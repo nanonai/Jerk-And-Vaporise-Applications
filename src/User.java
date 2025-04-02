@@ -77,8 +77,8 @@ public class User {
                         break;
                     default:
                         counter = 0;
-                        allUser.add(new User(UserID, Username, Password, FullName,
-                                Email, Phone, AccType, DateOfRegis));
+                        allUser.add(new User(UserID, Username, Password, FullName, Email,
+                                Phone, AccType, DateOfRegis));
                         break;
                 }
                 counter += 1;
