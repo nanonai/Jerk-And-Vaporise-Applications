@@ -1,45 +1,55 @@
 UserID:         AD0000000000
 Username:       AD123
 Password:       AD123
-FullName:       kooner
-Email:          koonerIsAD123@gmail.com
+FullName:       Wong
+Email:          AD123@gmail.com
 Phone:          0151240129
 AccType:        Administrator
 DateOfRegis:    2025-03-31
+Validated:      1
+RememberMe:     0
 ~~~~~
 UserID:         SM1253724128
 Username:       SM123
 Password:       SM123
-FullName:       booner
-Email:          boonerIsSM123@gmail.com
+FullName:       hhh
+Email:          SM123@gmail.com
 Phone:          0123354535
 AccType:        Sales Manager
 DateOfRegis:    2025-03-31
+Validated:      1
+RememberMe:     0
 ~~~~~
 UserID:         PM0971204357
 Username:       PM123
 Password:       PM123
-FullName:       wooner
-Email:          woonerIsPM123@gmail.com
+FullName:       hhh
+Email:          PM123@gmail.com
 Phone:          0128467057
 AccType:        Purchase Manager
 DateOfRegis:    2025-03-31
+Validated:      1
+RememberMe:     0
 ~~~~~
 UserID:         IM0971204357
 Username:       IM123
 Password:       IM123
-FullName:       vooner
-Email:          voonerIsIM123@gmail.com
+FullName:       Eason
+Email:          IM123@gmail.com
 Phone:          0123574252
 AccType:        Inventory Manager
 DateOfRegis:    2025-03-31
+Validated:      1
+RememberMe:     0
 ~~~~~
 UserID:         FM0971204357
 Username:       FM123
 Password:       FM123
-FullName:       hooner
-Email:          hoonerIsFM123@gmail.com
+FullName:       Vanessa
+Email:          FM123@gmail.com
 Phone:          0145323423
 AccType:        Finance Manager
 DateOfRegis:    2025-03-31
+Validated:      1
+RememberMe:     0
 ~~~~~

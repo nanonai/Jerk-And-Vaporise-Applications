@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class User {
     String UserID, Username, Password, FullName, Email, AccType;
-    int Phone;
+    int Phone, Validated, RememberMe;
     LocalDate DateOfRegis;
     public static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final String EMAIL_REGEX =
@@ -18,7 +18,8 @@ public class User {
     public static final String PHONE_REGEX = "^01[0-9]{8}$";
 
     public User(String UserID, String Username, String Password, String FullName,
-                String Email, int Phone, String AccType, LocalDate DateOfRegis) {
+                String Email, int Phone, String AccType, LocalDate DateOfRegis,
+                int Validated, int RememberMe) {
         this.UserID = UserID;
         this.Username = Username;
         this.Password = Password;
@@ -27,13 +28,15 @@ public class User {
         this.Phone = Phone;
         this.AccType = AccType;
         this.DateOfRegis = DateOfRegis;
+        this.Validated = Validated;
+        this.RememberMe = RememberMe;
     }
 
     public static List<User> listAllUser(String filename) {
         List<User> allUser = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String UserID = "", Username = "", Password = "", FullName = "", Email = "", AccType = "";
-            int Phone  = 0;
+            int Phone  = 0, Validated = 0, RememberMe = 0;
             LocalDate DateOfRegis = null;
 
             String line;
@@ -48,6 +51,8 @@ public class User {
 //          Phone:          0000000000
 //          AccType:        XXXXXXX
 //          DateOfRegis:    0000-00-00
+//          Validated:      0/1
+//          RememberMe:     0/1
 //          ~~~~~
             while ((line = reader.readLine()) != null) {
                 switch (counter) {
@@ -75,10 +80,15 @@ public class User {
                     case 8:
                         DateOfRegis = LocalDate.parse(line.substring(16), df);
                         break;
+                    case 9:
+                        Validated = Integer.parseInt(line.substring(16));
+                        break;
+                    case 10:
+                        RememberMe = Integer.parseInt(line.substring(16));
                     default:
                         counter = 0;
                         allUser.add(new User(UserID, Username, Password, FullName, Email,
-                                Phone, AccType, DateOfRegis));
+                                Phone, AccType, DateOfRegis, Validated, RememberMe));
                         break;
                 }
                 counter += 1;
@@ -155,7 +165,7 @@ public class User {
     public static String validityChecker(String Username, String Password, String FullName,
                                          String Email, int Phone, String filename) {
         String indicator = "";
-        if (!Username.trim().isEmpty() && Username.length() >= 8 && Username.length() <= 36) {
+        if (Username.length() >= 8 && Username.length() <= 36) {
             indicator += "1";
         } else {
             indicator += "0";
@@ -165,12 +175,12 @@ public class User {
         } else {
             indicator += "X";
         }
-        if (!Password.contains(" ") && Password.length() >= 8) {
+        if (Password.length() >= 8) {
             indicator += "1";
         } else {
             indicator += "0";
         }
-        if (!FullName.trim().isEmpty() && FullName.length() >= 8 && FullName.length() <= 48) {
+        if (FullName.length() >= 8 && FullName.length() <= 48) {
             indicator += "1";
         } else {
             indicator += "0";
@@ -208,6 +218,8 @@ public class User {
             writer.write("Phone:          " + user.Phone + "\n");
             writer.write("AccType:        " + user.AccType + "\n");
             writer.write("DateOfRegis:    " + user.DateOfRegis + "\n");
+            writer.write("Validated:      0\n");
+            writer.write("RememberMe:     0\n");
             writer.write("~~~~~\n");
             return true;
         } catch (IOException e) {
@@ -229,6 +241,8 @@ public class User {
                 writer.write("Phone:          " + user.Phone + "\n");
                 writer.write("AccType:        " + user.AccType + "\n");
                 writer.write("DateOfRegis:    " + user.DateOfRegis + "\n");
+                writer.write("Validated:      " + user.Validated + "\n");
+                writer.write("RememberMe:     " + user.RememberMe + "\n");
                 writer.write("~~~~~\n");
             }
             return true;
@@ -247,6 +261,10 @@ public class User {
                 user.Password = buffer.Password;
                 user.Phone = buffer.Phone;
                 user.Email = buffer.Email;
+                user.AccType = buffer.AccType;
+                user.DateOfRegis = buffer.DateOfRegis;
+                user.Validated = buffer.Validated;
+                user.RememberMe = buffer.RememberMe;
             }
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
@@ -259,6 +277,8 @@ public class User {
                 writer.write("Phone:          " + user.Phone + "\n");
                 writer.write("AccType:        " + user.AccType + "\n");
                 writer.write("DateOfRegis:    " + user.DateOfRegis + "\n");
+                writer.write("Validated:      " + user.Validated + "\n");
+                writer.write("RememberMe:     " + user.RememberMe + "\n");
                 writer.write("~~~~~\n");
             }
             return true;
