@@ -13,8 +13,9 @@ public class SignIn {
     private static CustomComponents.ImagePanel background;
     private static CustomComponents.ImageCell logo_cell, txt_icon1, txt_icon2;
     private static JLabel logo_text1, logo_text2, right_title;
-    private static JPanel right_grid;
-    private static CustomComponents.RoundedPanel right_panel, txt_grid, pick_grid;
+    private static JPanel outer_grid;
+    private static CustomComponents.RoundedPanel txt_grid1;
+    private static CustomComponents.RoundedPanel txt_grid2;
     private static CustomComponents.EmptyTextField txt1;
     private static CustomComponents.EmptyPasswordField txt2;
     private static CustomComponents.CustomButton hidden, button;
@@ -39,119 +40,121 @@ public class SignIn {
     public static void ShowPage() {
         background = new CustomComponents.ImagePanel(bg);
 
-        JPanel outer_grid = background.getGridPanel();
-        GridBagConstraints gbc = new GridBagConstraints();
+        outer_grid = background.getGridPanel();
+        GridBagConstraints gbc_outer = new GridBagConstraints();
         outer_grid.setBorder(BorderFactory.createEmptyBorder(30, 100, 30, 20));
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-        gbc.fill = GridBagConstraints.BOTH;
-        JLabel place_holder = new JLabel("", SwingConstants.CENTER);
-        outer_grid.add(place_holder, gbc);
+        gbc_outer.gridx = 0;
+        gbc_outer.gridy = 0;
+        gbc_outer.weightx = 1;
+        gbc_outer.weighty = 1;
+        gbc_outer.fill = GridBagConstraints.BOTH;
+        JLabel place_holder1 = new JLabel("", SwingConstants.CENTER);
+        outer_grid.add(place_holder1, gbc_outer);
 
-        gbc.gridy = 1;
+        gbc_outer.gridy = 1;
         logo_cell = new CustomComponents.ImageCell(logo, 0.85 , 7);
-        outer_grid.add(logo_cell, gbc);
+        outer_grid.add(logo_cell, gbc_outer);
 
-        gbc.gridy = 2;
-        gbc.weighty = 0.001;
+        gbc_outer.gridy = 2;
+        gbc_outer.weighty = 0.001;
         logo_text1 = new JLabel("<html><div style='color:#383546; padding-top: 14px;'>"
                 + "<b>Omega Wholesale Sdn Bhd (OWSB)</b></div></html>");
         logo_text1.setFont(merriweather);
-        outer_grid.add(logo_text1, gbc);
+        outer_grid.add(logo_text1, gbc_outer);
 
-        gbc.gridy = 3;
-        gbc.weighty = 0.7;
+        gbc_outer.gridy = 3;
+        gbc_outer.weighty = 0.7;
         logo_text2 = new JLabel("<html><div style='color:#383546;'>"
                 + "Automated Purchase Order<br>Management System</div></html>");
         logo_text2.setFont(boldonse);
-        outer_grid.add(logo_text2, gbc);
+        outer_grid.add(logo_text2, gbc_outer);
 
-        gbc.gridy = 4;
-        gbc.weighty = 1;
-        place_holder = new JLabel("", SwingConstants.CENTER);
-        outer_grid.add(place_holder, gbc);
+        gbc_outer.gridy = 4;
+        gbc_outer.weighty = 1;
+        JLabel place_holder2 = new JLabel("", SwingConstants.CENTER);
+        outer_grid.add(place_holder2, gbc_outer);
 
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.gridheight = 5;
-        gbc.weightx = 5;
-        gbc.fill = GridBagConstraints.BOTH;
-        right_panel = new CustomComponents.RoundedPanel(
-                30, 1, 0, Color.WHITE, Color.BLACK);
+        gbc_outer.gridx = 1;
+        gbc_outer.gridy = 0;
+        gbc_outer.gridheight = 5;
+        gbc_outer.weightx = 5;
+        gbc_outer.fill = GridBagConstraints.BOTH;
+        CustomComponents.RoundedPanel right_panel = new CustomComponents.RoundedPanel(30,
+                1, 0, Color.WHITE, Color.BLACK);
         right_panel.setBackground(Color.WHITE);
+
         right_panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc_right = new GridBagConstraints();
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-        right_grid = new JPanel(new GridBagLayout());
+        gbc_right.gridx = 0;
+        gbc_right.weightx = 1;
+        gbc_right.weighty = 1;
+        gbc_right.fill = GridBagConstraints.BOTH;
+        JPanel right_grid = new JPanel(new GridBagLayout());
         right_grid.setOpaque(false);
-        right_grid.setBorder(BorderFactory.createEmptyBorder(60, 100, 60, 100));
-        right_panel.add(right_grid, gbc);
+        right_grid.setBorder(BorderFactory.createEmptyBorder(60, 100, 120, 100));
+        right_panel.add(right_grid, gbc_right);
 
-        gbc.gridy = 0;
-        gbc.weightx = 10;
-        gbc.weighty = 0.3;
-        gbc.fill = GridBagConstraints.BOTH;
+        GridBagConstraints gbc_inner = new GridBagConstraints();
+        gbc_inner.gridy = 0;
+        gbc_inner.weightx = 10;
+        gbc_inner.weighty = 0.3;
+        gbc_inner.fill = GridBagConstraints.BOTH;
         right_title = new JLabel("<html><div style='color:#383546;'>"
                 + "<b>Sign In</b></div></html>");
-        right_grid.add(right_title, gbc);
+        right_grid.add(right_title, gbc_inner);
 
-        gbc.gridy = 1;
-        gbc.weighty = 0.125;
-        txt_grid = new CustomComponents.RoundedPanel(
+        gbc_inner.gridy = 1;
+        gbc_inner.weighty = 0.125;
+        txt_grid1 = new CustomComponents.RoundedPanel(
                 60, 0, 3,
                 Color.WHITE, new Color(179, 181, 180));
-        txt_grid.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
-        txt_grid.setLayout(new GridBagLayout());
-        right_grid.add(txt_grid, gbc);
+        txt_grid1.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        txt_grid1.setLayout(new GridBagLayout());
+        right_grid.add(txt_grid1, gbc_inner);
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 4;
+        gbc_inner.gridx = 0;
+        gbc_inner.gridy = 0;
+        gbc_inner.weightx = 4;
         txt_icon1 = new CustomComponents.ImageCell(
                 user_icon, 0.5, 5);
-        txt_grid.add(txt_icon1, gbc);
+        txt_grid1.add(txt_icon1, gbc_inner);
 
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weightx = 6;
+        gbc_inner.gridx = 1;
+        gbc_inner.gridy = 0;
+        gbc_inner.weightx = 6;
         txt1 = new CustomComponents.EmptyTextField(
                 10, "Username or email \r\r", new Color(178, 181, 180));
-        txt_grid.add(txt1, gbc);
+        txt_grid1.add(txt1, gbc_inner);
 
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.weighty = 0.125;
-        gbc.insets = new Insets(10, 0, 0, 0);
-        txt_grid = new CustomComponents.RoundedPanel(60, 0, 3,
+        gbc_inner.gridx = 0;
+        gbc_inner.gridy = 2;
+        gbc_inner.weighty = 0.125;
+        gbc_inner.insets = new Insets(10, 0, 0, 0);
+        txt_grid2 = new CustomComponents.RoundedPanel(60, 0, 3,
                 Color.WHITE, new Color(179, 181, 180));
-        txt_grid.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-        txt_grid.setLayout(new GridBagLayout());
-        right_grid.add(txt_grid, gbc);
+        txt_grid2.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        txt_grid2.setLayout(new GridBagLayout());
+        right_grid.add(txt_grid2, gbc_inner);
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 5.8;
-        gbc.insets = new Insets(0, 0, 0, 0);
+        gbc_inner.gridx = 0;
+        gbc_inner.gridy = 0;
+        gbc_inner.weightx = 5.8;
+        gbc_inner.insets = new Insets(0, 0, 0, 0);
         txt_icon2 = new CustomComponents.ImageCell(
                 lock_icon, 0.5, 5);
-        txt_grid.add(txt_icon2, gbc);
+        txt_grid2.add(txt_icon2, gbc_inner);
 
-        gbc.gridx = 1;
-        gbc.weightx = 5.6;
+        gbc_inner.gridx = 1;
+        gbc_inner.weightx = 5.6;
         txt2 = new CustomComponents.EmptyPasswordField(
                 7, "Password \r\r", new Color(178, 181, 180));
         txt2.setEchoChar((char) 0);
-        txt_grid.add(txt2, gbc);
+        txt_grid2.add(txt2, gbc_inner);
 
-        gbc.gridx = 2;
-        gbc.weightx = 4;
+        gbc_inner.gridx = 2;
+        gbc_inner.weightx = 4;
         hidden = new CustomComponents.CustomButton("", merriweather,
                 transparent, transparent, transparent, transparent, transparent,
                 30, 0, transparent, false, 5,
@@ -165,73 +168,74 @@ public class SignIn {
             txt2.UpdateStatus(hidden.ReturnImageState());
             txt2.repaint();
         });
-        txt_grid.add(hidden, gbc);
+        txt_grid2.add(hidden, gbc_inner);
 
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.weightx = 4;
-        gbc.weighty = 0.05;
-        gbc.insets = new Insets(6, 12, 15, 0);
-        pick_grid = new CustomComponents.RoundedPanel(
+        gbc_inner.gridx = 0;
+        gbc_inner.gridy = 3;
+        gbc_inner.weightx = 4;
+        gbc_inner.weighty = 0.05;
+        gbc_inner.insets = new Insets(6, 12, 15, 0);
+        CustomComponents.RoundedPanel pick_grid = new CustomComponents.RoundedPanel(
                 0, 0, 0, transparent, transparent);
         pick_grid.setLayout(new GridBagLayout());
-        right_grid.add(pick_grid, gbc);
+        right_grid.add(pick_grid, gbc_inner);
 
-        gbc.gridy = 0;
-        gbc.weightx = 2;
+        gbc_inner.gridy = 0;
+        gbc_inner.weightx = 2;
         check = new JCheckBox("<html><div style='color:#383546;'>"
                 + "<pre><b> Remember me</b></pre></div></html>");
         check.setBorder(null);
         check.setFocusPainted(false);
         check.setOpaque(false);
         check.setVerticalAlignment(SwingConstants.TOP);
-        pick_grid.add(check,gbc);
+        pick_grid.add(check, gbc_inner);
 
-        gbc.gridx = 1;
-        gbc.weightx = 8;
+        gbc_inner.gridx = 1;
+        gbc_inner.weightx = 8;
         JLabel placeholder1 = new JLabel("");
-        pick_grid.add(placeholder1, gbc);
+        pick_grid.add(placeholder1, gbc_inner);
 
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.weightx = 10;
-        gbc.weighty = 0.125;
-        gbc.insets = new Insets(0, 0, 0, 0);
+        gbc_inner.gridx = 0;
+        gbc_inner.gridy = 4;
+        gbc_inner.weightx = 10;
+        gbc_inner.weighty = 0.125;
+        gbc_inner.insets = new Insets(0, 0, 0, 0);
         button = new CustomComponents.CustomButton(
                 "Sign In", merriweather, Color.BLACK, Color.WHITE,
                 new Color(244, 156, 187), new Color(56, 53, 70),
                 new Color(161, 111, 136), 30, 14, Color.WHITE,
                 true, 5, false, null, 0);
         button.addActionListener(e -> {
-            if (txt1.getText().isEmpty() || txt1.getText().equals("Username or email \r\r") ||
-                    new String(txt2.getPassword()).isEmpty() ||
-                    new String(txt2.getPassword()).equals("Password \r\r")) {
-                CustomComponents.CustomDialog error_empty = new CustomComponents.CustomDialog(parent,
-                        merriweather, 0);
-                error_empty.show_dialog("Error", "Details must not be empty!",
-                        "Ok", null, null, null);
-            } else if (txt1.getText().contains(" ") || new String(txt2.getPassword()).contains(" ")) {
-
-            }
+//            if (txt1.getText().isEmpty() || txt1.getText().equals("Username or email \r\r") ||
+//                    new String(txt2.getPassword()).isEmpty() ||
+//                    new String(txt2.getPassword()).equals("Password \r\r")) {
+//                CustomComponents.CustomDialog error_empty = new CustomComponents.CustomDialog(parent,
+//                        merriweather, 0);
+//                error_empty.show_dialog("Error", "Details must not be empty!",
+//                        "Ok", null, null, null);
+//            } else if (txt1.getText().contains(" ") || new String(txt2.getPassword()).contains(" ")) {
+//
+//            }
+            Main.indicator = 1;
+            Main.PageChanger(parent);
         });
-        right_grid.add(button, gbc);
-
-        outer_grid.add(right_panel, gbc);
-        background.add(outer_grid);
-        parent.add(background);
-
+        right_grid.add(button, gbc_inner);
+        outer_grid.add(right_panel, gbc_outer);
+        background.add(outer_grid, gbc_outer);
+        parent.setContentPane(background);
         SwingUtilities.invokeLater(logo_cell::requestFocusInWindow);
     }
     
-    public static void UpdateComponentSize() {
-        int parent_width = parent.getContentPane().getWidth();
-        int parent_height = parent.getContentPane().getHeight();
+    public static void UpdateComponentSize(int parent_width, int parent_height) {
         background.updateSize(parent_width, parent_height);
+        outer_grid.revalidate();
+        outer_grid.repaint();
         logo_cell.repaint();
         logo_text1.setFont(merriweather.deriveFont((float) parent_height / 30));
         logo_text2.setFont(boldonse.deriveFont((float) parent_height  / 25));
         right_title.setFont(merriweather.deriveFont((float) parent_height / 14));
-        txt_grid.ChangeRadius(parent_height / 16);
+        txt_grid1.ChangeRadius(parent_height / 10);
+        txt_grid2.ChangeRadius(parent_height / 10);
         txt1.setFont(merriweather.deriveFont((float) parent_height / 30));
         txt2.setFont(merriweather.deriveFont((float) parent_height / 30));
         check.setFont(merriweather.deriveFont((float) parent_height / 40));
@@ -239,7 +243,7 @@ public class SignIn {
                 new Color(145, 145, 145), Color.WHITE, new Color(97, 97, 97)));
         check.setSelectedIcon(new CustomComponents.CustomCheckBoxIcon(30, 3,1,true,
                 new Color(145, 145, 145), Color.WHITE, new Color(97, 97, 97)));
-        button.UpdateCustomButton(parent_height / 12, parent_height / 30, null, 0);
+        button.UpdateCustomButton(parent_height / 10, parent_height / 30, null, 0);
         txt_icon1.repaint();
         txt_icon2.repaint();
     }

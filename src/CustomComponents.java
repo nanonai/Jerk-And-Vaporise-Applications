@@ -30,6 +30,10 @@ public class CustomComponents {
             return grid;
         }
 
+        public double getRatio() {
+            return ratio;
+        }
+
         public void updateSize(int parent_width, int parent_height) {
             if (image == null) return;
             int new_width = parent_width;
@@ -40,11 +44,11 @@ public class CustomComponents {
                 new_width = (int) (parent_height * ratio);
             }
 
-            int x = (parent_width - new_width) / 2;
-            int y = (parent_height - new_height) / 2;
+            int x = (getWidth() - new_width) / 2;
+            int y = (getHeight() - new_height) / 2;
+
             grid.setBounds(x, y, new_width, new_height);
             grid.revalidate();
-            grid.repaint();
             repaint();
         }
 

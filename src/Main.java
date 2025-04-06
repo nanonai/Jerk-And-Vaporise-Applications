@@ -45,12 +45,15 @@ public class Main {
             main_frame.setIconImage(icon);
 
             SignIn.SignInLoader(main_frame, merriweather, boldonse);
+            SignIn.ShowPage();
             PageChanger(main_frame);
 
             main_frame.addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
-
+                    SignIn.UpdateComponentSize(
+                    main_frame.getContentPane().getWidth(),
+                    main_frame.getContentPane().getHeight());
                 }
             });
 
@@ -67,18 +70,14 @@ public class Main {
     public static void PageChanger(JFrame parent) {
         switch (indicator) {
             case 0:
-                parent.removeAll();
-                SignIn.ShowPage();
+                parent.getContentPane().removeAll();
                 parent.revalidate();
                 parent.repaint();
+                SignIn.ShowPage();
                 parent.setVisible(true);
                 break;
             case 1:
-                break;
-            default:
-                indicator = 0;
-                parent.removeAll();
-                SignIn.ShowPage();
+                parent.getContentPane().removeAll();
                 parent.revalidate();
                 parent.repaint();
                 parent.setVisible(true);
