@@ -142,7 +142,7 @@ public class User {
         List<User> allUser = listAllUser(filename);
         boolean repeated = false;
         for (User user : allUser) {
-            if (Objects.equals(user.Username, Username)) {
+            if (Objects.equals(user.Username, Username.toLowerCase())) {
                 repeated = true;
                 break;
             }
@@ -227,7 +227,7 @@ public class User {
 
     public static boolean saveNewUser(User user, String filename) {
         try (FileWriter writer = new FileWriter(filename, true)) {
-            writer.write("UserID:         " + user.UserID + "]\n");
+            writer.write("UserID:         " + user.UserID + "\n");
             writer.write("Username:       " + user.Username + "\n");
             writer.write("Password:       " + user.Password + "\n");
             writer.write("FullName:       " + user.FullName + "\n");
@@ -249,7 +249,7 @@ public class User {
         allUser.removeIf(user -> Objects.equals(user.UserID, UserID));
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (User user : allUser) {
-                writer.write("UserID:         " + user.UserID + "]\n");
+                writer.write("UserID:         " + user.UserID + "\n");
                 writer.write("Username:       " + user.Username + "\n");
                 writer.write("Password:       " + user.Password + "\n");
                 writer.write("FullName:       " + user.FullName + "\n");
@@ -283,7 +283,7 @@ public class User {
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (User user : allUser) {
-                writer.write("UserID:         " + user.UserID + "]\n");
+                writer.write("UserID:         " + user.UserID + "\n");
                 writer.write("Username:       " + user.Username + "\n");
                 writer.write("Password:       " + user.Password + "\n");
                 writer.write("FullName:       " + user.FullName + "\n");

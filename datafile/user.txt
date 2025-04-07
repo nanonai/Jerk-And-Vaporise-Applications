@@ -1,48 +1,48 @@
-UserID:         AD0000000000]]
-Username:       AD123
-Password:       AD123
+UserID:         AD0000000000
+Username:       ad123
+Password:       ad123
 FullName:       Wong
-Email:          AD123@gmail.com
+Email:          ad123@gmail.com
 Phone:          151240129
 AccType:        Administrator
 DateOfRegis:    2025-03-31
-RememberMe:     1
+RememberMe:     0
 ~~~~~
-UserID:         SM1253724128]]
-Username:       SM123
-Password:       SM123
+UserID:         SM1253724128
+Username:       sm123
+Password:       sm123
 FullName:       Whei Hung
-Email:          SM123@gmail.com
+Email:          sm123@gmail.com
 Phone:          123354535
 AccType:        Sales Manager
 DateOfRegis:    2025-03-31
 RememberMe:     0
 ~~~~~
-UserID:         PM0971204357]]
-Username:       PM123
-Password:       PM123
+UserID:         PM0971204357
+Username:       pm123
+Password:       pm123
 FullName:       Boon
-Email:          PM123@gmail.com
+Email:          pm123@gmail.com
 Phone:          128467057
 AccType:        Purchase Manager
 DateOfRegis:    2025-03-31
 RememberMe:     0
 ~~~~~
-UserID:         IM0971204357]]
-Username:       IM123
-Password:       IM123
+UserID:         IM0971204357
+Username:       im123
+Password:       im123
 FullName:       Eason
-Email:          IM123@gmail.com
+Email:          im123@gmail.com
 Phone:          123574252
 AccType:        Inventory Manager
 DateOfRegis:    2025-03-31
 RememberMe:     0
 ~~~~~
-UserID:         FM0971204357]]
-Username:       FM123
-Password:       FM123
+UserID:         FM0971204357
+Username:       fm123
+Password:       fm123
 FullName:       Vanessa
-Email:          FM123@gmail.com
+Email:          fm123@gmail.com
 Phone:          145323423
 AccType:        Finance Manager
 DateOfRegis:    2025-03-31

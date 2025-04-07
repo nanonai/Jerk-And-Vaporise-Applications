@@ -229,12 +229,12 @@ public class SignIn {
                     merriweather, 0);
             error.show_dialog("Error", "Details must not contain spaces!",
                     "Ok", null, null, null);
-        } else if (!User.usernameChecker(txt1.getText(), Main.userdata_file)) {
+        } else if (!User.usernameChecker(txt1.getText().toLowerCase(), Main.userdata_file)) {
             List<User> allUser = User.listAllUser(Main.userdata_file);
             boolean correct = false;
             String AccType = "";
             for (User user : allUser) {
-                if (Objects.equals(user.Username, txt1.getText()) &&
+                if (Objects.equals(user.Username, txt1.getText().toLowerCase()) &&
                         Objects.equals(user.Password, new String(txt2.getPassword()))) {
                     correct = true;
                     AccType = user.AccType;
@@ -252,7 +252,7 @@ public class SignIn {
                 if (check.isSelected()) {
                     Buffer logged_in = null;
                     for (User user : allUser) {
-                        if (Objects.equals(user.Username, txt1.getText()) &&
+                        if (Objects.equals(user.Username, txt1.getText().toLowerCase()) &&
                                 Objects.equals(user.Password, new String(txt2.getPassword()))) {
                             logged_in = new Buffer(user.UserID, user.Username, user.Password, user.FullName,
                                     user.Email, user.Phone, user.AccType, user.DateOfRegis, 1);
