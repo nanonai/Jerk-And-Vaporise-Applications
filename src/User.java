@@ -9,17 +9,21 @@ import java.util.regex.Pattern;
 
 public class User {
     String UserID, Username, Password, FullName, Email, AccType;
-    int Phone, Validated, RememberMe;
+    int Phone, RememberMe;
     LocalDate DateOfRegis;
     public static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final String EMAIL_REGEX =
             "^(?!\\.)(?!.*\\.\\.)([a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*)"
                     + "@([a-zA-Z0-9.-]+)\\.([a-zA-Z]{2,})$";
     public static final String PHONE_REGEX = "^01[0-9]{8}$";
+    public static final String upperCasePattern = ".*[A-Z].*";
+    public static final String lowerCasePattern = ".*[a-z].*";
+    public static final String digitPattern = ".*\\d.*";
+    public static final String specialCharPattern = ".*[!@#$%^&*()\\-+].*";
 
     public User(String UserID, String Username, String Password, String FullName,
                 String Email, int Phone, String AccType, LocalDate DateOfRegis,
-                int Validated, int RememberMe) {
+                int RememberMe) {
         this.UserID = UserID;
         this.Username = Username;
         this.Password = Password;
@@ -28,7 +32,6 @@ public class User {
         this.Phone = Phone;
         this.AccType = AccType;
         this.DateOfRegis = DateOfRegis;
-        this.Validated = Validated;
         this.RememberMe = RememberMe;
     }
 
@@ -36,7 +39,7 @@ public class User {
         List<User> allUser = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String UserID = "", Username = "", Password = "", FullName = "", Email = "", AccType = "";
-            int Phone  = 0, Validated = 0, RememberMe = 0;
+            int Phone  = 0, RememberMe = 0;
             LocalDate DateOfRegis = null;
 
             String line;
@@ -51,7 +54,6 @@ public class User {
 //          Phone:          0000000000
 //          AccType:        XXXXXXX
 //          DateOfRegis:    0000-00-00
-//          Validated:      0/1
 //          RememberMe:     0/1
 //          ~~~~~
             while ((line = reader.readLine()) != null) {
@@ -81,14 +83,12 @@ public class User {
                         DateOfRegis = LocalDate.parse(line.substring(16), df);
                         break;
                     case 9:
-                        Validated = Integer.parseInt(line.substring(16));
-                        break;
-                    case 10:
                         RememberMe = Integer.parseInt(line.substring(16));
+                        break;
                     default:
                         counter = 0;
                         allUser.add(new User(UserID, Username, Password, FullName, Email,
-                                Phone, AccType, DateOfRegis, Validated, RememberMe));
+                                Phone, AccType, DateOfRegis, RememberMe));
                         break;
                 }
                 counter += 1;
@@ -97,6 +97,18 @@ public class User {
             e.getStackTrace();
         }
         return allUser;
+    }
+
+    public static User RememberedUser(String filename) {
+        List<User> allUser = listAllUser(filename);
+        User r_user = null;
+        for (User user : allUser) {
+            if (Objects.equals(user.RememberMe, 1)) {
+                r_user = user;
+                break;
+            }
+        }
+        return r_user;
     }
 
     public static String idMaker(String AccType, String filename) {
@@ -162,6 +174,11 @@ public class User {
         return !repeated;
     }
 
+    public static boolean passwordChecker(String password) {
+        return password.matches(upperCasePattern) && password.matches(lowerCasePattern) &&
+                password.matches(digitPattern) && password.matches(specialCharPattern);
+    }
+
     public static String validityChecker(String Username, String Password, String FullName,
                                          String Email, int Phone, String filename) {
         String indicator = "";
@@ -175,7 +192,7 @@ public class User {
         } else {
             indicator += "X";
         }
-        if (Password.length() >= 8) {
+        if (Password.length() >= 8 && passwordChecker(Password)) {
             indicator += "1";
         } else {
             indicator += "0";
@@ -218,7 +235,6 @@ public class User {
             writer.write("Phone:          " + user.Phone + "\n");
             writer.write("AccType:        " + user.AccType + "\n");
             writer.write("DateOfRegis:    " + user.DateOfRegis + "\n");
-            writer.write("Validated:      0\n");
             writer.write("RememberMe:     0\n");
             writer.write("~~~~~\n");
             return true;
@@ -241,7 +257,6 @@ public class User {
                 writer.write("Phone:          " + user.Phone + "\n");
                 writer.write("AccType:        " + user.AccType + "\n");
                 writer.write("DateOfRegis:    " + user.DateOfRegis + "\n");
-                writer.write("Validated:      " + user.Validated + "\n");
                 writer.write("RememberMe:     " + user.RememberMe + "\n");
                 writer.write("~~~~~\n");
             }
@@ -252,7 +267,7 @@ public class User {
         }
     }
 
-    public static boolean modifyUser(String UserID, Buffer buffer, String filename) {
+    public static void modifyUser(String UserID, Buffer buffer, String filename) {
         List<User> allUser = listAllUser(filename);
         for (User user : allUser) {
             if (Objects.equals(user.UserID, UserID)) {
@@ -263,7 +278,6 @@ public class User {
                 user.Email = buffer.Email;
                 user.AccType = buffer.AccType;
                 user.DateOfRegis = buffer.DateOfRegis;
-                user.Validated = buffer.Validated;
                 user.RememberMe = buffer.RememberMe;
             }
         }
@@ -277,14 +291,11 @@ public class User {
                 writer.write("Phone:          " + user.Phone + "\n");
                 writer.write("AccType:        " + user.AccType + "\n");
                 writer.write("DateOfRegis:    " + user.DateOfRegis + "\n");
-                writer.write("Validated:      " + user.Validated + "\n");
                 writer.write("RememberMe:     " + user.RememberMe + "\n");
                 writer.write("~~~~~\n");
             }
-            return true;
         } catch (IOException e) {
             e.getStackTrace();
-            return false;
         }
     }
 }

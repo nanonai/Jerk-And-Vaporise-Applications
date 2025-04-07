@@ -485,65 +485,109 @@ public class CustomComponents {
                         g2.fillOval(x, y, (int) r, (int) r);
 
                         GeneralPath path = new GeneralPath();
-                        path.moveTo((float) -radius / 3, -3);
+                        path.moveTo(-1, 0);
                         path.lineTo(c_radius, 0);
-                        path.curveTo((float) c_radius * 5 / 6, (float) c_radius * 0.0139866666666667,
-                                (float) c_radius * 4 / 6, (float) c_radius * 0.057191,
-                                (float) c_radius * 3 / 6, (float) c_radius * 0.1339746666666667);
-                        path.curveTo((float) c_radius * 2 / 6, (float) c_radius * 0.254644,
-                                (float) c_radius * 0.254644, (float) c_radius * 2 / 6,
-                                (float) c_radius * 0.1339746666666667, (float) c_radius * 3 / 6);
-                        path.curveTo((float) c_radius * 0.057191, (float) c_radius * 4 / 6,
-                                (float) c_radius * 0.0139866666666667, (float) c_radius * 5 / 6,
-                                0, (float) c_radius);
+                        path.curveTo(
+                                (float) c_radius * 11 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)),
+                                (float) c_radius * 10 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)),
+                                (float) c_radius * 9 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)));
+                        path.curveTo((float) c_radius * 8 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)),
+                                (float) c_radius * 7 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)),
+                                (float) c_radius * 6 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)));
+                        path.curveTo((float) c_radius * 5 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)),
+                                (float) c_radius * 4 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)),
+                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)) - 1, (float) c_radius * 4 / 12);
+                        path.curveTo(
+                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)) - 1, (float) c_radius * 5 / 12,
+                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)) - 1, (float) c_radius * 6 / 12,
+                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)) - 1, (float) c_radius * 7 / 12);
+                        path.curveTo(c_radius - Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)) - 1, (float) c_radius * 8 / 12,
+                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)) - 1, (float) c_radius * 9 / 12,
+                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)) - 1, (float) c_radius * 10 / 12);
+                        path.curveTo(c_radius - Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)) - 1, (float) c_radius * 11 / 12,
+                                -1, (float) c_radius,
+                                -1, (float) c_radius);
                         path.closePath();
                         g2.setColor(background);
                         g2.fill(path);
 
                         path = new GeneralPath();
-                        path.moveTo((float) (width + radius / 3), -3);
+                        path.moveTo((float) (width), 0);
                         path.lineTo(width - c_radius, 0);
-                        path.curveTo((float) width - c_radius * 5 / 6, (float) c_radius * 0.0139866666666667,
-                                (float) width - c_radius * 4 / 6, (float) c_radius * 0.057191,
-                                (float) width - c_radius * 3 / 6, (float) c_radius * 0.1339746666666667);
-                        path.curveTo((float) width - c_radius * 2 / 6, (float) c_radius * 0.254644,
-                                (float) width - c_radius * 0.254644, (float) c_radius * 2 / 6,
-                                (float) width - c_radius * 0.1339746666666667, (float) c_radius * 3 / 6);
-                        path.curveTo((float) width - c_radius * 0.057191, (float) c_radius * 4 / 6,
-                                (float) width - c_radius * 0.0139866666666667, (float) c_radius * 5 / 6,
+                        path.curveTo(
+                                width - (float) c_radius * 11 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)),
+                                width - (float) c_radius * 10 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)),
+                                width - (float) c_radius * 9 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)));
+                        path.curveTo(width - (float) c_radius * 8 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)),
+                                width - (float) c_radius * 7 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)),
+                                width - (float) c_radius * 6 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)));
+                        path.curveTo(width - (float) c_radius * 5 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)),
+                                width - (float) c_radius * 4 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)),
+                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)), (float) c_radius * 4 / 12);
+                        path.curveTo(
+                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)), (float) c_radius * 5 / 12,
+                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)), (float) c_radius * 6 / 12,
+                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)), (float) c_radius * 7 / 12);
+                        path.curveTo(width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)), (float) c_radius * 8 / 12,
+                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)), (float) c_radius * 9 / 12,
+                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)), (float) c_radius * 10 / 12);
+                        path.curveTo(width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)), (float) c_radius * 11 / 12,
+                                width, (float) c_radius,
                                 width, (float) c_radius);
                         path.closePath();
                         g2.setColor(background);
                         g2.fill(path);
 
                         path = new GeneralPath();
-                        path.moveTo((float) -radius / 3, height + 1);
-                        path.lineTo(c_radius, height + 1);
-                        path.curveTo((float) c_radius * 5 / 6, (float) height - c_radius * 0.0139866666666667,
-                                (float) c_radius * 4 / 6, (float) height - c_radius * 0.057191,
-                                (float) c_radius * 3 / 6, (float) height - c_radius * 0.1339746666666667);
-                        path.curveTo((float) c_radius * 2 / 6, (float) height - c_radius * 0.254644,
-                                (float) c_radius * 0.254644, (float) height - c_radius * 2 / 6,
-                                (float) c_radius * 0.1339746666666667, (float) height - c_radius * 3 / 6);
-                        path.curveTo((float) c_radius * 0.057191, (float) height - c_radius * 4 / 6,
-                                (float) c_radius * 0.0139866666666667, (float) height - c_radius * 5 / 6,
-                                0, (float) height - c_radius);
+                        path.moveTo(-1, height + 3);
+                        path.lineTo(c_radius, height + 3);
+                        path.curveTo(
+                                (float) c_radius * 11 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)),
+                                (float) c_radius * 10 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)),
+                                (float) c_radius * 9 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)));
+                        path.curveTo((float) c_radius * 8 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)),
+                                (float) c_radius * 7 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)),
+                                (float) c_radius * 6 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)));
+                        path.curveTo((float) c_radius * 5 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)),
+                                (float) c_radius * 4 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)),
+                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)) - 1, height - (float) c_radius * 4 / 12);
+                        path.curveTo(
+                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)) - 1, height - (float) c_radius * 5 / 12,
+                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)) - 1, height - (float) c_radius * 6 / 12,
+                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)) - 1, height - (float) c_radius * 7 / 12);
+                        path.curveTo(c_radius - Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)) - 1, height - (float) c_radius * 8 / 12,
+                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)) - 1, height - (float) c_radius * 9 / 12,
+                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)) - 1, height - (float) c_radius * 10 / 12);
+                        path.curveTo(c_radius - Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)) - 1, height - (float) c_radius * 11 / 12,
+                                -1, height + 3,
+                                -1, height + 3);
                         path.closePath();
                         g2.setColor(background);
                         g2.fill(path);
 
                         path = new GeneralPath();
-                        path.moveTo((float) (width + radius / 3), height + 1);
-                        path.lineTo(width - c_radius, height + 1);
-                        path.curveTo((float) width - c_radius * 5 / 6, (float) height - c_radius * 0.0139866666666667,
-                                (float) width - c_radius * 4 / 6, (float) height - c_radius * 0.057191,
-                                (float) width - c_radius * 3 / 6, (float) height - c_radius * 0.1339746666666667);
-                        path.curveTo((float) width - c_radius * 2 / 6, (float) height - c_radius * 0.254644,
-                                (float) width - c_radius * 0.254644, (float) height - c_radius * 2 / 6,
-                                (float) width - c_radius * 0.1339746666666667, (float) height - c_radius * 3 / 6);
-                        path.curveTo((float) width - c_radius * 0.057191, (float) height - c_radius * 4 / 6,
-                                (float) width - c_radius * 0.0139866666666667, (float) height - c_radius * 5 / 6,
-                                width, (float) height - c_radius);
+                        path.moveTo((float) (width), height + 3);
+                        path.lineTo(width - c_radius, height + 3);
+                        path.curveTo(
+                                width - (float) c_radius * 11 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)),
+                                width - (float) c_radius * 10 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)),
+                                width - (float) c_radius * 9 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)));
+                        path.curveTo(width - (float) c_radius * 8 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)),
+                                width - (float) c_radius * 7 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)),
+                                width - (float) c_radius * 6 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)));
+                        path.curveTo(width - (float) c_radius * 5 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)),
+                                width - (float) c_radius * 4 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)),
+                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)), height - (float) c_radius * 4 / 12);
+                        path.curveTo(
+                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)), height - (float) c_radius * 5 / 12,
+                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)), height - (float) c_radius * 6 / 12,
+                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)), height - (float) c_radius * 7 / 12);
+                        path.curveTo(width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)), height - (float) c_radius * 8 / 12,
+                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)), height - (float) c_radius * 9 / 12,
+                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)), height - (float) c_radius * 10 / 12);
+                        path.curveTo(width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)), height - (float) c_radius * 11 / 12,
+                                width, height + 3,
+                                width, height + 3);
                         path.closePath();
                         g2.setColor(background);
                         g2.fill(path);
@@ -665,7 +709,7 @@ public class CustomComponents {
         public void show_dialog(String title, String content, String option1, String option2,
                                 ActionEvent event1, ActionEvent event2) {
             JDialog dialog = new JDialog(frame, title, true);
-            dialog.setSize((int) (frame.getWidth() / 2.5), (int) (frame.getHeight() / 3.5));
+            dialog.setSize((int) (frame.getWidth() / 2.8), (int) (frame.getHeight() / 4));
             dialog.setLayout(new GridBagLayout());
             dialog.setResizable(false);
             dialog.setIconImage(icon);

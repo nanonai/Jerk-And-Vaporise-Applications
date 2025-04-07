@@ -9,8 +9,8 @@ import com.formdev.flatlaf.FlatIntelliJLaf;
 
 public class Main {
     public static int indicator = 0;
-//   Please indicate the relation of the indicator value and specific java class:
-//   0 -> Sign In Class
+    public static final Color transparent = new Color(0, 0, 0, 0);
+    public static final String userdata_file = "datafile/user.txt";
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -45,7 +45,6 @@ public class Main {
             main_frame.setIconImage(icon);
 
             SignIn.SignInLoader(main_frame, merriweather, boldonse);
-            SignIn.ShowPage();
             PageChanger(main_frame);
 
             main_frame.addComponentListener(new ComponentAdapter() {
@@ -69,17 +68,57 @@ public class Main {
 
     public static void PageChanger(JFrame parent) {
         switch (indicator) {
+//    Please indicate the relation of the indicator value and specific java class:
+//    0 -> Sign In Page
+//    1 -> Administrator Home Page
+//    2 -> Sales Manager Home Page
+//    3 -> Purchase Manager Home Page
+//    4 -> Inventory Manager Home Page
+//    5 -> Finance Manager Home Page
             case 0:
                 parent.getContentPane().removeAll();
                 parent.revalidate();
                 parent.repaint();
                 SignIn.ShowPage();
+                if (User.RememberedUser(userdata_file) != null) {
+                    SignIn.LoginRemembered();
+                    break;
+                }
                 parent.setVisible(true);
                 break;
             case 1:
                 parent.getContentPane().removeAll();
                 parent.revalidate();
                 parent.repaint();
+                Admin.Print();
+                parent.setVisible(true);
+                break;
+            case 2:
+                parent.getContentPane().removeAll();
+                parent.revalidate();
+                parent.repaint();
+                SalesMgr.Print();
+                parent.setVisible(true);
+                break;
+            case 3:
+                parent.getContentPane().removeAll();
+                parent.revalidate();
+                parent.repaint();
+                PurchaseMgr.Print();
+                parent.setVisible(true);
+                break;
+            case 4:
+                parent.getContentPane().removeAll();
+                parent.revalidate();
+                parent.repaint();
+                InventoryMgr.Print();
+                parent.setVisible(true);
+                break;
+            case 5:
+                parent.getContentPane().removeAll();
+                parent.revalidate();
+                parent.repaint();
+                FinanceMgr.Print();
                 parent.setVisible(true);
                 break;
         }

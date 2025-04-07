@@ -4,12 +4,13 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 
 public class SignIn {
     private static JFrame parent;
     private static BufferedImage bg, logo, user_icon, lock_icon, show_icon, hidden_icon;
     private static Font merriweather, boldonse;
-    static final Color transparent = new Color(0, 0, 0, 0);
     private static CustomComponents.ImagePanel background;
     private static CustomComponents.ImageCell logo_cell, txt_icon1, txt_icon2;
     private static JLabel logo_text1, logo_text2, right_title;
@@ -126,6 +127,7 @@ public class SignIn {
         gbc_inner.weightx = 6;
         txt1 = new CustomComponents.EmptyTextField(
                 10, "Username or email \r\r", new Color(178, 181, 180));
+        txt1.addActionListener(_ -> SwingUtilities.invokeLater(txt2::requestFocusInWindow));
         txt_grid1.add(txt1, gbc_inner);
 
         gbc_inner.gridx = 0;
@@ -151,13 +153,14 @@ public class SignIn {
         txt2 = new CustomComponents.EmptyPasswordField(
                 7, "Password \r\r", new Color(178, 181, 180));
         txt2.setEchoChar((char) 0);
+        txt2.addActionListener(_ -> Checker());
         txt_grid2.add(txt2, gbc_inner);
 
         gbc_inner.gridx = 2;
         gbc_inner.weightx = 4;
         hidden = new CustomComponents.CustomButton("", merriweather,
-                transparent, transparent, transparent, transparent, transparent,
-                30, 0, transparent, false, 5,
+                Main.transparent, Main.transparent, Main.transparent, Main.transparent, Main.transparent,
+                30, 0, Main.transparent, false, 5,
                 true, hidden_icon, 0.4);
         hidden.addActionListener(_ -> {
             if (hidden.ReturnImageState()) {
@@ -176,7 +179,7 @@ public class SignIn {
         gbc_inner.weighty = 0.05;
         gbc_inner.insets = new Insets(6, 12, 15, 0);
         CustomComponents.RoundedPanel pick_grid = new CustomComponents.RoundedPanel(
-                0, 0, 0, transparent, transparent);
+                0, 0, 0, Main.transparent, Main.transparent);
         pick_grid.setLayout(new GridBagLayout());
         right_grid.add(pick_grid, gbc_inner);
 
@@ -205,27 +208,89 @@ public class SignIn {
                 new Color(244, 156, 187), new Color(56, 53, 70),
                 new Color(161, 111, 136), 30, 14, Color.WHITE,
                 true, 5, false, null, 0);
-        button.addActionListener(e -> {
-//            if (txt1.getText().isEmpty() || txt1.getText().equals("Username or email \r\r") ||
-//                    new String(txt2.getPassword()).isEmpty() ||
-//                    new String(txt2.getPassword()).equals("Password \r\r")) {
-//                CustomComponents.CustomDialog error_empty = new CustomComponents.CustomDialog(parent,
-//                        merriweather, 0);
-//                error_empty.show_dialog("Error", "Details must not be empty!",
-//                        "Ok", null, null, null);
-//            } else if (txt1.getText().contains(" ") || new String(txt2.getPassword()).contains(" ")) {
-//
-//            }
-            Main.indicator = 1;
-            Main.PageChanger(parent);
-        });
+        button.addActionListener(_ -> Checker());
         right_grid.add(button, gbc_inner);
         outer_grid.add(right_panel, gbc_outer);
         background.add(outer_grid, gbc_outer);
         parent.setContentPane(background);
         SwingUtilities.invokeLater(logo_cell::requestFocusInWindow);
     }
-    
+
+    private static void Checker() {
+        if (txt1.getText().isEmpty() || txt1.getText().equals("Username or email \r\r") ||
+                new String(txt2.getPassword()).isEmpty() ||
+                new String(txt2.getPassword()).equals("Password \r\r")) {
+            CustomComponents.CustomDialog error = new CustomComponents.CustomDialog(parent,
+                    merriweather, 0);
+            error.show_dialog("Error", "Details must not be empty!",
+                    "Ok", null, null, null);
+        } else if (txt1.getText().contains(" ") || new String(txt2.getPassword()).contains(" ")) {
+            CustomComponents.CustomDialog error = new CustomComponents.CustomDialog(parent,
+                    merriweather, 0);
+            error.show_dialog("Error", "Details must not contain spaces!",
+                    "Ok", null, null, null);
+        } else if (!User.usernameChecker(txt1.getText(), Main.userdata_file)) {
+            List<User> allUser = User.listAllUser(Main.userdata_file);
+            boolean correct = false;
+            String AccType = "";
+            for (User user : allUser) {
+                if (Objects.equals(user.Username, txt1.getText()) &&
+                        Objects.equals(user.Password, new String(txt2.getPassword()))) {
+                    correct = true;
+                    AccType = user.AccType;
+                    break;
+                }
+            }
+            if (correct) {
+                switch (AccType) {
+                    case "Administrator" -> Main.indicator = 1;
+                    case "Sales Manager" -> Main.indicator = 2;
+                    case "Purchase Manager" -> Main.indicator = 3;
+                    case "Inventory Manager" -> Main.indicator = 4;
+                    case "Finance Manager" -> Main.indicator = 5;
+                }
+                if (check.isSelected()) {
+                    Buffer logged_in = null;
+                    for (User user : allUser) {
+                        if (Objects.equals(user.Username, txt1.getText()) &&
+                                Objects.equals(user.Password, new String(txt2.getPassword()))) {
+                            logged_in = new Buffer(user.UserID, user.Username, user.Password, user.FullName,
+                                    user.Email, user.Phone, user.AccType, user.DateOfRegis, 1);
+                            break;
+                        }
+                    }
+                    if (logged_in != null) {
+                        User.modifyUser(logged_in.UserID, logged_in, Main.userdata_file);
+                    }
+                }
+                Main.PageChanger(parent);
+            } else {
+                CustomComponents.CustomDialog error = new CustomComponents.CustomDialog(parent,
+                        merriweather, 0);
+                error.show_dialog("Error", "Username or password is incorrect!",
+                        "Ok", null, null, null);
+            }
+        } else {
+            CustomComponents.CustomDialog error = new CustomComponents.CustomDialog(parent,
+                    merriweather, 0);
+            error.show_dialog("Error", "Username or password is incorrect!",
+                    "Ok", null, null, null);
+        }
+    }
+
+    public static void LoginRemembered() {
+        User logged_in = User.RememberedUser(Main.userdata_file);
+        String AccType = logged_in.AccType;
+        switch (AccType) {
+            case "Administrator" -> Main.indicator = 1;
+            case "Sales Manager" -> Main.indicator = 2;
+            case "Purchase Manager" -> Main.indicator = 3;
+            case "Inventory Manager" -> Main.indicator = 4;
+            case "Finance Manager" -> Main.indicator = 5;
+        }
+        Main.PageChanger(parent);
+    }
+
     public static void UpdateComponentSize(int parent_width, int parent_height) {
         background.updateSize(parent_width, parent_height);
         outer_grid.revalidate();
