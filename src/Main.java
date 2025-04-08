@@ -45,7 +45,7 @@ public class Main {
             main_frame.setIconImage(icon);
 
             SignIn.SignInLoader(main_frame, merriweather, boldonse);
-            PageChanger(main_frame);
+            PageChanger(main_frame, merriweather, boldonse);
 
             main_frame.addComponentListener(new ComponentAdapter() {
                 @Override
@@ -66,59 +66,27 @@ public class Main {
         });
     }
 
-    public static void PageChanger(JFrame parent) {
+    public static void PageChanger(JFrame parent, Font merriweather, Font boldonse) {
         switch (indicator) {
 //    Please indicate the relation of the indicator value and specific java class:
 //    0 -> Sign In Page
-//    1 -> Administrator Home Page
-//    2 -> Sales Manager Home Page
-//    3 -> Purchase Manager Home Page
-//    4 -> Inventory Manager Home Page
-//    5 -> Finance Manager Home Page
+//    1 -> Home Page
             case 0:
                 parent.getContentPane().removeAll();
-                parent.revalidate();
-                parent.repaint();
                 SignIn.ShowPage();
                 if (User.RememberedUser(userdata_file) != null) {
                     SignIn.LoginRemembered();
                     break;
                 }
+                parent.revalidate();
+                parent.repaint();
                 parent.setVisible(true);
                 break;
             case 1:
                 parent.getContentPane().removeAll();
+                Home.ShowPage();
                 parent.revalidate();
                 parent.repaint();
-                Admin.Print();
-                parent.setVisible(true);
-                break;
-            case 2:
-                parent.getContentPane().removeAll();
-                parent.revalidate();
-                parent.repaint();
-                SalesMgr.Print();
-                parent.setVisible(true);
-                break;
-            case 3:
-                parent.getContentPane().removeAll();
-                parent.revalidate();
-                parent.repaint();
-                PurchaseMgr.Print();
-                parent.setVisible(true);
-                break;
-            case 4:
-                parent.getContentPane().removeAll();
-                parent.revalidate();
-                parent.repaint();
-                InventoryMgr.Print();
-                parent.setVisible(true);
-                break;
-            case 5:
-                parent.getContentPane().removeAll();
-                parent.revalidate();
-                parent.repaint();
-                FinanceMgr.Print();
                 parent.setVisible(true);
                 break;
         }

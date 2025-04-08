@@ -9,8 +9,8 @@ import java.util.Objects;
 
 public class SignIn {
     private static JFrame parent;
-    private static BufferedImage bg, logo, user_icon, lock_icon, show_icon, hidden_icon;
     private static Font merriweather, boldonse;
+    private static BufferedImage bg, logo, user_icon, lock_icon, show_icon, hidden_icon;
     private static CustomComponents.ImagePanel background;
     private static CustomComponents.ImageCell logo_cell, txt_icon1, txt_icon2;
     private static JLabel logo_text1, logo_text2, right_title;
@@ -63,7 +63,6 @@ public class SignIn {
                 + "<b>Omega Wholesale Sdn Bhd (OWSB)</b></div></html>");
         logo_text1.setFont(merriweather);
         outer_grid.add(logo_text1, gbc_outer);
-
         gbc_outer.gridy = 3;
         gbc_outer.weighty = 0.7;
         logo_text2 = new JLabel("<html><div style='color:#383546;'>"
@@ -211,7 +210,7 @@ public class SignIn {
         button.addActionListener(_ -> Checker());
         right_grid.add(button, gbc_inner);
         outer_grid.add(right_panel, gbc_outer);
-        background.add(outer_grid, gbc_outer);
+        background.add(outer_grid);
         parent.setContentPane(background);
         SwingUtilities.invokeLater(logo_cell::requestFocusInWindow);
     }
@@ -249,21 +248,20 @@ public class SignIn {
                     case "Inventory Manager" -> Main.indicator = 4;
                     case "Finance Manager" -> Main.indicator = 5;
                 }
-                if (check.isSelected()) {
-                    Buffer logged_in = null;
-                    for (User user : allUser) {
-                        if (Objects.equals(user.Username, txt1.getText().toLowerCase()) &&
-                                Objects.equals(user.Password, new String(txt2.getPassword()))) {
-                            logged_in = new Buffer(user.UserID, user.Username, user.Password, user.FullName,
-                                    user.Email, user.Phone, user.AccType, user.DateOfRegis, 1);
-                            break;
-                        }
-                    }
-                    if (logged_in != null) {
-                        User.modifyUser(logged_in.UserID, logged_in, Main.userdata_file);
+                Buffer logged_in = null;
+                for (User user : allUser) {
+                    if (Objects.equals(user.Username, txt1.getText().toLowerCase()) &&
+                            Objects.equals(user.Password, new String(txt2.getPassword()))) {
+                        logged_in = new Buffer(user.UserID, user.Username, user.Password, user.FullName,
+                                user.Email, user.Phone, user.AccType, user.DateOfRegis, 1);
+                        break;
                     }
                 }
-                Main.PageChanger(parent);
+                if (check.isSelected() && logged_in != null) {
+                        User.modifyUser(logged_in.UserID, logged_in, Main.userdata_file);
+                }
+                Home.HomeLoader(parent, merriweather, boldonse, logged_in);
+                Main.PageChanger(parent, merriweather, boldonse);
             } else {
                 CustomComponents.CustomDialog error = new CustomComponents.CustomDialog(parent,
                         merriweather, 0);
@@ -279,7 +277,9 @@ public class SignIn {
     }
 
     public static void LoginRemembered() {
-        User logged_in = User.RememberedUser(Main.userdata_file);
+        User user = User.RememberedUser(Main.userdata_file);
+        Buffer logged_in = new Buffer(user.UserID, user.Username, user.Password, user.FullName,
+                user.Email, user.Phone, user.AccType, user.DateOfRegis, 1);
         String AccType = logged_in.AccType;
         switch (AccType) {
             case "Administrator" -> Main.indicator = 1;
@@ -288,7 +288,8 @@ public class SignIn {
             case "Inventory Manager" -> Main.indicator = 4;
             case "Finance Manager" -> Main.indicator = 5;
         }
-        Main.PageChanger(parent);
+        Home.HomeLoader(parent, merriweather, boldonse, logged_in);
+        Main.PageChanger(parent, merriweather, boldonse);
     }
 
     public static void UpdateComponentSize(int parent_width, int parent_height) {

@@ -774,4 +774,85 @@ public class CustomComponents {
             dialog.setVisible(true);
         }
     }
+
+    public static class CustomProfileIcon implements Icon {
+        private final int size;
+        private final boolean isHover;
+        private final String AccType;
+        private final Font font;
+
+        public CustomProfileIcon(int size, boolean isHover, String AccType, Font font) {
+            this.size = size;
+            this.isHover = isHover;
+            this.AccType = AccType;
+            this.font = font;
+        }
+
+        @Override
+        public int getIconWidth() {
+            return size;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return size;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            if (AccType.equals("Administrator")) {
+                if (!isHover) {
+                    g2d.setColor(new Color(56, 53, 70));
+                } else {
+                    g2d.setColor(new Color(73, 69, 87));
+                }
+            } else if (AccType.equals("Sales Manager")) {
+                if (!isHover) {
+                    g2d.setColor(new Color(212, 87, 132));
+                } else {
+                    g2d.setColor(new Color(225, 108, 150));
+                }
+            } else if (AccType.equals("Purchase Manager")) {
+                if (!isHover) {
+                    g2d.setColor(new Color(244, 156, 187));
+                } else {
+                    g2d.setColor(new Color(255, 184, 211));
+                }
+            } else if (AccType.equals("Inventory Manager")) {
+                if (!isHover) {
+                    g2d.setColor(new Color(255, 191, 217));
+                } else {
+                    g2d.setColor(new Color(255, 222, 237));
+                }
+            } else {
+                if (!isHover) {
+                    g2d.setColor(new Color(239, 239, 239));
+                } else {
+                    g2d.setColor(new Color(249, 249, 249));
+                }
+            }
+            g2d.fillOval(x, y, size, size);
+
+            g2d.setColor(new Color(56, 53, 70));
+            if (AccType.equals("Administrator") || AccType.equals("Sales Manager")) {
+                g2d.setColor(Color.WHITE);
+            }
+            Font font_resize = font.deriveFont(Font.BOLD, size * 0.6f);
+            g2d.setFont(font_resize);
+
+            FontMetrics fm = g2d.getFontMetrics();
+            int textWidth = fm.stringWidth(String.valueOf(AccType.charAt(0)));
+            int textHeight = fm.getAscent();
+
+            int textX = x + (size - textWidth) / 2;
+            int textY = y + (size + textHeight) / 2;
+
+            g2d.drawString(String.valueOf(AccType.charAt(0)), textX, textY);
+
+            g2d.dispose();
+        }
+    }
 }
