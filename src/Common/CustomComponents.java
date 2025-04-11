@@ -1,11 +1,15 @@
+package Common;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.GeneralPath;
+import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 public class CustomComponents {
     public static class ImagePanel extends JPanel {
@@ -30,10 +34,6 @@ public class CustomComponents {
             return grid;
         }
 
-        public double getRatio() {
-            return ratio;
-        }
-
         public void updateSize(int parent_width, int parent_height) {
             if (image == null) return;
             int new_width = parent_width;
@@ -56,6 +56,7 @@ public class CustomComponents {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             if (image != null) {
+                Graphics2D g2d = (Graphics2D) g.create();
                 int panel_width = getWidth();
                 int panel_height = getHeight();
 
@@ -71,7 +72,119 @@ public class CustomComponents {
                 int y = (panel_height - new_height) / 2;
 
                 g.drawImage(image, x, y, new_width, new_height, this);
+                drawOuterGlow(g2d, x, y, new_width, new_height, panel_width, panel_height);
             }
+        }
+    }
+
+    public static class ColorPanel extends JPanel {
+        private final Color color;
+        private final double ratio;
+        private final JPanel grid;
+
+        public ColorPanel(Color color, double ratio) {
+            this.color = color;
+            this.ratio = ratio;
+            setLayout(null);
+            grid = new JPanel(new GridBagLayout());
+            grid.setOpaque(false);
+            add(grid);
+        }
+
+        public JPanel getGridPanel() {
+            return grid;
+        }
+
+        public void updateSize(int parent_width, int parent_height) {
+            int new_width = parent_width;
+            int new_height = (int) (parent_width / ratio);
+
+            if (new_height > parent_height) {
+                new_height = parent_height;
+                new_width = (int) (parent_height * ratio);
+            }
+
+            int x = (getWidth() - new_width) / 2;
+            int y = (getHeight() - new_height) / 2;
+
+            grid.setBounds(x, y, new_width, new_height);
+            grid.revalidate();
+            repaint();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g.create();
+            int panel_width = getWidth();
+            int panel_height = getHeight();
+
+            int new_width = panel_width;
+            int new_height = (int) (panel_width / ratio);
+
+            if (new_height > panel_height) {
+                new_height = panel_height;
+                new_width = (int) (panel_height * ratio);
+            }
+
+            int x = (panel_width - new_width) / 2;
+            int y = (panel_height - new_height) / 2;
+
+            g.setColor(color);
+            g.fillRect(x, y, new_width, new_height);
+            drawOuterGlow(g2d, x, y, new_width, new_height, panel_width, panel_height);
+        }
+    }
+
+    private static void drawOuterGlow(Graphics2D g2d, int x, int y, int width, int height, int panelWidth, int panelHeight) {
+        int glowSize = 8;
+        Color transparent = new Color(0, 0, 0, 0);
+        Color glowColor = new Color(0, 0, 0, 60);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        if (x > 0) {
+            LinearGradientPaint leftPaint = new LinearGradientPaint(
+                    new Point2D.Double(x - glowSize, 0),
+                    new Point2D.Double(x, 0),
+                    new float[]{0f, 1f},
+                    new Color[]{transparent, glowColor}
+            );
+            g2d.setPaint(leftPaint);
+            g2d.fillRect(Math.max(0, x - glowSize), y, glowSize, height);
+        }
+        if (x + width < panelWidth) {
+            LinearGradientPaint rightPaint = new LinearGradientPaint(
+                    new Point2D.Double(x + width, 0),
+                    new Point2D.Double(x + width + glowSize, 0),
+                    new float[]{0f, 1f},
+                    new Color[]{glowColor, transparent}
+            );
+            g2d.setPaint(rightPaint);
+            g2d.fillRect(x + width, y, glowSize, height);
+        }
+        if (y > 0) {
+            int topGlowY = Math.max(0, y - glowSize);
+            int topGlowHeight = y - topGlowY;
+            if (topGlowHeight > 0) {
+                LinearGradientPaint topPaint = new LinearGradientPaint(
+                        new Point2D.Double(0, topGlowY),
+                        new Point2D.Double(0, y),
+                        new float[]{0f, 1f},
+                        new Color[]{transparent, glowColor}
+                );
+                g2d.setPaint(topPaint);
+                g2d.fillRect(x, topGlowY, width, topGlowHeight);
+            }
+        }
+        if (y + height < panelHeight) {
+            LinearGradientPaint bottomPaint = new LinearGradientPaint(
+                    new Point2D.Double(0, y + height),
+                    new Point2D.Double(0, y + height + glowSize),
+                    new float[]{0f, 1f},
+                    new Color[]{glowColor, transparent}
+            );
+            g2d.setPaint(bottomPaint);
+            g2d.fillRect(x, y + height, width, glowSize);
         }
     }
 
@@ -174,7 +287,13 @@ public class CustomComponents {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+            g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+            g2.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
             if (shadow_factor != 0) {
                 int shadowSize = getHeight() / 80;
@@ -203,6 +322,7 @@ public class CustomComponents {
             g2.dispose();
         }
     }
+
 
     public static class EmptyTextField extends JTextField {
         private final String placeholder;
@@ -354,13 +474,13 @@ public class CustomComponents {
         private final Color background;
         private final Color normal, hover, follow, t_normal, t_hover;
         private final Font font;
-        private double c_radius;
         private int radius, t_size;
         private double r;
         private Timer timer;
         private boolean hovering;
         private final boolean animated, image_factor;
         private final int align_factor;
+        private int size_if_need1, size_if_need2;
         private double size_factor, ratio;
         private BufferedImage image;
         private boolean istate = true;
@@ -368,7 +488,7 @@ public class CustomComponents {
         public CustomButton(String text, Font font, Color t_normal, Color t_hover,
                             Color normal, Color hover, Color follow, int radius, int t_size,
                             Color background, boolean animated, int align_factor, boolean image_factor,
-                            BufferedImage image, double size_factor) {
+                            BufferedImage image, double size_factor, int size_if_need1, int size_if_need2) {
             super(text);
             this.font = font;
             this.normal = normal;
@@ -379,12 +499,13 @@ public class CustomComponents {
             this.radius = radius;
             this.t_size = t_size;
             this.background = background;
-            this.c_radius = (double) radius / 2;
             this.animated = animated;
             this.align_factor = align_factor;
             this.image_factor = image_factor;
             this.image = image;
             this.size_factor = size_factor;
+            this.size_if_need1 = size_if_need1;
+            this.size_if_need2 = size_if_need2;
             if (image != null){
                 int img_width = image.getWidth(null);
                 int img_height = image.getHeight(null);
@@ -423,15 +544,15 @@ public class CustomComponents {
         public void UpdateCustomButton(int radius, int t_size, BufferedImage image, double size_factor) {
             this.istate = !istate;
             this.radius = radius;
-            this.c_radius = (double) radius / 2;
             this.t_size = t_size;
             this.image = image;
             this.size_factor = size_factor;
-            if (image != null){
-                int img_width = image.getWidth(null);
-                int img_height = image.getHeight(null);
-                ratio = (double) img_width / img_height;
-            }
+            repaint();
+        }
+
+        public void UpdateSize(int size_if_need1, int size_if_need2) {
+            this.size_if_need1 = size_if_need1;
+            this.size_if_need2 = size_if_need2;
             repaint();
         }
 
@@ -465,12 +586,15 @@ public class CustomComponents {
             int width = getWidth();
             int height = getHeight();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
             if (!image_factor){
                 g2.setColor(background);
                 g2.fillRect(0, 0, getWidth(), getHeight());
 
                 if (animated) {
+                    g2.setClip(new RoundRectangle2D.Double(0, 0, width, height, radius, radius));
                     g2.setColor(normal);
                     g2.fillRoundRect(0, 0, width, height, radius, radius);
                     if (r > 0) {
@@ -483,114 +607,6 @@ public class CustomComponents {
                         x = (int) ((double) width / 2 - r / 2);
                         y = (int) (-r * 1.55 / 2);
                         g2.fillOval(x, y, (int) r, (int) r);
-
-                        GeneralPath path = new GeneralPath();
-                        path.moveTo(-1, 0);
-                        path.lineTo(c_radius, 0);
-                        path.curveTo(
-                                (float) c_radius * 11 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)),
-                                (float) c_radius * 10 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)),
-                                (float) c_radius * 9 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)));
-                        path.curveTo((float) c_radius * 8 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)),
-                                (float) c_radius * 7 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)),
-                                (float) c_radius * 6 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)));
-                        path.curveTo((float) c_radius * 5 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)),
-                                (float) c_radius * 4 / 12 - 1, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)),
-                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)) - 1, (float) c_radius * 4 / 12);
-                        path.curveTo(
-                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)) - 1, (float) c_radius * 5 / 12,
-                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)) - 1, (float) c_radius * 6 / 12,
-                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)) - 1, (float) c_radius * 7 / 12);
-                        path.curveTo(c_radius - Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)) - 1, (float) c_radius * 8 / 12,
-                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)) - 1, (float) c_radius * 9 / 12,
-                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)) - 1, (float) c_radius * 10 / 12);
-                        path.curveTo(c_radius - Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)) - 1, (float) c_radius * 11 / 12,
-                                -1, (float) c_radius,
-                                -1, (float) c_radius);
-                        path.closePath();
-                        g2.setColor(background);
-                        g2.fill(path);
-
-                        path = new GeneralPath();
-                        path.moveTo((float) (width), 0);
-                        path.lineTo(width - c_radius, 0);
-                        path.curveTo(
-                                width - (float) c_radius * 11 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)),
-                                width - (float) c_radius * 10 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)),
-                                width - (float) c_radius * 9 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)));
-                        path.curveTo(width - (float) c_radius * 8 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)),
-                                width - (float) c_radius * 7 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)),
-                                width - (float) c_radius * 6 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)));
-                        path.curveTo(width - (float) c_radius * 5 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)),
-                                width - (float) c_radius * 4 / 12, c_radius - Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)),
-                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)), (float) c_radius * 4 / 12);
-                        path.curveTo(
-                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)), (float) c_radius * 5 / 12,
-                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)), (float) c_radius * 6 / 12,
-                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)), (float) c_radius * 7 / 12);
-                        path.curveTo(width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)), (float) c_radius * 8 / 12,
-                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)), (float) c_radius * 9 / 12,
-                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)), (float) c_radius * 10 / 12);
-                        path.curveTo(width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)), (float) c_radius * 11 / 12,
-                                width, (float) c_radius,
-                                width, (float) c_radius);
-                        path.closePath();
-                        g2.setColor(background);
-                        g2.fill(path);
-
-                        path = new GeneralPath();
-                        path.moveTo(-1, height + 3);
-                        path.lineTo(c_radius, height + 3);
-                        path.curveTo(
-                                (float) c_radius * 11 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)),
-                                (float) c_radius * 10 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)),
-                                (float) c_radius * 9 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)));
-                        path.curveTo((float) c_radius * 8 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)),
-                                (float) c_radius * 7 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)),
-                                (float) c_radius * 6 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)));
-                        path.curveTo((float) c_radius * 5 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)),
-                                (float) c_radius * 4 / 12 - 1, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)),
-                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)) - 1, height - (float) c_radius * 4 / 12);
-                        path.curveTo(
-                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)) - 1, height - (float) c_radius * 5 / 12,
-                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)) - 1, height - (float) c_radius * 6 / 12,
-                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)) - 1, height - (float) c_radius * 7 / 12);
-                        path.curveTo(c_radius - Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)) - 1, height - (float) c_radius * 8 / 12,
-                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)) - 1, height - (float) c_radius * 9 / 12,
-                                c_radius - Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)) - 1, height - (float) c_radius * 10 / 12);
-                        path.curveTo(c_radius - Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)) - 1, height - (float) c_radius * 11 / 12,
-                                -1, height + 3,
-                                -1, height + 3);
-                        path.closePath();
-                        g2.setColor(background);
-                        g2.fill(path);
-
-                        path = new GeneralPath();
-                        path.moveTo((float) (width), height + 3);
-                        path.lineTo(width - c_radius, height + 3);
-                        path.curveTo(
-                                width - (float) c_radius * 11 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)),
-                                width - (float) c_radius * 10 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)),
-                                width - (float) c_radius * 9 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)));
-                        path.curveTo(width - (float) c_radius * 8 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)),
-                                width - (float) c_radius * 7 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)),
-                                width - (float) c_radius * 6 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)));
-                        path.curveTo(width - (float) c_radius * 5 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)),
-                                width - (float) c_radius * 4 / 12, height - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)),
-                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 80 / 144)), height - (float) c_radius * 4 / 12);
-                        path.curveTo(
-                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 95 / 144)), height - (float) c_radius * 5 / 12,
-                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 108 / 144)), height - (float) c_radius * 6 / 12,
-                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 119 / 144)), height - (float) c_radius * 7 / 12);
-                        path.curveTo(width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 128 / 144)), height - (float) c_radius * 8 / 12,
-                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 135 / 144)), height - (float) c_radius * 9 / 12,
-                                width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 140 / 144)), height - (float) c_radius * 10 / 12);
-                        path.curveTo(width - c_radius + Math.sqrt((c_radius * c_radius) * ((double) 143 / 144)), height - (float) c_radius * 11 / 12,
-                                width, height + 3,
-                                width, height + 3);
-                        path.closePath();
-                        g2.setColor(background);
-                        g2.fill(path);
                     }
                 } else {
                     g2.setColor(hovering ? hover : normal);
@@ -632,14 +648,12 @@ public class CustomComponents {
                         break;
                 }
             } else {
+                setSize(size_if_need1, size_if_need2);
                 g2.setColor(background);
-                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.fillRect(0, 0, size_if_need1, size_if_need2);
 
-                int panel_width = getWidth();
-                int panel_height = getHeight();
-
-                int max_width = (int) (panel_width * size_factor);
-                int max_height = (int) (panel_height * size_factor);
+                int max_width = (int) (size_if_need1 * size_factor);
+                int max_height = (int) (size_if_need2 * size_factor);
 
                 int new_width = max_width;
                 int new_height = (int) (max_width / ratio);
@@ -649,8 +663,40 @@ public class CustomComponents {
                     new_width = (int) (max_height * ratio);
                 }
 
-                int x = (width - new_width) / 2;
-                int y = (height - new_height) / 2;
+                int x = 0, y= 0;
+
+                switch (align_factor) {
+                    case 1:
+                        break;
+                    case 2:
+                        x = (size_if_need1 - new_width) / 2;
+                        break;
+                    case 3:
+                        x = size_if_need1 - new_width;
+                        break;
+                    case 4:
+                        y = (size_if_need2 - new_height) / 2;
+                        break;
+                    case 5:
+                        x = (size_if_need1 - new_width) / 2;
+                        y = (size_if_need2 - new_height) / 2;
+                        break;
+                    case 6:
+                        x = size_if_need1 - new_width;
+                        y = (size_if_need2 - new_height) / 2;
+                        break;
+                    case 7:
+                        y = size_if_need2 - new_height;
+                        break;
+                    case 8:
+                        x = (size_if_need1 - new_width) / 2;
+                        y = size_if_need2 - new_height;
+                        break;
+                    case 9:
+                        x = size_if_need1 - new_width;
+                        y = size_if_need2 - new_height;
+                        break;
+                }
                 g.drawImage(image, x, y, new_width, new_height, this);
             }
             g2.dispose();
@@ -776,7 +822,7 @@ public class CustomComponents {
     }
 
     public static class CustomProfileIcon implements Icon {
-        private final int size;
+        private int size;
         private final boolean isHover;
         private final String AccType;
         private final Font font;
@@ -786,6 +832,10 @@ public class CustomComponents {
             this.isHover = isHover;
             this.AccType = AccType;
             this.font = font;
+        }
+
+        public void UpdateSize(int size) {
+            this.size = size;
         }
 
         @Override
@@ -803,35 +853,41 @@ public class CustomComponents {
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            if (AccType.equals("Administrator")) {
-                if (!isHover) {
-                    g2d.setColor(new Color(56, 53, 70));
-                } else {
-                    g2d.setColor(new Color(73, 69, 87));
+            switch (AccType) {
+                case "Administrator" -> {
+                    if (!isHover) {
+                        g2d.setColor(new Color(56, 53, 70));
+                    } else {
+                        g2d.setColor(new Color(73, 69, 87));
+                    }
                 }
-            } else if (AccType.equals("Sales Manager")) {
-                if (!isHover) {
-                    g2d.setColor(new Color(212, 87, 132));
-                } else {
-                    g2d.setColor(new Color(225, 108, 150));
+                case "Sales Manager" -> {
+                    if (!isHover) {
+                        g2d.setColor(new Color(212, 87, 132));
+                    } else {
+                        g2d.setColor(new Color(225, 108, 150));
+                    }
                 }
-            } else if (AccType.equals("Purchase Manager")) {
-                if (!isHover) {
-                    g2d.setColor(new Color(244, 156, 187));
-                } else {
-                    g2d.setColor(new Color(255, 184, 211));
+                case "Purchase Manager" -> {
+                    if (!isHover) {
+                        g2d.setColor(new Color(244, 156, 187));
+                    } else {
+                        g2d.setColor(new Color(255, 184, 211));
+                    }
                 }
-            } else if (AccType.equals("Inventory Manager")) {
-                if (!isHover) {
-                    g2d.setColor(new Color(255, 191, 217));
-                } else {
-                    g2d.setColor(new Color(255, 222, 237));
+                case "Inventory Manager" -> {
+                    if (!isHover) {
+                        g2d.setColor(new Color(255, 191, 217));
+                    } else {
+                        g2d.setColor(new Color(255, 222, 237));
+                    }
                 }
-            } else {
-                if (!isHover) {
-                    g2d.setColor(new Color(239, 239, 239));
-                } else {
-                    g2d.setColor(new Color(249, 249, 249));
+                default -> {
+                    if (!isHover) {
+                        g2d.setColor(new Color(239, 239, 239));
+                    } else {
+                        g2d.setColor(new Color(249, 249, 249));
+                    }
                 }
             }
             g2d.fillOval(x, y, size, size);
@@ -840,12 +896,12 @@ public class CustomComponents {
             if (AccType.equals("Administrator") || AccType.equals("Sales Manager")) {
                 g2d.setColor(Color.WHITE);
             }
-            Font font_resize = font.deriveFont(Font.BOLD, size * 0.6f);
+            Font font_resize = font.deriveFont(size * 0.4f);
             g2d.setFont(font_resize);
 
             FontMetrics fm = g2d.getFontMetrics();
             int textWidth = fm.stringWidth(String.valueOf(AccType.charAt(0)));
-            int textHeight = fm.getAscent();
+            int textHeight = fm.getAscent() - fm.getDescent();
 
             int textX = x + (size - textWidth) / 2;
             int textY = y + (size + textHeight) / 2;
@@ -853,6 +909,41 @@ public class CustomComponents {
             g2d.drawString(String.valueOf(AccType.charAt(0)), textX, textY);
 
             g2d.dispose();
+        }
+    }
+
+    public static class CustomPopupMenu extends JPopupMenu {
+        private final CustomButton base;
+
+        public CustomPopupMenu(CustomButton base, List<String> options, List<ActionListener> actions,
+                Font font, int alignment_factor) {
+            this.base = base;
+
+            for (int i = 0; i < options.size(); i++) {
+                String label = options.get(i);
+                ActionListener action = actions.get(i);
+
+                JMenuItem item = new JMenuItem(label);
+                item.setFont(font);
+                item.addActionListener(action);
+                add(item);
+            }
+
+            base.addActionListener(_ -> {
+                    if (base.ReturnImageState()) {
+                        showRelativeToBase(alignment_factor);
+                    } else {
+                        this.setVisible(false);
+                    }
+            });
+        }
+
+        private void showRelativeToBase(int alignment_factor) {
+            int x = 0;
+            if (alignment_factor == 1) {
+                x = base.getWidth() - this.getPreferredSize().width;
+            }
+            this.show(base, x, base.getHeight());
         }
     }
 }

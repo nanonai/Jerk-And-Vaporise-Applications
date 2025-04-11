@@ -1,9 +1,11 @@
+package Common;
+
 import java.time.LocalDate;
 
 public class Buffer {
-    String UserID, Username, Password, FullName, Email, AccType;
-    int Phone, RememberMe;
-    LocalDate DateOfRegis;
+    public String UserID, Username, Password, FullName, Email, AccType;
+    public int Phone, RememberMe;
+    public LocalDate DateOfRegis;
 
     public Buffer(String UserID, String Username, String Password, String FullName,
                   String Email, int Phone, String AccType, LocalDate DateOfRegis,

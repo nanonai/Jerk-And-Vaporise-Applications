@@ -1,3 +1,4 @@
+package Common;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -22,7 +23,7 @@ public class SignIn {
     private static CustomComponents.CustomButton hidden, button;
     private static JCheckBox check;
 
-    public static void SignInLoader(JFrame parent, Font merriweather, Font boldonse) {
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse) {
         try {
             bg = ImageIO.read(new File("images/login_bg.jpg"));
             logo = ImageIO.read(new File("images/logo_original.png"));
@@ -148,7 +149,7 @@ public class SignIn {
         txt_grid2.add(txt_icon2, gbc_inner);
 
         gbc_inner.gridx = 1;
-        gbc_inner.weightx = 5.6;
+        gbc_inner.weightx = 8.6;
         txt2 = new CustomComponents.EmptyPasswordField(
                 7, "Password \r\r", new Color(178, 181, 180));
         txt2.setEchoChar((char) 0);
@@ -156,17 +157,19 @@ public class SignIn {
         txt_grid2.add(txt2, gbc_inner);
 
         gbc_inner.gridx = 2;
-        gbc_inner.weightx = 4;
+        gbc_inner.weightx = 1;
         hidden = new CustomComponents.CustomButton("", merriweather,
                 Main.transparent, Main.transparent, Main.transparent, Main.transparent, Main.transparent,
-                30, 0, Main.transparent, false, 5,
-                true, hidden_icon, 0.4);
+                0, 0, Main.transparent, false, 5,
+                true, hidden_icon, 0.5,
+                txt_grid2.getHeight(), txt_grid2.getHeight());
         hidden.addActionListener(_ -> {
             if (hidden.ReturnImageState()) {
-                hidden.UpdateCustomButton(30, 0, show_icon, 0.35);
+                hidden.UpdateCustomButton(30, 0, show_icon, 0.5);
             } else {
-                hidden.UpdateCustomButton(30, 0, hidden_icon, 0.4);
+                hidden.UpdateCustomButton(30, 0, hidden_icon, 0.5);
             }
+            hidden.UpdateSize(txt_grid2.getHeight(), txt_grid2.getHeight());
             txt2.UpdateStatus(hidden.ReturnImageState());
             txt2.repaint();
         });
@@ -184,8 +187,8 @@ public class SignIn {
 
         gbc_inner.gridy = 0;
         gbc_inner.weightx = 2;
-        check = new JCheckBox("<html><div style='color:#383546;'>"
-                + "<pre><b> Remember me</b></pre></div></html>");
+        check = new JCheckBox("<html><div style='color:#383546; padding-left: 6px;'>"
+                + "<b>Remember me</b></div></html>");
         check.setBorder(null);
         check.setFocusPainted(false);
         check.setOpaque(false);
@@ -206,7 +209,7 @@ public class SignIn {
                 "Sign In", merriweather, Color.BLACK, Color.WHITE,
                 new Color(244, 156, 187), new Color(56, 53, 70),
                 new Color(161, 111, 136), 30, 14, Color.WHITE,
-                true, 5, false, null, 0);
+                true, 5, false, null, 0, 0, 0);
         button.addActionListener(_ -> Checker());
         right_grid.add(button, gbc_inner);
         outer_grid.add(right_panel, gbc_outer);
@@ -228,12 +231,14 @@ public class SignIn {
                     merriweather, 0);
             error.show_dialog("Error", "Details must not contain spaces!",
                     "Ok", null, null, null);
-        } else if (!User.usernameChecker(txt1.getText().toLowerCase(), Main.userdata_file)) {
+        } else if (!User.usernameChecker(txt1.getText().toLowerCase(), Main.userdata_file) ||
+                !User.emailChecker(txt1.getText(), Main.userdata_file)) {
             List<User> allUser = User.listAllUser(Main.userdata_file);
             boolean correct = false;
             String AccType = "";
             for (User user : allUser) {
-                if (Objects.equals(user.Username, txt1.getText().toLowerCase()) &&
+                if ((Objects.equals(user.Username, txt1.getText().toLowerCase()) ||
+                        Objects.equals(user.Email, txt1.getText())) &&
                         Objects.equals(user.Password, new String(txt2.getPassword()))) {
                     correct = true;
                     AccType = user.AccType;
@@ -241,17 +246,18 @@ public class SignIn {
                 }
             }
             if (correct) {
+                Main.indicator = 1;
                 switch (AccType) {
-                    case "Administrator" -> Main.indicator = 1;
-                    case "Sales Manager" -> Main.indicator = 2;
-                    case "Purchase Manager" -> Main.indicator = 3;
-                    case "Inventory Manager" -> Main.indicator = 4;
-                    case "Finance Manager" -> Main.indicator = 5;
+                    case "Administrator" -> Home.indicator = 0;
+                    case "Sales Manager" -> Home.indicator = 1;
+                    case "Purchase Manager" -> Home.indicator = 2;
+                    case "Inventory Manager" -> Home.indicator = 3;
+                    case "Finance Manager" -> Home.indicator = 4;
                 }
                 Buffer logged_in = null;
                 for (User user : allUser) {
-                    if (Objects.equals(user.Username, txt1.getText().toLowerCase()) &&
-                            Objects.equals(user.Password, new String(txt2.getPassword()))) {
+                    if (Objects.equals(user.Username, txt1.getText().toLowerCase()) ||
+                            Objects.equals(user.Email, txt1.getText())) {
                         logged_in = new Buffer(user.UserID, user.Username, user.Password, user.FullName,
                                 user.Email, user.Phone, user.AccType, user.DateOfRegis, 1);
                         break;
@@ -260,18 +266,18 @@ public class SignIn {
                 if (check.isSelected() && logged_in != null) {
                         User.modifyUser(logged_in.UserID, logged_in, Main.userdata_file);
                 }
-                Home.HomeLoader(parent, merriweather, boldonse, logged_in);
+                Home.current_user = logged_in;
                 Main.PageChanger(parent, merriweather, boldonse);
             } else {
                 CustomComponents.CustomDialog error = new CustomComponents.CustomDialog(parent,
                         merriweather, 0);
-                error.show_dialog("Error", "Username or password is incorrect!",
+                error.show_dialog("Error", "<html>Username/email or password<br>is incorrect!</html>",
                         "Ok", null, null, null);
             }
         } else {
             CustomComponents.CustomDialog error = new CustomComponents.CustomDialog(parent,
                     merriweather, 0);
-            error.show_dialog("Error", "Username or password is incorrect!",
+            error.show_dialog("Error", "<html>Username/email or password<br>is incorrect!</html>",
                     "Ok", null, null, null);
         }
     }
@@ -281,14 +287,15 @@ public class SignIn {
         Buffer logged_in = new Buffer(user.UserID, user.Username, user.Password, user.FullName,
                 user.Email, user.Phone, user.AccType, user.DateOfRegis, 1);
         String AccType = logged_in.AccType;
+        Main.indicator = 1;
         switch (AccType) {
-            case "Administrator" -> Main.indicator = 1;
-            case "Sales Manager" -> Main.indicator = 2;
-            case "Purchase Manager" -> Main.indicator = 3;
-            case "Inventory Manager" -> Main.indicator = 4;
-            case "Finance Manager" -> Main.indicator = 5;
+            case "Administrator" -> Home.indicator = 0;
+            case "Sales Manager" -> Home.indicator = 1;
+            case "Purchase Manager" -> Home.indicator = 2;
+            case "Inventory Manager" -> Home.indicator = 3;
+            case "Finance Manager" -> Home.indicator = 4;
         }
-        Home.HomeLoader(parent, merriweather, boldonse, logged_in);
+        Home.current_user = logged_in;
         Main.PageChanger(parent, merriweather, boldonse);
     }
 
@@ -312,5 +319,8 @@ public class SignIn {
         button.UpdateCustomButton(parent_height / 10, parent_height / 30, null, 0);
         txt_icon1.repaint();
         txt_icon2.repaint();
+        hidden.UpdateSize(txt_grid2.getHeight(), txt_grid2.getHeight());
+        txt2.UpdateStatus(hidden.ReturnImageState());
+        txt2.repaint();
     }
 }

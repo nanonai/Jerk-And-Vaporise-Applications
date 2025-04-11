@@ -1,3 +1,4 @@
+package Common;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -8,9 +9,9 @@ import java.io.FileWriter;
 import java.util.regex.Pattern;
 
 public class User {
-    String UserID, Username, Password, FullName, Email, AccType;
-    int Phone, RememberMe;
-    LocalDate DateOfRegis;
+    public String UserID, Username, Password, FullName, Email, AccType;
+    public int Phone, RememberMe;
+    public LocalDate DateOfRegis;
     public static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final String EMAIL_REGEX =
             "^(?!\\.)(?!.*\\.\\.)([a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*)"
@@ -109,6 +110,32 @@ public class User {
             }
         }
         return r_user;
+    }
+
+    public static void UnrememberAllUser(String filename) {
+        List<User> allUser = listAllUser(filename);
+        for (User user : allUser) {
+            if (Objects.equals(user.RememberMe, 1)) {
+                user.RememberMe = 0;
+                break;
+            }
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (User user : allUser) {
+                writer.write("UserID:         " + user.UserID + "\n");
+                writer.write("Username:       " + user.Username + "\n");
+                writer.write("Password:       " + user.Password + "\n");
+                writer.write("FullName:       " + user.FullName + "\n");
+                writer.write("Email:          " + user.Email + "\n");
+                writer.write("Phone:          " + user.Phone + "\n");
+                writer.write("AccType:        " + user.AccType + "\n");
+                writer.write("DateOfRegis:    " + user.DateOfRegis + "\n");
+                writer.write("RememberMe:     " + user.RememberMe + "\n");
+                writer.write("~~~~~\n");
+            }
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
     }
 
     public static String idMaker(String AccType, String filename) {

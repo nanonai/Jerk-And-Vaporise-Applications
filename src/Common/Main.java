@@ -1,3 +1,4 @@
+package Common;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -44,15 +45,22 @@ public class Main {
             main_frame.setResizable(true);
             main_frame.setIconImage(icon);
 
-            SignIn.SignInLoader(main_frame, merriweather, boldonse);
+            SignIn.Loader(main_frame, merriweather, boldonse);
+            Home.Loader(main_frame, merriweather, boldonse);
             PageChanger(main_frame, merriweather, boldonse);
 
             main_frame.addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
-                    SignIn.UpdateComponentSize(
-                    main_frame.getContentPane().getWidth(),
-                    main_frame.getContentPane().getHeight());
+                    if (indicator == 0) {
+                        SignIn.UpdateComponentSize(
+                                main_frame.getContentPane().getWidth(),
+                                main_frame.getContentPane().getHeight());
+                    } else if (indicator == 1) {
+                        Home.UpdateComponentSize(
+                                main_frame.getContentPane().getWidth(),
+                                main_frame.getContentPane().getHeight());
+                    }
                 }
             });
 
@@ -73,20 +81,33 @@ public class Main {
 //    1 -> Home Page
             case 0:
                 parent.getContentPane().removeAll();
+                parent.revalidate();
+                parent.repaint();
                 SignIn.ShowPage();
                 if (User.RememberedUser(userdata_file) != null) {
                     SignIn.LoginRemembered();
                     break;
+                } else {
+                    SignIn.UpdateComponentSize(parent.getWidth(), parent.getHeight());
+                    SwingUtilities.invokeLater(() -> {
+                        SignIn.UpdateComponentSize(parent.getWidth(), parent.getHeight());
+                        parent.getContentPane().revalidate();
+                        parent.getContentPane().repaint();
+                    });
                 }
-                parent.revalidate();
-                parent.repaint();
                 parent.setVisible(true);
                 break;
             case 1:
                 parent.getContentPane().removeAll();
-                Home.ShowPage();
                 parent.revalidate();
                 parent.repaint();
+                Home.ShowPage();
+                Home.UpdateComponentSize(parent.getWidth(), parent.getHeight());
+                SwingUtilities.invokeLater(() -> {
+                    Home.UpdateComponentSize(parent.getWidth(), parent.getHeight());
+                    parent.getContentPane().revalidate();
+                    parent.getContentPane().repaint();
+                });
                 parent.setVisible(true);
                 break;
         }
