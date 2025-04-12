@@ -289,11 +289,11 @@ public class SignIn {
         String AccType = logged_in.AccType;
         Main.indicator = 1;
         switch (AccType) {
-            case "Administrator" -> Home.indicator = 0;
-            case "Sales Manager" -> Home.indicator = 1;
-            case "Purchase Manager" -> Home.indicator = 2;
-            case "Inventory Manager" -> Home.indicator = 3;
-            case "Finance Manager" -> Home.indicator = 4;
+            case "Administrator" -> Home.indicator = 1;
+            case "Sales Manager" -> Home.indicator = 2;
+            case "Purchase Manager" -> Home.indicator = 3;
+            case "Inventory Manager" -> Home.indicator = 4;
+            case "Finance Manager" -> Home.indicator = 5;
         }
         Home.current_user = logged_in;
         Main.PageChanger(parent, merriweather, boldonse);

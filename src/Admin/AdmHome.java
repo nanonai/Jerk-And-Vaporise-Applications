@@ -1,19 +1,18 @@
 package Admin;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import Common.*;
-import FinanceMgr.FinanceHome;
-import InventoryMgr.InventoryHome;
-import PurchaseMgr.PurchaseHome;
-import SalesMgr.SalesHome;
 
 public class AdmHome {
     public static int indicator = 0;
@@ -152,6 +151,18 @@ public class AdmHome {
             });
         });
 
+        content.addContainerListener(new ContainerAdapter() {
+            @Override
+            public void componentAdded(ContainerEvent e) {
+                UpdateComponentSize(parent.getWidth(), parent.getHeight());
+            }
+
+            @Override
+            public void componentRemoved(ContainerEvent e) {
+                UpdateComponentSize(parent.getWidth(), parent.getHeight());
+            }
+        });
+
         Profile.Loader(parent, merriweather, boldonse, content, current_user);
         PageChanger();
     }
@@ -167,9 +178,10 @@ public class AdmHome {
             case 0:
                 break;
             case 1:
-//                Profile.ShowPage();
+                Profile.ShowPage();
                 break;
         }
+        UpdateComponentSize(parent.getWidth(), parent.getHeight());
     }
 
     public static void UpdateComponentSize(int parent_width, int parent_height) {
@@ -182,14 +194,20 @@ public class AdmHome {
         int finalBase_size = base_size;
         SwingUtilities.invokeLater(() -> {
             logo_cell.repaint();
-            user_management.UpdateCustomButton(0, (int) (finalBase_size * 1.2), null, 0);
+            user_management.UpdateCustomButton(0, finalBase_size, null, 0);
             title.setFont(boldonse.deriveFont((float)finalBase_size));
             profile.repaint();
             profileIcon1.UpdateSize((int) (finalBase_size * 2.5));
             profileIcon2.UpdateSize((int) (finalBase_size * 2.5));
             profile_drop.UpdateSize(top_bar.getHeight() / 2, top_bar.getHeight());
             profile.setSize(profileIcon1.getIconWidth(), profileIcon1.getIconHeight());
-            profile_drop.repaint();
+            switch (indicator) {
+                case 0:
+                    break;
+                case 1:
+                    Profile.UpdateComponentSize(finalBase_size);
+                    break;
+            }
         });
     }
 }

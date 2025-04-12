@@ -6,6 +6,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.util.List;
 import Common.*;
 
 public class FinanceHome {
+    public static int indicator = 0;
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel side_bar, top_bar, content;
@@ -111,11 +114,13 @@ public class FinanceHome {
         List<String> options = List.of("Check Profile", "Sign Out");
         List<ActionListener> actions = List.of(
                 e -> {
-
+                    FinanceHome.indicator = 1;
+                    PageChanger();
                 },
                 e -> {
                     User.UnrememberAllUser(Main.userdata_file);
                     Main.indicator = 0;
+                    FinanceHome.indicator = 0;
                     Main.PageChanger(parent, merriweather, boldonse);
                 }
         );
@@ -145,6 +150,38 @@ public class FinanceHome {
                 }
             });
         });
+
+        content.addContainerListener(new ContainerAdapter() {
+            @Override
+            public void componentAdded(ContainerEvent e) {
+                UpdateComponentSize(parent.getWidth(), parent.getHeight());
+            }
+
+            @Override
+            public void componentRemoved(ContainerEvent e) {
+                UpdateComponentSize(parent.getWidth(), parent.getHeight());
+            }
+        });
+
+        Profile.Loader(parent, merriweather, boldonse, content, current_user);
+        PageChanger();
+    }
+
+    public static void PageChanger() {
+        content.removeAll();
+        content.revalidate();
+        content.repaint();
+        switch (indicator) {
+//    Please indicate the relation of the indicator value and specific java class:
+//    0 -> Finance Home Welcome Page
+//    1 -> Profile page
+            case 0:
+                break;
+            case 1:
+                Profile.ShowPage();
+                break;
+        }
+        UpdateComponentSize(parent.getWidth(), parent.getHeight());
     }
 
     public static void UpdateComponentSize(int parent_width, int parent_height) {
@@ -157,14 +194,20 @@ public class FinanceHome {
         int finalBase_size = base_size;
         SwingUtilities.invokeLater(() -> {
             logo_cell.repaint();
-            user_management.UpdateCustomButton(0, (int) (finalBase_size * 1.2), null, 0);
+            user_management.UpdateCustomButton(0, finalBase_size, null, 0);
             title.setFont(boldonse.deriveFont((float)finalBase_size));
             profile.repaint();
             profileIcon1.UpdateSize((int) (finalBase_size * 2.5));
             profileIcon2.UpdateSize((int) (finalBase_size * 2.5));
             profile_drop.UpdateSize(top_bar.getHeight() / 2, top_bar.getHeight());
             profile.setSize(profileIcon1.getIconWidth(), profileIcon1.getIconHeight());
-            profile_drop.repaint();
+            switch (indicator) {
+                case 0:
+                    break;
+                case 1:
+                    Profile.UpdateComponentSize(finalBase_size);
+                    break;
+            }
         });
     }
 }
