@@ -884,9 +884,9 @@ public class CustomComponents {
                 }
                 default -> {
                     if (!isHover) {
-                        g2d.setColor(new Color(239, 239, 239));
+                        g2d.setColor(new Color(147, 147, 147));
                     } else {
-                        g2d.setColor(new Color(249, 249, 249));
+                        g2d.setColor(new Color(197, 197, 197));
                     }
                 }
             }

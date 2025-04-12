@@ -92,6 +92,10 @@ public class FinanceHome {
         profile.setFocusPainted(false);
         profile.setPreferredSize(new Dimension(profileIcon1.getIconWidth(), profileIcon1.getIconHeight()));
         profile.setSize(profileIcon1.getIconWidth(), profileIcon1.getIconHeight());
+        profile.addActionListener(_ -> {
+            FinanceHome.indicator = 1;
+            PageChanger();
+        });
         top_bar.add(profile, gbc_top);
 
         gbc_top.gridx = 2;
