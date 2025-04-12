@@ -16,6 +16,7 @@ public class PurchaseHome {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel side_bar, top_bar, content;
+    public static Buffer current_user;
     private static BufferedImage logo, caret_up, caret_down;
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
@@ -25,7 +26,7 @@ public class PurchaseHome {
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel side_bar, JPanel top_bar, JPanel content) {
+                              JPanel side_bar, JPanel top_bar, JPanel content, Buffer current_user) {
         try {
             logo = ImageIO.read(new File("images/logo_sidebar.png"));
             caret_up = ImageIO.read(new File("images/caret_up.png"));
@@ -39,6 +40,7 @@ public class PurchaseHome {
         PurchaseHome.side_bar = side_bar;
         PurchaseHome.top_bar = top_bar;
         PurchaseHome.content = content;
+        PurchaseHome.current_user = current_user;
     }
 
     public static void ShowPage() {

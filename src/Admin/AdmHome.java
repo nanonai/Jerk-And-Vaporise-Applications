@@ -10,11 +10,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import Common.*;
+import FinanceMgr.FinanceHome;
+import InventoryMgr.InventoryHome;
+import PurchaseMgr.PurchaseHome;
+import SalesMgr.SalesHome;
 
 public class AdmHome {
+    public static int indicator = 0;
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel side_bar, top_bar, content;
+    public static Buffer current_user;
     private static BufferedImage logo, caret_up, caret_down;
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
@@ -24,7 +30,7 @@ public class AdmHome {
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel side_bar, JPanel top_bar, JPanel content) {
+                              JPanel side_bar, JPanel top_bar, JPanel content, Buffer current_user) {
         try {
             logo = ImageIO.read(new File("images/logo_sidebar.png"));
             caret_up = ImageIO.read(new File("images/caret_up.png"));
@@ -38,6 +44,7 @@ public class AdmHome {
         AdmHome.side_bar = side_bar;
         AdmHome.top_bar = top_bar;
         AdmHome.content = content;
+        AdmHome.current_user = current_user;
     }
 
     public static void ShowPage() {
@@ -108,11 +115,13 @@ public class AdmHome {
         List<String> options = List.of("Check Profile", "Sign Out");
         List<ActionListener> actions = List.of(
                 e -> {
-
+                    AdmHome.indicator = 1;
+                    PageChanger();
                 },
                 e -> {
                     User.UnrememberAllUser(Main.userdata_file);
                     Main.indicator = 0;
+                    AdmHome.indicator = 0;
                     Main.PageChanger(parent, merriweather, boldonse);
                 }
         );
@@ -142,6 +151,25 @@ public class AdmHome {
                 }
             });
         });
+
+        Profile.Loader(parent, merriweather, boldonse, content, current_user);
+        PageChanger();
+    }
+
+    public static void PageChanger() {
+        content.removeAll();
+        content.revalidate();
+        content.repaint();
+        switch (indicator) {
+//    Please indicate the relation of the indicator value and specific java class:
+//    0 -> Administrator Welcome Page
+//    1 -> Profile page
+            case 0:
+                break;
+            case 1:
+//                Profile.ShowPage();
+                break;
+        }
     }
 
     public static void UpdateComponentSize(int parent_width, int parent_height) {

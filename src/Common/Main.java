@@ -56,10 +56,20 @@ public class Main {
                         SignIn.UpdateComponentSize(
                                 main_frame.getContentPane().getWidth(),
                                 main_frame.getContentPane().getHeight());
+                        SwingUtilities.invokeLater(() -> {
+                            SignIn.UpdateComponentSize(
+                                    main_frame.getContentPane().getWidth(),
+                                    main_frame.getContentPane().getHeight());
+                        });
                     } else if (indicator == 1) {
                         Home.UpdateComponentSize(
                                 main_frame.getContentPane().getWidth(),
                                 main_frame.getContentPane().getHeight());
+                        SwingUtilities.invokeLater(() -> {
+                            Home.UpdateComponentSize(
+                                    main_frame.getContentPane().getWidth(),
+                                    main_frame.getContentPane().getHeight());
+                        });
                     }
                 }
             });

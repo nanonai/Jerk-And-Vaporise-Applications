@@ -52,11 +52,11 @@ public class Home {
         content.setOpaque(false);
         outer_grid.add(content, gbc_outer);
 
-        AdmHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content);
-        SalesHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content);
-        PurchaseHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content);
-        InventoryHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content);
-        FinanceHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content);
+        AdmHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content, current_user);
+        SalesHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content, current_user);
+        PurchaseHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content, current_user);
+        InventoryHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content, current_user);
+        FinanceHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content, current_user);
         PageChanger();
 
         background.add(outer_grid, gbc_outer);
@@ -76,24 +76,24 @@ public class Home {
         content.repaint();
         switch (indicator) {
 //    Please indicate the relation of the indicator value and specific java class:
-//    0 -> Administrator Home Page
-//    1 -> Sales Manager Home Page
-//    2 -> Purchase Manager Home Page
-//    3 -> Inventory Manager Home Page
-//    4 -> Finance Manager Home Page
-            case 0:
+//    1 -> Administrator Home Page
+//    2 -> Sales Manager Home Page
+//    3 -> Purchase Manager Home Page
+//    4 -> Inventory Manager Home Page
+//    5 -> Finance Manager Home Page
+            case 1:
                 AdmHome.ShowPage();
                 break;
-            case 1:
+            case 2:
                 SalesHome.ShowPage();
                 break;
-            case 2:
+            case 3:
                 PurchaseHome.ShowPage();
                 break;
-            case 3:
+            case 4:
                 InventoryHome.ShowPage();
                 break;
-            case 4:
+            case 5:
                 FinanceHome.ShowPage();
                 break;
         }
@@ -110,31 +110,31 @@ public class Home {
         content.revalidate();
         content.repaint();
         switch (indicator) {
-            case 0:
+            case 1:
                 AdmHome.UpdateComponentSize(parent_width, parent_height);
                 SwingUtilities.invokeLater(() -> {
                     AdmHome.UpdateComponentSize(parent_width, parent_height);
                 });
                 break;
-            case 1:
+            case 2:
                 SalesHome.UpdateComponentSize(parent_width, parent_height);
                 SwingUtilities.invokeLater(() -> {
                     SalesHome.UpdateComponentSize(parent_width, parent_height);
                 });
                 break;
-            case 2:
+            case 3:
                 PurchaseHome.UpdateComponentSize(parent_width, parent_height);
                 SwingUtilities.invokeLater(() -> {
                     PurchaseHome.UpdateComponentSize(parent_width, parent_height);
                 });
                 break;
-            case 3:
+            case 4:
                 InventoryHome.UpdateComponentSize(parent_width, parent_height);
                 SwingUtilities.invokeLater(() -> {
                     InventoryHome.UpdateComponentSize(parent_width, parent_height);
                 });
                 break;
-            case 4:
+            case 5:
                 FinanceHome.UpdateComponentSize(parent_width, parent_height);
                 SwingUtilities.invokeLater(() -> {
                     FinanceHome.UpdateComponentSize(parent_width, parent_height);

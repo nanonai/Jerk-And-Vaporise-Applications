@@ -149,7 +149,7 @@ public class SignIn {
         txt_grid2.add(txt_icon2, gbc_inner);
 
         gbc_inner.gridx = 1;
-        gbc_inner.weightx = 8.6;
+        gbc_inner.weightx = 9.1;
         txt2 = new CustomComponents.EmptyPasswordField(
                 7, "Password \r\r", new Color(178, 181, 180));
         txt2.setEchoChar((char) 0);
@@ -157,19 +157,19 @@ public class SignIn {
         txt_grid2.add(txt2, gbc_inner);
 
         gbc_inner.gridx = 2;
-        gbc_inner.weightx = 1;
+        gbc_inner.weightx = 0.5;
         hidden = new CustomComponents.CustomButton("", merriweather,
                 Main.transparent, Main.transparent, Main.transparent, Main.transparent, Main.transparent,
-                0, 0, Main.transparent, false, 5,
-                true, hidden_icon, 0.5,
-                txt_grid2.getHeight(), txt_grid2.getHeight());
+                0, 0, Main.transparent, false, 4,
+                true, hidden_icon, 0.6,
+                txt_grid2.getHeight() * 5 / 6, txt_grid2.getHeight());
         hidden.addActionListener(_ -> {
             if (hidden.ReturnImageState()) {
-                hidden.UpdateCustomButton(30, 0, show_icon, 0.5);
+                hidden.UpdateCustomButton(0, 0, show_icon, 0.6);
             } else {
-                hidden.UpdateCustomButton(30, 0, hidden_icon, 0.5);
+                hidden.UpdateCustomButton(0, 0, hidden_icon, 0.6);
             }
-            hidden.UpdateSize(txt_grid2.getHeight(), txt_grid2.getHeight());
+            hidden.UpdateSize(txt_grid2.getHeight() * 5 / 6, txt_grid2.getHeight());
             txt2.UpdateStatus(hidden.ReturnImageState());
             txt2.repaint();
         });
@@ -248,11 +248,11 @@ public class SignIn {
             if (correct) {
                 Main.indicator = 1;
                 switch (AccType) {
-                    case "Administrator" -> Home.indicator = 0;
-                    case "Sales Manager" -> Home.indicator = 1;
-                    case "Purchase Manager" -> Home.indicator = 2;
-                    case "Inventory Manager" -> Home.indicator = 3;
-                    case "Finance Manager" -> Home.indicator = 4;
+                    case "Administrator" -> Home.indicator = 1;
+                    case "Sales Manager" -> Home.indicator = 2;
+                    case "Purchase Manager" -> Home.indicator = 3;
+                    case "Inventory Manager" -> Home.indicator = 4;
+                    case "Finance Manager" -> Home.indicator = 5;
                 }
                 Buffer logged_in = null;
                 for (User user : allUser) {
@@ -319,7 +319,8 @@ public class SignIn {
         button.UpdateCustomButton(parent_height / 10, parent_height / 30, null, 0);
         txt_icon1.repaint();
         txt_icon2.repaint();
-        hidden.UpdateSize(txt_grid2.getHeight(), txt_grid2.getHeight());
+        hidden.UpdateSize(txt_grid2.getHeight() * 5 / 6, txt_grid2.getHeight());
+        hidden.repaint();
         txt2.UpdateStatus(hidden.ReturnImageState());
         txt2.repaint();
     }
