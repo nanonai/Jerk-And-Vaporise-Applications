@@ -76,7 +76,7 @@ public class InventoryHome {
         gbc_top.weighty = 1;
         gbc_top.fill =GridBagConstraints.BOTH;
         gbc_top.insets = new Insets(0, 20, 0, 0);
-        title = new JLabel(String.format("<html>Welcome, Inventory Manager <i>-%s</i></html>",
+        title = new JLabel(String.format("<html>Welcome, Inventory Manager <i>- %s</i></html>",
                 Home.current_user.FullName));
         top_bar.add(title, gbc_top);
 

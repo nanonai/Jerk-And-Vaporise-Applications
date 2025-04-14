@@ -76,7 +76,7 @@ public class AdmHome {
         gbc_top.weighty = 1;
         gbc_top.fill =GridBagConstraints.BOTH;
         gbc_top.insets = new Insets(0, 20, 0, 0);
-        title = new JLabel(String.format("<html>Welcome, Administrator <i>-%s</i></html>",
+        title = new JLabel(String.format("<html>Welcome, Administrator <i>- %s</i></html>",
                 Home.current_user.FullName));
         top_bar.add(title, gbc_top);
 
@@ -167,6 +167,7 @@ public class AdmHome {
             }
         });
 
+        Welcome.Loader(parent, merriweather, boldonse, content, current_user);
         Profile.Loader(parent, merriweather, boldonse, content, current_user);
         PageChanger();
     }
@@ -180,6 +181,7 @@ public class AdmHome {
 //    0 -> Administrator Welcome Page
 //    1 -> Profile page
             case 0:
+                Welcome.ShowPage();
                 break;
             case 1:
                 Profile.ShowPage();
@@ -207,6 +209,7 @@ public class AdmHome {
             profile.setSize(profileIcon1.getIconWidth(), profileIcon1.getIconHeight());
             switch (indicator) {
                 case 0:
+                    Welcome.UpdateComponentSize(finalBase_size);
                     break;
                 case 1:
                     Profile.UpdateComponentSize(finalBase_size);

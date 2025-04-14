@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Objects;
 
 public class CustomComponents {
     public static class ImagePanel extends JPanel {
@@ -753,7 +754,7 @@ public class CustomComponents {
         }
         
         public void show_dialog(String title, String content, String option1, String option2,
-                                ActionEvent event1, ActionEvent event2) {
+                                ActionListener event1, ActionListener event2) {
             JDialog dialog = new JDialog(frame, title, true);
             dialog.setSize((int) (frame.getWidth() / 2.8), (int) (frame.getHeight() / 4));
             dialog.setLayout(new GridBagLayout());
@@ -804,17 +805,9 @@ public class CustomComponents {
             button1.setFont(font.deriveFont((float) frame.getHeight() / 40));
             panel2.add(button1, gbc);
 
-            if (event1 != null) {
-                button1.addActionListener((ActionListener) event1);
-            } else {
-                button1.addActionListener(_ -> dialog.dispose());
-            }
+            button1.addActionListener(Objects.requireNonNullElseGet(event1, () -> _ -> dialog.dispose()));
 
-            if (event1 != null) {
-                button2.addActionListener((ActionListener) event2);
-            } else {
-                button2.addActionListener(_ -> dialog.dispose());
-            }
+            button2.addActionListener(Objects.requireNonNullElseGet(event2, () -> _ -> dialog.dispose()));
 
             dialog.setLocationRelativeTo(frame);
             dialog.setVisible(true);
