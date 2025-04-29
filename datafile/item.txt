@@ -1,0 +1,18 @@
+ItemID:         1
+Itemname:       Apple
+UnitPrice:      12.23
+Quantity:       24
+Category:       Fruits
+~~~~~
+ItemID:         2
+Itemname:       Soda
+UnitPrice:      11
+Quantity:       56
+Category:       Drinks
+~~~~~
+ItemID:         3
+Itemname:       Pop
+UnitPrice:      16
+Quantity:       31
+Category:       Drinks
+~~~~~

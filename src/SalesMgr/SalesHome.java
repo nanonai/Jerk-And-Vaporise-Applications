@@ -1,4 +1,4 @@
-package Admin;
+package SalesMgr;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 import Common.*;
 
-public class AdmHome {
+public class SalesHome {
     public static int indicator = 0;
     private static JFrame parent;
     private static Font merriweather, boldonse;
@@ -24,7 +24,7 @@ public class AdmHome {
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
     private static CustomComponents.CustomProfileIcon profileIcon1, profileIcon2;
-    private static CustomComponents.CustomButton user_management, profile_drop;
+    private static CustomComponents.CustomButton home_btn, item_btn, sply_btn, dly_sls_btn, pr_btn, po_btn, profile_drop;
     private static JLabel title;
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
@@ -37,13 +37,13 @@ public class AdmHome {
         } catch (IOException e) {
             e.getStackTrace();
         }
-        AdmHome.parent = parent;
-        AdmHome.merriweather = merriweather;
-        AdmHome.boldonse = boldonse;
-        AdmHome.side_bar = side_bar;
-        AdmHome.top_bar = top_bar;
-        AdmHome.content = content;
-        AdmHome.current_user = current_user;
+        SalesHome.parent = parent;
+        SalesHome.merriweather = merriweather;
+        SalesHome.boldonse = boldonse;
+        SalesHome.side_bar = side_bar;
+        SalesHome.top_bar = top_bar;
+        SalesHome.content = content;
+        SalesHome.current_user = current_user;
     }
 
     public static void ShowPage() {
@@ -58,18 +58,53 @@ public class AdmHome {
 
         gbc_side.gridy = 1;
         gbc_side.weighty = 0.8;
-        user_management = new CustomComponents.CustomButton("Manage User", merriweather, Color.WHITE, Color.WHITE,
+        home_btn = new CustomComponents.CustomButton("Home", merriweather, Color.WHITE, Color.WHITE,
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
-        user_management.addActionListener(_ -> {
-            AdmHome.indicator = 2;
-            PageChanger();
-        });
-        side_bar.add(user_management, gbc_side);
+        side_bar.add(home_btn, gbc_side);
 
         gbc_side.gridy = 2;
-        gbc_side.weighty = 8.2;
+        item_btn = new CustomComponents.CustomButton("Items", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        item_btn.addActionListener(_ -> {
+            SalesHome.indicator = 2;
+            PageChanger();
+        });
+        side_bar.add(item_btn, gbc_side);
+
+        gbc_side.gridy = 3;
+        sply_btn = new CustomComponents.CustomButton("Suppliers", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        side_bar.add(sply_btn, gbc_side);
+
+        gbc_side.gridy = 4;
+        dly_sls_btn = new CustomComponents.CustomButton("Daily Sales", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        side_bar.add(dly_sls_btn, gbc_side);
+
+        gbc_side.gridy = 5;
+        pr_btn = new CustomComponents.CustomButton("Purchase Requisitions", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 10,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        side_bar.add(pr_btn, gbc_side);
+
+        gbc_side.gridy = 6;
+        po_btn = new CustomComponents.CustomButton("Purchase Orders", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        side_bar.add(po_btn, gbc_side);
+
+        gbc_side.gridy =7;
+        gbc_side.weighty = 4.2;
         JLabel placeholder = new JLabel("");
         side_bar.add(placeholder, gbc_side);
 
@@ -78,17 +113,17 @@ public class AdmHome {
         gbc_top.gridy = 0;
         gbc_top.weightx = 9;
         gbc_top.weighty = 1;
-        gbc_top.fill = GridBagConstraints.BOTH;
+        gbc_top.fill =GridBagConstraints.BOTH;
         gbc_top.insets = new Insets(0, 20, 0, 0);
-        title = new JLabel(String.format("<html>Welcome, Administrator <i>- %s</i></html>",
+        title = new JLabel(String.format("<html>Welcome, Sales Manager <i>- %s</i></html>",
                 Home.current_user.FullName));
         top_bar.add(title, gbc_top);
 
         gbc_top.gridx = 1;
         gbc_top.weightx = 0.7;
-        profileIcon1 = new CustomComponents.CustomProfileIcon(10, false, "Administrator", boldonse);
+        profileIcon1 = new CustomComponents.CustomProfileIcon(10, false, "Sales Manager", boldonse);
         profile = new JButton(profileIcon1);
-        profileIcon2 = new CustomComponents.CustomProfileIcon(10, true, "Administrator", boldonse);
+        profileIcon2 = new CustomComponents.CustomProfileIcon(10, true, "Sales Manager", boldonse);
         profile.setRolloverIcon(profileIcon2);
         profile.setMargin(new Insets(0, 0, 0, 0));
         profile.setBorderPainted(false);
@@ -97,7 +132,7 @@ public class AdmHome {
         profile.setPreferredSize(new Dimension(profileIcon1.getIconWidth(), profileIcon1.getIconHeight()));
         profile.setSize(profileIcon1.getIconWidth(), profileIcon1.getIconHeight());
         profile.addActionListener(_ -> {
-            AdmHome.indicator = 1;
+            SalesHome.indicator = 1;
             PageChanger();
         });
         top_bar.add(profile, gbc_top);
@@ -122,13 +157,13 @@ public class AdmHome {
         List<String> options = List.of("Check Profile", "Sign Out");
         List<ActionListener> actions = List.of(
                 e -> {
-                    AdmHome.indicator = 1;
+                    SalesHome.indicator = 1;
                     PageChanger();
                 },
                 e -> {
                     User.UnrememberAllUser(Main.userdata_file);
                     Main.indicator = 0;
-                    AdmHome.indicator = 0;
+                    SalesHome.indicator = 0;
                     Main.PageChanger(parent, merriweather, boldonse);
                 }
         );
@@ -171,8 +206,8 @@ public class AdmHome {
             }
         });
 
-        Welcome.Loader(parent, merriweather, boldonse, content, current_user);
         Profile.Loader(parent, merriweather, boldonse, content, current_user);
+        ItemMng.Loader(parent, merriweather, boldonse, content, current_user);
         PageChanger();
     }
 
@@ -182,15 +217,20 @@ public class AdmHome {
         content.repaint();
         switch (indicator) {
 //    Please indicate the relation of the indicator value and specific java class:
-//    0 -> Administrator Welcome Page
+//    0 -> Sales Manager Home Page
 //    1 -> Profile page
+//    2 -> Item page
+//    3 -> Suppliers page
+//    4 -> Daily sales page
+//    5 -> Purchase requisitions page
+//    6 -> Purchase orders page
             case 0:
-                Welcome.ShowPage();
                 break;
             case 1:
                 Profile.ShowPage();
                 break;
             case 2:
+                ItemMng.ShowPage();
                 break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());
@@ -206,7 +246,12 @@ public class AdmHome {
         int finalBase_size = base_size;
         SwingUtilities.invokeLater(() -> {
             logo_cell.repaint();
-            user_management.UpdateCustomButton(0, finalBase_size, null, 0);
+            home_btn.UpdateCustomButton(0, finalBase_size, null, 0);
+            item_btn.UpdateCustomButton(0, finalBase_size, null, 0);
+            sply_btn.UpdateCustomButton(0, finalBase_size, null, 0);
+            dly_sls_btn.UpdateCustomButton(0, finalBase_size, null, 0);
+            pr_btn.UpdateCustomButton(0, finalBase_size, null, 0);
+            po_btn.UpdateCustomButton(0, finalBase_size, null, 0);
             title.setFont(boldonse.deriveFont((float)finalBase_size));
             profile.repaint();
             profileIcon1.UpdateSize((int) (finalBase_size * 2.5));
@@ -215,12 +260,12 @@ public class AdmHome {
             profile.setSize(profileIcon1.getIconWidth(), profileIcon1.getIconHeight());
             switch (indicator) {
                 case 0:
-                    Welcome.UpdateComponentSize(finalBase_size);
                     break;
                 case 1:
                     Profile.UpdateComponentSize(finalBase_size);
                     break;
                 case 2:
+                    ItemMng.UpdateComponentSize(finalBase_size);
                     break;
             }
         });
