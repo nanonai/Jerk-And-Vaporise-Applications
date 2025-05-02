@@ -18,6 +18,8 @@ public class ItemMng {
     private static JPanel content;
     public static Buffer current_user;
     public static int indicator, base_size;
+    public static List<Item> AllItems;
+    public static JList ItemList;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
                               JPanel content, Buffer current_user) {
@@ -33,11 +35,15 @@ public class ItemMng {
 
         gbc.gridx = 1;
         gbc.gridy = 1;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        JLabel label = new JLabel("HAHAHAHHAH");
-        label.setOpaque(true);
-        label.setBackground(Color.RED);
-        content.add(label, gbc);
+        AllItems = Item.listAllItem("datafile/item.txt");
+        List<String> AllItemConvt = Item.ItemConvt(AllItems);
+        ItemList = new JList<String>(AllItemConvt.toArray(new String[0]));
+        ItemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPane = new JScrollPane(ItemList);
+        content.add(scrollPane , gbc);
     }
 
     public static void PageChanger() {
@@ -58,5 +64,6 @@ public class ItemMng {
     }
 
     public static void UpdateComponentSize(int base_size) {
+
     }
 }

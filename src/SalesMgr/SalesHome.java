@@ -91,7 +91,7 @@ public class SalesHome {
 
         gbc_side.gridy = 5;
         pr_btn = new CustomComponents.CustomButton("Purchase Requisitions", merriweather, Color.WHITE, Color.WHITE,
-                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 10,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 8,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
         side_bar.add(pr_btn, gbc_side);
