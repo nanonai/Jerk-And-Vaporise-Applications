@@ -53,7 +53,7 @@ public class ItemMng {
 
         gbc.gridx = 1;
         gbc.gridy = 1;
-        gbc.weightx = 1;
+//        gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.gridwidth = 1;
         gbc.insets = new Insets(0,0,15,10);
