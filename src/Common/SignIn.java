@@ -315,7 +315,7 @@ public class SignIn {
         check.setIcon(new CustomComponents.CustomCheckBoxIcon(30, 3,2,false,
                 new Color(145, 145, 145), Color.WHITE, new Color(97, 97, 97)));
         check.setSelectedIcon(new CustomComponents.CustomCheckBoxIcon(30, 3,1,true,
-                new Color(145, 145, 145), Color.WHITE, new Color(97, 97, 97)));
+               new Color(145, 145, 145), Color.WHITE, new Color(97, 97, 97)));
         button.UpdateCustomButton(parent_height / 10, parent_height / 30, null, 0);
         txt_icon1.repaint();
         txt_icon2.repaint();
