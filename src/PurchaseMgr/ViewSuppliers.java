@@ -81,7 +81,7 @@ public class ViewSuppliers {
             System.out.println(string);
             data += string;
         }
-        JLabel ferret = new JLabel(data);
+        JLabel ferret = new JLabel("Skibidi");
         content.add(ferret, gbc);
     }
 
