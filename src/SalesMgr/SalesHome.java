@@ -19,13 +19,13 @@ public class SalesHome {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel side_bar, top_bar, content;
-    public static Buffer current_user;
+    private static Buffer current_user;
     private static BufferedImage logo, caret_up, caret_down;
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
     private static CustomComponents.CustomProfileIcon profileIcon1, profileIcon2;
     private static CustomComponents.CustomButton home_btn, item_btn, sply_btn, dly_sls_btn, pr_btn, po_btn, profile_drop;
-    private static JLabel title;
+    public static JLabel title;
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
@@ -62,6 +62,11 @@ public class SalesHome {
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
+        home_btn.addActionListener(_ -> {
+            SalesHome.indicator = 0;
+            SalesHome.title.setText("HomePage");
+            PageChanger();
+        });
         side_bar.add(home_btn, gbc_side);
 
         gbc_side.gridy = 2;
@@ -71,6 +76,7 @@ public class SalesHome {
                 0, 0);
         item_btn.addActionListener(_ -> {
             SalesHome.indicator = 2;
+            SalesHome.title.setText("Item Management Page");
             PageChanger();
         });
         side_bar.add(item_btn, gbc_side);
@@ -80,6 +86,11 @@ public class SalesHome {
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
+        sply_btn.addActionListener(_ -> {
+            SalesHome.indicator = 3;
+            SalesHome.title.setText("Supplier Management Page");
+            PageChanger();
+        });
         side_bar.add(sply_btn, gbc_side);
 
         gbc_side.gridy = 4;
@@ -87,6 +98,11 @@ public class SalesHome {
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
+        dly_sls_btn.addActionListener(_ -> {
+            SalesHome.title.setText("Daily Item-Wise Sales Management Page");
+            SalesHome.indicator = 4;
+            PageChanger();
+        });
         side_bar.add(dly_sls_btn, gbc_side);
 
         gbc_side.gridy = 5;
@@ -94,6 +110,11 @@ public class SalesHome {
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 8,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
+        pr_btn.addActionListener(_ -> {
+            SalesHome.indicator = 5;
+            SalesHome.title.setText("Purchase Requisition Management Page");
+            PageChanger();
+        });
         side_bar.add(pr_btn, gbc_side);
 
         gbc_side.gridy = 6;
@@ -101,6 +122,11 @@ public class SalesHome {
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
+        po_btn.addActionListener(_ -> {
+            SalesHome.indicator = 6;
+            SalesHome.title.setText("Purchase Order Management Page");
+            PageChanger();
+        });
         side_bar.add(po_btn, gbc_side);
 
         gbc_side.gridy =7;
@@ -208,6 +234,11 @@ public class SalesHome {
 
         Profile.Loader(parent, merriweather, boldonse, content, current_user);
         ItemMng.Loader(parent, merriweather, boldonse, content, current_user);
+        SalesHomePage.Loader(parent, merriweather, boldonse, content, current_user);
+        SupplierMng.Loader(parent, merriweather, boldonse, content, current_user);
+        DailySalesMng.Loader(parent, merriweather, boldonse, content, current_user);
+        PurchaseRequisitionMng.Loader(parent, merriweather, boldonse, content, current_user);
+        PurchaseOrderMng.Loader(parent, merriweather, boldonse, content, current_user);
         PageChanger();
     }
 
@@ -225,12 +256,25 @@ public class SalesHome {
 //    5 -> Purchase requisitions page
 //    6 -> Purchase orders page
             case 0:
+                SalesHomePage.ShowPage();
                 break;
             case 1:
                 Profile.ShowPage();
                 break;
             case 2:
                 ItemMng.ShowPage();
+                break;
+            case 3:
+                SupplierMng.ShowPage();
+                break;
+            case 4:
+                DailySalesMng.ShowPage();
+                break;
+            case 5:
+                PurchaseRequisitionMng.ShowPage();
+                break;
+            case 6:
+                PurchaseOrderMng.ShowPage();
                 break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());
