@@ -46,5 +46,5 @@ Email:          fm123@gmail.com
 Phone:          145323423
 AccType:        Finance Manager
 DateOfRegis:    2025-03-31
-RememberMe:     1
+RememberMe:     0
 ~~~~~
