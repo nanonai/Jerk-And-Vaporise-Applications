@@ -14,6 +14,7 @@ public class UserMng {
     private static Buffer current_user;
     private static CustomComponents.CustomList<String> list;
     private static CustomComponents.CustomScrollPane scrollPane;
+    private static CustomComponents.CustomSearchIcon search_icon, search_icon_h;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, Buffer current_user) {
         UserMng.parent = parent;
@@ -28,24 +29,11 @@ public class UserMng {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 2;
+        gbc.weightx = 1;
         gbc.weighty = 1;
-
-        String[] dataset = {"apple", "banana", "skibidi", "apple", "banana", "skibidi", "apple", "banana", "skibidi", "apple", "banana", "skibidi", "apple", "banana", "skibidi", "apple", "banana", "skibidi", "apple", "banana", "skibidi", "apple", "banana", "skibidi", "apple", "banana", "skibidi", "apple", "banana", "skibidi", "apple", "banana", "skibidi", "apple", "banana", "skibidi", "apple", "banana", "skibidi", "apple", "banana", "skibidi"};
-        List<String> data2 = new ArrayList<String>();
-        data2.add("apple");
-        data2.add("banana");
-        data2.add("cherry");
-        gbc.gridx = 6;
-        list = new CustomComponents.CustomList<>(dataset, 0, 14, boldonse,
-                Color.black, Color.WHITE, Color.WHITE, Color.BLACK);
-        scrollPane = new CustomComponents.CustomScrollPane(false, 10, list, 24, Color.WHITE,
-                new Color(231, 231, 231), new Color(77, 77, 77),
-                new Color(231, 231, 231), new Color(77, 77, 77),
-                new Color(255, 222, 237), new Color(147, 169, 255),
-                new Color(255, 184, 211), new Color(225, 108, 150),
-                new Color(87, 120, 255), new Color(0, 48, 255), 12);
-        content.add(scrollPane, gbc);
+        search_icon = new CustomComponents.CustomSearchIcon(20, 4, Color.BLACK, Color.cyan);
+        JLabel tl = new JLabel(search_icon);
+        content.add(tl, gbc);
     }
 
     public static void UpdateComponentSize(int base_size) {

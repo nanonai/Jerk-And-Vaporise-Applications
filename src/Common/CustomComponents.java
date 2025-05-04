@@ -1259,4 +1259,78 @@ public class CustomComponents {
             }
         }
     }
+
+    public static class CustomSearchIcon implements Icon {
+        private final int size, border_width;
+        private final Color stroke, fill;
+
+        public CustomSearchIcon(int size, int border_width, Color stroke, Color fill) {
+            this.size = size;
+            this.border_width = border_width;
+            this.stroke = stroke;
+            this.fill = fill;
+        }
+
+        @Override
+        public int getIconWidth() {
+            return size;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return size;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setStroke(new BasicStroke(
+                    border_width,
+                    BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER
+            ));
+            g2d.setColor(stroke);
+            double unit = size / 20.0;
+
+            double y1 = 0;
+            double x1 = 20;
+
+            double y2 = 8.0525;
+            double x2 = 20 - y2;
+
+            int px1 = (int) (x1 * unit);
+            int py1 = (int) ((20 - y1) * unit);
+
+            int px2 = (int) (x2 * unit);
+            int py2 = (int) ((20 - y2) * unit);
+
+            g2d.drawLine(x + px1, y + py1, x + px2, y + py2);
+
+            double centerX = 7;
+            double centerY = 13;
+            double radius = 7;
+
+            int pixelDiameter = (int) (2 * radius * unit);
+            int pixelCenterX = (int) (centerX * unit);
+            int pixelCenterY = (int) ((20 - centerY) * unit);
+
+            g2d.setColor(fill);
+            g2d.fillOval(
+                    x+ pixelCenterX - pixelDiameter / 2,
+                    y + pixelCenterY - pixelDiameter / 2,
+                    pixelDiameter,
+                    pixelDiameter
+            );
+
+            g2d.setColor(stroke);
+            g2d.drawOval(
+                    x+ pixelCenterX - pixelDiameter / 2,
+                    y + pixelCenterY - pixelDiameter / 2,
+                    pixelDiameter,
+                    pixelDiameter
+            );
+            g2d.dispose();
+        }
+    }
 }
