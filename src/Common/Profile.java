@@ -18,7 +18,7 @@ public class Profile {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    public static Buffer current_user;
+    private static Buffer current_user;
     private static BufferedImage icon_username, icon_fullname, icon_password, icon_email, icon_phone,
             icon_exit, icon_exit_hover, icon_hide, icon_show;
     private static JLabel profile_pic, id_label, job_label, date_label, username_label, fullname_label,

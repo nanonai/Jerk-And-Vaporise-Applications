@@ -1,15 +1,9 @@
 package PurchaseMgr;
 
-import Admin.Welcome;
 import Common.*;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +11,8 @@ public class ViewSuppliers {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    public static Buffer current_user;
-    public static List<String> list = new ArrayList<>();
+    private static Buffer current_user;
+    private static List<String> list = new ArrayList<>();
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
                               JPanel content, Buffer current_user) {

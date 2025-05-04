@@ -9,9 +9,9 @@ public class DailySalesMng {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    public static Buffer current_user;
+    private static Buffer current_user;
     private static JLabel label1;
-    public static int indicator, base_size;
+    private static int indicator, base_size;
 
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
