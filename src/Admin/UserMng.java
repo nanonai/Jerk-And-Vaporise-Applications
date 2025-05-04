@@ -57,7 +57,7 @@ public class UserMng {
         table.setFillsViewportHeight(true);
 
         CustomComponents.CustomTable tb = new CustomComponents.CustomTable(columnNames, data,
-                boldonse, merriweather, Color.WHITE, Color.YELLOW, Color.WHITE, Color.BLACK, 4, 30);
+                boldonse, merriweather, Color.BLACK, Color.YELLOW, Color.WHITE, Color.BLACK, 4, 30);
         CustomComponents.CustomScrollPane sp = new CustomComponents.CustomScrollPane(false, 4, tb,
                 30, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.WHITE, Color.CYAN,
                 Main.transparent, Main.transparent, Main.transparent, Main.transparent, 0);
