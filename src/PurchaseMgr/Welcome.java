@@ -1,19 +1,10 @@
 package PurchaseMgr;
 
-import Admin.*;
 import Common.Buffer;
 import Common.CustomComponents;
-import Common.Home;
-import Common.Main;
-import SalesMgr.*;
-import PurchaseMgr.*;
-import InventoryMgr.*;
-import FinanceMgr.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +13,7 @@ public class Welcome {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    public static Buffer current_user;
+    private static Buffer current_user;
     private static JLabel greet;
     private static CustomComponents.ImageCell weasel;
     private static BufferedImage logo;

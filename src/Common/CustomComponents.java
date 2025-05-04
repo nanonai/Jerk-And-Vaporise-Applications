@@ -1,7 +1,13 @@
 package Common;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.basic.BasicScrollBarUI;
+import javax.swing.border.*;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
@@ -11,6 +17,8 @@ import java.io.IOException;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Objects;
+
+import static com.sun.java.accessibility.util.SwingEventMonitor.addListSelectionListener;
 
 public class CustomComponents {
     public static class ImagePanel extends JPanel {
@@ -617,36 +625,26 @@ public class CustomComponents {
                 g2.setFont(font.deriveFont((float) t_size));
                 g2.setColor(hovering ? t_hover : t_normal);
                 FontMetrics fm = g2.getFontMetrics();
-                int textWidth = fm.stringWidth(getText());
-                int textHeight = fm.getAscent() - fm.getDescent();
-                switch (align_factor) {
-                    case 1:
-                        g2.drawString(getText(), 0, 0);
-                        break;
-                    case 2:
-                        g2.drawString(getText(), (width - textWidth) / 2, 0);
-                        break;
-                    case 3:
-                        g2.drawString(getText(), width - textWidth, 0);
-                        break;
-                    case 4:
-                        g2.drawString(getText(), 0, (height + textHeight) / 2);
-                        break;
-                    case 5:
-                        g2.drawString(getText(), (width - textWidth) / 2, (height + textHeight) / 2);
-                        break;
-                    case 6:
-                        g2.drawString(getText(), width - textWidth, (height + textHeight) / 2);
-                        break;
-                    case 7:
-                        g2.drawString(getText(), 0, height + textHeight);
-                        break;
-                    case 8:
-                        g2.drawString(getText(), (width - textWidth) / 2, height + textHeight);
-                        break;
-                    case 9:
-                        g2.drawString(getText(), width - textWidth, height + textHeight);
-                        break;
+
+                String[] lines = getText().split("\\r?\\n");
+                int lineHeight = fm.getHeight();
+                int totalTextHeight = lineHeight * lines.length;
+
+                int startY = switch (align_factor) {
+                    case 1, 2, 3 -> 0;
+                    case 7, 8, 9 -> height - totalTextHeight + fm.getAscent();
+                    default -> (height - totalTextHeight) / 2 + fm.getAscent();
+                };
+                for (int i = 0; i < lines.length; i++) {
+                    String line = lines[i];
+                    int textWidth = fm.stringWidth(line);
+                    int x = switch (align_factor) {
+                        case 1, 4, 7 -> 0;
+                        case 3, 6, 9 -> width - textWidth;
+                        default -> (width - textWidth) / 2;
+                    };
+                    int y = startY + i * lineHeight;
+                    g2.drawString(line, x, y);
                 }
             } else {
                 setSize(size_if_need1, size_if_need2);
@@ -756,7 +754,7 @@ public class CustomComponents {
         public void show_dialog(String title, String content, String option1, String option2,
                                 ActionListener event1, ActionListener event2) {
             JDialog dialog = new JDialog(frame, title, true);
-            dialog.setSize((int) (frame.getWidth() / 2.8), (int) (frame.getHeight() / 4));
+            dialog.setSize((int) (frame.getWidth() / 2.8), (frame.getHeight() / 4));
             dialog.setLayout(new GridBagLayout());
             dialog.setResizable(false);
             dialog.setIconImage(icon);
@@ -938,5 +936,488 @@ public class CustomComponents {
             }
             this.show(base, x, base.getHeight());
         }
+    }
+
+    public static class CustomList<E> extends JList<E> {
+        private final int maxSelections;
+        private int[] previousSelection = new int[0];
+        private boolean suppressListener = false;
+
+        @SuppressWarnings("unchecked")
+        public CustomList(Object data, int maxSelections, int text_size, Font text_font,
+                          Color t_normal, Color t_select, Color bg_normal, Color bg_select) {
+            super(new DefaultListModel<>());
+            this.maxSelections = maxSelections;
+            setBorder(BorderFactory.createEmptyBorder());
+            setFocusable(false);
+            setCellRenderer(new DefaultListCellRenderer() {
+                @Override
+                public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                                                              boolean isSelected, boolean cellHasFocus) {
+                    JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                    if (isSelected) {
+                        label.setBackground(bg_select);
+                        label.setForeground(t_select);
+                    } else {
+                        label.setBackground(bg_normal);
+                        label.setForeground(t_normal);
+                    }
+                    return label;
+                }
+            });
+            setFont(text_font.deriveFont(Font.PLAIN, text_size));
+            if (data instanceof List<?> list) {
+                setListData((E[]) list.toArray());
+            } else if (data instanceof Object[]) {
+                setListData((E[]) data);
+            } else {
+                throw new IllegalArgumentException("Data must be a List or an Array.");
+            }
+            if (maxSelections == 1) {
+                setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            } else {
+                setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                if (maxSelections > 1) {
+                    addListSelectionListener(new MaxSelectionEnforcer());
+                }
+            }
+        }
+
+        private class MaxSelectionEnforcer implements ListSelectionListener {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (suppressListener || e.getValueIsAdjusting()) return;
+                int[] selected = getSelectedIndices();
+                if (maxSelections > 0 && selected.length > maxSelections) {
+                    suppressListener = true;
+                    setSelectedIndices(previousSelection);
+                    suppressListener = false;
+                } else {
+                    previousSelection = selected;
+                }
+            }
+        }
+    }
+
+    public static class CustomScrollPane extends JScrollPane {
+        public CustomScrollPane(boolean shadow_factor, int border_factor, JComponent view, int bar_factor,
+                                Color s, Color r_h, Color r_s, Color l_h, Color l_s, Color thumb, Color track,
+                                Color tmb_hover, Color tmb_press, Color trk_hover, Color trk_press, int r) {
+            super(view);
+            getVerticalScrollBar().setPreferredSize(new Dimension(bar_factor, Integer.MAX_VALUE));
+            getHorizontalScrollBar().setPreferredSize(new Dimension(Integer.MAX_VALUE, bar_factor));
+            if (thumb != null && track != null) {
+                getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+                    private boolean isThumbHovered = false;
+                    private boolean isThumbPressed = false;
+
+                    {
+                        JScrollBar vsb = getVerticalScrollBar();
+                        vsb.addMouseMotionListener(new MouseMotionAdapter() {
+                            @Override
+                            public void mouseMoved(MouseEvent e) {
+                                if (!isThumbPressed) {
+                                    Rectangle thumbBounds = getThumbBounds();
+                                    boolean nowHovered = thumbBounds.contains(e.getPoint());
+                                    if (nowHovered != isThumbHovered) {
+                                        isThumbHovered = nowHovered;
+                                        thumbColor = nowHovered ? tmb_hover : thumb;
+                                        trackColor = nowHovered ? trk_hover : track;
+                                        vsb.repaint();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void mouseDragged(MouseEvent e) {
+                                isThumbPressed = true;
+                                thumbColor = tmb_press;
+                                trackColor = trk_press;
+                                vsb.repaint();
+                            }
+                        });
+
+                        vsb.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mousePressed(MouseEvent e) {
+                                if (getThumbBounds().contains(e.getPoint())) {
+                                    isThumbPressed = true;
+                                    thumbColor = tmb_press;
+                                    trackColor = trk_press;
+                                    vsb.repaint();
+                                }
+                            }
+
+                            @Override
+                            public void mouseReleased(MouseEvent e) {
+                                if (isThumbPressed) {
+                                    isThumbPressed = false;
+                                    // Check if the mouse is still on the thumb
+                                    Rectangle thumbBounds = getThumbBounds();
+                                    if (thumbBounds.contains(e.getPoint())) {
+                                        thumbColor = tmb_hover;
+                                        trackColor = trk_hover;
+                                    } else {
+                                        thumbColor = thumb;
+                                        trackColor = track;
+                                    }
+                                    vsb.repaint();
+                                }
+                            }
+
+                            @Override
+                            public void mouseExited(MouseEvent e) {
+                                if (!isThumbPressed) {
+                                    if (isThumbHovered) {
+                                        isThumbHovered = false;
+                                        thumbColor = thumb;
+                                        trackColor = track;
+                                        vsb.repaint();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void mouseEntered(MouseEvent e) {
+                                if (!isThumbPressed) {
+                                    Rectangle thumbBounds = getThumbBounds();
+                                    if (thumbBounds.contains(e.getPoint())) {
+                                        isThumbHovered = true;
+                                        thumbColor = tmb_hover;
+                                        trackColor = trk_hover;
+                                        vsb.repaint();
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    protected void configureScrollBarColors() {
+                        this.thumbColor = thumb;
+                        this.trackColor = track;
+                    }
+
+                    @Override
+                    protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
+                        if (!c.isEnabled()) return;
+                        Graphics2D g2 = (Graphics2D) g.create();
+                        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                        g2.setPaint(thumbColor);
+                        g2.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, r, r);
+                        g2.dispose();
+                    }
+
+                    @Override
+                    protected JButton createDecreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    @Override
+                    protected JButton createIncreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    private JButton createZeroButton() {
+                        JButton button = new JButton();
+                        button.setPreferredSize(new Dimension(0, 0));
+                        button.setMinimumSize(new Dimension(0, 0));
+                        button.setMaximumSize(new Dimension(0, 0));
+                        return button;
+                    }
+                });
+
+                getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
+                    private boolean isThumbHovered = false;
+                    private boolean isThumbPressed = false;
+
+                    {
+                        JScrollBar hsb = getHorizontalScrollBar();
+
+                        hsb.addMouseMotionListener(new MouseMotionAdapter() {
+                            @Override
+                            public void mouseMoved(MouseEvent e) {
+                                Rectangle thumbBounds = getThumbBounds();
+                                boolean nowHovered = thumbBounds.contains(e.getPoint());
+                                if (nowHovered != isThumbHovered) {
+                                    isThumbHovered = nowHovered;
+                                    thumbColor = nowHovered ? tmb_hover : thumb;
+                                    trackColor = nowHovered ? trk_hover : track;
+                                    hsb.repaint();
+                                }
+                            }
+
+                            @Override
+                            public void mouseDragged(MouseEvent e) {
+                                isThumbPressed = true;
+                                thumbColor = tmb_press;
+                                trackColor = trk_press;
+                                hsb.repaint();
+                            }
+                        });
+
+                        hsb.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mousePressed(MouseEvent e) {
+                                if (getThumbBounds().contains(e.getPoint())) {
+                                    isThumbPressed = true;
+                                    thumbColor = tmb_press;
+                                    trackColor = trk_press;
+                                    hsb.repaint();
+                                }
+                            }
+
+                            @Override
+                            public void mouseReleased(MouseEvent e) {
+                                if (isThumbPressed) {
+                                    isThumbPressed = false;
+                                    Rectangle thumbBounds = getThumbBounds();
+                                    if (thumbBounds.contains(e.getPoint())) {
+                                        thumbColor = tmb_hover;
+                                        trackColor = trk_hover;
+                                    } else {
+                                        thumbColor = thumb;
+                                        trackColor = track;
+                                    }
+                                    hsb.repaint();
+                                }
+                            }
+
+                            @Override
+                            public void mouseExited(MouseEvent e) {
+                                if (!isThumbPressed) {
+                                    if (isThumbHovered) {
+                                        isThumbHovered = false;
+                                        thumbColor = thumb;
+                                        trackColor = track;
+                                        hsb.repaint();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void mouseEntered(MouseEvent e) {
+                                if (!isThumbPressed) {
+                                    Rectangle thumbBounds = getThumbBounds();
+                                    if (thumbBounds.contains(e.getPoint())) {
+                                        isThumbHovered = true;
+                                        thumbColor = tmb_hover;
+                                        trackColor = trk_hover;
+                                        hsb.repaint();
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    protected void configureScrollBarColors() {
+                        this.thumbColor = thumb;
+                        this.trackColor = track;
+                    }
+
+                    @Override
+                    protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
+                        if (!c.isEnabled()) return;
+                        Graphics2D g2 = (Graphics2D) g.create();
+                        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                        g2.setPaint(thumbColor);
+                        g2.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, r, r);
+                        g2.dispose();
+                    }
+
+                    @Override
+                    protected JButton createDecreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    @Override
+                    protected JButton createIncreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    private JButton createZeroButton() {
+                        JButton button = new JButton();
+                        button.setPreferredSize(new Dimension(0, 0));
+                        button.setMinimumSize(new Dimension(0, 0));
+                        button.setMaximumSize(new Dimension(0, 0));
+                        return button;
+                    }
+                });
+            }
+
+            if (!shadow_factor) {
+                setBorder(BorderFactory.createEmptyBorder());
+            }
+            if (border_factor > 0) {
+                Border solid = new MatteBorder(border_factor, border_factor, border_factor, border_factor, s);
+                Border raisedBevel = new BevelBorder(BevelBorder.RAISED, r_h, r_s);
+                Border loweredBevel = new BevelBorder(BevelBorder.LOWERED, l_h, l_s);
+                Border compound = BorderFactory.createCompoundBorder(
+                        raisedBevel,
+                        BorderFactory.createCompoundBorder(solid, loweredBevel)
+                );
+                setBorder(compound);
+            }
+        }
+    }
+
+    public static class CustomSearchIcon implements Icon {
+        private final int size, border_width;
+        private final Color stroke, fill;
+
+        public CustomSearchIcon(int size, int border_width, Color stroke, Color fill) {
+            this.size = size;
+            this.border_width = border_width;
+            this.stroke = stroke;
+            this.fill = fill;
+        }
+
+        @Override
+        public int getIconWidth() {
+            return size;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return size;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setStroke(new BasicStroke(
+                    border_width,
+                    BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_MITER
+            ));
+            g2d.setColor(stroke);
+            double unit = size / 20.0;
+
+            double y1 = 0;
+            double x1 = 20;
+
+            double y2 = 8.0525;
+            double x2 = 20 - y2;
+
+            int px1 = (int) (x1 * unit);
+            int py1 = (int) ((20 - y1) * unit);
+
+            int px2 = (int) (x2 * unit);
+            int py2 = (int) ((20 - y2) * unit);
+
+            g2d.drawLine(x + px1, y + py1, x + px2, y + py2);
+
+            double centerX = 7;
+            double centerY = 13;
+            double radius = 7;
+
+            int pixelDiameter = (int) (2 * radius * unit);
+            int pixelCenterX = (int) (centerX * unit);
+            int pixelCenterY = (int) ((20 - centerY) * unit);
+
+            g2d.setColor(fill);
+            g2d.fillOval(
+                    x+ pixelCenterX - pixelDiameter / 2,
+                    y + pixelCenterY - pixelDiameter / 2,
+                    pixelDiameter,
+                    pixelDiameter
+            );
+
+            g2d.setColor(stroke);
+            g2d.drawOval(
+                    x+ pixelCenterX - pixelDiameter / 2,
+                    y + pixelCenterY - pixelDiameter / 2,
+                    pixelDiameter,
+                    pixelDiameter
+            );
+            g2d.dispose();
+        }
+    }
+
+    public static class CustomTable extends JTable {
+        private int[] previousSelection = new int[0];
+        private boolean suppressListener = false;
+        private final int mode;
+
+        public CustomTable(String[] columns, Object[][] data, Font title, Font content,
+                           Color cfg, Color cfg_press, Color cbg, Color cbg_press,
+                           int mode, int height) {
+            super(new DefaultTableModel(data, columns) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            });
+            this.mode = mode;
+            JTableHeader header = getTableHeader();
+            header.setFont(title);
+            setDefaultRenderer(Object.class, new CellRenderer(content, cfg, cfg_press, cbg, cbg_press));
+
+            if (mode == 1) {
+                setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            } else {
+                setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                if (mode > 1) {
+                    getSelectionModel().addListSelectionListener((new MaxSelectionEnforcer()));
+                }
+            }
+
+            setRowHeight(height);
+            setShowGrid(false);
+            setIntercellSpacing(new Dimension(0, 0));
+            TableRowSorter<TableModel> sorter = new TableRowSorter<>(new DefaultTableModel(data, columns));
+            setRowSorter(sorter);
+            setFillsViewportHeight(true);
+        }
+
+        private static class CellRenderer extends DefaultTableCellRenderer {
+            private final Color bg, fg, bg_press, fg_press;
+            private final Font font;
+
+            public CellRenderer(Font font, Color bg, Color fg, Color bg_press, Color fg_press) {
+                this.font = font;
+                this.bg = bg;
+                this.fg = fg;
+                this.bg_press = bg_press;
+                this.fg_press = fg_press;
+                setOpaque(true);
+            }
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                           boolean hasFocus, int row, int column) {
+                setText(value != null ? value.toString() : "");
+                setFont(font);
+                if (isSelected) {
+                    setBackground(bg_press);
+                    setForeground(fg_press);
+                } else {
+                    setBackground(bg);
+                    setForeground(fg);
+                }
+                return this;
+            }
+        }
+
+        private class MaxSelectionEnforcer implements ListSelectionListener {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (suppressListener || e.getValueIsAdjusting()) return;
+                int[] selected = getSelectedRows();
+                if (mode > 0 && selected.length > mode) {
+                    suppressListener = true;
+                    clearSelection();
+                    for (int i : previousSelection) {
+                        addRowSelectionInterval(i, i);
+                    }
+                    suppressListener = false;
+                } else {
+                    previousSelection = selected;
+                }
+            }
+        }
+
     }
 }

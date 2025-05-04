@@ -15,7 +15,7 @@ public class Welcome {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    public static Buffer current_user;
+    private static Buffer current_user;
     private static BufferedImage bg, img;
     private static JLabel haha, haha1, haha2;
     private static CustomComponents.ImagePanel pnl;

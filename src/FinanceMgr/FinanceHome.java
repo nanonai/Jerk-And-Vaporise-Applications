@@ -18,13 +18,14 @@ public class FinanceHome {
     public static int indicator = 0;
     private static JFrame parent;
     private static Font merriweather, boldonse;
+
     private static JPanel side_bar, top_bar, content;
     public static Buffer current_user;
     private static BufferedImage logo, caret_up, caret_down;
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
     private static CustomComponents.CustomProfileIcon profileIcon1, profileIcon2;
-    private static CustomComponents.CustomButton user_management, profile_drop;
+    private static CustomComponents.CustomButton purchaseOrder, profile_drop , inventory,payment, purchaseRequisition, report;
     private static JLabel title;
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
@@ -56,19 +57,72 @@ public class FinanceHome {
         logo_cell = new CustomComponents.ImageCell(logo, 0.8, 5);
         side_bar.add(logo_cell, gbc_side);
 
+        // purchase order button
         gbc_side.gridy = 1;
         gbc_side.weighty = 0.8;
-        user_management = new CustomComponents.CustomButton("Manage User", merriweather, Color.WHITE, Color.WHITE,
+        purchaseOrder = new CustomComponents.CustomButton("Purchase Order", merriweather, Color.WHITE, Color.BLACK,
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
-        side_bar.add(user_management, gbc_side);
+        side_bar.add(purchaseOrder, gbc_side);
+        purchaseOrder.addActionListener(_ -> {
+                    FinanceHome.indicator = 2;
+                    PageChanger();
+                });
 
+        //purchaseRequisition
         gbc_side.gridy = 2;
-        gbc_side.weighty = 8.2;
-        JLabel placeholder = new JLabel("");
-        side_bar.add(placeholder, gbc_side);
+        gbc_side.weighty = 0.8;
+        purchaseRequisition = new CustomComponents.CustomButton("Purchase Requisition", merriweather,Color.WHITE, Color.BLACK,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        side_bar.add(purchaseRequisition, gbc_side);
+        purchaseRequisition.addActionListener(_ -> {
+            FinanceHome.indicator = 3;
+            PageChanger();
+        });
 
+        // View Inventory button
+        gbc_side.gridy = 3;
+        gbc_side.weighty = 0.8;
+        inventory = new CustomComponents.CustomButton("Inventory", merriweather, Color.WHITE, Color.BLACK,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        side_bar.add(inventory, gbc_side);
+        inventory.addActionListener(_ -> {
+            FinanceHome.indicator = 4;
+            PageChanger();
+        });
+
+        // payment button
+        gbc_side.gridy = 4;
+        gbc_side.weighty = 0.8;
+        payment = new CustomComponents.CustomButton("Payment", merriweather, Color.WHITE, Color.BLACK,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        side_bar.add(payment, gbc_side);
+        payment.addActionListener(_ -> {
+            FinanceHome.indicator = 5;
+            PageChanger();
+        });
+
+        //report
+        gbc_side.gridy = 5;
+        gbc_side.weighty = 0.8;
+        report = new CustomComponents.CustomButton("Report", merriweather, Color.WHITE, Color.BLACK,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        side_bar.add(report, gbc_side);
+        report.addActionListener(_ -> {
+            FinanceHome.indicator = 6;
+            PageChanger();
+        });
+
+        // label of welcome
         GridBagConstraints gbc_top = new GridBagConstraints();
         gbc_top.gridx = 0;
         gbc_top.gridy = 0;
@@ -80,6 +134,7 @@ public class FinanceHome {
                 Home.current_user.FullName));
         top_bar.add(title, gbc_top);
 
+        // profile button
         gbc_top.gridx = 1;
         gbc_top.weightx = 0.7;
         profileIcon1 = new CustomComponents.CustomProfileIcon(10, false, "Finance Manager", boldonse);
@@ -129,7 +184,7 @@ public class FinanceHome {
                 }
         );
 
-        SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> { //ensure things are not re-size before its loaded causing an error
             profile_drop_menu = new CustomComponents.CustomPopupMenu(
                     profile_drop,
                     options,
@@ -167,6 +222,8 @@ public class FinanceHome {
             }
         });
 
+        PurchaseReqPage.Loader(parent, merriweather, boldonse, content, current_user);
+        PurchaseOrderPage.Loader(parent, merriweather, boldonse, content, current_user);
         Profile.Loader(parent, merriweather, boldonse, content, current_user);
         PageChanger();
     }
@@ -175,14 +232,31 @@ public class FinanceHome {
         content.removeAll();
         content.revalidate();
         content.repaint();
-        switch (indicator) {
+        switch (FinanceHome.indicator) {
 //    Please indicate the relation of the indicator value and specific java class:
 //    0 -> Finance Home Welcome Page
 //    1 -> Profile page
+//    2 -> PO
+//    3 -> PR
+//    4 -> Inventory
+//    5 -> Process payment
+//    6 -> Generate financial report
             case 0:
                 break;
             case 1:
                 Profile.ShowPage();
+                break;
+            case 2:
+                PurchaseOrderPage.ShowPage();
+                break;
+            case 3:
+                PurchaseReqPage.ShowPage();
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
                 break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());
@@ -198,7 +272,11 @@ public class FinanceHome {
         int finalBase_size = base_size;
         SwingUtilities.invokeLater(() -> {
             logo_cell.repaint();
-            user_management.UpdateCustomButton(0, finalBase_size, null, 0);
+            purchaseOrder.UpdateCustomButton(0, finalBase_size, null, 0);
+            inventory.UpdateCustomButton(0, finalBase_size, null, 0);
+            payment.UpdateCustomButton(0, finalBase_size, null, 0);
+            purchaseRequisition.UpdateCustomButton(0, finalBase_size, null, 0);
+            report.UpdateCustomButton(0, finalBase_size, null, 0);
             title.setFont(boldonse.deriveFont((float)finalBase_size));
             profile.repaint();
             profileIcon1.UpdateSize((int) (finalBase_size * 2.5));
