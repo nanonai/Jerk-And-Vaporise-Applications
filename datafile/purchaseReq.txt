@@ -1,0 +1,120 @@
+PurchaseReqID :      PR0020
+ItemID:              16
+Quantity:            35
+ReqDate:             2023-7-13
+UserID:              PM0971204372
+~~~~~
+PurchaseReqID :      PR0021
+ItemID:              3
+Quantity:            15
+ReqDate:             2023-8-01
+UserID:              PM0971204373
+~~~~~
+PurchaseReqID :      PR0022
+ItemID:              7
+Quantity:            22
+ReqDate:             2023-8-15
+UserID:              PM0971204374
+~~~~~
+PurchaseReqID :      PR0023
+ItemID:              12
+Quantity:            10
+ReqDate:             2023-9-03
+UserID:              PM0971204375
+~~~~~
+PurchaseReqID :      PR0024
+ItemID:              9
+Quantity:            18
+ReqDate:             2023-9-20
+UserID:              PM0971204376
+~~~~~
+PurchaseReqID :      PR0025
+ItemID:              14
+Quantity:            25
+ReqDate:             2023-10-05
+UserID:              PM0971204377
+~~~~~
+PurchaseReqID :      PR0026
+ItemID:              6
+Quantity:            30
+ReqDate:             2023-10-18
+UserID:              PM0971204378
+~~~~~
+PurchaseReqID :      PR0027
+ItemID:              5
+Quantity:            12
+ReqDate:             2023-11-02
+UserID:              PM0971204379
+~~~~~
+PurchaseReqID :      PR0028
+ItemID:              2
+Quantity:            40
+ReqDate:             2023-11-16
+UserID:              PM0971204380
+~~~~~
+PurchaseReqID :      PR0029
+ItemID:              1
+Quantity:            20
+ReqDate:             2023-12-01
+UserID:              PM0971204381
+~~~~~
+PurchaseReqID :      PR0030
+ItemID:              11
+Quantity:            17
+ReqDate:             2023-12-20
+UserID:              PM0971204382
+~~~~~
+PurchaseReqID :      PR0031
+ItemID:              8
+Quantity:            23
+ReqDate:             2024-01-10
+UserID:              PM0971204383
+~~~~~
+PurchaseReqID :      PR0032
+ItemID:              13
+Quantity:            9
+ReqDate:             2024-01-25
+UserID:              PM0971204384
+~~~~~
+PurchaseReqID :      PR0033
+ItemID:              10
+Quantity:            28
+ReqDate:             2024-02-14
+UserID:              PM0971204385
+~~~~~
+PurchaseReqID :      PR0034
+ItemID:              4
+Quantity:            35
+ReqDate:             2024-03-03
+UserID:              PM0971204386
+~~~~~
+PurchaseReqID :      PR0035
+ItemID:              15
+Quantity:            16
+ReqDate:             2024-03-19
+UserID:              PM0971204387
+~~~~~
+PurchaseReqID :      PR0036
+ItemID:              17
+Quantity:            50
+ReqDate:             2024-04-07
+UserID:              PM0971204388
+~~~~~
+PurchaseReqID :      PR0037
+ItemID:              18
+Quantity:            21
+ReqDate:             2024-04-22
+UserID:              PM0971204389
+~~~~~
+PurchaseReqID :      PR0038
+ItemID:              19
+Quantity:            27
+ReqDate:             2024-05-05
+UserID:              PM0971204390
+~~~~~
+PurchaseReqID :      PR0039
+ItemID:              20
+Quantity:            14
+ReqDate:             2024-05-20
+UserID:              PM0971204391
+~~~~~
