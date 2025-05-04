@@ -7,6 +7,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.border.*;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
@@ -16,6 +17,8 @@ import java.io.IOException;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Objects;
+
+import static com.sun.java.accessibility.util.SwingEventMonitor.addListSelectionListener;
 
 public class CustomComponents {
     public static class ImagePanel extends JPanel {
@@ -1168,7 +1171,6 @@ public class CustomComponents {
                             public void mouseReleased(MouseEvent e) {
                                 if (isThumbPressed) {
                                     isThumbPressed = false;
-                                    // Check if the mouse is still on the thumb
                                     Rectangle thumbBounds = getThumbBounds();
                                     if (thumbBounds.contains(e.getPoint())) {
                                         thumbColor = tmb_hover;
@@ -1332,5 +1334,90 @@ public class CustomComponents {
             );
             g2d.dispose();
         }
+    }
+
+    public static class CustomTable extends JTable {
+        private int[] previousSelection = new int[0];
+        private boolean suppressListener = false;
+        private final int mode;
+
+        public CustomTable(String[] columns, Object[][] data, Font title, Font content,
+                           Color cfg, Color cfg_press, Color cbg, Color cbg_press,
+                           int mode, int height) {
+            super(new DefaultTableModel(data, columns) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            });
+            this.mode = mode;
+            JTableHeader header = getTableHeader();
+            header.setFont(title);
+            setDefaultRenderer(Object.class, new CellRenderer(content, cfg, cfg_press, cbg, cbg_press));
+
+            if (mode == 1) {
+                setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            } else {
+                setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                if (mode > 1) {
+                    getSelectionModel().addListSelectionListener((new MaxSelectionEnforcer()));
+                }
+            }
+
+            setRowHeight(height);
+            setShowGrid(false);
+            setIntercellSpacing(new Dimension(0, 0));
+            TableRowSorter<TableModel> sorter = new TableRowSorter<>(new DefaultTableModel(data, columns));
+            setRowSorter(sorter);
+            setFillsViewportHeight(true);
+        }
+
+        private static class CellRenderer extends DefaultTableCellRenderer {
+            private final Color bg, fg, bg_press, fg_press;
+            private final Font font;
+
+            public CellRenderer(Font font, Color bg, Color fg, Color bg_press, Color fg_press) {
+                this.font = font;
+                this.bg = bg;
+                this.fg = fg;
+                this.bg_press = bg_press;
+                this.fg_press = fg_press;
+                setOpaque(true);
+            }
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                           boolean hasFocus, int row, int column) {
+                setText(value != null ? value.toString() : "");
+                setFont(font);
+                if (isSelected) {
+                    setBackground(bg_press);
+                    setForeground(fg_press);
+                } else {
+                    setBackground(bg);
+                    setForeground(fg);
+                }
+                return this;
+            }
+        }
+
+        private class MaxSelectionEnforcer implements ListSelectionListener {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (suppressListener || e.getValueIsAdjusting()) return;
+                int[] selected = getSelectedRows();
+                if (mode > 0 && selected.length > mode) {
+                    suppressListener = true;
+                    clearSelection();
+                    for (int i : previousSelection) {
+                        addRowSelectionInterval(i, i);
+                    }
+                    suppressListener = false;
+                } else {
+                    previousSelection = selected;
+                }
+            }
+        }
+
     }
 }
