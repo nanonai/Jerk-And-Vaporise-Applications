@@ -8,7 +8,6 @@ public class Supplier {
     public String Email;
     public String Address;
 
-    // Constructor to initialize a new Supplier
     public Supplier(String SupplierID, String SupplierName, String ContactPerson, String Phone, String Email, String Address) {
         this.SupplierID = SupplierID;
         this.SupplierName = SupplierName;

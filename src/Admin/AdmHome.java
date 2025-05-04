@@ -19,7 +19,7 @@ public class AdmHome {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel side_bar, top_bar, content;
-    public static Buffer current_user;
+    private static Buffer current_user;
     private static BufferedImage logo, caret_up, caret_down;
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
@@ -58,7 +58,7 @@ public class AdmHome {
 
         gbc_side.gridy = 1;
         gbc_side.weighty = 0.8;
-        user_management = new CustomComponents.CustomButton("Manage User", merriweather, Color.WHITE, Color.WHITE,
+        user_management = new CustomComponents.CustomButton("Manage\nUser", merriweather, Color.WHITE, Color.WHITE,
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
@@ -173,6 +173,7 @@ public class AdmHome {
 
         Welcome.Loader(parent, merriweather, boldonse, content, current_user);
         Profile.Loader(parent, merriweather, boldonse, content, current_user);
+        UserMng.Loader(parent, merriweather, boldonse, content, current_user);
         PageChanger();
     }
 
@@ -191,6 +192,7 @@ public class AdmHome {
                 Profile.ShowPage();
                 break;
             case 2:
+                UserMng.ShowPage();
                 break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());
@@ -221,6 +223,7 @@ public class AdmHome {
                     Profile.UpdateComponentSize(finalBase_size);
                     break;
                 case 2:
+                    UserMng.UpdateComponentSize(finalBase_size);
                     break;
             }
         });

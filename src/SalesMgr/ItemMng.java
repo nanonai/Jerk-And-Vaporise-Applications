@@ -19,7 +19,7 @@ public class ItemMng {
     private static Font merriweather, boldonse;
     private static JPanel content, top_bar;
     private static Buffer current_user;
-    public static int indicator, base_size;
+    private static int indicator, base_size;
     private static List<Item> AllItems;
     private static JList ItemList;
     private static CustomComponents.CustomButton btnAdd,btnDelete,btnEdit;

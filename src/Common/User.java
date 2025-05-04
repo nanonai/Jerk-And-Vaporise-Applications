@@ -9,8 +9,8 @@ import java.io.FileWriter;
 import java.util.regex.Pattern;
 
 public class User {
-    public String UserID, Username, Password, FullName, Email, AccType;
-    public int Phone, RememberMe;
+    public String UserID, Username, Password, FullName, Email, AccType, Phone;
+    public int RememberMe;
     public LocalDate DateOfRegis;
     public static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final String EMAIL_REGEX =
@@ -23,7 +23,7 @@ public class User {
     public static final String specialCharPattern = ".*[!@#$%^&*()\\-+].*";
 
     public User(String UserID, String Username, String Password, String FullName,
-                String Email, int Phone, String AccType, LocalDate DateOfRegis,
+                String Email, String Phone, String AccType, LocalDate DateOfRegis,
                 int RememberMe) {
         this.UserID = UserID;
         this.Username = Username;
@@ -39,8 +39,8 @@ public class User {
     public static List<User> listAllUser(String filename) {
         List<User> allUser = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            String UserID = "", Username = "", Password = "", FullName = "", Email = "", AccType = "";
-            int Phone  = 0, RememberMe = 0;
+            String UserID = "", Username = "", Password = "", FullName = "", Email = "", AccType = "", Phone = "";
+            int RememberMe = 0;
             LocalDate DateOfRegis = null;
 
             String line;
@@ -52,7 +52,7 @@ public class User {
 //          Password:       XX000
 //          FullName:       XXXX
 //          Email:          XXXXXXXX@XXXXXX.XXXX
-//          Phone:          0000000000
+//          Phone:          000000000
 //          AccType:        XXXXXXX
 //          DateOfRegis:    0000-00-00
 //          RememberMe:     0/1
@@ -75,7 +75,7 @@ public class User {
                         Email = line.substring(16);
                         break;
                     case 6:
-                        Phone = Integer.parseInt(line.substring(16));
+                        Phone = line.substring(16);
                         break;
                     case 7:
                         AccType = line.substring(16);
@@ -189,7 +189,7 @@ public class User {
         return !repeated;
     }
 
-    public static boolean phoneChecker(int Phone, String filename) {
+    public static boolean phoneChecker(String Phone, String filename) {
         List<User> allUser = listAllUser(filename);
         boolean repeated = false;
         for (User user : allUser) {
@@ -207,7 +207,7 @@ public class User {
     }
 
     public static String validityChecker(String Username, String Password, String FullName,
-                                         String Email, int Phone, String filename) {
+                                         String Email, String Phone, String filename) {
         String indicator = "";
         if (Username.length() >= 8 && Username.length() <= 36) {
             indicator += "1";
