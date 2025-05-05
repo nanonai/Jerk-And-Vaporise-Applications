@@ -97,49 +97,39 @@ public class Home {
                 FinanceHome.ShowPage();
                 break;
         }
+        UpdateComponentSize(parent.getWidth(), parent.getHeight());
     }
 
     public static void UpdateComponentSize(int parent_width, int parent_height) {
         background.updateSize(parent_width, parent_height);
         outer_grid.revalidate();
         outer_grid.repaint();
+        side_bar.setPreferredSize(new Dimension(parent_width, parent_height));
         side_bar.revalidate();
         side_bar.repaint();
+        top_bar.setPreferredSize(new Dimension(parent_width, parent_height / 12));
         top_bar.revalidate();
         top_bar.repaint();
         content.revalidate();
         content.repaint();
-        switch (indicator) {
-            case 1:
-                AdmHome.UpdateComponentSize(parent_width, parent_height);
-                SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
+            switch (indicator) {
+                case 1:
                     AdmHome.UpdateComponentSize(parent_width, parent_height);
-                });
-                break;
-            case 2:
-                SalesHome.UpdateComponentSize(parent_width, parent_height);
-                SwingUtilities.invokeLater(() -> {
+                    break;
+                case 2:
                     SalesHome.UpdateComponentSize(parent_width, parent_height);
-                });
-                break;
-            case 3:
-                PurchaseHome.UpdateComponentSize(parent_width, parent_height);
-                SwingUtilities.invokeLater(() -> {
+                    break;
+                case 3:
                     PurchaseHome.UpdateComponentSize(parent_width, parent_height);
-                });
-                break;
-            case 4:
-                InventoryHome.UpdateComponentSize(parent_width, parent_height);
-                SwingUtilities.invokeLater(() -> {
+                    break;
+                case 4:
                     InventoryHome.UpdateComponentSize(parent_width, parent_height);
-                });
-                break;
-            case 5:
-                FinanceHome.UpdateComponentSize(parent_width, parent_height);
-                SwingUtilities.invokeLater(() -> {
+                    break;
+                case 5:
                     FinanceHome.UpdateComponentSize(parent_width, parent_height);
-                });
-                break;
-        }
+                    break;
+            }
+        });
     }
 }

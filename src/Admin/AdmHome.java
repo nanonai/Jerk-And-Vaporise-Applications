@@ -24,7 +24,7 @@ public class AdmHome {
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
     private static CustomComponents.CustomProfileIcon profileIcon1, profileIcon2;
-    private static CustomComponents.CustomButton user_management, profile_drop;
+    private static CustomComponents.CustomButton home_page, user_management, profile_drop;
     private static JLabel title;
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
@@ -58,7 +58,19 @@ public class AdmHome {
 
         gbc_side.gridy = 1;
         gbc_side.weighty = 0.8;
-        user_management = new CustomComponents.CustomButton("Manage\nUser", merriweather, Color.WHITE, Color.WHITE,
+        home_page = new CustomComponents.CustomButton("Home Page", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 20,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        home_page.addActionListener(_ -> {
+            AdmHome.indicator = 0;
+            PageChanger();
+        });
+        side_bar.add(home_page, gbc_side);
+
+        gbc_side.gridy = 2;
+        gbc_side.weighty = 0.8;
+        user_management = new CustomComponents.CustomButton("Manage User", merriweather, Color.WHITE, Color.WHITE,
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 20,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
@@ -68,8 +80,8 @@ public class AdmHome {
         });
         side_bar.add(user_management, gbc_side);
 
-        gbc_side.gridy = 2;
-        gbc_side.weighty = 8.2;
+        gbc_side.gridy = 3;
+        gbc_side.weighty = 7.4;
         JLabel placeholder = new JLabel("");
         side_bar.add(placeholder, gbc_side);
 
@@ -187,12 +199,16 @@ public class AdmHome {
 //    1 -> Profile page
             case 0:
                 Welcome.ShowPage();
+                title.setText(String.format("<html>Welcome, Administrator <i>- %s</i></html>",
+                        Home.current_user.FullName));
                 break;
             case 1:
                 Profile.ShowPage();
+                title.setText("Profile");
                 break;
             case 2:
                 UserMng.ShowPage();
+                title.setText("User Management Page");
                 break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());
@@ -208,6 +224,7 @@ public class AdmHome {
         int finalBase_size = base_size;
         SwingUtilities.invokeLater(() -> {
             logo_cell.repaint();
+            home_page.UpdateCustomButton(0, (int) (finalBase_size * 1.1), null, 0);
             user_management.UpdateCustomButton(0, (int) (finalBase_size * 1.1), null, 0);
             title.setFont(boldonse.deriveFont((float)finalBase_size));
             profile.repaint();

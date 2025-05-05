@@ -1382,7 +1382,7 @@ public class CustomComponents {
             this.cbg_press = cbg_press;
             JTableHeader header = getTableHeader();
             header.setFont(title);
-            setDefaultRenderer(Object.class, new CellRenderer(content, cfg, cfg_press, cbg, cbg_press));
+            setDefaultRenderer(Object.class, new CellRenderer(content, cbg, cfg, cbg_press, cfg_press));
 
             if (mode == 1) {
                 setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -1407,7 +1407,7 @@ public class CustomComponents {
                 header.setFont(title);
             }
             if (content != null) {
-                setDefaultRenderer(Object.class, new CellRenderer(content, cfg, cfg_press, cbg, cbg_press));
+                setDefaultRenderer(Object.class, new CellRenderer(content, cbg, cfg, cbg_press, cfg_press));
             }
             if (mode >= 0) {
                 this.mode = mode;
