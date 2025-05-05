@@ -939,15 +939,15 @@ public class CustomComponents {
     }
 
     public static class CustomList<E> extends JList<E> {
-        private final int maxSelections;
+        private int mode;
         private int[] previousSelection = new int[0];
         private boolean suppressListener = false;
 
         @SuppressWarnings("unchecked")
-        public CustomList(Object data, int maxSelections, int text_size, Font text_font,
+        public CustomList(Object data, int mode, int text_size, Font text_font,
                           Color t_normal, Color t_select, Color bg_normal, Color bg_select) {
             super(new DefaultListModel<>());
-            this.maxSelections = maxSelections;
+            this.mode = mode;
             setBorder(BorderFactory.createEmptyBorder());
             setFocusable(false);
             setCellRenderer(new DefaultListCellRenderer() {
@@ -973,12 +973,30 @@ public class CustomComponents {
             } else {
                 throw new IllegalArgumentException("Data must be a List or an Array.");
             }
-            if (maxSelections == 1) {
+            if (mode == 1) {
                 setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             } else {
                 setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-                if (maxSelections > 1) {
+                if (mode > 1) {
                     addListSelectionListener(new MaxSelectionEnforcer());
+                }
+            }
+        }
+
+        public void SetChanges(Font text_font, int text_size, int mode) {
+            if (text_size >= 0) {
+                setFont(text_font.deriveFont(Font.PLAIN, text_size));
+                repaint();
+            }
+            if (mode >= 0) {
+                this.mode = mode;
+                if (mode == 1) {
+                    setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                } else {
+                    setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                    if (mode > 1) {
+                        addListSelectionListener(new MaxSelectionEnforcer());
+                    }
                 }
             }
         }
@@ -988,7 +1006,7 @@ public class CustomComponents {
             public void valueChanged(ListSelectionEvent e) {
                 if (suppressListener || e.getValueIsAdjusting()) return;
                 int[] selected = getSelectedIndices();
-                if (maxSelections > 0 && selected.length > maxSelections) {
+                if (mode > 0 && selected.length > mode) {
                     suppressListener = true;
                     setSelectedIndices(previousSelection);
                     suppressListener = false;
@@ -1263,7 +1281,7 @@ public class CustomComponents {
     }
 
     public static class CustomSearchIcon implements Icon {
-        private final int size, border_width;
+        private int size, border_width;
         private final Color stroke, fill;
 
         public CustomSearchIcon(int size, int border_width, Color stroke, Color fill) {
@@ -1273,6 +1291,12 @@ public class CustomComponents {
             this.fill = fill;
         }
 
+        public void UpdateSize(int size) {
+            this.size = size;
+        }
+        
+        public void UpdateBorder(int border_width) { this.border_width = border_width; }
+        
         @Override
         public int getIconWidth() {
             return size;
@@ -1339,7 +1363,8 @@ public class CustomComponents {
     public static class CustomTable extends JTable {
         private int[] previousSelection = new int[0];
         private boolean suppressListener = false;
-        private final int mode;
+        private int mode;
+        private final Color cfg, cfg_press, cbg, cbg_press;
 
         public CustomTable(String[] columns, Object[][] data, Font title, Font content,
                            Color cfg, Color cfg_press, Color cbg, Color cbg_press,
@@ -1351,6 +1376,10 @@ public class CustomComponents {
                 }
             });
             this.mode = mode;
+            this.cfg = cfg;
+            this.cfg_press = cfg_press;
+            this.cbg = cbg;
+            this.cbg_press = cbg_press;
             JTableHeader header = getTableHeader();
             header.setFont(title);
             setDefaultRenderer(Object.class, new CellRenderer(content, cfg, cfg_press, cbg, cbg_press));
@@ -1370,6 +1399,28 @@ public class CustomComponents {
             TableRowSorter<TableModel> sorter = new TableRowSorter<>(new DefaultTableModel(data, columns));
             setRowSorter(sorter);
             setFillsViewportHeight(true);
+        }
+
+        public void SetChanges(Font title, Font content, int mode) {
+            if (title != null) {
+                JTableHeader header = getTableHeader();
+                header.setFont(title);
+            }
+            if (content != null) {
+                setDefaultRenderer(Object.class, new CellRenderer(content, cfg, cfg_press, cbg, cbg_press));
+            }
+            if (mode >= 0) {
+                this.mode = mode;
+                if (mode == 1) {
+                    setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                } else {
+                    setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                    if (mode > 1) {
+                        getSelectionModel().addListSelectionListener((new MaxSelectionEnforcer()));
+                    }
+                }
+            }
+            repaint();
         }
 
         private static class CellRenderer extends DefaultTableCellRenderer {

@@ -13,11 +13,11 @@ import java.util.ArrayList;
 public class UserMng {
     private static JFrame parent;
     private static Font merriweather, boldonse;
-    private static JPanel content;
+    private static JPanel content, inner;
     private static Buffer current_user;
-    private static CustomComponents.CustomList<String> list;
-    private static CustomComponents.CustomScrollPane scrollPane;
-    private static CustomComponents.CustomSearchIcon search_icon, search_icon_h;
+    private static CustomComponents.CustomButton all, fin, pur, inv, sls;
+    private static JLabel lbl_show, lbl_entries;
+    private static JComboBox<String> entries;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, Buffer current_user) {
         UserMng.parent = parent;
@@ -30,38 +30,62 @@ public class UserMng {
     public static void ShowPage() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 10;
-        gbc.weighty = 10;
-        gbc.insets = new Insets(20, 20, 20, 20);
-        String[] columnNames = {"ID", "Name", "Age"};
-        Object[][] data = {
-                {3, "Alice", 22}, {1, "Bob", 25}, {2, "Charlie", 20}, {5, "Diana", 30},
-                {4, "Ethan", 28}, {6, "Fiona", 24}, {7, "George", 27}, {8, "Hannah", 21},
-                {9, "Ian", 26}, {10, "Jasmine", 23}, {11, "Kyle", 29}, {12, "Lara", 22},
-                {13, "Mike", 24}, {14, "Nina", 20}, {15, "Oscar", 31}, {16, "Paula", 19},
-                {17, "Quincy", 33}, {18, "Rita", 32}, {19, "Steve", 23}, {20, "Tina", 25},
-                {21, "Uma", 26}, {22, "Victor", 27}, {23, "Wendy", 24}, {24, "Xavier", 30},
-                {25, "Yara", 28}, {26, "Zane", 22}, {27, "Amber", 21}, {28, "Blake", 23},
-                {29, "Cindy", 25}, {30, "Derek", 24}, {31, "Elle", 26}, {32, "Frank", 27},
-                {33, "Grace", 29}, {34, "Hugo", 20}, {35, "Isla", 23}, {36, "Jake", 22},
-                {37, "Kara", 24}, {38, "Leo", 30}, {39, "Mila", 25}, {40, "Noah", 21}
-        };
-        DefaultTableModel model = new DefaultTableModel(data, columnNames);
-        JTable table = new JTable(model);
+        gbc.insets = new Insets(20, 20, 0, 0);
+        all = new CustomComponents.CustomButton("All user", merriweather,
+                Color.BLACK, Color.BLACK, Color.WHITE, Color.WHITE,
+                Main.transparent, 0, 20, Main.transparent, false, 5, false,
+                null, 0, 0, 0);
+        content.add(all, gbc);
 
-        TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
-        table.setRowSorter(sorter);
+        gbc.gridx = 1;
+        gbc.insets = new Insets(20, 0, 0, 0);
+        fin = new CustomComponents.CustomButton("Finance", merriweather, new Color(255, 255, 255),
+                new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
+                Main.transparent, 0, 20, Main.transparent, false, 5, false,
+                null, 0, 0, 0);
+        content.add(fin, gbc);
 
-        table.setFillsViewportHeight(true);
+        gbc.gridx = 2;
+        pur = new CustomComponents.CustomButton("Purchase", merriweather, new Color(255, 255, 255),
+                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
+                Main.transparent, 0, 20, Main.transparent, false, 5, false,
+                null, 0, 0, 0);
+        content.add(pur, gbc);
 
-        CustomComponents.CustomTable tb = new CustomComponents.CustomTable(columnNames, data,
-                boldonse, merriweather, Color.BLACK, Color.YELLOW, Color.WHITE, Color.BLACK, 4, 30);
-        CustomComponents.CustomScrollPane sp = new CustomComponents.CustomScrollPane(false, 4, tb,
-                30, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.WHITE, Color.CYAN,
-                Main.transparent, Main.transparent, Main.transparent, Main.transparent, 0);
-        content.add(sp, gbc);
+        gbc.gridx = 3;
+        inv = new CustomComponents.CustomButton("Inventory", merriweather, new Color(255, 255, 255),
+                new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
+                Main.transparent, 0, 20, Main.transparent, false, 5, false,
+                null, 0, 0, 0);
+        content.add(inv, gbc);
+
+        gbc.gridx = 4;
+        sls = new CustomComponents.CustomButton("Sales", merriweather, new Color(255, 255, 255),
+                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
+                Main.transparent, 0, 20, Main.transparent, false, 5, false,
+                null, 0, 0, 0);
+        content.add(sls, gbc);
+
+        gbc.gridx = 5;
+        gbc.weightx = 14;
+        gbc.insets = new Insets(0, 0, 0, 20);
+        JLabel placeholder1 = new JLabel("");
+        content.add(placeholder1, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 6;
+        gbc.weightx = 1;
+        gbc.weighty = 18;
+        gbc.insets = new Insets(0, 20, 20, 20);
+        inner = new JPanel(new GridBagLayout());
+        inner.setOpaque(true);
+        inner.setBackground(Color.WHITE);
+        content.add(inner, gbc);
     }
 
     public static void UpdateComponentSize(int base_size) {

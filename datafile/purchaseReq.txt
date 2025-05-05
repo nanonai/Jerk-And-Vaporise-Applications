@@ -1,31 +1,31 @@
 PurchaseReqID :      PR0020
 ItemID:              16
 Quantity:            35
-ReqDate:             2023-7-13
+ReqDate:             2023-07-13
 UserID:              PM0971204372
 ~~~~~
 PurchaseReqID :      PR0021
 ItemID:              3
 Quantity:            15
-ReqDate:             2023-8-01
+ReqDate:             2023-08-01
 UserID:              PM0971204373
 ~~~~~
 PurchaseReqID :      PR0022
 ItemID:              7
 Quantity:            22
-ReqDate:             2023-8-15
+ReqDate:             2023-08-15
 UserID:              PM0971204374
 ~~~~~
 PurchaseReqID :      PR0023
 ItemID:              12
 Quantity:            10
-ReqDate:             2023-9-03
+ReqDate:             2023-09-03
 UserID:              PM0971204375
 ~~~~~
 PurchaseReqID :      PR0024
 ItemID:              9
 Quantity:            18
-ReqDate:             2023-9-20
+ReqDate:             2023-09-20
 UserID:              PM0971204376
 ~~~~~
 PurchaseReqID :      PR0025
