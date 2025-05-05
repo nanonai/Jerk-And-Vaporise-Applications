@@ -59,7 +59,7 @@ public class AdmHome {
         gbc_side.gridy = 1;
         gbc_side.weighty = 0.8;
         user_management = new CustomComponents.CustomButton("Manage\nUser", merriweather, Color.WHITE, Color.WHITE,
-                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 20,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
         user_management.addActionListener(_ -> {
@@ -208,7 +208,7 @@ public class AdmHome {
         int finalBase_size = base_size;
         SwingUtilities.invokeLater(() -> {
             logo_cell.repaint();
-            user_management.UpdateCustomButton(0, finalBase_size, null, 0);
+            user_management.UpdateCustomButton(0, (int) (finalBase_size * 1.1), null, 0);
             title.setFont(boldonse.deriveFont((float)finalBase_size));
             profile.repaint();
             profileIcon1.UpdateSize((int) (finalBase_size * 2.5));

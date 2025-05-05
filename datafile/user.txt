@@ -6,7 +6,7 @@ Email:          ad123@gmail.com
 Phone:          151240129
 AccType:        Administrator
 DateOfRegis:    2025-03-31
-RememberMe:     0
+RememberMe:     1
 ~~~~~
 UserID:         SM1253724128
 Username:       sm123
