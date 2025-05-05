@@ -28,8 +28,5 @@ public class PurchaseReqPage {
         List<PurchaseRequisition> prList = PurchaseRequisition.listAllPurchaseRequisitions("datafile/purchaseReq.txt");
         JPanel tablePanel = TableUIHelper.createPurchaseReqTablePanel(prList);
         content.add(tablePanel);
-
-        JLabel pop = new JLabel("POP");
-        content.add(pop);
     }
 }
