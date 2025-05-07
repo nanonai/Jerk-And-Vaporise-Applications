@@ -25,7 +25,7 @@ public class SalesHome {
     private static JButton profile;
     private static CustomComponents.CustomProfileIcon profileIcon1, profileIcon2;
     private static CustomComponents.CustomButton home_btn, item_btn, sply_btn, dly_sls_btn, pr_btn, po_btn, profile_drop;
-    public static JLabel title;
+    private static JLabel title;
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
@@ -64,7 +64,6 @@ public class SalesHome {
                 0, 0);
         home_btn.addActionListener(_ -> {
             SalesHome.indicator = 0;
-            SalesHome.title.setText("HomePage");
             PageChanger();
         });
         side_bar.add(home_btn, gbc_side);
@@ -76,7 +75,6 @@ public class SalesHome {
                 0, 0);
         item_btn.addActionListener(_ -> {
             SalesHome.indicator = 2;
-            SalesHome.title.setText("Item Management Page");
             PageChanger();
         });
         side_bar.add(item_btn, gbc_side);
@@ -88,7 +86,6 @@ public class SalesHome {
                 0, 0);
         sply_btn.addActionListener(_ -> {
             SalesHome.indicator = 3;
-            SalesHome.title.setText("Supplier Management Page");
             PageChanger();
         });
         side_bar.add(sply_btn, gbc_side);
@@ -99,7 +96,6 @@ public class SalesHome {
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
         dly_sls_btn.addActionListener(_ -> {
-            SalesHome.title.setText("Daily Item-Wise Sales Management Page");
             SalesHome.indicator = 4;
             PageChanger();
         });
@@ -112,7 +108,6 @@ public class SalesHome {
                 0, 0);
         pr_btn.addActionListener(_ -> {
             SalesHome.indicator = 5;
-            SalesHome.title.setText("Purchase Requisition Management Page");
             PageChanger();
         });
         side_bar.add(pr_btn, gbc_side);
@@ -124,7 +119,6 @@ public class SalesHome {
                 0, 0);
         po_btn.addActionListener(_ -> {
             SalesHome.indicator = 6;
-            SalesHome.title.setText("Purchase Order Management Page");
             PageChanger();
         });
         side_bar.add(po_btn, gbc_side);
@@ -257,24 +251,32 @@ public class SalesHome {
 //    6 -> Purchase orders page
             case 0:
                 SalesHomePage.ShowPage();
+                title.setText(String.format("<html>Welcome, Sales Manager <i>- %s</i></html>",
+                        Home.current_user.FullName));
                 break;
             case 1:
                 Profile.ShowPage();
+                title.setText("Profile");
                 break;
             case 2:
                 ItemMng.ShowPage();
+                title.setText("Item Management Page");
                 break;
             case 3:
                 SupplierMng.ShowPage();
+                title.setText("Supplier Management Page");
                 break;
             case 4:
                 DailySalesMng.ShowPage();
+                title.setText("Daily Item-Wise Sales Management Page");
                 break;
             case 5:
                 PurchaseRequisitionMng.ShowPage();
+                title.setText("Purchase Requisition Management Page");
                 break;
             case 6:
                 PurchaseOrderMng.ShowPage();
+                title.setText("Purchase Order Management Page");
                 break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());

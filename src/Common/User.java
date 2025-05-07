@@ -12,15 +12,15 @@ public class User {
     public String UserID, Username, Password, FullName, Email, AccType, Phone;
     public int RememberMe;
     public LocalDate DateOfRegis;
-    public static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    public static final String EMAIL_REGEX =
+    private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final String EMAIL_REGEX =
             "^(?!\\.)(?!.*\\.\\.)([a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*)"
                     + "@([a-zA-Z0-9.-]+)\\.([a-zA-Z]{2,})$";
-    public static final String PHONE_REGEX = "^01[0-9]{8}$";
-    public static final String upperCasePattern = ".*[A-Z].*";
-    public static final String lowerCasePattern = ".*[a-z].*";
-    public static final String digitPattern = ".*\\d.*";
-    public static final String specialCharPattern = ".*[!@#$%^&*()\\-+].*";
+    private static final String PHONE_REGEX = "^01[0-9]{8}$";
+    private static final String upperCasePattern = ".*[A-Z].*";
+    private static final String lowerCasePattern = ".*[a-z].*";
+    private static final String digitPattern = ".*\\d.*";
+    private static final String specialCharPattern = ".*[!@#$%^&*()\\-+].*";
 
     public User(String UserID, String Username, String Password, String FullName,
                 String Email, String Phone, String AccType, LocalDate DateOfRegis,
