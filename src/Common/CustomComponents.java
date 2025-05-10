@@ -316,19 +316,29 @@ public class CustomComponents {
                             getWidth() - (shadowOffset + i * 2),
                             getHeight() - (shadowOffset + i * 2),
                             corner_radius, corner_radius);
+                    g2.setColor(fill_color);
+                    g2.fillRoundRect(0, 0, getWidth() - 5, getHeight() - 5, corner_radius, corner_radius);
+                    if (border_factor != 0) {
+                        g2.setColor(border_color);
+                        g2.setStroke(new BasicStroke(border_factor, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                        g2.drawRoundRect(border_factor, border_factor, getWidth() - 5 - 2 * border_factor,
+                                getHeight() - 5 - 2 * border_factor,
+                                corner_radius - border_factor, corner_radius - border_factor);
+                    }
+                    g2.dispose();
                 }
+            } else {
+                g2.setColor(fill_color);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), corner_radius, corner_radius);
+                if (border_factor != 0) {
+                    g2.setColor(border_color);
+                    g2.setStroke(new BasicStroke(border_factor, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                    g2.drawRoundRect(border_factor, border_factor, getWidth() - 2 * border_factor,
+                            getHeight()  - 2 * border_factor,
+                            corner_radius - border_factor, corner_radius - border_factor);
+                }
+                g2.dispose();
             }
-
-            g2.setColor(fill_color);
-            g2.fillRoundRect(0, 0, getWidth() - 5, getHeight() - 5, corner_radius, corner_radius);
-            if (border_factor != 0) {
-                g2.setColor(border_color);
-                g2.setStroke(new BasicStroke(border_factor, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-                g2.drawRoundRect(border_factor, border_factor, getWidth() - 5 - 2 * border_factor,
-                        getHeight() - 5 - 2 * border_factor,
-                        corner_radius - border_factor, corner_radius - border_factor);
-            }
-            g2.dispose();
         }
     }
 
@@ -481,7 +491,7 @@ public class CustomComponents {
 
     public static class CustomButton extends JButton {
         private final Color background;
-        private final Color normal, hover, follow, t_normal, t_hover;
+        private Color normal, hover, follow, t_normal, t_hover;
         private final Font font;
         private int radius, t_size;
         private double r;
@@ -559,9 +569,23 @@ public class CustomComponents {
             repaint();
         }
 
+        public void UpdateColor(Color t_normal, Color t_hover, Color normal, Color hover, Color follow) {
+            this.t_normal = t_normal;
+            this.t_hover = t_hover;
+            this.normal = normal;
+            this.hover = hover;
+            this.follow = follow;
+            repaint();
+        }
+
         public void UpdateSize(int size_if_need1, int size_if_need2) {
             this.size_if_need1 = size_if_need1;
             this.size_if_need2 = size_if_need2;
+            repaint();
+        }
+
+        public void UpdateText(String string) {
+            setText(string);
             repaint();
         }
 
@@ -1470,5 +1494,87 @@ public class CustomComponents {
             }
         }
 
+        public void UpdateTableContent(String[] columns, Object[][] data) {
+            DefaultTableModel model = new DefaultTableModel(data, columns) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+            setModel(model);
+            setRowSorter(new TableRowSorter<>(model));
+            if (mode == 1) {
+                setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            } else {
+                setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                if (mode > 1) {
+                    getSelectionModel().addListSelectionListener((new MaxSelectionEnforcer()));
+                }
+            }
+            repaint();
+        }
+    }
+
+    public static class CustomArrowIcon implements Icon {
+        private int size, borderWidth;
+        private final Color stroke;
+        private final boolean direction;
+
+        public CustomArrowIcon(int size, int borderWidth, Color stroke, boolean direction) {
+            this.size = size;
+            this.borderWidth = borderWidth;
+            this.stroke = stroke;
+            this.direction = direction;
+        }
+
+        public void UpdateSize(int size) {
+            this.size = size;
+        }
+
+        public void UpdateBorder(int borderWidth) {
+            this.borderWidth = borderWidth;
+        }
+
+        @Override
+        public int getIconWidth() {
+            return size;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return size;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setStroke(new BasicStroke(borderWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            g2d.setColor(stroke);
+
+            double unit = size / 20.0;
+            int[][] arrowPoints;
+            if (direction) {
+                arrowPoints = new int[][] {
+                        {14, 5},
+                        {6, 10},
+                        {14, 15}
+                };
+            } else {
+                arrowPoints = new int[][] {
+                        {6, 5},
+                        {14, 10},
+                        {6, 15}
+                };
+            }
+            for (int i = 0; i < arrowPoints.length - 1; i++) {
+                int x1 = (int) (arrowPoints[i][0] * unit);
+                int y1 = (int) (arrowPoints[i][1] * unit);
+                int x2 = (int) (arrowPoints[i + 1][0] * unit);
+                int y2 = (int) (arrowPoints[i + 1][1] * unit);
+                g2d.drawLine(x + x1, y + y1, x + x2, y + y2);
+            }
+            g2d.dispose();
+        }
     }
 }

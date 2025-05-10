@@ -100,6 +100,36 @@ public class User {
         return allUser;
     }
 
+    public static List<User> listAllUserFromFilter(String filename, String type, String filter) {
+        List<User> user_list = listAllUser(filename);
+        List<User> type_user_list = new ArrayList<>();
+        List<User> filtered_user_list = new ArrayList<>();
+        if (type.isEmpty() && filter.isEmpty()) {
+            return user_list;
+        }
+        for (User user: user_list) {
+            if (Objects.equals(user.AccType, type)) {
+                type_user_list.add(user);
+            } else if (type.isEmpty()) {
+                type_user_list.add(user);
+            }
+        }
+        if (filter.isEmpty()) {
+            return type_user_list;
+        }
+        for (User user: type_user_list) {
+            if ((user.UserID.toLowerCase().contains(filter.toLowerCase()) ||
+                    user.Email.toLowerCase().contains(filter.toLowerCase()) ||
+                    user.Phone.contains(filter) ||
+                    user.DateOfRegis.toString().contains(filter.toLowerCase()) ||
+                    user.Username.toLowerCase().contains(filter.toLowerCase()) ||
+                    user.FullName.toLowerCase().contains(filter.toLowerCase()))) {
+                filtered_user_list.add(user);
+            }
+        }
+        return filtered_user_list;
+    }
+
     public static User RememberedUser(String filename) {
         List<User> allUser = listAllUser(filename);
         User r_user = null;
