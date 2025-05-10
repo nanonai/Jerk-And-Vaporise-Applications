@@ -3,17 +3,17 @@ Username:       ad123
 Password:       ad123
 FullName:       Wong
 Email:          ad123@gmail.com
-Phone:          151240129
+Phone:          0151240129
 AccType:        Administrator
 DateOfRegis:    2025-03-31
-RememberMe:     0
+RememberMe:     1
 ~~~~~
 UserID:         SM1253724128
 Username:       sm123
 Password:       sm123
 FullName:       Whei Hung
 Email:          sm123@gmail.com
-Phone:          123354535
+Phone:          0123354535
 AccType:        Sales Manager
 DateOfRegis:    2025-03-31
 RememberMe:     0
@@ -23,7 +23,7 @@ Username:       pm123
 Password:       pm123
 FullName:       Boon
 Email:          pm123@gmail.com
-Phone:          128467057
+Phone:          0128467057
 AccType:        Purchase Manager
 DateOfRegis:    2025-03-31
 RememberMe:     0
@@ -33,7 +33,7 @@ Username:       im123
 Password:       im123
 FullName:       Eason
 Email:          im123@gmail.com
-Phone:          123574252
+Phone:          0123574252
 AccType:        Inventory Manager
 DateOfRegis:    2025-03-31
 RememberMe:     0
@@ -43,8 +43,58 @@ Username:       fm123
 Password:       fm123
 FullName:       Vanessa
 Email:          fm123@gmail.com
-Phone:          145323423
+Phone:          0145323423
 AccType:        Finance Manager
 DateOfRegis:    2025-03-31
+RememberMe:     0
+~~~~~
+UserID:         AD7264918352
+Username:       adminX
+Password:       Admin@123
+FullName:       Tan Ai Ling
+Email:          adminx@gmail.com
+Phone:          0123456789
+AccType:        Administrator
+DateOfRegis:    2025-04-01
+RememberMe:     0
+~~~~~
+UserID:         SM6352871092
+Username:       salesY
+Password:       Sales#456
+FullName:       Lim Jin Wei
+Email:          salesy@gmail.com
+Phone:          0112345678
+AccType:        Sales Manager
+DateOfRegis:    2025-04-01
+RememberMe:     0
+~~~~~
+UserID:         PM9274618301
+Username:       purchaseZ
+Password:       Purchase$789
+FullName:       Chua Mei Lin
+Email:          purchasez@gmail.com
+Phone:          0198765432
+AccType:        Purchase Manager
+DateOfRegis:    2025-04-01
+RememberMe:     0
+~~~~~
+UserID:         IM3284765193
+Username:       invmanA
+Password:       Invman!321
+FullName:       Goh Wei Sheng
+Email:          invmana@gmail.com
+Phone:          0181234567
+AccType:        Inventory Manager
+DateOfRegis:    2025-04-01
+RememberMe:     0
+~~~~~
+UserID:         FM8374920156
+Username:       finmgrB
+Password:       Finmgr&654
+FullName:       Lee Siew Yeen
+Email:          finmgrb@gmail.com
+Phone:          0176543210
+AccType:        Finance Manager
+DateOfRegis:    2025-04-01
 RememberMe:     0
 ~~~~~
