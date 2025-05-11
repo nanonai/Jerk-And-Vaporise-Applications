@@ -175,7 +175,9 @@ public class Profile {
         content.add(phone_img, gbc);
 
         gbc.gridx = 3;
-        phone_label = new JLabel(String.format("<html><b>Phone No.: <i>%s</i></b></html>", current_user.Phone));
+        String format_phone = String.format("+60 %s-%s %s", current_user.Phone.substring(1, 3),
+                current_user.Phone.substring(3, 6), current_user.Phone.substring(6));
+        phone_label = new JLabel(String.format("<html><b>Phone No.: <i>%s</i></b></html>", format_phone));
         content.add(phone_label, gbc);
 
         gbc.gridx = 1;

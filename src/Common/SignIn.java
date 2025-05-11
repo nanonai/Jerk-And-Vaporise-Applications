@@ -222,15 +222,25 @@ public class SignIn {
         if (txt1.getText().isEmpty() || txt1.getText().equals("Username or email \r\r") ||
                 new String(txt2.getPassword()).isEmpty() ||
                 new String(txt2.getPassword()).equals("Password \r\r")) {
-            CustomComponents.CustomDialog error = new CustomComponents.CustomDialog(parent,
-                    merriweather, 0);
-            error.show_dialog("Error", "Details must not be empty!",
-                    "Ok", null, null, null);
+            CustomComponents.CustomOptionPane.showErrorDialog(
+                    parent,
+                    "Details must not be empty!",
+                    "Error",
+                    new Color(209, 88, 128),
+                    new Color(255, 255, 255),
+                    new Color(237, 136, 172),
+                    new Color(255, 255, 255)
+            );
         } else if (txt1.getText().contains(" ") || new String(txt2.getPassword()).contains(" ")) {
-            CustomComponents.CustomDialog error = new CustomComponents.CustomDialog(parent,
-                    merriweather, 0);
-            error.show_dialog("Error", "Details must not contain spaces!",
-                    "Ok", null, null, null);
+            CustomComponents.CustomOptionPane.showErrorDialog(
+                    parent,
+                    "Details must not contain spaces!",
+                    "Error",
+                    new Color(209, 88, 128),
+                    new Color(255, 255, 255),
+                    new Color(237, 136, 172),
+                    new Color(255, 255, 255)
+            );
         } else if (!User.usernameChecker(txt1.getText().toLowerCase(), Main.userdata_file) ||
                 !User.emailChecker(txt1.getText(), Main.userdata_file)) {
             List<User> allUser = User.listAllUser(Main.userdata_file);
@@ -269,16 +279,26 @@ public class SignIn {
                 Home.current_user = logged_in;
                 Main.PageChanger(parent, merriweather, boldonse);
             } else {
-                CustomComponents.CustomDialog error = new CustomComponents.CustomDialog(parent,
-                        merriweather, 0);
-                error.show_dialog("Error", "<html>Username/email or password<br>is incorrect!</html>",
-                        "Ok", null, null, null);
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Username/email or password is incorrect!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
             }
         } else {
-            CustomComponents.CustomDialog error = new CustomComponents.CustomDialog(parent,
-                    merriweather, 0);
-            error.show_dialog("Error", "<html>Username/email or password<br>is incorrect!</html>",
-                    "Ok", null, null, null);
+            CustomComponents.CustomOptionPane.showErrorDialog(
+                    parent,
+                    "Username/email or password is incorrect!",
+                    "Error",
+                    new Color(209, 88, 128),
+                    new Color(255, 255, 255),
+                    new Color(237, 136, 172),
+                    new Color(255, 255, 255)
+            );
         }
     }
 

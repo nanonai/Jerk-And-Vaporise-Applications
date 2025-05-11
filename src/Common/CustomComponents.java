@@ -1,5 +1,4 @@
 package Common;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
@@ -12,13 +11,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.Objects;
-
-import static com.sun.java.accessibility.util.SwingEventMonitor.addListSelectionListener;
 
 public class CustomComponents {
     public static class ImagePanel extends JPanel {
@@ -356,7 +350,7 @@ public class CustomComponents {
             setForeground(Color.BLACK);
             setBackground(new Color(255, 255, 255));
             setCaretColor(Color.BLACK);
-            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 26));
+            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 
             addFocusListener(new FocusListener() {
                 @Override
@@ -378,6 +372,13 @@ public class CustomComponents {
 
             setText(placeholder);
             setForeground(placeholderColor);
+        }
+
+        public void Reset() {
+            setText(placeholder);
+            setToolTipText("");
+            setForeground(placeholderColor);
+            repaint();
         }
     }
 
@@ -730,109 +731,174 @@ public class CustomComponents {
         }
     }
 
-    public static class CustomDialog {
-        private final JFrame frame;
-        private final Font font;
-        private BufferedImage icon, image;
+    public static class CustomOptionPane extends JOptionPane {
+        public static void showErrorDialog(Component parent, String message, String title,
+                                           Color btn_bg, Color btn_fg, Color btn_bgh, Color btn_fgh) {
+            int base_size = getBaseFontSize(parent);
+            JLabel messageLabel = new JLabel(message);
+            messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, base_size));
 
-        public CustomDialog(JFrame frame, Font font, int icon_factor) {
-            this.frame = frame;
-            this.font = font;
-            if (icon_factor == 0) {
-                Icon pre_icon = UIManager.getIcon("OptionPane.errorIcon");
-                if (pre_icon != null) {
-                    icon = new BufferedImage(
-                            pre_icon.getIconWidth(),
-                            pre_icon.getIconHeight(),
-                            BufferedImage.TYPE_INT_ARGB
-                    );
-                    Graphics2D g2d = icon.createGraphics();
-                    pre_icon.paintIcon(null, g2d, 0, 0);
-                    g2d.dispose();
-                }
-                try {
-                    image = ImageIO.read(new File("images/error.png"));
-                } catch (IOException e) {
-                    e.getStackTrace();
-                }
-            } else if (icon_factor == 1) {
-                Icon pre_icon = UIManager.getIcon("OptionPane.informationIcon");
-                if (pre_icon != null) {
-                    icon = new BufferedImage(
-                            pre_icon.getIconWidth(),
-                            pre_icon.getIconHeight(),
-                            BufferedImage.TYPE_INT_ARGB
-                    );
-                    Graphics2D g2d = icon.createGraphics();
-                    pre_icon.paintIcon(null, g2d, 0, 0);
-                    g2d.dispose();
-                }
-                try {
-                    image = ImageIO.read(new File("images/info.png"));
-                } catch (IOException e) {
-                    e.getStackTrace();
-                }
+            JOptionPane optionPane = new JOptionPane(
+                    messageLabel,
+                    JOptionPane.ERROR_MESSAGE,
+                    JOptionPane.DEFAULT_OPTION
+            );
+
+            JDialog dialog = optionPane.createDialog(parent, title);
+            dialog.pack();
+            changeButtonColors(parent, dialog, btn_bg, btn_fg, btn_bgh, btn_fgh,
+                    null, null, null, null);
+
+            dialog.setVisible(true);
+        }
+
+        public static void showInfoDialog(Component parent, String message, String title,
+                                           Color btn_bg, Color btn_fg, Color btn_bgh, Color btn_fgh) {
+            int base_size = getBaseFontSize(parent);
+            JLabel messageLabel = new JLabel(message);
+            messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, base_size));
+
+            JOptionPane optionPane = new JOptionPane(
+                    messageLabel,
+                    JOptionPane.INFORMATION_MESSAGE,
+                    JOptionPane.DEFAULT_OPTION
+            );
+
+            JDialog dialog = optionPane.createDialog(parent, title);
+            dialog.pack();
+            changeButtonColors(parent, dialog, btn_bg, btn_fg, btn_bgh, btn_fgh,
+                    null, null, null, null);
+
+            dialog.setVisible(true);
+        }
+
+        public static boolean showConfirmDialog(Component parent, String message, String title,
+                                                Color btn_bg1, Color btn_fg1, Color btn_bgh1, Color btn_fgh1,
+                                                Color btn_bg2, Color btn_fg2, Color btn_bgh2, Color btn_fgh2,
+                                                boolean default_b) {
+            int base_size = getBaseFontSize(parent);
+            JLabel messageLabel = new JLabel(message);
+            messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, base_size));
+
+            Object[] options = {"No", "Yes"};
+
+            JOptionPane optionPane = new JOptionPane(
+                    messageLabel,
+                    JOptionPane.QUESTION_MESSAGE,
+                    JOptionPane.YES_NO_OPTION,
+                    null,
+                    options,
+                    options[0]
+            );
+
+            JDialog dialog = optionPane.createDialog(parent, title);
+            dialog.pack();
+            changeButtonColors(parent, dialog, btn_bg1, btn_fg1, btn_bgh1, btn_fgh1,
+                    btn_bg2, btn_fg2, btn_bgh2, btn_fgh2);
+            dialog.setVisible(true);
+
+            Object selectedValue = optionPane.getValue();
+            if (selectedValue == null || selectedValue == UNINITIALIZED_VALUE) {
+                return default_b;
+            }
+            return "Yes".equals(selectedValue);
+        }
+
+        private static int getBaseFontSize(Component parent) {
+            if (parent.getWidth() >= parent.getHeight()) {
+                return parent.getHeight() / 50;
+            } else {
+                return parent.getWidth() / 37;
             }
         }
-        
-        public void show_dialog(String title, String content, String option1, String option2,
-                                ActionListener event1, ActionListener event2) {
-            JDialog dialog = new JDialog(frame, title, true);
-            dialog.setSize((int) (frame.getWidth() / 2.8), (frame.getHeight() / 4));
-            dialog.setLayout(new GridBagLayout());
-            dialog.setResizable(false);
-            dialog.setIconImage(icon);
 
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.weighty = 1;
-            gbc.fill = GridBagConstraints.BOTH;
-            gbc.insets = new Insets(20, 0, 0, 0);
-            JPanel panel1 = new JPanel(new GridBagLayout());
-            dialog.add(panel1, gbc);
+        private static void changeButtonColors(Component parent, Container container, Color btn_bg1, Color btn_fg1,
+                                               Color btn_bgh1, Color btn_fgh1, Color btn_bg2, Color btn_fg2,
+                                               Color btn_bgh2, Color btn_fgh2) {
+            int counter = 0;
+            for (Component comp : container.getComponents()) {
+                if (comp instanceof JButton button) {
+                    int base_size = getBaseFontSize(parent);
+                    button.setFont(new Font("Segoe UI", Font.BOLD, (int) (base_size * 0.9)));
+                    if (counter == 0 && btn_bg2 != null) {
+                        counter += 1;
+                        button.setBorderPainted(false);
+                        button.setFocusable(false);
+                        button.setBackground(btn_bg2);
+                        button.setForeground(btn_fg2);
+                        button.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseEntered(MouseEvent e) {
+                                button.setBackground(btn_bgh2);
+                                button.setForeground(btn_fgh2);
+                            }
 
-            gbc.weightx = 1;
-            gbc.insets = new Insets(0, 0, 0, 0);
-            ImageCell logo = new ImageCell(image, 0.5, 2);
-            panel1.add(logo, gbc);
+                            @Override
+                            public void mouseExited(MouseEvent e) {
+                                button.setBackground(btn_bg2);
+                                button.setForeground(btn_fg2);
+                            }
 
-            gbc.gridx = 1;
-            gbc.weightx = 2;
-            JLabel message = new JLabel(content);
-            message.setFont(font.deriveFont((float) frame.getHeight() / 40));
-            message.setVerticalAlignment(SwingConstants.TOP);
-            panel1.add(message, gbc);
+                            @Override
+                            public void mousePressed(MouseEvent e) {
+                                button.setBackground(btn_bg2);
+                                button.setForeground(btn_fg2);
+                            }
 
-            gbc.insets = new Insets(0, frame.getHeight() / 7, 20, frame.getHeight() / 7);
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            gbc.weighty = 0.3;
-            JPanel panel2 = new JPanel(new GridBagLayout());
-            if (option2 != null) {
-                gbc.insets = new Insets(0, frame.getHeight() / 30, 20, frame.getHeight() / 30);
+                            @Override
+                            public void mouseReleased(MouseEvent e) {
+                                Point point = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), button);
+                                if (button.contains(point)) {
+                                    button.setBackground(btn_bgh2);
+                                    button.setForeground(btn_fgh2);
+                                } else {
+                                    button.setBackground(btn_bg2);
+                                    button.setForeground(btn_fg2);
+                                }
+                            }
+                        });
+                    } else {
+                        button.setBorderPainted(false);
+                        button.setFocusable(false);
+                        button.setBackground(btn_bg1);
+                        button.setForeground(btn_fg1);
+                        button.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseEntered(MouseEvent e) {
+                                button.setBackground(btn_bgh1);
+                                button.setForeground(btn_fgh1);
+                            }
+
+                            @Override
+                            public void mouseExited(MouseEvent e) {
+                                button.setBackground(btn_bg1);
+                                button.setForeground(btn_fg1);
+                            }
+
+                            @Override
+                            public void mousePressed(MouseEvent e) {
+                                button.setBackground(btn_bg1);
+                                button.setForeground(btn_fg1);
+                            }
+
+                            @Override
+                            public void mouseReleased(MouseEvent e) {
+                                Point point = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), button);
+                                if (button.contains(point)) {
+                                    button.setBackground(btn_bgh1);
+                                    button.setForeground(btn_fgh1);
+                                } else {
+                                    button.setBackground(btn_bg1);
+                                    button.setForeground(btn_fg1);
+                                }
+                            }
+                        });
+                    }
+                } else if (comp instanceof Container nested) {
+                    changeButtonColors(parent, nested, btn_bg1, btn_fg1, btn_bgh1, btn_fgh1,
+                            btn_bg2, btn_fg2, btn_bgh2, btn_fgh2);
+                }
             }
-            dialog.add(panel2, gbc);
-
-            gbc.gridy = 0;
-            JButton button2 = new JButton(option2);
-            button2.setFont(font.deriveFont((float) frame.getHeight() / 40));
-            if (option2 != null) {
-                gbc.insets = new Insets(0, 0, 0, frame.getHeight() / 20);
-                panel2.add(button2, gbc);
-                gbc.gridx = 1;
-            }
-            gbc.insets = new Insets(0, 0, 0, 0);
-            JButton button1 = new JButton(option1);
-            button1.setFont(font.deriveFont((float) frame.getHeight() / 40));
-            panel2.add(button1, gbc);
-
-            button1.addActionListener(Objects.requireNonNullElseGet(event1, () -> _ -> dialog.dispose()));
-
-            button2.addActionListener(Objects.requireNonNullElseGet(event2, () -> _ -> dialog.dispose()));
-
-            dialog.setLocationRelativeTo(frame);
-            dialog.setVisible(true);
         }
     }
 
@@ -1302,6 +1368,20 @@ public class CustomComponents {
                 setBorder(compound);
             }
         }
+
+        public void UpdateBorder(int border_factor, Color s, Color r_h, Color r_s, Color l_h, Color l_s) {
+            if (border_factor > 0) {
+                Border solid = new MatteBorder(border_factor, border_factor, border_factor, border_factor, s);
+                Border raisedBevel = new BevelBorder(BevelBorder.RAISED, r_h, r_s);
+                Border loweredBevel = new BevelBorder(BevelBorder.LOWERED, l_h, l_s);
+                Border compound = BorderFactory.createCompoundBorder(
+                        raisedBevel,
+                        BorderFactory.createCompoundBorder(solid, loweredBevel)
+                );
+                setBorder(compound);
+                repaint();
+            }
+        }
     }
 
     public static class CustomSearchIcon implements Icon {
@@ -1388,7 +1468,8 @@ public class CustomComponents {
         private int[] previousSelection = new int[0];
         private boolean suppressListener = false;
         private int mode;
-        private final Color cfg, cfg_press, cbg, cbg_press;
+        private Font content;
+        private Color cfg, cfg_press, cbg, cbg_press;
 
         public CustomTable(String[] columns, Object[][] data, Font title, Font content,
                            Color cfg, Color cfg_press, Color cbg, Color cbg_press,
@@ -1400,6 +1481,7 @@ public class CustomComponents {
                 }
             });
             this.mode = mode;
+            this.content = content;
             this.cfg = cfg;
             this.cfg_press = cfg_press;
             this.cbg = cbg;
@@ -1444,6 +1526,15 @@ public class CustomComponents {
                     }
                 }
             }
+            repaint();
+        }
+
+        public void SetColors(Color cfg, Color cfg_press, Color cbg, Color cbg_press) {
+            this.cfg = cfg;
+            this.cfg_press = cfg_press;
+            this.cbg = cbg;
+            this.cbg_press = cbg_press;
+            setDefaultRenderer(Object.class, new CellRenderer(content, cbg, cfg, cbg_press, cfg_press));
             repaint();
         }
 
@@ -1574,6 +1665,64 @@ public class CustomComponents {
                 int y2 = (int) (arrowPoints[i + 1][1] * unit);
                 g2d.drawLine(x + x1, y + y1, x + x2, y + y2);
             }
+            g2d.dispose();
+        }
+    }
+
+    public static class CustomXIcon implements Icon {
+        private int size, borderWidth;
+        private final Color stroke;
+        private final boolean roundedEnds;
+
+        public CustomXIcon(int size, int borderWidth, Color stroke, boolean roundedEnds) {
+            this.size = size;
+            this.borderWidth = borderWidth;
+            this.stroke = stroke;
+            this.roundedEnds = roundedEnds;
+        }
+
+        public void UpdateSize(int size) {
+            this.size = size;
+        }
+
+        public void UpdateBorder(int borderWidth) {
+            this.borderWidth = borderWidth;
+        }
+
+        @Override
+        public int getIconWidth() {
+            return size;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return size;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            int capStyle = roundedEnds ? BasicStroke.CAP_ROUND : BasicStroke.CAP_BUTT;
+            g2d.setStroke(new BasicStroke(borderWidth, capStyle, BasicStroke.JOIN_ROUND));
+            g2d.setColor(stroke);
+
+            double unit = size / 20.0;
+
+            int x1 = x + (int) (5 * unit);
+            int y1 = y + (int) (5 * unit);
+            int x2 = x + (int) (15 * unit);
+            int y2 = y + (int) (15 * unit);
+
+            int x3 = x + (int) (15 * unit);
+            int y3 = y + (int) (5 * unit);
+            int x4 = x + (int) (5 * unit);
+            int y4 = y + (int) (15 * unit);
+
+            g2d.drawLine(x1, y1, x2, y2);
+            g2d.drawLine(x3, y3, x4, y4);
+
             g2d.dispose();
         }
     }
