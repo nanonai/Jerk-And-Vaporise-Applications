@@ -3,10 +3,13 @@ package Admin;
 import Common.*;
 import javax.swing.*;
 import javax.swing.border.StrokeBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 
 public class UserMng {
@@ -15,7 +18,8 @@ public class UserMng {
     private static JPanel content;
     private static Buffer current_user;
     private static JButton s_btn, p_left, p_right, p_first, p_last;
-    private static CustomComponents.CustomButton all, fin, pur, inv, sls, view, add, modify, delete, data_transfer;
+    private static CustomComponents.CustomButton all, fin, pur, inv, sls, view, add, modify,
+            delete1, delete2, data_transfer;
     private static JLabel lbl_show, lbl_entries, lbl_indicate;
     private static JComboBox<String> entries, pages;
     private static CustomComponents.EmptyTextField search;
@@ -23,7 +27,10 @@ public class UserMng {
     private static CustomComponents.CustomArrowIcon left_icon1, left_icon2, right_icon1, right_icon2;
     private static CustomComponents.CustomTable table_user;
     private static int list_length = 10, page_counter = 0, filter = 0, mode = 1;
+    private static boolean deleting = false;
     private static List<User> user_list;
+    private static final Set<String> deleting_id = new LinkedHashSet<>();
+    private static final Set<Integer> previousSelection = new HashSet<>();;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, Buffer current_user) {
         UserMng.parent = parent;
@@ -249,7 +256,7 @@ public class UserMng {
         igbc.weighty = 4;
         igbc.insets = new Insets(0, 3, 0, 3);
         String[] titles = new String[]{"Id", "Role", "Username", "Full Name", "Phone", "Email", "Date Joined"};
-        user_list = User.listAllUser(Main.userdata_file);
+        user_list = User.listAllUserFromFilter(Main.userdata_file, "", "", current_user);
         Object[][] data = new Object[user_list.size()][titles.length];
         int counter = 0;
         for (User user : user_list) {
@@ -260,6 +267,35 @@ public class UserMng {
         table_user = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
                 merriweather.deriveFont(Font.PLAIN, 16), Color.BLACK, Color.BLACK,
                 Color.WHITE, new Color(212, 212, 212), 1, 30);
+        table_user.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting() && deleting) {
+                    SwingUtilities.invokeLater(() -> {
+                        int[] selectedRows = table_user.getSelectedRows();
+                        Set<Integer> currentSelection = new HashSet<>();
+                        for (int row : selectedRows) {
+                            currentSelection.add(row);
+                        }
+                        Set<Integer> newlySelected = new HashSet<>(currentSelection);
+                        newlySelected.removeAll(previousSelection);
+                        Set<Integer> deselected = new HashSet<>(previousSelection);
+                        deselected.removeAll(currentSelection);
+                        for (int row : newlySelected) {
+                            deleting_id.add(table_user.getValueAt(row,
+                                    table_user.getColumnModel().getColumnIndex("Id")).toString());
+                        }
+                        for (int row : deselected) {
+                            deleting_id.remove(table_user.getValueAt(row,
+                                    table_user.getColumnModel().getColumnIndex("Id")).toString());
+                        }
+                        delete2.setText(String.format("Delete User (%s)", deleting_id.size()));
+                        previousSelection.clear();
+                        previousSelection.addAll(currentSelection);
+                    });
+                }
+            }
+        });
         lbl_indicate = new JLabel("");
         pages = new JComboBox<>();
         UpdateTable(list_length, page_counter);
@@ -306,6 +342,10 @@ public class UserMng {
             page_counter = 0;
             pages.setSelectedIndex(0);
             UpdateTable(list_length, page_counter);
+            previousSelection.clear();
+            SwingUtilities.invokeLater(() -> {
+                RememberDeletion(deleting_id, table_user);
+            });
         });
         p_first.addMouseListener(new MouseAdapter() {
             @Override
@@ -348,6 +388,10 @@ public class UserMng {
                 page_counter -= 1;
                 pages.setSelectedIndex(page_counter);
                 UpdateTable(list_length, page_counter);
+                previousSelection.clear();
+                SwingUtilities.invokeLater(() -> {
+                    RememberDeletion(deleting_id, table_user);
+                });
             }
         });
         page_panel.add(p_left, ii_gbc);
@@ -361,6 +405,10 @@ public class UserMng {
             if (pages.getItemCount() > 0) {
                 page_counter = pages.getSelectedIndex();
                 UpdateTable(list_length, page_counter);
+                previousSelection.clear();
+                SwingUtilities.invokeLater(() -> {
+                    RememberDeletion(deleting_id, table_user);
+                });
             }
         });
         page_panel.add(pages, ii_gbc);
@@ -378,6 +426,10 @@ public class UserMng {
                 page_counter += 1;
                 pages.setSelectedIndex(page_counter);
                 UpdateTable(list_length, page_counter);
+                previousSelection.clear();
+                SwingUtilities.invokeLater(() -> {
+                    RememberDeletion(deleting_id, table_user);
+                });
             }
         });
         page_panel.add(p_right, ii_gbc);
@@ -391,6 +443,10 @@ public class UserMng {
             page_counter = pages.getItemCount() - 1;
             pages.setSelectedIndex(page_counter);
             UpdateTable(list_length, page_counter);
+            previousSelection.clear();
+            SwingUtilities.invokeLater(() -> {
+                RememberDeletion(deleting_id, table_user);
+            });
         });
         p_last.addMouseListener(new MouseAdapter() {
             @Override
@@ -441,6 +497,27 @@ public class UserMng {
                 new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 16, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
+        view.addActionListener(_ -> {
+            if (table_user.getSelectedRowCount() == 0) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select an account to view!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else {
+                String selected_id = table_user.getValueAt(table_user.getSelectedRow(),
+                        table_user.getColumnModel().getColumnIndex("Id")).toString();
+                ViewUser.UpdateUser(User.GetUserById(selected_id, Main.userdata_file));
+                boolean see = ViewUser.ShowPage();
+                if (see) {
+                    System.out.println("Skibidi");
+                }
+            }
+        });
         button_panel1.add(view, ii_gbc);
 
         ii_gbc.gridx = 1;
@@ -500,13 +577,109 @@ public class UserMng {
 
         ii_gbc.gridx = 5;
         ii_gbc.insets = new Insets(0, 0, 0, 0);
-        delete = new CustomComponents.CustomButton("Delete User", merriweather, Color.WHITE, Color.WHITE,
+        delete1 = new CustomComponents.CustomButton("Delete User", merriweather, Color.WHITE, Color.WHITE,
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 16,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
-        button_panel2.add(delete, ii_gbc);
+        delete1.addActionListener(_ -> {
+            deleting = CustomComponents.CustomOptionPane.showConfirmDialog(
+                    parent,
+                    "Enter delete selection mode?",
+                    "Confirmation",
+                    new Color(159, 4, 4),
+                    new Color(255, 255, 255),
+                    new Color(161, 40, 40),
+                    new Color(255, 255, 255),
+                    new Color(56, 53, 70),
+                    new Color(255, 255, 255),
+                    new Color(73, 69, 87),
+                    new Color(255, 255, 255),
+                    false
+            );
+            if (deleting) {
+                view.setEnabled(false);
+                add.setEnabled(false);
+                modify.setEnabled(false);
+                data_transfer.setEnabled(false);
+                view.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
+                        new Color(242, 242, 242), new Color(241, 241, 242),
+                        new Color(241, 241, 242));
+                add.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
+                        new Color(241, 241, 242), new Color(241, 241, 242),
+                        new Color(241, 241, 242));
+                modify.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
+                        new Color(241, 241, 242), new Color(241, 241, 242),
+                        new Color(241, 241, 242));
+                data_transfer.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
+                        new Color(241, 241, 242), new Color(241, 241, 242),
+                        new Color(241, 241, 242));
+                table_user.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(255, 203, 205));
+                mode = 0;
+                table_user.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
+                        merriweather.deriveFont(Font.PLAIN, 16), mode);
+                scrollPane1.UpdateBorder(3, new Color(159, 4, 4), Main.transparent,
+                        Main.transparent, Main.transparent, Main.transparent);
+                button_panel2.remove(delete1);
+                ii_gbc.gridx = 5;
+                ii_gbc.insets = new Insets(0, 0, 0, 0);
+                button_panel2.add(delete2, ii_gbc);
+                button_panel2.revalidate();
+                button_panel2.repaint();
+                int base_size = 0;
+                if (parent.getWidth() >= parent.getHeight()) {
+                    base_size = parent.getHeight() / 40;
+                } else {
+                    base_size = parent.getWidth() / 30;
+                }
+                delete2.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+            }
+        });
+        button_panel2.add(delete1, ii_gbc);
+
+        delete2 = new CustomComponents.CustomButton("Delete User (0)", merriweather, Color.WHITE, Color.WHITE,
+                new Color(159, 4, 4), new Color(161, 40, 40), null, 0, 16,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        delete2.addActionListener(_ -> {
+            view.setEnabled(true);
+            add.setEnabled(true);
+            modify.setEnabled(true);
+            data_transfer.setEnabled(true);
+            view.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                    new Color(225, 108, 150), new Color(237, 136, 172),
+                    Main.transparent);
+            add.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                    new Color(209, 88, 128), new Color(237, 136, 172),
+                    Main.transparent);
+            modify.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                    new Color(225, 108, 150), new Color(237, 136, 172),
+                    Main.transparent);
+            data_transfer.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                    new Color(209, 88, 128), new Color(237, 136, 172),
+                    Main.transparent);
+            table_user.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(212, 212, 212));
+            mode = 1;
+            table_user.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
+                    merriweather.deriveFont(Font.PLAIN, 16), mode);
+            scrollPane1.UpdateBorder(1, new Color(202, 202, 202), Main.transparent,
+                    Main.transparent, Main.transparent, Main.transparent);
+            button_panel2.remove(delete2);
+            ii_gbc.gridx = 5;
+            ii_gbc.insets = new Insets(0, 0, 0, 0);
+            button_panel2.add(delete1, ii_gbc);
+            button_panel2.revalidate();
+            button_panel2.repaint();
+            int base_size = 0;
+            if (parent.getWidth() >= parent.getHeight()) {
+                base_size = parent.getHeight() / 40;
+            } else {
+                base_size = parent.getWidth() / 30;
+            }
+            delete1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        });
 
         AddUser.Loader(parent, merriweather, boldonse, content, current_user);
+        ViewUser.Loader(parent, merriweather, boldonse, content, null);
     }
 
     public static void UpdateTable(int length, int page) {
@@ -542,6 +715,20 @@ public class UserMng {
         }
     }
 
+    public static void RememberDeletion(Set<String> deleting_id, CustomComponents.CustomTable table) {
+        if (deleting) {
+            int rowCount = table.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                Object value = table.getValueAt(i, table.getColumnModel().getColumnIndex("Id"));
+                if (value != null && deleting_id.contains(value.toString())) {
+                    table.addRowSelectionInterval(i, i);
+                }
+            }
+            table.revalidate();
+            table.repaint();
+        }
+    }
+
     public static void UpdatePages(int length) {
         int pageCount = (int) Math.ceil(user_list.size() / (double) length);
         if (user_list.size() <= length) {
@@ -565,7 +752,7 @@ public class UserMng {
             case 4 -> "Sales Manager";
             default -> "";
         };
-        List<User> temp_user_list = User.listAllUserFromFilter(Main.userdata_file, temp, searcher);
+        List<User> temp_user_list = User.listAllUserFromFilter(Main.userdata_file, temp, searcher, current_user);
         if (temp_user_list.isEmpty()) {
             CustomComponents.CustomOptionPane.showInfoDialog(
                     parent,
@@ -618,6 +805,10 @@ public class UserMng {
         add.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         modify.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         data_transfer.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
-        delete.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        if (!deleting) {
+            delete1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        } else {
+            delete2.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        }
     }
 }

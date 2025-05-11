@@ -731,15 +731,10 @@ public class CustomComponents {
         }
     }
 
-    public class CustomOptionPane extends JOptionPane {
+    public static class CustomOptionPane extends JOptionPane {
         public static void showErrorDialog(Component parent, String message, String title,
                                            Color btn_bg, Color btn_fg, Color btn_bgh, Color btn_fgh) {
-            int base_size = 0;
-            if (parent.getWidth() >= parent.getHeight()) {
-                base_size = parent.getHeight() / 50;
-            } else {
-                base_size = parent.getWidth() / 37;
-            }
+            int base_size = getBaseFontSize(parent);
             JLabel messageLabel = new JLabel(message);
             messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, base_size));
 
@@ -751,19 +746,15 @@ public class CustomComponents {
 
             JDialog dialog = optionPane.createDialog(parent, title);
             dialog.pack();
-            changeButtonColors(dialog, btn_bg, btn_fg, btn_bgh, btn_fgh);
+            changeButtonColors(parent, dialog, btn_bg, btn_fg, btn_bgh, btn_fgh,
+                    null, null, null, null);
 
             dialog.setVisible(true);
         }
 
         public static void showInfoDialog(Component parent, String message, String title,
                                            Color btn_bg, Color btn_fg, Color btn_bgh, Color btn_fgh) {
-            int base_size = 0;
-            if (parent.getWidth() >= parent.getHeight()) {
-                base_size = parent.getHeight() / 50;
-            } else {
-                base_size = parent.getWidth() / 37;
-            }
+            int base_size = getBaseFontSize(parent);
             JLabel messageLabel = new JLabel(message);
             messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, base_size));
 
@@ -775,52 +766,137 @@ public class CustomComponents {
 
             JDialog dialog = optionPane.createDialog(parent, title);
             dialog.pack();
-            changeButtonColors(dialog, btn_bg, btn_fg, btn_bgh, btn_fgh);
+            changeButtonColors(parent, dialog, btn_bg, btn_fg, btn_bgh, btn_fgh,
+                    null, null, null, null);
 
             dialog.setVisible(true);
         }
 
-        private static void changeButtonColors(Container container, Color btn_bg, Color btn_fg,
-                                               Color btn_bgh, Color btn_fgh) {
+        public static boolean showConfirmDialog(Component parent, String message, String title,
+                                                Color btn_bg1, Color btn_fg1, Color btn_bgh1, Color btn_fgh1,
+                                                Color btn_bg2, Color btn_fg2, Color btn_bgh2, Color btn_fgh2,
+                                                boolean default_b) {
+            int base_size = getBaseFontSize(parent);
+            JLabel messageLabel = new JLabel(message);
+            messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, base_size));
+
+            Object[] options = {"No", "Yes"};
+
+            JOptionPane optionPane = new JOptionPane(
+                    messageLabel,
+                    JOptionPane.QUESTION_MESSAGE,
+                    JOptionPane.YES_NO_OPTION,
+                    null,
+                    options,
+                    options[0]
+            );
+
+            JDialog dialog = optionPane.createDialog(parent, title);
+            dialog.pack();
+            changeButtonColors(parent, dialog, btn_bg1, btn_fg1, btn_bgh1, btn_fgh1,
+                    btn_bg2, btn_fg2, btn_bgh2, btn_fgh2);
+            dialog.setVisible(true);
+
+            Object selectedValue = optionPane.getValue();
+            if (selectedValue == null || selectedValue == UNINITIALIZED_VALUE) {
+                return default_b;
+            }
+            return "Yes".equals(selectedValue);
+        }
+
+        private static int getBaseFontSize(Component parent) {
+            if (parent.getWidth() >= parent.getHeight()) {
+                return parent.getHeight() / 50;
+            } else {
+                return parent.getWidth() / 37;
+            }
+        }
+
+        private static void changeButtonColors(Component parent, Container container, Color btn_bg1, Color btn_fg1,
+                                               Color btn_bgh1, Color btn_fgh1, Color btn_bg2, Color btn_fg2,
+                                               Color btn_bgh2, Color btn_fgh2) {
+            int counter = 0;
             for (Component comp : container.getComponents()) {
                 if (comp instanceof JButton button) {
-                    button.setBorderPainted(false);
-                    button.setFocusable(false);
-                    button.setBackground(btn_bg);
-                    button.setForeground(btn_fg);
-                    button.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mouseEntered(MouseEvent e) {
-                            button.setBackground(btn_bgh);
-                            button.setForeground(btn_fgh);
-                        }
-
-                        @Override
-                        public void mouseExited(MouseEvent e) {
-                            button.setBackground(btn_bg);
-                            button.setForeground(btn_fg);
-                        }
-
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-                            button.setBackground(btn_bg);
-                            button.setForeground(btn_fg);
-                        }
-
-                        @Override
-                        public void mouseReleased(MouseEvent e) {
-                            Point point = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), button);
-                            if (button.contains(point)) {
-                                button.setBackground(btn_bgh);
-                                button.setForeground(btn_fgh);
-                            } else {
-                                button.setBackground(btn_bg);
-                                button.setForeground(btn_fg);
+                    int base_size = getBaseFontSize(parent);
+                    button.setFont(new Font("Segoe UI", Font.BOLD, (int) (base_size * 0.9)));
+                    if (counter == 0 && btn_bg2 != null) {
+                        counter += 1;
+                        button.setBorderPainted(false);
+                        button.setFocusable(false);
+                        button.setBackground(btn_bg2);
+                        button.setForeground(btn_fg2);
+                        button.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseEntered(MouseEvent e) {
+                                button.setBackground(btn_bgh2);
+                                button.setForeground(btn_fgh2);
                             }
-                        }
-                    });
+
+                            @Override
+                            public void mouseExited(MouseEvent e) {
+                                button.setBackground(btn_bg2);
+                                button.setForeground(btn_fg2);
+                            }
+
+                            @Override
+                            public void mousePressed(MouseEvent e) {
+                                button.setBackground(btn_bg2);
+                                button.setForeground(btn_fg2);
+                            }
+
+                            @Override
+                            public void mouseReleased(MouseEvent e) {
+                                Point point = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), button);
+                                if (button.contains(point)) {
+                                    button.setBackground(btn_bgh2);
+                                    button.setForeground(btn_fgh2);
+                                } else {
+                                    button.setBackground(btn_bg2);
+                                    button.setForeground(btn_fg2);
+                                }
+                            }
+                        });
+                    } else {
+                        button.setBorderPainted(false);
+                        button.setFocusable(false);
+                        button.setBackground(btn_bg1);
+                        button.setForeground(btn_fg1);
+                        button.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseEntered(MouseEvent e) {
+                                button.setBackground(btn_bgh1);
+                                button.setForeground(btn_fgh1);
+                            }
+
+                            @Override
+                            public void mouseExited(MouseEvent e) {
+                                button.setBackground(btn_bg1);
+                                button.setForeground(btn_fg1);
+                            }
+
+                            @Override
+                            public void mousePressed(MouseEvent e) {
+                                button.setBackground(btn_bg1);
+                                button.setForeground(btn_fg1);
+                            }
+
+                            @Override
+                            public void mouseReleased(MouseEvent e) {
+                                Point point = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), button);
+                                if (button.contains(point)) {
+                                    button.setBackground(btn_bgh1);
+                                    button.setForeground(btn_fgh1);
+                                } else {
+                                    button.setBackground(btn_bg1);
+                                    button.setForeground(btn_fg1);
+                                }
+                            }
+                        });
+                    }
                 } else if (comp instanceof Container nested) {
-                    changeButtonColors(nested, btn_bg, btn_fg, btn_bgh, btn_fgh);
+                    changeButtonColors(parent, nested, btn_bg1, btn_fg1, btn_bgh1, btn_fgh1,
+                            btn_bg2, btn_fg2, btn_bgh2, btn_fgh2);
                 }
             }
         }
@@ -1292,6 +1368,20 @@ public class CustomComponents {
                 setBorder(compound);
             }
         }
+
+        public void UpdateBorder(int border_factor, Color s, Color r_h, Color r_s, Color l_h, Color l_s) {
+            if (border_factor > 0) {
+                Border solid = new MatteBorder(border_factor, border_factor, border_factor, border_factor, s);
+                Border raisedBevel = new BevelBorder(BevelBorder.RAISED, r_h, r_s);
+                Border loweredBevel = new BevelBorder(BevelBorder.LOWERED, l_h, l_s);
+                Border compound = BorderFactory.createCompoundBorder(
+                        raisedBevel,
+                        BorderFactory.createCompoundBorder(solid, loweredBevel)
+                );
+                setBorder(compound);
+                repaint();
+            }
+        }
     }
 
     public static class CustomSearchIcon implements Icon {
@@ -1378,7 +1468,8 @@ public class CustomComponents {
         private int[] previousSelection = new int[0];
         private boolean suppressListener = false;
         private int mode;
-        private final Color cfg, cfg_press, cbg, cbg_press;
+        private Font content;
+        private Color cfg, cfg_press, cbg, cbg_press;
 
         public CustomTable(String[] columns, Object[][] data, Font title, Font content,
                            Color cfg, Color cfg_press, Color cbg, Color cbg_press,
@@ -1390,6 +1481,7 @@ public class CustomComponents {
                 }
             });
             this.mode = mode;
+            this.content = content;
             this.cfg = cfg;
             this.cfg_press = cfg_press;
             this.cbg = cbg;
@@ -1434,6 +1526,15 @@ public class CustomComponents {
                     }
                 }
             }
+            repaint();
+        }
+
+        public void SetColors(Color cfg, Color cfg_press, Color cbg, Color cbg_press) {
+            this.cfg = cfg;
+            this.cfg_press = cfg_press;
+            this.cbg = cbg;
+            this.cbg_press = cbg_press;
+            setDefaultRenderer(Object.class, new CellRenderer(content, cbg, cfg, cbg_press, cfg_press));
             repaint();
         }
 
