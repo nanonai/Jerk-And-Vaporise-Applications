@@ -236,7 +236,7 @@ public class UserMng {
         search_panel.add(s_btn, ii_gbc);
 
         ii_gbc.gridx = 1;
-        ii_gbc.insets = new Insets(6, 0, 10, 0);
+        ii_gbc.insets = new Insets(6, 0, 8, 0);
         search = new CustomComponents.EmptyTextField(20, "Search...\r\r", new Color(122, 122, 122));
         search.setFont(merriweather.deriveFont(Font.BOLD, 14));
         search.addActionListener(_ -> SearchStuff());
@@ -248,7 +248,7 @@ public class UserMng {
         igbc.weightx = 1;
         igbc.weighty = 4;
         igbc.insets = new Insets(0, 3, 0, 3);
-        String[] titles = new String[]{"Id", "Role", "Username", "Fullname", "Phone", "Email", "Date Joined"};
+        String[] titles = new String[]{"Id", "Role", "Username", "Full Name", "Phone", "Email", "Date Joined"};
         user_list = User.listAllUser(Main.userdata_file);
         Object[][] data = new Object[user_list.size()][titles.length];
         int counter = 0;
@@ -448,6 +448,36 @@ public class UserMng {
                 new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
                 Main.transparent, 0, 16, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
+        add.addActionListener(_ -> {
+            int[] added = AddUser.ShowPage(filter);
+            if (added[0] == 1) {
+                search.Reset();
+                filter = added[1];
+                switch(filter) {
+                    case 0:
+                        all.doClick();
+                        break;
+                    case 1:
+                        fin.doClick();
+                        break;
+                    case 2:
+                        pur.doClick();
+                        break;
+                    case 3:
+                        inv.doClick();
+                        break;
+                    case 4:
+                        sls.doClick();
+                        break;
+                }
+                page_counter = pages.getItemCount() - 1;
+                pages.setSelectedIndex(page_counter);
+                UpdateTable(list_length, page_counter);
+                table_user.clearSelection();
+                table_user.addRowSelectionInterval(user_list.size() - page_counter * list_length - 1,
+                        user_list.size() - page_counter * list_length - 1);
+            }
+        });
         button_panel1.add(add, ii_gbc);
 
         ii_gbc.gridx = 2;
@@ -475,10 +505,12 @@ public class UserMng {
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
         button_panel2.add(delete, ii_gbc);
+
+        AddUser.Loader(parent, merriweather, boldonse, content, current_user);
     }
 
     public static void UpdateTable(int length, int page) {
-        String[] titles = new String[]{"Id", "Role", "Username", "Fullname", "Phone", "Email", "Date Joined"};
+        String[] titles = new String[]{"Id", "Role", "Username", "Full Name", "Phone", "Email", "Date Joined"};
         Object[][] data;
         int counter = 0;
         int anti_counter = page * length;
@@ -535,10 +567,15 @@ public class UserMng {
         };
         List<User> temp_user_list = User.listAllUserFromFilter(Main.userdata_file, temp, searcher);
         if (temp_user_list.isEmpty()) {
-            CustomComponents.CustomDialog msg = new CustomComponents.CustomDialog(parent,
-                    merriweather, 1);
-            msg.show_dialog("Notification", "No results found.",
-                    "Ok", null, null, null);
+            CustomComponents.CustomOptionPane.showInfoDialog(
+                    parent,
+                    "No results found.",
+                    "Notification",
+                    new Color(88, 149, 209),
+                    new Color(255, 255, 255),
+                    new Color(125, 178, 228),
+                    new Color(255, 255, 255)
+            );
         } else {
             user_list = temp_user_list;
             page_counter = 0;
