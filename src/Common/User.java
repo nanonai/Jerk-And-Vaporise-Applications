@@ -100,18 +100,29 @@ public class User {
         return allUser;
     }
 
-    public static List<User> listAllUserFromFilter(String filename, String type, String filter) {
+    public static List<User> listAllUserFromFilter(String filename, String type, String filter, Buffer current_user) {
         List<User> user_list = listAllUser(filename);
         List<User> type_user_list = new ArrayList<>();
         List<User> filtered_user_list = new ArrayList<>();
         if (type.isEmpty() && filter.isEmpty()) {
+            if (current_user != null) {
+                int length = user_list.size();
+                for (int i = 0; i < length; i++) {
+                    if (Objects.equals(user_list.get(i).UserID, current_user.UserID)) {
+                        user_list.remove(i);
+                        break;
+                    }
+                }
+            }
             return user_list;
         }
         for (User user: user_list) {
-            if (Objects.equals(user.AccType, type)) {
-                type_user_list.add(user);
-            } else if (type.isEmpty()) {
-                type_user_list.add(user);
+            if (!Objects.equals(user.UserID, current_user.UserID)) {
+                if (Objects.equals(user.AccType, type)) {
+                    type_user_list.add(user);
+                } else if (type.isEmpty()) {
+                    type_user_list.add(user);
+                }
             }
         }
         if (filter.isEmpty()) {
@@ -128,6 +139,18 @@ public class User {
             }
         }
         return filtered_user_list;
+    }
+
+    public static User GetUserById(String id, String filename) {
+        List<User> user_list = listAllUser(filename);
+        User user_temp = null;
+        for (User user: user_list) {
+            if (Objects.equals(user.UserID, id)) {
+                user_temp = user;
+                break;
+            }
+        }
+        return user_temp;
     }
 
     public static User RememberedUser(String filename) {
@@ -159,7 +182,7 @@ public class User {
                 writer.write("Email:          " + user.Email + "\n");
                 writer.write("Phone:          " + user.Phone + "\n");
                 writer.write("AccType:        " + user.AccType + "\n");
-                writer.write("DateOfRegis:    " + user.DateOfRegis + "\n");
+                writer.write("DateOfRegis:    " + user.DateOfRegis.format(df) + "\n");
                 writer.write("RememberMe:     " + user.RememberMe + "\n");
                 writer.write("~~~~~\n");
             }
@@ -183,7 +206,11 @@ public class User {
         String newId = "";
         while (!success) {
             long newNum = (long) (Math.random() * 1E10);
-            newId = String.format("%s%s", role, newNum);
+            StringBuilder number = new StringBuilder(String.valueOf(newNum));
+            while (number.length() < 10) {
+                number.insert(0, "0");
+            }
+            newId = String.format("%s%s", role, number);
             for (User user : allUser) {
                 if (Objects.equals(user.UserID, newId) && Objects.equals(user.AccType, AccType)) {
                     repeated = true;
@@ -288,7 +315,7 @@ public class User {
         return indicator;
     }
 
-    public static boolean saveNewUser(User user, String filename) {
+    public static void saveNewUser(User user, String filename) {
         try (FileWriter writer = new FileWriter(filename, true)) {
             writer.write("UserID:         " + user.UserID + "\n");
             writer.write("Username:       " + user.Username + "\n");
@@ -297,17 +324,15 @@ public class User {
             writer.write("Email:          " + user.Email + "\n");
             writer.write("Phone:          " + user.Phone + "\n");
             writer.write("AccType:        " + user.AccType + "\n");
-            writer.write("DateOfRegis:    " + user.DateOfRegis + "\n");
+            writer.write("DateOfRegis:    " + user.DateOfRegis.format(df) + "\n");
             writer.write("RememberMe:     0\n");
             writer.write("~~~~~\n");
-            return true;
         } catch (IOException e) {
             e.getStackTrace();
-            return false;
         }
     }
 
-    public static boolean removeUser(String UserID, String filename) {
+    public static void removeUser(String UserID, String filename) {
         List<User> allUser = listAllUser(filename);
         allUser.removeIf(user -> Objects.equals(user.UserID, UserID));
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
@@ -319,14 +344,12 @@ public class User {
                 writer.write("Email:          " + user.Email + "\n");
                 writer.write("Phone:          " + user.Phone + "\n");
                 writer.write("AccType:        " + user.AccType + "\n");
-                writer.write("DateOfRegis:    " + user.DateOfRegis + "\n");
+                writer.write("DateOfRegis:    " + user.DateOfRegis.format(df) + "\n");
                 writer.write("RememberMe:     " + user.RememberMe + "\n");
                 writer.write("~~~~~\n");
             }
-            return true;
         } catch (IOException e) {
             e.getStackTrace();
-            return false;
         }
     }
 
@@ -353,7 +376,7 @@ public class User {
                 writer.write("Email:          " + user.Email + "\n");
                 writer.write("Phone:          " + user.Phone + "\n");
                 writer.write("AccType:        " + user.AccType + "\n");
-                writer.write("DateOfRegis:    " + user.DateOfRegis + "\n");
+                writer.write("DateOfRegis:    " + user.DateOfRegis.format(df) + "\n");
                 writer.write("RememberMe:     " + user.RememberMe + "\n");
                 writer.write("~~~~~\n");
             }

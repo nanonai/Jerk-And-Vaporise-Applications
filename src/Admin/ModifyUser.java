@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 
-public class AddUser {
+public class ModifyUser {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
@@ -34,11 +34,11 @@ public class AddUser {
     private static final String PHONE_REGEX = "^01[0-9]{8}$";
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, Buffer current_user) {
-        AddUser.parent = parent;
-        AddUser.merriweather = merriweather;
-        AddUser.boldonse = boldonse;
-        AddUser.content = content;
-        AddUser.current_user = current_user;
+        ModifyUser.parent = parent;
+        ModifyUser.merriweather = merriweather;
+        ModifyUser.boldonse = boldonse;
+        ModifyUser.content = content;
+        ModifyUser.current_user = current_user;
     }
 
     public static int[] ShowPage(int filter) {
