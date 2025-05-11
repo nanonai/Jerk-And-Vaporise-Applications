@@ -199,7 +199,7 @@ public class User {
         List<User> allUser = listAllUser(filename);
         boolean repeated = false;
         for (User user : allUser) {
-            if (Objects.equals(user.Username, Username.toLowerCase())) {
+            if (Objects.equals(user.Username.toLowerCase(), Username.toLowerCase())) {
                 repeated = true;
                 break;
             }
@@ -238,6 +238,7 @@ public class User {
 
     public static String validityChecker(String Username, String Password, String FullName,
                                          String Email, String Phone, String filename) {
+//      Sample output: 0X0X00X0X
         String indicator = "";
         if (Username.length() >= 8 && Username.length() <= 36) {
             indicator += "1";
@@ -249,10 +250,15 @@ public class User {
         } else {
             indicator += "X";
         }
-        if (Password.length() >= 8 && passwordChecker(Password)) {
+        if (Password.length() >= 8) {
             indicator += "1";
         } else {
             indicator += "0";
+        }
+        if (passwordChecker(Password)) {
+            indicator += "O";
+        } else {
+            indicator += "X";
         }
         if (FullName.length() >= 8 && FullName.length() <= 48) {
             indicator += "1";
@@ -269,7 +275,7 @@ public class User {
         } else {
             indicator += "X";
         }
-        if (Pattern.compile(PHONE_REGEX).matcher(String.valueOf(Phone)).matches()) {
+        if (Pattern.compile(PHONE_REGEX).matcher(Phone).matches()) {
             indicator += "1";
         } else {
             indicator += "0";

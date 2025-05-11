@@ -196,9 +196,10 @@ public class AdmHome {
         home_page.UpdateText("Home Page");
         user_management.UpdateText("Manage User");
         switch (indicator) {
-//    Please indicate the relation of the indicator value and specific java class:
-//    0 -> Administrator Welcome Page
-//    1 -> Profile page
+//        Please indicate the relation of the indicator value and specific java class:
+//        0  -> Administrator Welcome Page
+//        1  -> Profile Page
+//        2  -> User Management Page
             case 0:
                 Welcome.ShowPage();
                 title.setText(String.format("<html>Welcome, Administrator <i>- %s</i></html>",

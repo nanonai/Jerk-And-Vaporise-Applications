@@ -1,5 +1,4 @@
 package Common;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
@@ -12,13 +11,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.Objects;
-
-import static com.sun.java.accessibility.util.SwingEventMonitor.addListSelectionListener;
 
 public class CustomComponents {
     public static class ImagePanel extends JPanel {
@@ -356,7 +350,7 @@ public class CustomComponents {
             setForeground(Color.BLACK);
             setBackground(new Color(255, 255, 255));
             setCaretColor(Color.BLACK);
-            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 26));
+            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 
             addFocusListener(new FocusListener() {
                 @Override
@@ -378,6 +372,13 @@ public class CustomComponents {
 
             setText(placeholder);
             setForeground(placeholderColor);
+        }
+
+        public void Reset() {
+            setText(placeholder);
+            setToolTipText("");
+            setForeground(placeholderColor);
+            repaint();
         }
     }
 
@@ -730,109 +731,98 @@ public class CustomComponents {
         }
     }
 
-    public static class CustomDialog {
-        private final JFrame frame;
-        private final Font font;
-        private BufferedImage icon, image;
-
-        public CustomDialog(JFrame frame, Font font, int icon_factor) {
-            this.frame = frame;
-            this.font = font;
-            if (icon_factor == 0) {
-                Icon pre_icon = UIManager.getIcon("OptionPane.errorIcon");
-                if (pre_icon != null) {
-                    icon = new BufferedImage(
-                            pre_icon.getIconWidth(),
-                            pre_icon.getIconHeight(),
-                            BufferedImage.TYPE_INT_ARGB
-                    );
-                    Graphics2D g2d = icon.createGraphics();
-                    pre_icon.paintIcon(null, g2d, 0, 0);
-                    g2d.dispose();
-                }
-                try {
-                    image = ImageIO.read(new File("images/error.png"));
-                } catch (IOException e) {
-                    e.getStackTrace();
-                }
-            } else if (icon_factor == 1) {
-                Icon pre_icon = UIManager.getIcon("OptionPane.informationIcon");
-                if (pre_icon != null) {
-                    icon = new BufferedImage(
-                            pre_icon.getIconWidth(),
-                            pre_icon.getIconHeight(),
-                            BufferedImage.TYPE_INT_ARGB
-                    );
-                    Graphics2D g2d = icon.createGraphics();
-                    pre_icon.paintIcon(null, g2d, 0, 0);
-                    g2d.dispose();
-                }
-                try {
-                    image = ImageIO.read(new File("images/info.png"));
-                } catch (IOException e) {
-                    e.getStackTrace();
-                }
+    public class CustomOptionPane extends JOptionPane {
+        public static void showErrorDialog(Component parent, String message, String title,
+                                           Color btn_bg, Color btn_fg, Color btn_bgh, Color btn_fgh) {
+            int base_size = 0;
+            if (parent.getWidth() >= parent.getHeight()) {
+                base_size = parent.getHeight() / 50;
+            } else {
+                base_size = parent.getWidth() / 37;
             }
-        }
-        
-        public void show_dialog(String title, String content, String option1, String option2,
-                                ActionListener event1, ActionListener event2) {
-            JDialog dialog = new JDialog(frame, title, true);
-            dialog.setSize((int) (frame.getWidth() / 2.8), (frame.getHeight() / 4));
-            dialog.setLayout(new GridBagLayout());
-            dialog.setResizable(false);
-            dialog.setIconImage(icon);
+            JLabel messageLabel = new JLabel(message);
+            messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, base_size));
 
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.weighty = 1;
-            gbc.fill = GridBagConstraints.BOTH;
-            gbc.insets = new Insets(20, 0, 0, 0);
-            JPanel panel1 = new JPanel(new GridBagLayout());
-            dialog.add(panel1, gbc);
+            JOptionPane optionPane = new JOptionPane(
+                    messageLabel,
+                    JOptionPane.ERROR_MESSAGE,
+                    JOptionPane.DEFAULT_OPTION
+            );
 
-            gbc.weightx = 1;
-            gbc.insets = new Insets(0, 0, 0, 0);
-            ImageCell logo = new ImageCell(image, 0.5, 2);
-            panel1.add(logo, gbc);
+            JDialog dialog = optionPane.createDialog(parent, title);
+            dialog.pack();
+            changeButtonColors(dialog, btn_bg, btn_fg, btn_bgh, btn_fgh);
 
-            gbc.gridx = 1;
-            gbc.weightx = 2;
-            JLabel message = new JLabel(content);
-            message.setFont(font.deriveFont((float) frame.getHeight() / 40));
-            message.setVerticalAlignment(SwingConstants.TOP);
-            panel1.add(message, gbc);
-
-            gbc.insets = new Insets(0, frame.getHeight() / 7, 20, frame.getHeight() / 7);
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            gbc.weighty = 0.3;
-            JPanel panel2 = new JPanel(new GridBagLayout());
-            if (option2 != null) {
-                gbc.insets = new Insets(0, frame.getHeight() / 30, 20, frame.getHeight() / 30);
-            }
-            dialog.add(panel2, gbc);
-
-            gbc.gridy = 0;
-            JButton button2 = new JButton(option2);
-            button2.setFont(font.deriveFont((float) frame.getHeight() / 40));
-            if (option2 != null) {
-                gbc.insets = new Insets(0, 0, 0, frame.getHeight() / 20);
-                panel2.add(button2, gbc);
-                gbc.gridx = 1;
-            }
-            gbc.insets = new Insets(0, 0, 0, 0);
-            JButton button1 = new JButton(option1);
-            button1.setFont(font.deriveFont((float) frame.getHeight() / 40));
-            panel2.add(button1, gbc);
-
-            button1.addActionListener(Objects.requireNonNullElseGet(event1, () -> _ -> dialog.dispose()));
-
-            button2.addActionListener(Objects.requireNonNullElseGet(event2, () -> _ -> dialog.dispose()));
-
-            dialog.setLocationRelativeTo(frame);
             dialog.setVisible(true);
+        }
+
+        public static void showInfoDialog(Component parent, String message, String title,
+                                           Color btn_bg, Color btn_fg, Color btn_bgh, Color btn_fgh) {
+            int base_size = 0;
+            if (parent.getWidth() >= parent.getHeight()) {
+                base_size = parent.getHeight() / 50;
+            } else {
+                base_size = parent.getWidth() / 37;
+            }
+            JLabel messageLabel = new JLabel(message);
+            messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, base_size));
+
+            JOptionPane optionPane = new JOptionPane(
+                    messageLabel,
+                    JOptionPane.INFORMATION_MESSAGE,
+                    JOptionPane.DEFAULT_OPTION
+            );
+
+            JDialog dialog = optionPane.createDialog(parent, title);
+            dialog.pack();
+            changeButtonColors(dialog, btn_bg, btn_fg, btn_bgh, btn_fgh);
+
+            dialog.setVisible(true);
+        }
+
+        private static void changeButtonColors(Container container, Color btn_bg, Color btn_fg,
+                                               Color btn_bgh, Color btn_fgh) {
+            for (Component comp : container.getComponents()) {
+                if (comp instanceof JButton button) {
+                    button.setBorderPainted(false);
+                    button.setFocusable(false);
+                    button.setBackground(btn_bg);
+                    button.setForeground(btn_fg);
+                    button.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseEntered(MouseEvent e) {
+                            button.setBackground(btn_bgh);
+                            button.setForeground(btn_fgh);
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e) {
+                            button.setBackground(btn_bg);
+                            button.setForeground(btn_fg);
+                        }
+
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+                            button.setBackground(btn_bg);
+                            button.setForeground(btn_fg);
+                        }
+
+                        @Override
+                        public void mouseReleased(MouseEvent e) {
+                            Point point = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), button);
+                            if (button.contains(point)) {
+                                button.setBackground(btn_bgh);
+                                button.setForeground(btn_fgh);
+                            } else {
+                                button.setBackground(btn_bg);
+                                button.setForeground(btn_fg);
+                            }
+                        }
+                    });
+                } else if (comp instanceof Container nested) {
+                    changeButtonColors(nested, btn_bg, btn_fg, btn_bgh, btn_fgh);
+                }
+            }
         }
     }
 
@@ -1574,6 +1564,64 @@ public class CustomComponents {
                 int y2 = (int) (arrowPoints[i + 1][1] * unit);
                 g2d.drawLine(x + x1, y + y1, x + x2, y + y2);
             }
+            g2d.dispose();
+        }
+    }
+
+    public static class CustomXIcon implements Icon {
+        private int size, borderWidth;
+        private final Color stroke;
+        private final boolean roundedEnds;
+
+        public CustomXIcon(int size, int borderWidth, Color stroke, boolean roundedEnds) {
+            this.size = size;
+            this.borderWidth = borderWidth;
+            this.stroke = stroke;
+            this.roundedEnds = roundedEnds;
+        }
+
+        public void UpdateSize(int size) {
+            this.size = size;
+        }
+
+        public void UpdateBorder(int borderWidth) {
+            this.borderWidth = borderWidth;
+        }
+
+        @Override
+        public int getIconWidth() {
+            return size;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return size;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            int capStyle = roundedEnds ? BasicStroke.CAP_ROUND : BasicStroke.CAP_BUTT;
+            g2d.setStroke(new BasicStroke(borderWidth, capStyle, BasicStroke.JOIN_ROUND));
+            g2d.setColor(stroke);
+
+            double unit = size / 20.0;
+
+            int x1 = x + (int) (5 * unit);
+            int y1 = y + (int) (5 * unit);
+            int x2 = x + (int) (15 * unit);
+            int y2 = y + (int) (15 * unit);
+
+            int x3 = x + (int) (15 * unit);
+            int y3 = y + (int) (5 * unit);
+            int x4 = x + (int) (5 * unit);
+            int y4 = y + (int) (15 * unit);
+
+            g2d.drawLine(x1, y1, x2, y2);
+            g2d.drawLine(x3, y3, x4, y4);
+
             g2d.dispose();
         }
     }
