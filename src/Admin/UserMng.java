@@ -189,6 +189,7 @@ public class UserMng {
                     user.FullName, user.Phone, user.Email};
             counter += 1;
         }
+
         table_user = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
                 merriweather.deriveFont(Font.PLAIN, 16), Color.BLACK, Color.BLACK,
                 Color.WHITE, new Color(212, 212, 212), 1, 30);
