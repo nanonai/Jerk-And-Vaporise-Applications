@@ -193,10 +193,13 @@ public class AdmHome {
         content.removeAll();
         content.revalidate();
         content.repaint();
+        home_page.UpdateText("Home Page");
+        user_management.UpdateText("Manage User");
         switch (indicator) {
-//    Please indicate the relation of the indicator value and specific java class:
-//    0 -> Administrator Welcome Page
-//    1 -> Profile page
+//        Please indicate the relation of the indicator value and specific java class:
+//        0  -> Administrator Welcome Page
+//        1  -> Profile Page
+//        2  -> User Management Page
             case 0:
                 Welcome.ShowPage();
                 title.setText(String.format("<html>Welcome, Administrator <i>- %s</i></html>",
@@ -205,6 +208,8 @@ public class AdmHome {
             case 1:
                 Profile.ShowPage();
                 title.setText("Profile");
+                home_page.UpdateText("      Home Page      ");
+                user_management.UpdateText("      Manage User      ");
                 break;
             case 2:
                 UserMng.ShowPage();
@@ -224,14 +229,14 @@ public class AdmHome {
         int finalBase_size = base_size;
         SwingUtilities.invokeLater(() -> {
             logo_cell.repaint();
-            home_page.UpdateCustomButton(0, (int) (finalBase_size * 1.1), null, 0);
-            user_management.UpdateCustomButton(0, (int) (finalBase_size * 1.1), null, 0);
+            home_page.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
+            user_management.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
             title.setFont(boldonse.deriveFont((float)finalBase_size));
-            profile.repaint();
             profileIcon1.UpdateSize((int) (finalBase_size * 2.5));
             profileIcon2.UpdateSize((int) (finalBase_size * 2.5));
             profile_drop.UpdateSize(top_bar.getHeight() / 2, top_bar.getHeight());
             profile.setSize(profileIcon1.getIconWidth(), profileIcon1.getIconHeight());
+            profile.repaint();
             switch (indicator) {
                 case 0:
                     Welcome.UpdateComponentSize(finalBase_size);
