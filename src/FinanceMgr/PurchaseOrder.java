@@ -108,10 +108,6 @@ public class PurchaseOrder {
         }
     }
 
-    public static void ViewPO(){
-
-    }
-
 
 }
 
