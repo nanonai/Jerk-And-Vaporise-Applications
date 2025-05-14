@@ -31,20 +31,6 @@ public class SalesHomePage {
         content.add(label1,gbc);
     }
 
-    public static void PageChanger() {
-        content.removeAll();
-        content.revalidate();
-        content.repaint();
-        switch (indicator) {
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-        }
-        UpdateComponentSize(base_size);
-    }
 
     public static void UpdateComponentSize(int base_size) {
 
