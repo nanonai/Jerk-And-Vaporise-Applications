@@ -202,24 +202,9 @@ public class PurchaseOrderPage {
         igbc.insets = new Insets(0, 0, 10, 0);
         String[] titles = new String[]{"PurchaseOrderID", "PurchaseReqID", "ItemID", "Quantity", "SupplierID","OrderDate","UserID","Status"};
         List<PurchaseOrder> purchaseOrder_list = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
-        Object[][] data = new Object[purchaseOrder_list.size() * 9][titles.length];
+        Object[][] data = new Object[purchaseOrder_list.size()][titles.length];
         int counter = 0;
         for (PurchaseOrder purchaseOrder : purchaseOrder_list) {
-            data[counter] = new Object[]{purchaseOrder.purchaseOrderID,purchaseOrder.purchaseReqID, purchaseOrder.itemID,purchaseOrder.quantity,
-                    purchaseOrder.supplierID,purchaseOrder.orderDate, purchaseOrder.purchaseManID,purchaseOrder.status};
-            counter += 1;
-            data[counter] = new Object[]{purchaseOrder.purchaseOrderID,purchaseOrder.purchaseReqID, purchaseOrder.itemID,purchaseOrder.quantity,
-                    purchaseOrder.supplierID,purchaseOrder.orderDate, purchaseOrder.purchaseManID,purchaseOrder.status};
-            counter += 1;
-            data[counter] = new Object[]{purchaseOrder.purchaseOrderID,purchaseOrder.purchaseReqID, purchaseOrder.itemID,purchaseOrder.quantity,
-                    purchaseOrder.supplierID,purchaseOrder.orderDate, purchaseOrder.purchaseManID,purchaseOrder.status};
-            counter += 1;
-            data[counter] = new Object[]{purchaseOrder.purchaseOrderID,purchaseOrder.purchaseReqID, purchaseOrder.itemID,purchaseOrder.quantity,
-                    purchaseOrder.supplierID,purchaseOrder.orderDate, purchaseOrder.purchaseManID,purchaseOrder.status};
-            counter += 1;
-            data[counter] = new Object[]{purchaseOrder.purchaseOrderID,purchaseOrder.purchaseReqID, purchaseOrder.itemID,purchaseOrder.quantity,
-                    purchaseOrder.supplierID,purchaseOrder.orderDate, purchaseOrder.purchaseManID,purchaseOrder.status};
-            counter += 1;
             data[counter] = new Object[]{purchaseOrder.purchaseOrderID,purchaseOrder.purchaseReqID, purchaseOrder.itemID,purchaseOrder.quantity,
                     purchaseOrder.supplierID,purchaseOrder.orderDate, purchaseOrder.purchaseManID,purchaseOrder.status};
             counter += 1;

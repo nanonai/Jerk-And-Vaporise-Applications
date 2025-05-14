@@ -151,7 +151,7 @@ public class ItemMng {
                     item.UnitPrice,
                     item.Quantity,
                     item.Category,
-                    item.SupplierName
+                    item.SupplierID
             };
             counter += 1;
         }
@@ -389,7 +389,7 @@ public class ItemMng {
                         item.UnitPrice,
                         item.Quantity,
                         item.Category,
-                        item.SupplierName
+                        item.SupplierID
                 };
                 counter += 1;
                 if (counter == length || counter == filteredItems.size()) { break; }
@@ -431,11 +431,11 @@ public class ItemMng {
             UpdatePages(AllItems.size());
             UpdateTable(AllItems, list_length, page_counter);
         } else {
-            AllItems = Item.listAllItem("datafile/item.txt");
-            AllItems.removeIf(item -> !(item.Itemname.toLowerCase().contains(searcher.toLowerCase()) ||
-                    item.ItemID.toLowerCase().contains(searcher.toLowerCase()) ||
-                    item.Category.toLowerCase().contains(searcher.toLowerCase()) ||
-                    item.SupplierName.toLowerCase().contains(searcher.toLowerCase())));
+//            AllItems = Item.listAllItem("datafile/item.txt");
+//            AllItems.removeIf(item -> !(item.Itemname.toLowerCase().contains(searcher.toLowerCase()) ||
+//                    item.ItemID.toLowerCase().contains(searcher.toLowerCase()) ||
+//                    item.Category.toLowerCase().contains(searcher.toLowerCase()) ||
+//                    item.SupplierID.toLowerCase().contains(searcher.toLowerCase())));
         }
 
         if (AllItems.isEmpty()) {
