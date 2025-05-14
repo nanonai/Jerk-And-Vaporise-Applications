@@ -374,6 +374,10 @@ public class CustomComponents {
             setForeground(placeholderColor);
         }
 
+        public void UpdateColumns(int columns) {
+            setColumns(columns);
+        }
+
         public void Reset() {
             setText(placeholder);
             setToolTipText("");

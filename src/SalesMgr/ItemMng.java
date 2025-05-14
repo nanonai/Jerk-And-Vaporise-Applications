@@ -147,7 +147,7 @@ public class ItemMng {
         for (Item item : AllItems) {
             data[counter] = new Object[]{
                     item.ItemID,
-                    item.Itemname,
+                    item.ItemName,
                     item.UnitPrice,
                     item.Quantity,
                     item.Category,
@@ -385,7 +385,7 @@ public class ItemMng {
             } else {
                 data[counter] = new Object[]{
                         item.ItemID,
-                        item.Itemname,
+                        item.ItemName,
                         item.UnitPrice,
                         item.Quantity,
                         item.Category,
