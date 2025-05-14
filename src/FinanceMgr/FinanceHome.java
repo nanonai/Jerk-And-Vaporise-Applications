@@ -73,7 +73,7 @@ public class FinanceHome {
         //purchaseRequisition
         gbc_side.gridy = 2;
         gbc_side.weighty = 0.8;
-        purchaseRequisition = new CustomComponents.CustomButton("Purchase Requisition", merriweather,Color.WHITE, Color.BLACK,
+        purchaseRequisition = new CustomComponents.CustomButton("Purchase Req", merriweather,Color.WHITE, Color.BLACK,
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
@@ -222,6 +222,8 @@ public class FinanceHome {
             }
         });
 
+        PaymentPage.Loader(parent, merriweather, boldonse, content, current_user);
+        InventoryPage.Loader(parent, merriweather, boldonse, content, current_user);
         PurchaseReqPage.Loader(parent, merriweather, boldonse, content, current_user);
         PurchaseOrderPage.Loader(parent, merriweather, boldonse, content, current_user);
         Profile.Loader(parent, merriweather, boldonse, content, current_user);
@@ -253,8 +255,10 @@ public class FinanceHome {
                 PurchaseReqPage.ShowPage();
                 break;
             case 4:
+                InventoryPage.ShowPage();
                 break;
             case 5:
+                PaymentPage.ShowPage();
                 break;
             case 6:
                 break;
