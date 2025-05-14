@@ -6,7 +6,7 @@ Email:          ad123@gmail.com
 Phone:          0151240129
 AccType:        Administrator
 DateOfRegis:    2025-03-31
-RememberMe:     1
+RememberMe:     0
 ~~~~~
 UserID:         SM1253724128
 Username:       sm123
@@ -98,103 +98,43 @@ AccType:        Finance Manager
 DateOfRegis:    2025-04-01
 RememberMe:     0
 ~~~~~
-UserID:         PM7873164022
-Username:       testing1
-Password:       testING!1
-FullName:       testing1
-Email:          t@gmail.com
-Phone:          0124353453
-AccType:        Purchase Manager
-DateOfRegis:    2025-05-11
-RememberMe:     0
-~~~~~
-UserID:         PM3988888282
-Username:       testing2
-Password:       testING@2
-FullName:       testing2
-Email:          te@gmail.com
-Phone:          0123242423
-AccType:        Purchase Manager
-DateOfRegis:    2025-05-11
-RememberMe:     0
-~~~~~
-UserID:         FM2158210610
-Username:       testing3
-Password:       testING@2
-FullName:       testing2
-Email:          tes@gmail.com
-Phone:          0123242423
-AccType:        Finance Manager
-DateOfRegis:    2025-05-11
-RememberMe:     0
-~~~~~
-UserID:         SM7838256398
-Username:       whadufuq
-Password:       123qweQWE!@#
-FullName:       whadufuq
-Email:          wtf@gmail.com
-Phone:          0124234233
+UserID:         SM5592118047
+Username:       """"""""""
+Password:       Skibidi1@
+FullName:       skibidi wong
+Email:          skibidi2@pornhub.com
+Phone:          0124506943
 AccType:        Sales Manager
-DateOfRegis:    2025-05-11
+DateOfRegis:    2025-05-13
 RememberMe:     0
 ~~~~~
-UserID:         IM2939789388
-Username:       popipopipo
-Password:       qwe123!@#QWE
-FullName:       popipopipo
-Email:          qwe@gmail.com
-Phone:          0123235235
-AccType:        Inventory Manager
-DateOfRegis:    2025-05-11
-RememberMe:     0
-~~~~~
-UserID:         FM6497111438
-Username:       wefweewfwef
-Password:       qwe123!@#QWE
-FullName:       wfwefwefwefwf
-Email:          we@ddsf.asffsfsf
-Phone:          0128467052
+UserID:         FM1031172337
+Username:       fdsgdsgdsgds
+Password:       sdsgdsgdsg@!1fgwEF
+FullName:       gdsgdsgdsgdsgsd
+Email:          sdgfsfgerfr@dfdsfds.dfdsfds
+Phone:          0123434346
 AccType:        Finance Manager
-DateOfRegis:    2025-05-11
+DateOfRegis:    2025-05-13
 RememberMe:     0
 ~~~~~
-UserID:         SM2041986827
-Username:       dfsdfdgfdgfs
-Password:       ss32QsfW$#
-FullName:       gdgfdgfsdgfdgfs
-Email:          dfgdfgdg@gmail.com
-Phone:          0121311111
-AccType:        Sales Manager
-DateOfRegis:    2025-05-11
-RememberMe:     0
-~~~~~
-UserID:         FM0776170250
-Username:       dfgdrgss
-Password:       dsgWWTS#^2
-FullName:       sdgsdgsdgds
-Email:          sdf@sdg.dfhdfh
-Phone:          0121324565
+UserID:         FM3108412680
+Username:       ddsgdgdsg
+Password:       @13WDdwefe
+FullName:       sgdsgdgsgsgsdgds
+Email:          wege@dfghfe.wegweg
+Phone:          0122423523
 AccType:        Finance Manager
-DateOfRegis:    2025-05-11
+DateOfRegis:    2025-05-14
 RememberMe:     0
 ~~~~~
-UserID:         FM4207101859
-Username:       SgeEGegeg
-Password:       ewe$#^34^weteWTE
-FullName:       EGWgwwgewgw
-Email:          weeeeet@rh.ghf
-Phone:          0124555346
+UserID:         FM3975333726
+Username:       gdsgsgds
+Password:       dhdfhdf@123sdgdfsgdsaFWEFWE
+FullName:       gdfsghfdsgds
+Email:          sdgsgsd@sgsg.sdgdsg
+Phone:          0112345347
 AccType:        Finance Manager
-DateOfRegis:    2025-05-11
-RememberMe:     0
-~~~~~
-UserID:         FM3231785524
-Username:       dsfdsfdsfsfdsfds
-Password:       sdfdsf1241!@#fdsfaA
-FullName:       sdfsdfdsfsdfdsfdsf
-Email:          asf2@sg.sf
-Phone:          0143242423
-AccType:        Finance Manager
-DateOfRegis:    2025-05-11
+DateOfRegis:    2025-05-14
 RememberMe:     0
 ~~~~~
