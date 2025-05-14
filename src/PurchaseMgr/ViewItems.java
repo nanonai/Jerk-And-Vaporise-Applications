@@ -2,21 +2,19 @@ package PurchaseMgr;
 
 import Common.Buffer;
 import Common.CustomComponents;
-import javax.imageio.ImageIO;
+import SalesMgr.Item;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewItems {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
     private static Buffer current_user;
-    private static JLabel greet;
-    private static CustomComponents.ImageCell weasel;
-    private static BufferedImage logo;
+    private static java.util.List<String> list = new ArrayList<>();
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
                               JPanel content, Buffer current_user) {
@@ -25,39 +23,32 @@ public class ViewItems {
         ViewItems.boldonse = boldonse;
         ViewItems.content = content;
         ViewItems.current_user = current_user;
-        try {
-            logo = ImageIO.read(new File("images/logo_sidebar.png"));
-        } catch (IOException e) {
-            e.getStackTrace();
-        }
     }
 
     public static void ShowPage() {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridx = 1;
+        gbc.gridy = 1;
         gbc.weightx = 1;
         gbc.weighty = 1;
-        greet = new JLabel("");
-        greet.setOpaque(true);
-        greet.setBackground(Color.blue);
-        content.add(greet, gbc);
+        gbc.fill = GridBagConstraints.BOTH;
+        List<Item> list = Item.listAllItem("datafile/item.txt");
+        String[] itemColumn = new String[]{"ItemID", "Itemname", "UnitPrice", "Quantity", "Category"};
+        Object[][] itemData = new Object[list.size()][6];
+        int Counter = 0;
+        for (Item listItem: list){
+            itemData[Counter] = new Object[]{listItem.ItemID, listItem.ItemName, listItem.UnitPrice, listItem.Quantity, listItem.Category };
+            Counter += 1;
+        }
+        CustomComponents.CustomTable customtable = new CustomComponents.CustomTable(itemColumn, itemData, merriweather.deriveFont(Font.BOLD, 15),
+                merriweather.deriveFont(Font.PLAIN, 13), Color.CYAN, new Color(255, 254, 233), Color.DARK_GRAY, Color.BLUE, 2, 80);
+        CustomComponents.CustomScrollPane supplierPane = new CustomComponents.CustomScrollPane(true, 40, customtable, 10, Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN,
+                Color.GRAY, Color.DARK_GRAY, Color.BLUE, Color.blue, Color.DARK_GRAY, Color.magenta, Color.PINK, 100);
+        content.add(supplierPane, gbc);
 
-        gbc.gridx = 1;
-        gbc.weightx = 10;
-        JLabel ferret = new JLabel("Jill");
-        ferret.setOpaque(true);
-        ferret.setBackground(Color.cyan);
-        content.add(ferret, gbc);
-
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        weasel = new CustomComponents.ImageCell(logo, 0.25, 5);
-        content.add(weasel, gbc);
     }
 
     public static void UpdateComponentSize(int base_size) {
-        greet.setFont(merriweather.deriveFont(Font.BOLD, base_size));
+
     }
 }
