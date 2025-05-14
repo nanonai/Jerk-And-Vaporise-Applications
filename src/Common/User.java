@@ -153,6 +153,14 @@ public class User {
         return user_temp;
     }
 
+    public static List<User> GetUsersByIds(List<String> ids, String filename) {
+        List<User> user_list = new ArrayList<>();
+        for (String id: ids) {
+            user_list.add(GetUserById(id, filename));
+        }
+        return user_list;
+    }
+
     public static User RememberedUser(String filename) {
         List<User> allUser = listAllUser(filename);
         User r_user = null;
@@ -218,6 +226,7 @@ public class User {
                 }
             }
             success = !repeated;
+            repeated = false;
         }
         return newId;
     }
