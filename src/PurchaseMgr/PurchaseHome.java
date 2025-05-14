@@ -102,7 +102,7 @@ public class PurchaseHome {
 
         gbc_side.gridy = 5;
         gbc_side.weighty = 0.8;
-        generate_po = new CustomComponents.CustomButton("Generate Purchase Order", merriweather, Color.WHITE, Color.WHITE,
+        generate_po = new CustomComponents.CustomButton("Generate \n Purchase Order", merriweather, Color.WHITE, Color.WHITE,
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
@@ -110,7 +110,7 @@ public class PurchaseHome {
 
         gbc_side.gridy = 6;
         gbc_side.weighty = 0.8;
-        view_po = new CustomComponents.CustomButton("View Purchase Order", merriweather, Color.WHITE, Color.WHITE,
+        view_po = new CustomComponents.CustomButton("View \n Purchase Order", merriweather, Color.WHITE, Color.WHITE,
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);

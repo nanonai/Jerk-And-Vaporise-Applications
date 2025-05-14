@@ -1,21 +1,70 @@
-SupplierID:     S001
+SupplierID:     1
 SupplierName:   ABC Supplies
 ContactPerson:  John Doe
 Phone:          0123456789
 Email:          johndoe@abc.com
 Address:        1234 Supply St, Cityville
 ~~~~~
-SupplierID:     S002
+SupplierID:     2
 SupplierName:   XYZ Corp
 ContactPerson:  Jane Smith
 Phone:          0198765432
 Email:          janesmith@xyz.com
 Address:        9876 Corp Rd, Townsville
 ~~~~~
-SupplierID:     S003
+SupplierID:     3
 SupplierName:   Tech Supplies
 ContactPerson:  Emily Johnson
 Phone:          0147852369
 Email:          emily@techsupplies.com
 Address:        4567 Tech Park, Silicon Valley
+~~~~~
+SupplierID:     4
+SupplierName:   Delta Hardware
+ContactPerson:  Michael Lee
+Phone:          0172233445
+Email:          michael@deltahardware.com
+Address:        1020 Hardware Ave, Industriaville
+~~~~~
+SupplierID:     5
+SupplierName:   GreenField Tools
+ContactPerson:  Sarah Tan
+Phone:          0139988776
+Email:          sarah.tan@greenfield.com
+Address:        55 Green Rd, Farmtown
+~~~~~
+SupplierID:     6
+SupplierName:   Rapid Logistics
+ContactPerson:  Aaron Lim
+Phone:          0163322110
+Email:          aaron@rapidlogistics.com
+Address:        888 Speed Blvd, Port City
+~~~~~
+SupplierID:     7
+SupplierName:   Nova Supplies Co.
+ContactPerson:  Chloe Ong
+Phone:          0114455667
+Email:          chloe@novasupplies.com
+Address:        202 Nova Lane, Star City
+~~~~~
+SupplierID:     8
+SupplierName:   Prime Equipments
+ContactPerson:  Daniel Chong
+Phone:          0126789453
+Email:          daniel@primeequip.com
+Address:        777 Equipment St, Gearsville
+~~~~~
+SupplierID:     9
+SupplierName:   Fusion Industrial
+ContactPerson:  Lisa Wong
+Phone:          0182345678
+Email:          lisa.wong@fusionind.com
+Address:        909 Fusion Rd, Techport
+~~~~~
+SupplierID:     10
+SupplierName:   Omega Resources
+ContactPerson:  Bryan Tan
+Phone:          0159988776
+Email:          bryan@omegaresources.com
+Address:        303 Omega Blvd, Resource City
 ~~~~~

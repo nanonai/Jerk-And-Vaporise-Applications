@@ -1,5 +1,11 @@
 package PurchaseMgr;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Supplier {
     public String SupplierID;
     public String SupplierName;
@@ -15,5 +21,47 @@ public class Supplier {
         this.Phone = Phone;
         this.Email = Email;
         this.Address = Address;
+    }
+
+    public static List<Supplier> ListAllSupplier(String file){
+        List<Supplier> listSupplier = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String SupplierID = "", SupplierName = "", ContactPerson = "", Phone = "", Email = "", Address = "";
+
+            String line;
+            int counter = 1;
+            while ((line = reader.readLine()) != null) {
+                switch (counter) {
+                    case 1:
+                        SupplierID = line.substring(16);
+                        break;
+                    case 2:
+                        SupplierName = line.substring(16);
+                        break;
+                    case 3:
+                        ContactPerson = line.substring(16);
+                        break;
+                    case 4:
+                        Phone = line.substring(16);
+                        break;
+                    case 5:
+                        Email = line.substring(16);
+                        break;
+                    case 6:
+                        Address = line.substring(16);
+                        break;
+                    default:
+                        counter = 0;
+                        Supplier newsupplier = new Supplier(SupplierID, SupplierName, ContactPerson, Phone, Email, Address);
+                        listSupplier.add(newsupplier);
+                        break;
+                }
+                counter += 1;
+            }
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+        return listSupplier;
     }
 }
