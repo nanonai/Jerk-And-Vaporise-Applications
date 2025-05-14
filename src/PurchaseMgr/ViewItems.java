@@ -34,13 +34,10 @@ public class ViewItems {
         gbc.fill = GridBagConstraints.BOTH;
         List<Item> list = Item.listAllItem("datafile/item.txt");
         String[] itemColumn = new String[]{"ItemID", "Itemname", "UnitPrice", "Quantity", "Category"};
-        Object[][] itemData = new Object[list.size()*4][6];
+        Object[][] itemData = new Object[list.size()][6];
         int Counter = 0;
         for (Item listItem: list){
-            itemData[Counter] = new Object[]{listItem.ItemID, listItem.Itemname, listItem.UnitPrice, listItem.Quantity, listItem.Category };
-            //supplierData[Counter + 3] = new Object[]{listItem.SupplierID, listItem.SupplierName, listItem.ContactPerson, listItem.Phone, listItem.Email, listItem.Address };
-            //supplierData[Counter + 6] = new Object[]{listItem.SupplierID, listItem.SupplierName, listItem.ContactPerson, listItem.Phone, listItem.Email, listItem.Address };
-            //supplierData[Counter + 9] = new Object[]{listItem.SupplierID, listItem.SupplierName, listItem.ContactPerson, listItem.Phone, listItem.Email, listItem.Address };
+            itemData[Counter] = new Object[]{listItem.ItemID, listItem.ItemName, listItem.UnitPrice, listItem.Quantity, listItem.Category };
             Counter += 1;
         }
         CustomComponents.CustomTable customtable = new CustomComponents.CustomTable(itemColumn, itemData, merriweather.deriveFont(Font.BOLD, 15),
@@ -49,7 +46,6 @@ public class ViewItems {
                 Color.GRAY, Color.DARK_GRAY, Color.BLUE, Color.blue, Color.DARK_GRAY, Color.magenta, Color.PINK, 100);
         content.add(supplierPane, gbc);
 
-        //gbc.....
     }
 
     public static void UpdateComponentSize(int base_size) {

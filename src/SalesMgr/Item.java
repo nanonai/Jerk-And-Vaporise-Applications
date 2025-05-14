@@ -11,25 +11,23 @@ import java.util.*;
 public class Item {
     public int Quantity, Threshold;
     public String ItemID, ItemName, Category;
-    public Set<String> SupplierID;  // Add SupplierName field
+    public Set<String> SupplierID;
     public double UnitPrice;
 
-    // Constructor including SupplierName
     public Item(String ItemID, String ItemName, double UnitPrice, int Quantity, int Threshold, String Category, Set<String> SupplierID) {
-        this.ItemID = ItemID;   // Fruit I00001
-        this.ItemName = ItemName; // 150
-        this.UnitPrice = UnitPrice; // 100000.00
-        this.Quantity = Quantity; // 1000000
+        this.ItemID = ItemID;
+        this.ItemName = ItemName;
+        this.UnitPrice = UnitPrice;
+        this.Quantity = Quantity;
         this.Threshold = Threshold;
-        this.Category = Category; // 150
-        this.SupplierID = SupplierID;  // S00001
+        this.Category = Category;
+        this.SupplierID = SupplierID;
     }
 
-    // Method to list all items from a file
     public static List<Item> listAllItem(String filename) {
         List<Item> allItem = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            String ItemID = "", ItemName = "", Category = "";  // Add SupplierName here
+            String ItemID = "", ItemName = "", Category = "";
             int Quantity = 0, Threshold = 0;
             double UnitPrice = 0;
             Set<String> SupplierID = new HashSet<>();
@@ -39,29 +37,29 @@ public class Item {
             while ((line = reader.readLine()) != null) {
                 switch (counter) {
                     case 1:
-                        ItemID = line.substring(16);  // Extract ItemID
+                        ItemID = line.substring(16);
                         break;
                     case 2:
-                        ItemName = line.substring(16);  // Extract ItemName
+                        ItemName = line.substring(16);
                         break;
                     case 3:
-                        UnitPrice = Double.parseDouble(line.substring(16));  // Extract UnitPrice
+                        UnitPrice = Double.parseDouble(line.substring(16));
                         break;
                     case 4:
-                        Quantity = Integer.parseInt(line.substring(16));  // Extract Quantity
+                        Quantity = Integer.parseInt(line.substring(16));
                         break;
                     case 5:
                         Threshold = Integer.parseInt(line.substring(16));
                         break;
                     case 6:
-                        Category = line.substring(16);  // Extract Category
+                        Category = line.substring(16);
                         break;
                     case 7:
-                        SupplierID =  new HashSet<String>(List.of(line.substring(16).split(",")));  // Extract SupplierName
+                        SupplierID =  new HashSet<String>(List.of(line.substring(16).split(",")));
                         break;
                     default:
-                        counter = 0;  // Reset counter for the next item
-                        allItem.add(new Item(ItemID, ItemName, UnitPrice, Quantity, Threshold, Category, SupplierID));  // Create new item
+                        counter = 0;
+                        allItem.add(new Item(ItemID, ItemName, UnitPrice, Quantity, Threshold, Category, SupplierID));
                         break;
                 }
                 counter += 1;
@@ -72,7 +70,6 @@ public class Item {
         return allItem;
     }
 
-    // Method to convert Item objects to HTML strings
     public static List<String> ItemConvt(List<Item> items) {
         List<String> ItemList = new ArrayList<>();
         for (Item item : items) {
