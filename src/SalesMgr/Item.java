@@ -5,7 +5,9 @@ import jdk.jfr.Threshold;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 
 public class Item {
@@ -13,14 +15,17 @@ public class Item {
     public String ItemID, ItemName, Category;
     public Set<String> SupplierID;
     public double UnitPrice;
+    public LocalDate lastUpdate;
 
-    public Item(String ItemID, String ItemName, double UnitPrice, int Quantity, int Threshold, String Category, Set<String> SupplierID) {
+    public Item(String ItemID, String ItemName, double UnitPrice, int Quantity, int Threshold, String Category,
+            Set<String> SupplierID) {
         this.ItemID = ItemID;
         this.ItemName = ItemName;
         this.UnitPrice = UnitPrice;
         this.Quantity = Quantity;
         this.Threshold = Threshold;
         this.Category = Category;
+//        this.lastUpdate = lastUpdate;
         this.SupplierID = SupplierID;
     }
 
@@ -55,7 +60,7 @@ public class Item {
                         Category = line.substring(16);
                         break;
                     case 7:
-                        SupplierID =  new HashSet<String>(List.of(line.substring(16).split(",")));
+                        SupplierID =  new HashSet<String>(List.of(line.substring(16).split(", ")));
                         break;
                     default:
                         counter = 0;
@@ -93,7 +98,7 @@ public class Item {
                     Category:       %s<br>
                     SupplierID:     %s
                     </html>
-                    """, item.ItemID, item.ItemName, item.UnitPrice, item.Quantity, item.Threshold, item.Category, supID.toString());  // Add SupplierName here
+                    """, item.ItemID, item.ItemName, item.UnitPrice, item.Quantity, item.Threshold, item.Category, supID);  // Add SupplierName here
             ItemList.add(emp);
         }
         return ItemList;
@@ -126,7 +131,7 @@ public class Item {
     public static Boolean NameChecker(String name, String filename) {
         List<Item> allItem = listAllItem(filename);
         boolean repeated = false;
-        if (name.length() > 150 || name.length() < 8) {
+        if (name.length() > 150) {
             return false;
         }
         for (Item item : allItem) {
@@ -140,5 +145,31 @@ public class Item {
 
     public static Boolean PriceChecker(Double price) {
         return price <= 100000;
+    }
+
+    public static void saveNewItem(Item item, String filename) {
+        try (FileWriter writer = new FileWriter(filename, true)) {
+            StringBuilder supID = new StringBuilder();
+            int counter = 1;
+            for (String id : item.SupplierID){
+                supID.append(id);
+                if (counter != item.SupplierID.size()){
+                    supID.append(", ");
+                }
+                counter += 1;
+            }
+//            writer.write("ItemID:         " + item.ItemID + "\n");
+//            writer.write("Username:       " + item.Username + "\n");
+//            writer.write("Password:       " + item.Password + "\n");
+//            writer.write("FullName:       " + item.FullName + "\n");
+//            writer.write("Email:          " + item.Email + "\n");
+//            writer.write("Phone:          " + item.Phone + "\n");
+//            writer.write("AccType:        " + item.AccType + "\n");
+//            writer.write("SupplierID:     " + supID + "\n");
+//            writer.write("RememberMe:     0\n");
+//            writer.write("~~~~~\n");
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
     }
 }
