@@ -1,15 +1,15 @@
-package Common;
+package Admin;
 
 import java.time.LocalDate;
 
-public class Buffer {
+public class BufferForUser {
     public String UserID, Username, Password, FullName, Email, AccType, Phone;
     public int RememberMe;
     public LocalDate DateOfRegis;
 
-    public Buffer(String UserID, String Username, String Password, String FullName,
-                  String Email, String Phone, String AccType, LocalDate DateOfRegis,
-                  int RememberMe) {
+    public BufferForUser(String UserID, String Username, String Password, String FullName,
+                         String Email, String Phone, String AccType, LocalDate DateOfRegis,
+                         int RememberMe) {
         this.UserID = UserID;
         this.Username = Username;
         this.Password = Password;

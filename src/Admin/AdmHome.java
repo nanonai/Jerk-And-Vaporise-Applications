@@ -12,14 +12,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import Common.*;
 
 public class AdmHome {
     public static int indicator = 0;
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel side_bar, top_bar, content;
-    private static Buffer current_user;
+    private static BufferForUser current_user;
     private static BufferedImage logo, caret_up, caret_down;
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
@@ -29,7 +28,7 @@ public class AdmHome {
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel side_bar, JPanel top_bar, JPanel content, Buffer current_user) {
+                              JPanel side_bar, JPanel top_bar, JPanel content, BufferForUser current_user) {
         try {
             logo = ImageIO.read(new File("images/logo_sidebar.png"));
             caret_up = ImageIO.read(new File("images/caret_up.png"));
@@ -183,7 +182,7 @@ public class AdmHome {
             }
         });
 
-        Welcome.Loader(parent, merriweather, boldonse, content, current_user);
+        Dashboard.Loader(parent, merriweather, boldonse, content, current_user);
         Profile.Loader(parent, merriweather, boldonse, content, current_user);
         UserMng.Loader(parent, merriweather, boldonse, content, current_user);
         PageChanger();
@@ -197,11 +196,11 @@ public class AdmHome {
         user_management.UpdateText("Manage User");
         switch (indicator) {
 //        Please indicate the relation of the indicator value and specific java class:
-//        0  -> Administrator Welcome Page
+//        0  -> Administrator Dashboard Page
 //        1  -> Profile Page
 //        2  -> User Management Page
             case 0:
-                Welcome.ShowPage();
+                Dashboard.ShowPage();
                 title.setText(String.format("<html>Welcome, Administrator <i>- %s</i></html>",
                         Home.current_user.FullName));
                 break;
@@ -239,7 +238,7 @@ public class AdmHome {
             profile.repaint();
             switch (indicator) {
                 case 0:
-                    Welcome.UpdateComponentSize(finalBase_size);
+                    Dashboard.UpdateComponentSize(finalBase_size);
                     break;
                 case 1:
                     Profile.UpdateComponentSize(finalBase_size);
