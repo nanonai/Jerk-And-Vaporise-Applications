@@ -1,6 +1,5 @@
-package Common;
+package Admin;
 
-import Admin.*;
 import SalesMgr.*;
 import PurchaseMgr.*;
 import InventoryMgr.*;
@@ -18,7 +17,7 @@ public class Profile {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static Buffer current_user;
+    private static BufferForUser current_user;
     private static BufferedImage icon_username, icon_fullname, icon_password, icon_email, icon_phone,
             icon_hide, icon_show, icon_exit1, icon_exit2;
     private static JLabel profile_pic, id_label, job_label, date_label, username_label, fullname_label,
@@ -28,7 +27,7 @@ public class Profile {
     private static CustomComponents.CustomProfileIcon profileIcon;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, Buffer current_user) {
+                              JPanel content, BufferForUser current_user) {
         try {
             icon_username = ImageIO.read(new File("images/user_dark.png"));
             icon_fullname = ImageIO.read(new File("images/name_dark.png"));

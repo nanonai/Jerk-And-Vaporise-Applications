@@ -1,6 +1,6 @@
 package SalesMgr;
 
-import Common.Buffer;
+import Admin.BufferForUser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,13 +9,13 @@ public class PurchaseRequisitionMng {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    public static Buffer current_user;
+    public static BufferForUser current_user;
     private static JLabel label1;
     private static int indicator, base_size;
 
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, Buffer current_user) {
+                              JPanel content, BufferForUser current_user) {
         SalesMgr.PurchaseRequisitionMng.parent = parent;
         SalesMgr.PurchaseRequisitionMng.merriweather = merriweather;
         SalesMgr.PurchaseRequisitionMng.boldonse = boldonse;

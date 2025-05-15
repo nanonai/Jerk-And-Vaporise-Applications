@@ -1,27 +1,19 @@
 package FinanceMgr;
 
-import Common.Buffer;
-import Common.CustomComponents;
-import Common.Main;
-import Common.User;
+import Admin.BufferForUser;
+import Admin.CustomComponents;
+import Admin.Main;
+import PurchaseMgr.PurchaseOrder;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Objects;
 
 public class PurchaseOrderPage {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content,inner;
-    public static Buffer current_user;
+    public static BufferForUser current_user;
     private static JButton s_btn;
 //    private static CustomComponents.CustomButton all, purOrder, purReq, itemID, quan,supplier,orderDate,purMan,status;
     private static CustomComponents.RoundedPanel search_panel;
@@ -32,8 +24,8 @@ public class PurchaseOrderPage {
     private static CustomComponents.CustomTable table_purOrder;
     private static CustomComponents.CustomScrollPane scrollPane1;
 
-    public static void Loader(JFrame parent,Font merriweather,Font boldonse,
-                              JPanel content,Buffer current_user){
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse,
+                              JPanel content, BufferForUser current_user){
         PurchaseOrderPage.parent = parent;
         PurchaseOrderPage.merriweather = merriweather;
         PurchaseOrderPage.boldonse = boldonse;
@@ -78,7 +70,7 @@ public class PurchaseOrderPage {
 //        content.add(itemID, gbc);
 //
 //        gbc.gridx = 4;
-//        quan = new CustomComponents.CustomButton("Quantity", merriweather, new Color(255, 255, 255),
+//        quan = new CustomComponents.CustomButton("StockCount", merriweather, new Color(255, 255, 255),
 //                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
 //                Main.transparent, 0, 20, Main.transparent, false, 5, false,
 //                null, 0, 0, 0);
@@ -200,13 +192,13 @@ public class PurchaseOrderPage {
         igbc.weightx = 1;
         igbc.weighty = 10;
         igbc.insets = new Insets(0, 0, 10, 0);
-        String[] titles = new String[]{"PurchaseOrderID", "PurchaseReqID", "ItemID", "Quantity", "SupplierID","OrderDate","UserID","Status"};
+        String[] titles = new String[]{"PurchaseOrderID", "PurchaseReqID", "ItemID", "StockCount", "SupplierID","OrderDate","UserID","Status"};
         List<PurchaseOrder> purchaseOrder_list = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
         Object[][] data = new Object[purchaseOrder_list.size()][titles.length];
         int counter = 0;
         for (PurchaseOrder purchaseOrder : purchaseOrder_list) {
-            data[counter] = new Object[]{purchaseOrder.purchaseOrderID,purchaseOrder.purchaseReqID, purchaseOrder.itemID,purchaseOrder.quantity,
-                    purchaseOrder.supplierID,purchaseOrder.orderDate, purchaseOrder.purchaseManID,purchaseOrder.status};
+            data[counter] = new Object[]{purchaseOrder.PurchaseOrderID, purchaseOrder.ItemID,purchaseOrder.SupplierID,
+                    purchaseOrder.TotalAmt,purchaseOrder.OrderDate, purchaseOrder.PurchaseMgrID,purchaseOrder.Status};
             counter += 1;
         }
 

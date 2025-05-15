@@ -1,27 +1,20 @@
 package FinanceMgr;
 
-import Common.Buffer;
-import Common.CustomComponents;
-import Common.Main;
-import Common.User;
+import Admin.BufferForUser;
+import Admin.CustomComponents;
+import Admin.Main;
+import InventoryMgr.Item;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.ListIterator;
 
 public class InventoryPage {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content,inner;
-    public static Buffer current_user;
+    public static BufferForUser current_user;
     private static JButton s_btn;
     private static CustomComponents.RoundedPanel search_panel;
     private static JLabel lbl_show, lbl_entries;
@@ -32,8 +25,8 @@ public class InventoryPage {
     private static CustomComponents.CustomScrollPane scrollPane1;
 
 
-    public static void Loader(JFrame parent,Font merriweather,Font boldonse,
-                              JPanel content,Buffer current_user){
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse,
+                              JPanel content, BufferForUser current_user){
         InventoryPage.parent = parent;
         InventoryPage.merriweather = merriweather;
         InventoryPage.boldonse = boldonse;
@@ -137,27 +130,12 @@ public class InventoryPage {
         igbc.weighty = 10;
         igbc.insets = new Insets(0, 0, 10, 0);
         String[] titles = new String[]{"ItemID", "ItemName", "CurrentStock", "LastUpdateDate", "Threshold"};
-        List<Inventory> inventory_list = Inventory.listAllInventory(Main.inventory_file);
-        Object[][] data = new Object[inventory_list.size() * 6][titles.length];
+        List<Item> inventory_list = Item.listAllItem(Main.item_file);
+        Object[][] data = new Object[inventory_list.size()][titles.length];
         int counter = 0;
-        for (Inventory inventory : inventory_list) {
-            data[counter] = new Object[]{inventory.itemID,inventory.itemName, inventory.currentStock,
-                    inventory.lastUpdateDate, inventory.threshold};
-            counter += 1;
-            data[counter] = new Object[]{inventory.itemID,inventory.itemName, inventory.currentStock,
-                    inventory.lastUpdateDate, inventory.threshold};
-            counter += 1;
-            data[counter] = new Object[]{inventory.itemID,inventory.itemName, inventory.currentStock,
-                    inventory.lastUpdateDate, inventory.threshold};
-            counter += 1;
-            data[counter] = new Object[]{inventory.itemID,inventory.itemName, inventory.currentStock,
-                    inventory.lastUpdateDate, inventory.threshold};
-            counter += 1;
-            data[counter] = new Object[]{inventory.itemID,inventory.itemName, inventory.currentStock,
-                    inventory.lastUpdateDate, inventory.threshold};
-            counter += 1;
-            data[counter] = new Object[]{inventory.itemID,inventory.itemName, inventory.currentStock,
-                    inventory.lastUpdateDate, inventory.threshold};
+        for (Item item : inventory_list) {
+            data[counter] = new Object[]{item.ItemID,item.ItemName, item.StockCount,
+                    item.LastUpdate, item.Threshold};
             counter += 1;
         }
 
