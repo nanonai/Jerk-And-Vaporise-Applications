@@ -5,53 +5,57 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import Common.BufferForPR;
+import java.util.Objects;
 
 public class PurchaseRequisition {
-    public String purchaseReqID,itemID,purchaseManID;
-    public int quantity;
-    public LocalDate reqDate;
+    public String PurchaseReqID, ItemID, SupplierID, SalesMgrID;
+    public int Quantity;
+    public LocalDate ReqDate;
     private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public PurchaseRequisition(String purchaseReqID, String itemID,
-                               int quantity,LocalDate reqDate, String purchaseManID){
-        this.purchaseReqID = purchaseReqID;
-        this.itemID = itemID;
-        this.quantity = quantity;
-        this.reqDate = reqDate;
-        this.purchaseManID = purchaseManID;
+    public PurchaseRequisition(String PurchaseReqID, String ItemID,String SupplierID,int Quantity,
+                               LocalDate ReqDate, String SalesMgrID){
+        this.PurchaseReqID = PurchaseReqID;
+        this.ItemID = ItemID;
+        this.SupplierID = SupplierID;
+        this.Quantity = Quantity;
+        this.ReqDate = ReqDate;
+        this.SalesMgrID = SalesMgrID;
     }
 
     public static List<PurchaseRequisition> listAllPurchaseRequisitions(String filename) {
         List<PurchaseRequisition> allPurchaseRequisitions = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            String purchaseReqID = "", itemID = "", purchaseManID = "";
-            int quantity = 0;
-            LocalDate reqDate = null;
+            String PurchaseReqID = "", ItemID = "", SupplierID = "",SalesMgrID = "";
+            int Quantity = 0;
+            LocalDate ReqDate = null;
             int counter = 1;
             String line;
 
             while ((line = reader.readLine()) != null) {
                 switch (counter) {
                     case 1:
-                        purchaseReqID = line.substring(21);
+                        PurchaseReqID = line.substring(21);
                         break;
                     case 2:
-                        itemID = line.substring(21);
+                        ItemID = line.substring(21);
                         break;
                     case 3:
-                        quantity = Integer.parseInt(line.substring(21));
+                        SupplierID = line.substring(21);
                         break;
                     case 4:
-                        reqDate = LocalDate.parse(line.substring(21), df);
+                        Quantity = Integer.parseInt(line.substring(21));
                         break;
                     case 5:
-                        purchaseManID = line.substring(21);
+                        ReqDate = LocalDate.parse(line.substring(21), df);
+                        break;
+                    case 6:
+                        SalesMgrID = line.substring(21);
                         break;
                     default:
                         counter = 0;
                         allPurchaseRequisitions.add(new PurchaseRequisition(
-                                purchaseReqID, itemID, quantity,reqDate, purchaseManID
+                                PurchaseReqID, ItemID, SupplierID,Quantity, ReqDate,SalesMgrID
                         ));
                 }
                 counter += 1;
@@ -62,4 +66,27 @@ public class PurchaseRequisition {
         return allPurchaseRequisitions;
     }
 
+    public static String idMaker(String filename) {
+        List<PurchaseRequisition> allPurchaseRequisition = listAllPurchaseRequisitions(filename);
+        boolean repeated = false;
+        boolean success = false;
+        String newId = "";
+        while (!success) {
+            long newNum = (long) (Math.random() * 1E4);
+            StringBuilder number = new StringBuilder(String.valueOf(newNum));
+            while (number.length() < 4) {
+                number.insert(0, "0");
+            }
+            newId = String.format("%s%s", "PR", number);
+            for (PurchaseRequisition purchaseRequisition : allPurchaseRequisition) {
+                if (Objects.equals(purchaseRequisition.PurchaseReqID, newId)) {
+                    repeated = true;
+                    break;
+                }
+            }
+            success = !repeated;
+            repeated = false;
+        }
+        return newId;
+    }
 }

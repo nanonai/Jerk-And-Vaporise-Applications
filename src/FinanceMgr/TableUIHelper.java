@@ -1,5 +1,7 @@
 package FinanceMgr;
 
+import PurchaseMgr.PurchaseOrder;
+
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -10,22 +12,21 @@ public class TableUIHelper {
 
     public static JPanel createPurchaseOrderTablePanel(List<PurchaseOrder> purchaseOrderList) {
         String[] columnNames = {
-                "Purchase Order ID", "Request ID", "Item ID", "Quantity",
-                "Supplier ID", "Order Date", "Manager ID", "Status"
+                "Purchase Order ID", "Item ID", "Purchase Quantity", "Total Amount",
+                "Order Date", "Manager ID", "Status"
         };
 
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
         for (PurchaseOrder po : purchaseOrderList) {
             Object[] row = {
-                    po.purchaseOrderID,
-                    po.purchaseReqID,
-                    po.itemID,
-                    po.quantity,
-                    po.supplierID,
-                    po.orderDate,
-                    po.purchaseManID,
-                    po.status
+                    po.PurchaseOrderID,
+                    po.ItemID,
+                    po.PurchaseQuantity,
+                    po.TotalAmt,
+                    po.OrderDate,
+                    po.PurchaseMgrID,
+                    po.Status
             };
             model.addRow(row);
         }
@@ -34,19 +35,19 @@ public class TableUIHelper {
     }
     public static JPanel createPurchaseReqTablePanel(List<PurchaseRequisition> PurchaseRequisitionList) {
         String[] columnNames = {
-                "Purchase Req ID", "Item ID", "Quantity",
-                 "Order Date", "Manager ID"
+                "Purchase Req ID", "Item ID", "Supplier ID",
+                 "Requisition Date", "Manager ID"
         };
 
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
         for (PurchaseRequisition pr : PurchaseRequisitionList) {
             Object[] row = {
-                    pr.purchaseReqID,
-                    pr.itemID,
-                    pr.quantity,
-                    pr.reqDate,
-                    pr.purchaseManID
+                    pr.PurchaseReqID,
+                    pr.ItemID,
+                    pr.SupplierID,
+                    pr.ReqDate,
+                    pr.SalesMgrID
             };
             model.addRow(row);
         }

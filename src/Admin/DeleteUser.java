@@ -1,7 +1,5 @@
 package Admin;
 
-import Common.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -15,10 +13,10 @@ public class DeleteUser {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static Buffer current_user;
+    private static BufferForUser current_user;
     private static List<User> users;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, Buffer current_user) {
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, BufferForUser current_user) {
         DeleteUser.parent = parent;
         DeleteUser.merriweather = merriweather;
         DeleteUser.boldonse = boldonse;

@@ -1,7 +1,7 @@
-package Common;
+package Admin;
 import javax.swing.*;
 import java.awt.*;
-import Admin.*;
+
 import SalesMgr.*;
 import PurchaseMgr.*;
 import InventoryMgr.*;
@@ -10,7 +10,7 @@ import FinanceMgr.*;
 
 public class Home {
     public static int indicator = -1;
-    public static Buffer current_user;
+    public static BufferForUser current_user;
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static CustomComponents.ColorPanel background;

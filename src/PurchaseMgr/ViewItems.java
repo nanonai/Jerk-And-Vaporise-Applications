@@ -1,8 +1,8 @@
 package PurchaseMgr;
 
-import Common.Buffer;
-import Common.CustomComponents;
-import SalesMgr.Item;
+import Admin.BufferForUser;
+import Admin.CustomComponents;
+import InventoryMgr.Item;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,11 +13,11 @@ public class ViewItems {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static Buffer current_user;
+    private static BufferForUser current_user;
     private static java.util.List<String> list = new ArrayList<>();
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, Buffer current_user) {
+                              JPanel content, BufferForUser current_user) {
         ViewItems.parent = parent;
         ViewItems.merriweather = merriweather;
         ViewItems.boldonse = boldonse;
@@ -33,11 +33,11 @@ public class ViewItems {
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
         List<Item> list = Item.listAllItem("datafile/item.txt");
-        String[] itemColumn = new String[]{"ItemID", "Itemname", "UnitPrice", "Quantity", "Category"};
+        String[] itemColumn = new String[]{"ItemID", "Itemname", "UnitPrice", "StockCount", "Category"};
         Object[][] itemData = new Object[list.size()][6];
         int Counter = 0;
         for (Item listItem: list){
-            itemData[Counter] = new Object[]{listItem.ItemID, listItem.ItemName, listItem.UnitPrice, listItem.Quantity, listItem.Category };
+            itemData[Counter] = new Object[]{listItem.ItemID, listItem.ItemName, listItem.UnitPrice, listItem.StockCount, listItem.Category };
             Counter += 1;
         }
         CustomComponents.CustomTable customtable = new CustomComponents.CustomTable(itemColumn, itemData, merriweather.deriveFont(Font.BOLD, 15),
