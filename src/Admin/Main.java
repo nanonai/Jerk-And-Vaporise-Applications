@@ -1,4 +1,4 @@
-package Common;
+package Admin;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
 public class Main {
@@ -14,7 +15,7 @@ public class Main {
     public static final String userdata_file = "datafile/user.txt";
     public static final String purchaseReq_file = "datafile/purchaseReq.txt";
     public static final String purchaseOrder_file = "datafile/purchaseOrder.txt";
-    public static final String inventory_file = "datafile/inventory.txt";
+    public static final String item_file = "datafile/item.txt";
     public  static  final  String payment_file = "datafile/payment.txt";
 
     public static void main(String[] args) {

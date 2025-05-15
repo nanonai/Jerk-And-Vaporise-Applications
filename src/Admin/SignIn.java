@@ -1,4 +1,5 @@
-package Common;
+package Admin;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -264,11 +265,11 @@ public class SignIn {
                     case "Inventory Manager" -> Home.indicator = 4;
                     case "Finance Manager" -> Home.indicator = 5;
                 }
-                Buffer logged_in = null;
+                BufferForUser logged_in = null;
                 for (User user : allUser) {
                     if (Objects.equals(user.Username, txt1.getText().toLowerCase()) ||
                             Objects.equals(user.Email, txt1.getText())) {
-                        logged_in = new Buffer(user.UserID, user.Username, user.Password, user.FullName,
+                        logged_in = new BufferForUser(user.UserID, user.Username, user.Password, user.FullName,
                                 user.Email, user.Phone, user.AccType, user.DateOfRegis, 1);
                         break;
                     }
@@ -304,7 +305,7 @@ public class SignIn {
 
     public static void LoginRemembered() {
         User user = User.RememberedUser(Main.userdata_file);
-        Buffer logged_in = new Buffer(user.UserID, user.Username, user.Password, user.FullName,
+        BufferForUser logged_in = new BufferForUser(user.UserID, user.Username, user.Password, user.FullName,
                 user.Email, user.Phone, user.AccType, user.DateOfRegis, 1);
         String AccType = logged_in.AccType;
         Main.indicator = 1;

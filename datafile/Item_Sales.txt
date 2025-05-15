@@ -1,0 +1,10 @@
+ItemID:         I7390
+SalesID:        SL0010
+Quantity:       12
+Amount:         144
+~~~~~
+ItemID:         I5262
+SalesID:        SL0010
+Quantity:       1
+Amount:         15
+~~~~~
