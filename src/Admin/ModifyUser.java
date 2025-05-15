@@ -1,7 +1,5 @@
 package Admin;
 
-import Common.*;
-
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
@@ -14,7 +12,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -24,7 +21,7 @@ public class ModifyUser {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static Buffer current_user;
+    private static BufferForUser current_user;
     private static User past, future;
     private static JComboBox<String> types;
     private static CustomComponents.EmptyTextField username, fullname, password, email, phone;
@@ -33,7 +30,7 @@ public class ModifyUser {
                     + "@([a-zA-Z0-9.-]+)\\.([a-zA-Z]{2,})$";
     private static final String PHONE_REGEX = "^01[0-9]{8}$";
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, Buffer current_user) {
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, BufferForUser current_user) {
         ModifyUser.parent = parent;
         ModifyUser.merriweather = merriweather;
         ModifyUser.boldonse = boldonse;

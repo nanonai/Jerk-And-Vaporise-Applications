@@ -1,13 +1,10 @@
 package Admin;
 
-import Common.*;
 import javax.swing.*;
-import javax.swing.border.StrokeBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -18,7 +15,7 @@ public class UserMng {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static Buffer current_user;
+    private static BufferForUser current_user;
     private static JButton s_btn, p_left, p_right, p_first, p_last, x_btn;
     private static CustomComponents.CustomButton all, fin, pur, inv, sls, view, add, modify,
             delete1, delete2, data_transfer;
@@ -35,7 +32,7 @@ public class UserMng {
     private static final Set<String> deleting_id = new LinkedHashSet<>();
     private static final Set<Integer> previousSelection = new HashSet<>();
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, Buffer current_user) {
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, BufferForUser current_user) {
         UserMng.parent = parent;
         UserMng.merriweather = merriweather;
         UserMng.boldonse = boldonse;
