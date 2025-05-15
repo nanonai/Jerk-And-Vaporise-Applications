@@ -2,17 +2,26 @@ ItemID:         1
 Itemname:       Apple
 UnitPrice:      12.23
 Quantity:       24
+Threshold:      10
 Category:       Fruits
+LastUpDate:     2025-01-25
+SupplierID:     S001
 ~~~~~
 ItemID:         2
 Itemname:       Soda
 UnitPrice:      11
 Quantity:       56
+Threshold:      5
 Category:       Drinks
+LastUpDate:     2025-05-05
+SupplierID:     S002
 ~~~~~
 ItemID:         3
 Itemname:       Pop
 UnitPrice:      16
 Quantity:       31
+Threshold:      3
 Category:       Drinks
+LastUpDate:     2025-04-15
+SupplierID:     S003
 ~~~~~

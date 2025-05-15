@@ -28,8 +28,9 @@ public class PaymentPage {
     private static JComboBox<String> entries;
     private static CustomComponents.EmptyTextField search;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
-    private static CustomComponents.CustomTable table_purOrder;
     private static CustomComponents.CustomScrollPane scrollPane1;
+    private static CustomComponents.CustomButton viewPayment;
+    private static CustomComponents.CustomTable table_payment;
 
     public static void Loader(JFrame parent,Font merriweather,Font boldonse,
                               JPanel content,Buffer current_user){
@@ -136,37 +137,22 @@ public class PaymentPage {
         igbc.insets = new Insets(0, 0, 10, 0);
         String[] titles = new String[]{"PaymentID", "PurchaseOrderID", "Amount", "Date", "Status"};
         List<Payment> payments_list = Payment.listAllPayment(Main.payment_file);
-        Object[][] data = new Object[payments_list.size() * 6][titles.length];
+        Object[][] data = new Object[payments_list.size()][titles.length];
         int counter = 0;
         for (Payment payment : payments_list) {
             data[counter] = new Object[]{payment.paymentID,payment.purchaseOrderID, payment.amount,
                     payment.date, payment.status};
             counter += 1;
-            data[counter] = new Object[]{payment.paymentID,payment.purchaseOrderID, payment.amount,
-                    payment.date, payment.status};
-            counter += 1;
-            data[counter] = new Object[]{payment.paymentID,payment.purchaseOrderID, payment.amount,
-                    payment.date, payment.status};
-            counter += 1;
-            data[counter] = new Object[]{payment.paymentID,payment.purchaseOrderID, payment.amount,
-                    payment.date, payment.status};
-            counter += 1;
-            data[counter] =new Object[]{payment.paymentID,payment.purchaseOrderID, payment.amount,
-                    payment.date, payment.status};
-            counter += 1;
-            data[counter] = new Object[]{payment.paymentID,payment.purchaseOrderID, payment.amount,
-                    payment.date, payment.status};
-            counter += 1;
         }
 
-        table_purOrder = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
+        table_payment = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
                 merriweather.deriveFont(Font.PLAIN, 16), Color.BLACK, Color.BLACK,
                 Color.WHITE, new Color(212, 212, 212), 1, 30);
-        table_purOrder.setShowHorizontalLines(true);
-        table_purOrder.setShowVerticalLines(true);
-        table_purOrder.setGridColor(new Color(230, 230, 230));
+        table_payment.setShowHorizontalLines(true);
+        table_payment.setShowVerticalLines(true);
+        table_payment.setGridColor(new Color(230, 230, 230));
 
-        scrollPane1 = new CustomComponents.CustomScrollPane(false, 1, table_purOrder,
+        scrollPane1 = new CustomComponents.CustomScrollPane(false, 1, table_payment,
                 6, new Color(202, 202, 202), Main.transparent,
                 Main.transparent, Main.transparent, Main.transparent,
                 new Color(170, 170, 170), Color.WHITE,
@@ -174,6 +160,49 @@ public class PaymentPage {
                 Color.WHITE, Color.WHITE, 6);
         inner.add(scrollPane1, igbc);
 
+        igbc.gridwidth = 4;
+        igbc.gridx = 0;
+        igbc.gridy = 3;
+        igbc.insets = new Insets(0, 5, 10, 0);
+        JPanel button_panel1 = new JPanel(new GridBagLayout());
+        button_panel1.setOpaque(false);
+        inner.add(button_panel1, igbc);
+        ii_gbc.gridx = 0;
 
+        igbc.gridwidth = 1;
+        igbc.gridx = 4;
+        igbc.insets = new Insets(0, 0, 10, 5);
+        JPanel button_panel2 = new JPanel(new GridBagLayout());
+        button_panel2.setOpaque(false);
+        inner.add(button_panel2, igbc);
+
+        ii_gbc.insets = new Insets(0, 0, 0, 4);
+        viewPayment= new CustomComponents.CustomButton("View Payment", merriweather, new Color(255, 255, 255),
+                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
+                Main.transparent, 0, 16, Main.transparent, false, 5, false,
+                null, 0, 0, 0);
+        viewPayment.addActionListener(_ -> {
+            if (table_payment.getSelectedRowCount() == 0) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select a payment to view !",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else {
+                String selected_id = table_payment.getValueAt(table_payment.getSelectedRow(),
+                        table_payment.getColumnModel().getColumnIndex("PaymentID")).toString();
+                ViewPayment.UpdatePayment(Payment.getPaymentID(selected_id, Main.payment_file));
+                boolean see = ViewPayment.ShowPage();
+                if (see) {
+                    System.out.println(" ");
+                }
+            }
+        });
+        button_panel1.add(viewPayment, ii_gbc);
+        ViewPayment.Loader(parent, merriweather, boldonse, content, null);
     }
 }

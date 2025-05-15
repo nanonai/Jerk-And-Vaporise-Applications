@@ -4,12 +4,6 @@ CurrentStock :       200
 LastUpdateDate:      2025-05-03
 Threshold:           100
 ~~~~~
-ItemID:              IT001
-ItemName:            Beverages
-CurrentStock:        200
-LastUpdateDate:      2025-05-09
-Threshold:           100
-~~~~~
 ItemID:              IT002
 ItemName:            Rice
 CurrentStock:        150
