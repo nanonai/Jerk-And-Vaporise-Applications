@@ -1,4 +1,4 @@
-package Common;
+package Admin;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
 public class Main {

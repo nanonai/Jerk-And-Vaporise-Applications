@@ -1,67 +1,67 @@
-SupplierID:     1
+SupplierID:     S0001
 SupplierName:   ABC Supplies
 ContactPerson:  John Doe
 Phone:          0123456789
 Email:          johndoe@abc.com
 Address:        1234 Supply St, Cityville
 ~~~~~
-SupplierID:     2
+SupplierID:     S0002
 SupplierName:   XYZ Corp
 ContactPerson:  Jane Smith
 Phone:          0198765432
 Email:          janesmith@xyz.com
 Address:        9876 Corp Rd, Townsville
 ~~~~~
-SupplierID:     3
+SupplierID:     S0003
 SupplierName:   Tech Supplies
 ContactPerson:  Emily Johnson
 Phone:          0147852369
 Email:          emily@techsupplies.com
 Address:        4567 Tech Park, Silicon Valley
 ~~~~~
-SupplierID:     4
+SupplierID:     S0004
 SupplierName:   Delta Hardware
 ContactPerson:  Michael Lee
 Phone:          0172233445
 Email:          michael@deltahardware.com
 Address:        1020 Hardware Ave, Industriaville
 ~~~~~
-SupplierID:     5
+SupplierID:     S0005
 SupplierName:   GreenField Tools
 ContactPerson:  Sarah Tan
 Phone:          0139988776
 Email:          sarah.tan@greenfield.com
 Address:        55 Green Rd, Farmtown
 ~~~~~
-SupplierID:     6
+SupplierID:     S0006
 SupplierName:   Rapid Logistics
 ContactPerson:  Aaron Lim
 Phone:          0163322110
 Email:          aaron@rapidlogistics.com
 Address:        888 Speed Blvd, Port City
 ~~~~~
-SupplierID:     7
+SupplierID:     S0007
 SupplierName:   Nova Supplies Co.
 ContactPerson:  Chloe Ong
 Phone:          0114455667
 Email:          chloe@novasupplies.com
 Address:        202 Nova Lane, Star City
 ~~~~~
-SupplierID:     8
+SupplierID:     S0008
 SupplierName:   Prime Equipments
 ContactPerson:  Daniel Chong
 Phone:          0126789453
 Email:          daniel@primeequip.com
 Address:        777 Equipment St, Gearsville
 ~~~~~
-SupplierID:     9
+SupplierID:     S0009
 SupplierName:   Fusion Industrial
 ContactPerson:  Lisa Wong
 Phone:          0182345678
 Email:          lisa.wong@fusionind.com
 Address:        909 Fusion Rd, Techport
 ~~~~~
-SupplierID:     10
+SupplierID:     S0010
 SupplierName:   Omega Resources
 ContactPerson:  Bryan Tan
 Phone:          0159988776

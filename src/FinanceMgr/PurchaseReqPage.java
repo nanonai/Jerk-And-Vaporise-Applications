@@ -181,9 +181,24 @@ public class PurchaseReqPage {
         igbc.insets = new Insets(0, 0, 10, 0);
         String[] titles = new String[]{"PurchaseReqID", "ItemID", "Quantity", "ReqDate", "UserID"};
         List<PurchaseRequisition> purchaseReq_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
-        Object[][] data = new Object[purchaseReq_list.size()][titles.length];
+        Object[][] data = new Object[purchaseReq_list.size() * 6][titles.length];
         int counter = 0;
         for (PurchaseRequisition purchaseRequisition : purchaseReq_list) {
+            data[counter] = new Object[]{purchaseRequisition.purchaseReqID, purchaseRequisition.itemID,purchaseRequisition.quantity,
+                    purchaseRequisition.reqDate, purchaseRequisition.purchaseManID};
+            counter += 1;
+            data[counter] = new Object[]{purchaseRequisition.purchaseReqID, purchaseRequisition.itemID,purchaseRequisition.quantity,
+                    purchaseRequisition.reqDate, purchaseRequisition.purchaseManID};
+            counter += 1;
+            data[counter] = new Object[]{purchaseRequisition.purchaseReqID, purchaseRequisition.itemID,purchaseRequisition.quantity,
+                    purchaseRequisition.reqDate, purchaseRequisition.purchaseManID};
+            counter += 1;
+            data[counter] = new Object[]{purchaseRequisition.purchaseReqID, purchaseRequisition.itemID,purchaseRequisition.quantity,
+                    purchaseRequisition.reqDate, purchaseRequisition.purchaseManID};
+            counter += 1;
+            data[counter] = new Object[]{purchaseRequisition.purchaseReqID, purchaseRequisition.itemID,purchaseRequisition.quantity,
+                    purchaseRequisition.reqDate, purchaseRequisition.purchaseManID};
+            counter += 1;
             data[counter] = new Object[]{purchaseRequisition.purchaseReqID, purchaseRequisition.itemID,purchaseRequisition.quantity,
                     purchaseRequisition.reqDate, purchaseRequisition.purchaseManID};
             counter += 1;

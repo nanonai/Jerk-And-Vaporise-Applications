@@ -1,4 +1,5 @@
-package Common;
+package Admin;
+
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -100,7 +101,7 @@ public class User {
         return allUser;
     }
 
-    public static List<User> listAllUserFromFilter(String filename, String type, String filter, Buffer current_user) {
+    public static List<User> listAllUserFromFilter(String filename, String type, String filter, BufferForUser current_user) {
         List<User> user_list = listAllUser(filename);
         List<User> type_user_list = new ArrayList<>();
         List<User> filtered_user_list = new ArrayList<>();
@@ -363,18 +364,18 @@ public class User {
         }
     }
 
-    public static void modifyUser(String UserID, Buffer buffer, String filename) {
+    public static void modifyUser(String UserID, BufferForUser bufferForUser, String filename) {
         List<User> allUser = listAllUser(filename);
         for (User user : allUser) {
             if (Objects.equals(user.UserID, UserID)) {
-                user.Username = buffer.Username;
-                user.FullName = buffer.FullName;
-                user.Password = buffer.Password;
-                user.Phone = buffer.Phone;
-                user.Email = buffer.Email;
-                user.AccType = buffer.AccType;
-                user.DateOfRegis = buffer.DateOfRegis;
-                user.RememberMe = buffer.RememberMe;
+                user.Username = bufferForUser.Username;
+                user.FullName = bufferForUser.FullName;
+                user.Password = bufferForUser.Password;
+                user.Phone = bufferForUser.Phone;
+                user.Email = bufferForUser.Email;
+                user.AccType = bufferForUser.AccType;
+                user.DateOfRegis = bufferForUser.DateOfRegis;
+                user.RememberMe = bufferForUser.RememberMe;
             }
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {

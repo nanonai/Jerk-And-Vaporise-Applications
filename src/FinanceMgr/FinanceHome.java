@@ -12,7 +12,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import Common.*;
+
+import Admin.*;
 
 public class FinanceHome {
     public static int indicator = 0;
@@ -20,7 +21,7 @@ public class FinanceHome {
     private static Font merriweather, boldonse;
 
     private static JPanel side_bar, top_bar, content;
-    public static Buffer current_user;
+    public static BufferForUser current_user;
     private static BufferedImage logo, caret_up, caret_down;
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
@@ -30,7 +31,7 @@ public class FinanceHome {
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel side_bar, JPanel top_bar, JPanel content, Buffer current_user) {
+                              JPanel side_bar, JPanel top_bar, JPanel content, BufferForUser current_user) {
         try {
             logo = ImageIO.read(new File("images/logo_sidebar.png"));
             caret_up = ImageIO.read(new File("images/caret_up.png"));

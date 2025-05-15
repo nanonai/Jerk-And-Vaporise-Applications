@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class PurchaseOrder {
-    public static PurchaseOrder getPurchaseOrderID;
     public String purchaseOrderID,purchaseReqID,itemID,status,purchaseManID,supplierID;
     public int quantity;
     public LocalDate orderDate;
@@ -77,7 +76,7 @@ public class PurchaseOrder {
         return allPurchaseOrders;
     }
 
-    public static void ChangePurOrderStatus(String purchaseOrderID, BufferForPO buffer, String filename, String status) {
+    public static void ApprovePurOrder(String purchaseOrderID, BufferForPO buffer, String filename, String status) {
         List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(filename);
         for (PurchaseOrder po : purchaseOrderList) {
             if (Objects.equals(po.purchaseOrderID, purchaseOrderID)) {
@@ -88,9 +87,10 @@ public class PurchaseOrder {
                 po.supplierID = buffer.supplierID;
                 po.orderDate = buffer.orderDate;
                 po.purchaseManID = buffer.purchaseManID;
-                po.status = status;  // change status
+                po.status = status;  // Use method parameter here
             }
         }
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (PurchaseOrder po : purchaseOrderList) {
                 writer.write("purchaseOrderID:     " + po.purchaseOrderID + "\n");
@@ -106,17 +106,6 @@ public class PurchaseOrder {
         } catch (IOException e) {
             e.getStackTrace();
         }
-    }
-    public static PurchaseOrder getPurchaseOrderID(String purchaseOrderID, String filename){
-        List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(filename);
-            PurchaseOrder purchaseOrder_temp = null;
-        for (PurchaseOrder purchaseOrder: purchaseOrderList) {
-            if (Objects.equals(purchaseOrder.purchaseOrderID, purchaseOrderID)) {
-                purchaseOrder_temp = purchaseOrder;
-                break;
-            }
-        }
-        return purchaseOrder_temp;
     }
 
 

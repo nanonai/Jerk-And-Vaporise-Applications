@@ -1,27 +1,16 @@
-ItemID:         1
-Itemname:       Apple
+ItemID:         I73905
+ItemName:       Yamamoto San No Ringo | Mr Yamamoto's Apple
 UnitPrice:      12.23
 Quantity:       24
-Threshold:      10
+Threshold:      12
 Category:       Fruits
-LastUpDate:     2025-01-25
-SupplierID:     S001
+SupplierID:     S71250, S88899, S44380
 ~~~~~
-ItemID:         2
-Itemname:       Soda
+ItemID:         I99002
+ItemName:       Ice Cream Brand Soda
 UnitPrice:      11
 Quantity:       56
-Threshold:      5
+Threshold:      24
 Category:       Drinks
-LastUpDate:     2025-05-05
-SupplierID:     S002
-~~~~~
-ItemID:         3
-Itemname:       Pop
-UnitPrice:      16
-Quantity:       31
-Threshold:      3
-Category:       Drinks
-LastUpDate:     2025-04-15
-SupplierID:     S003
+SupplierID:     S00934, S77568
 ~~~~~

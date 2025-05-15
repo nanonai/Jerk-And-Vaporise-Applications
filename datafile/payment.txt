@@ -1,90 +1,66 @@
-PaymentID:             PO0001
-PurchaseOrderID :      PR0001
-Amount:                98.8
-Date:                  2025-05-02
-Status:                Pending
+PaymentID:           PY0001
+PurchaseOrderID :    PR0001
+Amount:              98.8
+PaymentDate:         2025-05-02
+FinanceMrgID:        FM0971204357
 ~~~~~
-PaymentID:             PO0002
-PurchaseOrderID :      PR0002
-Amount:                120.5
-Date:                  2025-05-03
-Status:                Completed
+PaymentID:           PY0002
+PurchaseOrderID :    PR0002
+Amount:              120.5
+PaymentDate:         2025-05-03
+FinanceMrgID:        FM0971204357
 ~~~~~
-PaymentID:             PO0003
-PurchaseOrderID :      PR0003
-Amount:                340.0
-Date:                  2025-05-03
-Status:                Pending
+PaymentID:           PY0003
+PurchaseOrderID :    PR0003
+Amount:              340.0
+PaymentDate:         2025-05-03
+FinanceMrgID:        FM0971204357
 ~~~~~
-PaymentID:             PO0004
-PurchaseOrderID :      PR0004
-Amount:                75.25
-Date:                  2025-05-04
-Status:                Completed
+PaymentID:           PY0004
+PurchaseOrderID :    PR0004
+Amount:              75.25
+PaymentDate:         2025-05-04
+FinanceMrgID:        FM0971204357
 ~~~~~
-PaymentID:             PO0005
-PurchaseOrderID :      PR0005
-Amount:                190.7
-Date:                  2025-05-04
-Status:                Pending
+PaymentID:           PY0005
+PurchaseOrderID :    PR0005
+Amount:              190.7
+PaymentDate:         2025-05-04
+FinanceMrgID:        FM0971204357
 ~~~~~
-PaymentID:             PO0006
-PurchaseOrderID :      PR0006
-Amount:                260.9
-Date:                  2025-05-05
-Status:                Completed
+PaymentID:           PY0006
+PurchaseOrderID :    PR0006
+Amount:              260.9
+PaymentDate:         2025-05-05
+FinanceMrgID:        FM0971204357
 ~~~~~
-PaymentID:             PO0007
-PurchaseOrderID :      PR0007
-Amount:                89.3
-Date:                  2025-05-06
-Status:                Pending
+PaymentID:           PY0007
+PurchaseOrderID :    PR0007
+Amount:              89.3
+PaymentDate:         2025-05-06
+FinanceMrgID:        FM0971204357
 ~~~~~
-PaymentID:             PO0008
-PurchaseOrderID :      PR0008
-Amount:                145.6
-Date:                  2025-05-06
-Status:                Completed
+PaymentID:           PY0008
+PurchaseOrderID :    PR0008
+Amount:              145.6
+PaymentDate:         2025-05-06
+FinanceMrgID:        FM0971204357
 ~~~~~
-PaymentID:             PO0009
-PurchaseOrderID :      PR0009
-Amount:                310.45
-Date:                  2025-05-07
-Status:                Pending
+PaymentID:           PY0009
+PurchaseOrderID :    PR0009
+Amount:              310.45
+PaymentDate:         2025-05-07
+FinanceMrgID:        FM0971204357
 ~~~~~
-PaymentID:             PO0010
-PurchaseOrderID :      PR0010
-Amount:                220.0
-Date:                  2025-05-08
-Status:                Completed
+PaymentID:           PY0010
+PurchaseOrderID :    PR0010
+Amount:              220.0
+PaymentDate:         2025-05-08
+FinanceMrgID:        FM0971204357
 ~~~~~
-PaymentID:             PO0011
-PurchaseOrderID :      PR0011
-Amount:                98.75
-Date:                  2025-05-09
-Status:                Pending
-~~~~~
-PaymentID:             PO0012
-PurchaseOrderID :      PR0012
-Amount:                180.4
-Date:                  2025-05-09
-Status:                Completed
-~~~~~
-PaymentID:             PO0013
-PurchaseOrderID :      PR0013
-Amount:                276.0
-Date:                  2025-05-10
-Status:                Pending
-~~~~~
-PaymentID:             PO0014
-PurchaseOrderID :      PR0014
-Amount:                134.95
-Date:                  2025-05-11
-Status:                Completed
-~~~~~
-PaymentID:             PO0015
-PurchaseOrderID :      PR0015
-Amount:                410.0
-Date:                  2025-05-11
-Status:                Pending
+PaymentID:           PY0011
+PurchaseOrderID :    PR0011
+Amount:              98.75
+PaymentDate:         2025-05-09
+FinanceMrgID:        FM0971204357
 ~~~~~

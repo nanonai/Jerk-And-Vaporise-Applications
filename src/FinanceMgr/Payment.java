@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Payment {
     public String paymentID,purchaseOrderID,status;
@@ -62,17 +61,6 @@ public class Payment {
             e.getStackTrace();
         }
         return allPayment;
-    }
-    public static Payment getPaymentID(String paymentID, String filename){
-        List<Payment> paymentList = listAllPayment(filename);
-        Payment payment_temp = null;
-        for (Payment payment: paymentList) {
-            if (Objects.equals(payment.paymentID, paymentID)) {
-                payment_temp = payment;
-                break;
-            }
-        }
-        return payment_temp;
     }
 
 

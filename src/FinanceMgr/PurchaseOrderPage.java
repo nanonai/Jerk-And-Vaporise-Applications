@@ -1,17 +1,21 @@
 package FinanceMgr;
 
-import Admin.AddUser;
-import Admin.ViewUser;
-import Common.*;
+import Common.Buffer;
+import Common.CustomComponents;
+import Common.Main;
+import Common.User;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.StrokeBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.text.View;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class PurchaseOrderPage {
     private static JFrame parent;
@@ -19,19 +23,14 @@ public class PurchaseOrderPage {
     private static JPanel content,inner;
     public static Buffer current_user;
     private static JButton s_btn;
-    private static CustomComponents.CustomButton all, fin, pur, inv, sls, view, add, updateStatus,
-            delete1, delete2, data_transfer;
 //    private static CustomComponents.CustomButton all, purOrder, purReq, itemID, quan,supplier,orderDate,purMan,status;
     private static CustomComponents.RoundedPanel search_panel;
-    private static JLabel lbl_show, lbl_entries,lbl_indicate;
+    private static JLabel lbl_show, lbl_entries;
     private static JComboBox<String> entries;
     private static CustomComponents.EmptyTextField search;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
     private static CustomComponents.CustomTable table_purOrder;
     private static CustomComponents.CustomScrollPane scrollPane1;
-    private static int list_length = 10, page_counter = 0, filter = 0, mode = 1;
-    private static JComboBox<String>  pages;
-    private static List<PurchaseOrder> purchaseOrder_List;
 
     public static void Loader(JFrame parent,Font merriweather,Font boldonse,
                               JPanel content,Buffer current_user){
@@ -226,82 +225,6 @@ public class PurchaseOrderPage {
                 Color.WHITE, Color.WHITE, 6);
         inner.add(scrollPane1, igbc);
 
-        igbc.gridwidth = 4;
-        igbc.gridx = 0;
-        igbc.gridy = 3;
-        igbc.insets = new Insets(0, 5, 10, 0);
-        JPanel button_panel1 = new JPanel(new GridBagLayout());
-        button_panel1.setOpaque(false);
-        inner.add(button_panel1, igbc);
-        ii_gbc.gridx = 0;
-
-        igbc.gridwidth = 1;
-        igbc.gridx = 4;
-        igbc.insets = new Insets(0, 0, 10, 5);
-        JPanel button_panel2 = new JPanel(new GridBagLayout());
-        button_panel2.setOpaque(false);
-        inner.add(button_panel2, igbc);
-
-        ii_gbc.insets = new Insets(0, 0, 0, 4);
-        updateStatus = new CustomComponents.CustomButton("Update Status", merriweather, new Color(255, 255, 255),
-                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
-                Main.transparent, 0, 16, Main.transparent, false, 5, false,
-                null, 0, 0, 0);
-        updateStatus.addActionListener(_ -> {
-            if (table_purOrder.getSelectedRowCount() == 0) {
-                CustomComponents.CustomOptionPane.showErrorDialog(
-                        parent,
-                        "Please select a PO to update status!",
-                        "Error",
-                        new Color(209, 88, 128),
-                        new Color(255, 255, 255),
-                        new Color(237, 136, 172),
-                        new Color(255, 255, 255)
-                );
-            } else {
-                String selected_id = table_purOrder.getValueAt(table_purOrder.getSelectedRow(),
-                        table_purOrder.getColumnModel().getColumnIndex("PurchaseOrderID")).toString();
-                ModifyPOStatus.UpdatePO(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));
-                boolean see = ModifyPOStatus.ShowPage();
-                if (see) {
-                    System.out.println(" ");
-                }
-            }
-        });
-        button_panel1.add(updateStatus, ii_gbc);
-        ModifyPOStatus.Loader(parent, merriweather, boldonse, content, null);
-}
-    public static void UpdateTable(int length, int page) {
-        String[] titles = new String[]{"PurchaseOrderID", "PurchaseReqID", "ItemID", "Quantity", "SupplierID", "OrderDate", "PurchaseManID","Status"};
-        Object[][] data;
-        int counter = 0;
-        int anti_counter = page * length;
-        if (length >= purchaseOrder_List.size() - page * length) {
-            data = new Object[purchaseOrder_List.size() - page * length][titles.length];
-        } else {
-            data = new Object[length][titles.length];
-        }
-        for (PurchaseOrder purchaseOrder : purchaseOrder_List) {
-            if (anti_counter != 0) {
-                anti_counter -= 1;
-                continue;
-            } else {
-                data[counter] = new Object[]{purchaseOrder.purchaseOrderID, purchaseOrder.purchaseReqID, purchaseOrder.itemID,
-                        purchaseOrder.quantity, purchaseOrder.supplierID, purchaseOrder.orderDate, purchaseOrder.purchaseManID,purchaseOrder.status};
-                counter += 1;
-                if (counter == length || counter == purchaseOrder_List.size()) { break; }
-            }
-        }
-        table_purOrder.UpdateTableContent(titles, data);
-        String temp2 = "<html>Displaying <b>%s</b> to <b>%s</b> of <b>%s</b> records</html>";
-        if (length >= purchaseOrder_List.size()) {
-            lbl_indicate.setText(String.format(temp2, (!purchaseOrder_List.isEmpty()) ? 1 : 0, purchaseOrder_List.size(),
-                    purchaseOrder_List.size()));
-        } else {
-            lbl_indicate.setText(String.format(temp2, page * length + 1,
-                    Math.min((page + 1) * length, purchaseOrder_List.size()),
-                    purchaseOrder_List.size()));
-        }
     }
 
 }

@@ -1,0 +1,131 @@
+package InventoryMgr;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+public class Item {
+    public String ItemID, ItemName, Category;
+    public double UnitPrice, UnitCost;
+    public int StockCount, Threshold;
+    public LocalDate LastUpdate;
+    private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    public Item(String ItemID, String ItemName, double UnitPrice, double UnitCost,
+                int StockCount, int Threshold, String Category, LocalDate LastUpdate) {
+        this.ItemID = ItemID;
+        this.ItemName = ItemName;
+        this.UnitPrice = UnitPrice;
+        this.UnitCost = UnitCost;
+        this.StockCount = StockCount;
+        this.Threshold = Threshold;
+        this.Category = Category;
+        this.LastUpdate = LastUpdate;
+    }
+
+    public static List<Item> listAllItem(String filename) {
+        List<Item> allItem = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String ItemID = "", ItemName = "", Category = "";
+            double UnitPrice = 0, UnitCost = 0;
+            int StockCount = 0, Threshold = 0;
+            LocalDate LastUpdate = null;
+
+            String line;
+            int counter = 1;
+            while ((line = reader.readLine()) != null) {
+                switch (counter) {
+                    case 1:
+                        ItemID = line.substring(16);
+                        break;
+                    case 2:
+                        ItemName = line.substring(16);
+                        break;
+                    case 3:
+                        UnitPrice = Double.parseDouble(line.substring(16));
+                        break;
+                    case 4:
+                        UnitCost = Double.parseDouble(line.substring(16));
+                        break;
+                    case 5:
+                        StockCount = Integer.parseInt(line.substring(16));
+                        break;
+                    case 6:
+                        Threshold = Integer.parseInt(line.substring(16));
+                        break;
+                    case 7:
+                        Category = line.substring(16);
+                        break;
+                    case 8:
+                        LastUpdate = LocalDate.parse(line.substring(16), df);
+                        break;
+                    default:
+                        counter = 0;
+                        allItem.add(new Item(ItemID, ItemName, UnitPrice, UnitCost,
+                                StockCount, Threshold, Category, LastUpdate));
+                        break;
+                }
+                counter += 1;
+            }
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+        return allItem;
+    }
+
+    public static String idMaker(String filename) {
+        List<Item> allItem = listAllItem(filename);
+        boolean repeated = false;
+        boolean success = false;
+        String newId = "";
+        while (!success) {
+            long newNum = (long) (Math.random() * 1E4);
+            StringBuilder number = new StringBuilder(String.valueOf(newNum));
+            while (number.length() < 4) {
+                number.insert(0, "0");
+            }
+            newId = String.format("%s%s", "I", number);
+            for (Item item : allItem) {
+                if (Objects.equals(item.ItemID, newId)) {
+                    repeated = true;
+                    break;
+                }
+            }
+            success = !repeated;
+            repeated = false;
+        }
+        return newId;
+    }
+
+    public static Boolean nameChecker(String name, String filename) {
+        List<Item> allItem = listAllItem(filename);
+        boolean repeated = false;
+        for (Item item : allItem) {
+            if (Objects.equals(item.ItemName, name)) {
+                repeated = true;
+                break;
+            }
+        }
+        return !repeated;
+    }
+
+    public static void saveNewItem(Item item, String filename) {
+        try (FileWriter writer = new FileWriter(filename, true)) {
+            writer.write("ItemID:         " + item.ItemID + "\n");
+            writer.write("ItemName:       " + item.ItemName + "\n");
+            writer.write("UnitPrice:      " + item.UnitPrice + "\n");
+            writer.write("UnitCost:       " + item.UnitCost + "\n");
+            writer.write("StockCount:     " + item.StockCount + "\n");
+            writer.write("Threshold:      " + item.Threshold + "\n");
+            writer.write("Category:       " + item.Category + "\n");
+            writer.write("LastUpdate:     " + item.LastUpdate + "\n");
+            writer.write("~~~~~\n");
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+    }
+}
