@@ -1,7 +1,7 @@
 package PurchaseMgr;
 
-import Common.Buffer;
-import Common.CustomComponents;
+import Admin.BufferForUser;
+import Admin.CustomComponents;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -13,13 +13,13 @@ public class Welcome {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static Buffer current_user;
+    private static BufferForUser current_user;
     private static JLabel greet;
     private static CustomComponents.ImageCell weasel;
     private static BufferedImage logo;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, Buffer current_user) {
+                              JPanel content, BufferForUser current_user) {
         Welcome.parent = parent;
         Welcome.merriweather = merriweather;
         Welcome.boldonse = boldonse;

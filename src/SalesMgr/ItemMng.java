@@ -1,10 +1,12 @@
 package SalesMgr;
 
-import Common.*;
+import Admin.BufferForUser;
+import Admin.CustomComponents;
+import Admin.Main;
+import InventoryMgr.Item;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,7 +14,7 @@ public class ItemMng {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content, top_bar;
-    private static Buffer current_user;
+    private static BufferForUser current_user;
     private static int indicator, base_size;
     private static List<Item> AllItems;
     private static JList ItemList;
@@ -30,7 +32,7 @@ public class ItemMng {
 
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, Buffer current_user) {
+                              JPanel content, BufferForUser current_user) {
         SalesMgr.ItemMng.parent = parent;
         SalesMgr.ItemMng.merriweather = merriweather;
         SalesMgr.ItemMng.boldonse = boldonse;
@@ -141,7 +143,7 @@ public class ItemMng {
         gbc.fill = GridBagConstraints.BOTH;
 
         AllItems = Item.listAllItem("datafile/item.txt");
-        String[] titles = new String[]{"ID", "Name", "Unit Price", "Quantity", "Category", "Supplier Name"};
+        String[] titles = new String[]{"ID", "Name", "Unit Price", "StockCount", "Category", "Supplier Name"};
         Object[][] data = new Object[AllItems.size()][titles.length];
         int counter = 0;
         for (Item item : AllItems) {
@@ -149,9 +151,8 @@ public class ItemMng {
                     item.ItemID,
                     item.ItemName,
                     item.UnitPrice,
-                    item.Quantity,
-                    item.Category,
-                    item.SupplierID
+                    item.StockCount,
+                    item.Category
             };
             counter += 1;
         }
@@ -365,7 +366,7 @@ public class ItemMng {
     }
 
     public static void UpdateTable(List<Item> filteredItems, int length, int page) {
-        String[] titles = new String[]{"ID", "Name", "Unit Price", "Quantity", "Category", "Supplier Name"};
+        String[] titles = new String[]{"ID", "Name", "Unit Price", "StockCount", "Category", "Supplier Name"};
         Object[][] data;
         int counter = 0;
         int anti_counter = page * length;
@@ -387,9 +388,8 @@ public class ItemMng {
                         item.ItemID,
                         item.ItemName,
                         item.UnitPrice,
-                        item.Quantity,
-                        item.Category,
-                        item.SupplierID
+                        item.StockCount,
+                        item.Category
                 };
                 counter += 1;
                 if (counter == length || counter == filteredItems.size()) { break; }

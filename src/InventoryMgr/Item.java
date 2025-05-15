@@ -1,36 +1,39 @@
-package SalesMgr;
-
-import Common.User;
-import jdk.jfr.Threshold;
+package InventoryMgr;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Item {
-    public int Quantity, Threshold;
     public String ItemID, ItemName, Category;
-    public Set<String> SupplierID;
-    public double UnitPrice;
+    public double UnitPrice, UnitCost;
+    public int StockCount, Threshold;
+    public LocalDate LastUpdate;
+    private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public Item(String ItemID, String ItemName, double UnitPrice, int Quantity, int Threshold, String Category, Set<String> SupplierID) {
+    public Item(String ItemID, String ItemName, double UnitPrice, double UnitCost,
+                int StockCount, int Threshold, String Category, LocalDate LastUpdate) {
         this.ItemID = ItemID;
         this.ItemName = ItemName;
         this.UnitPrice = UnitPrice;
-        this.Quantity = Quantity;
+        this.UnitCost = UnitCost;
+        this.StockCount = StockCount;
         this.Threshold = Threshold;
         this.Category = Category;
-        this.SupplierID = SupplierID;
+        this.LastUpdate = LastUpdate;
     }
 
     public static List<Item> listAllItem(String filename) {
         List<Item> allItem = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String ItemID = "", ItemName = "", Category = "";
-            int Quantity = 0, Threshold = 0;
-            double UnitPrice = 0;
-            Set<String> SupplierID = new HashSet<>();
+            double UnitPrice = 0, UnitCost = 0;
+            int StockCount = 0, Threshold = 0;
+            LocalDate LastUpdate = null;
 
             String line;
             int counter = 1;
@@ -46,20 +49,24 @@ public class Item {
                         UnitPrice = Double.parseDouble(line.substring(16));
                         break;
                     case 4:
-                        Quantity = Integer.parseInt(line.substring(16));
+                        UnitCost = Double.parseDouble(line.substring(16));
                         break;
                     case 5:
-                        Threshold = Integer.parseInt(line.substring(16));
+                        StockCount = Integer.parseInt(line.substring(16));
                         break;
                     case 6:
-                        Category = line.substring(16);
+                        Threshold = Integer.parseInt(line.substring(16));
                         break;
                     case 7:
-                        SupplierID =  new HashSet<String>(List.of(line.substring(16).split(",")));
+                        Category = line.substring(16);
+                        break;
+                    case 8:
+                        LastUpdate = LocalDate.parse(line.substring(16), df);
                         break;
                     default:
                         counter = 0;
-                        allItem.add(new Item(ItemID, ItemName, UnitPrice, Quantity, Threshold, Category, SupplierID));
+                        allItem.add(new Item(ItemID, ItemName, UnitPrice, UnitCost,
+                                StockCount, Threshold, Category, LastUpdate));
                         break;
                 }
                 counter += 1;
@@ -70,44 +77,15 @@ public class Item {
         return allItem;
     }
 
-    public static List<String> ItemConvt(List<Item> items) {
-        List<String> ItemList = new ArrayList<>();
-        for (Item item : items) {
-            StringBuilder supID = new StringBuilder();
-            int counter = 1;
-            for (String id : item.SupplierID){
-                supID.append(id);
-                if (counter != item.SupplierID.size()){
-                    supID.append(", ");
-                }
-                counter += 1;
-            }
-            String emp = String.format(
-                    """
-                    <html>
-                    ItemID:         %s<br>
-                    ItemName:       %s<br>
-                    UnitPrice:      %s<br>
-                    Quantity:       %s<br>
-                    Threshold:      %s<br>
-                    Category:       %s<br>
-                    SupplierID:     %s
-                    </html>
-                    """, item.ItemID, item.ItemName, item.UnitPrice, item.Quantity, item.Threshold, item.Category, supID.toString());  // Add SupplierName here
-            ItemList.add(emp);
-        }
-        return ItemList;
-    }
-
-    public static String idMaker(String AccType, String filename) {
+    public static String idMaker(String filename) {
         List<Item> allItem = listAllItem(filename);
         boolean repeated = false;
         boolean success = false;
         String newId = "";
         while (!success) {
-            long newNum = (long) (Math.random() * 1E5);
+            long newNum = (long) (Math.random() * 1E4);
             StringBuilder number = new StringBuilder(String.valueOf(newNum));
-            while (number.length() < 5) {
+            while (number.length() < 4) {
                 number.insert(0, "0");
             }
             newId = String.format("%s%s", "I", number);
@@ -123,12 +101,9 @@ public class Item {
         return newId;
     }
 
-    public static Boolean NameChecker(String name, String filename) {
+    public static Boolean nameChecker(String name, String filename) {
         List<Item> allItem = listAllItem(filename);
         boolean repeated = false;
-        if (name.length() > 150 || name.length() < 8) {
-            return false;
-        }
         for (Item item : allItem) {
             if (Objects.equals(item.ItemName, name)) {
                 repeated = true;
@@ -138,7 +113,19 @@ public class Item {
         return !repeated;
     }
 
-    public static Boolean PriceChecker(Double price) {
-        return price <= 100000;
+    public static void saveNewItem(Item item, String filename) {
+        try (FileWriter writer = new FileWriter(filename, true)) {
+            writer.write("ItemID:         " + item.ItemID + "\n");
+            writer.write("ItemName:       " + item.ItemName + "\n");
+            writer.write("UnitPrice:      " + item.UnitPrice + "\n");
+            writer.write("UnitCost:       " + item.UnitCost + "\n");
+            writer.write("StockCount:     " + item.StockCount + "\n");
+            writer.write("Threshold:      " + item.Threshold + "\n");
+            writer.write("Category:       " + item.Category + "\n");
+            writer.write("LastUpdate:     " + item.LastUpdate + "\n");
+            writer.write("~~~~~\n");
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
     }
 }
