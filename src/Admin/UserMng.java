@@ -3,6 +3,8 @@ package Admin;
 import Common.*;
 import javax.swing.*;
 import javax.swing.border.StrokeBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.View;
@@ -250,41 +252,55 @@ public class UserMng {
 
         ii_gbc.gridx = 1;
         ii_gbc.insets = new Insets(6, 0, 8, 0);
-        search = new CustomComponents.EmptyTextField(20, "Search...\r\r", new Color(122, 122, 122));
+        search = new CustomComponents.EmptyTextField(19, "Search...\r\r", new Color(122, 122, 122));
         search.setFont(merriweather.deriveFont(Font.BOLD, 14));
-        search.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (!search.getText().isEmpty()) {
-                    search.UpdateColumns(15);
-                    ii_gbc.gridx = 2;
-                    ii_gbc.insets = new Insets(6, 0, 8, 0);
-                    x_btn = new JButton(icon_clear1);
-                    x_btn.setRolloverIcon(icon_clear2);
-                    x_btn.setFocusable(false);
-                    x_btn.setBorderPainted(false);
-                    x_btn.addActionListener(_ -> {
-                        search.Reset();
-                        search_panel.remove(x_btn);
-                        search_panel.repaint();
-                        search_panel.revalidate();
-                    });
-                    search_panel.add(x_btn, ii_gbc);
-                }
+        search.addActionListener(_ -> SearchStuff());
+        search.getDocument().addDocumentListener(new DocumentListener() {
+            private void update() {
+                String text = search.getText();
+                boolean isPlaceholder = text.equals(search.GetPlaceHolder());
+                x_btn.setVisible(!text.isEmpty() && !isPlaceholder);
+                search.UpdateColumns((!text.isEmpty() && !isPlaceholder) ? 17 : 19);
             }
 
             @Override
+            public void insertUpdate(DocumentEvent e) { update(); }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) { update(); }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) { update(); }
+        });
+        search.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {}
+
+            @Override
             public void focusLost(FocusEvent e) {
-                if (search.getText().isEmpty()) {
-                    search.UpdateColumns(20);
-                    search_panel.remove(x_btn);
-                    search_panel.repaint();
-                    search_panel.revalidate();
-                }
+                String text = search.getText();
+                boolean isPlaceholder = text.equals(search.GetPlaceHolder());
+                x_btn.setVisible(!text.isEmpty() && !isPlaceholder);
+                search.UpdateColumns((!text.isEmpty() && !isPlaceholder) ? 17 : 19);
             }
         });
-        search.addActionListener(_ -> SearchStuff());
         search_panel.add(search, ii_gbc);
+
+        ii_gbc.gridx = 2;
+        ii_gbc.insets = new Insets(0, 8, 0, 0);
+        x_btn = new JButton(icon_clear1);
+        x_btn.setRolloverIcon(icon_clear2);
+        x_btn.setFocusable(false);
+        x_btn.setBorderPainted(false);
+        x_btn.setVisible(false);
+        x_btn.addActionListener(_ -> {
+            search.Reset();
+            x_btn.setVisible(false);
+            search.UpdateColumns(19);
+            SwingUtilities.invokeLater(lbl_show::requestFocusInWindow);
+            SearchStuff();
+        });
+        search_panel.add(x_btn, ii_gbc);
 
         igbc.gridwidth = 5;
         igbc.gridx = 0;
