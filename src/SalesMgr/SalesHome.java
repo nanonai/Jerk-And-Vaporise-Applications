@@ -65,6 +65,7 @@ public class SalesHome {
         home_btn.addActionListener(_ -> {
             SalesHome.indicator = 0;
             PageChanger();
+
         });
         side_bar.add(home_btn, gbc_side);
 
@@ -102,7 +103,7 @@ public class SalesHome {
         side_bar.add(dly_sls_btn, gbc_side);
 
         gbc_side.gridy = 5;
-        pr_btn = new CustomComponents.CustomButton("Purchase Requisitions", merriweather, Color.WHITE, Color.WHITE,
+        pr_btn = new CustomComponents.CustomButton("Purchase\nRequisitions", merriweather, Color.WHITE, Color.WHITE,
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 8,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);

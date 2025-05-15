@@ -374,6 +374,12 @@ public class CustomComponents {
             setForeground(placeholderColor);
         }
 
+        public void UpdateColumns(int columns) {
+            setColumns(columns);
+        }
+
+        public String GetPlaceHolder() { return placeholder; }
+
         public void Reset() {
             setText(placeholder);
             setToolTipText("");
@@ -806,9 +812,9 @@ public class CustomComponents {
 
         private static int getBaseFontSize(Component parent) {
             if (parent.getWidth() >= parent.getHeight()) {
-                return parent.getHeight() / 50;
+                return parent.getHeight() / 60;
             } else {
-                return parent.getWidth() / 37;
+                return parent.getWidth() / 45;
             }
         }
 

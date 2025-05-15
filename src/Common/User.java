@@ -134,7 +134,8 @@ public class User {
                     user.Phone.contains(filter) ||
                     user.DateOfRegis.toString().contains(filter.toLowerCase()) ||
                     user.Username.toLowerCase().contains(filter.toLowerCase()) ||
-                    user.FullName.toLowerCase().contains(filter.toLowerCase()))) {
+                    user.FullName.toLowerCase().contains(filter.toLowerCase()) ||
+                    user.AccType.toLowerCase().contains(filter.toLowerCase()))) {
                 filtered_user_list.add(user);
             }
         }
@@ -151,6 +152,14 @@ public class User {
             }
         }
         return user_temp;
+    }
+
+    public static List<User> GetUsersByIds(List<String> ids, String filename) {
+        List<User> user_list = new ArrayList<>();
+        for (String id: ids) {
+            user_list.add(GetUserById(id, filename));
+        }
+        return user_list;
     }
 
     public static User RememberedUser(String filename) {
@@ -218,6 +227,7 @@ public class User {
                 }
             }
             success = !repeated;
+            repeated = false;
         }
         return newId;
     }
