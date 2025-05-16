@@ -4,10 +4,16 @@ import Admin.BufferForUser;
 import Admin.CustomComponents;
 import Admin.Main;
 import InventoryMgr.Item;
+
+import static PurchaseMgr.Item_Supplier.getSupplierIDFromItemID;
+import static PurchaseMgr.Item_Supplier.getSupplierName;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.Objects;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class ItemMng {
     private static JFrame parent;
@@ -22,6 +28,7 @@ public class ItemMng {
     private static CustomComponents.CustomButton btnAdd,btnDelete,btnEdit;
     private static CustomComponents.CustomScrollPane scrollPane1;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
+    private static CustomComponents.CustomXIcon icon_clear1, icon_clear2;
     private static CustomComponents.EmptyTextField search;
     private static CustomComponents.CustomTable table_item;
     private static CustomComponents.CustomArrowIcon right_icon1,right_icon2, left_icon1, left_icon2;
@@ -107,7 +114,6 @@ public class ItemMng {
     s_btn.addActionListener(_ -> SearchStuff());
         search_panel.add(s_btn, igbc);
 
-        // Adding search field
         igbc.gridx = 1;
         igbc.insets = new Insets(6, 0, 6, 0);
         search = new CustomComponents.EmptyTextField(20, "Search...\r\r", new Color(122, 122, 122));
@@ -115,23 +121,42 @@ public class ItemMng {
     search.addActionListener(_ -> SearchStuff());
         search_panel.add(search, igbc);
 
-        clearbtn = new JButton("X");
-        clearbtn.setFont(merriweather.deriveFont(Font.BOLD, 14));
-        clearbtn.setForeground(new Color(122, 122, 122));
-        clearbtn.setContentAreaFilled(false);
-        clearbtn.setBorder(BorderFactory.createEmptyBorder());
+        igbc.gridx = 2;
+        igbc.weightx = 0.9;
+        igbc.weighty = 0.9;
+        igbc.fill = GridBagConstraints.BOTH;
+        icon_clear1 = new CustomComponents.CustomXIcon(23, 3,
+                new Color(209, 209, 209), true);
+        icon_clear2 = new CustomComponents.CustomXIcon( 23, 3,
+                Color.BLACK, true);
+        clearbtn = new JButton(icon_clear1);
+        clearbtn.setRolloverIcon(icon_clear2);
+        clearbtn.setOpaque(false);
         clearbtn.setFocusable(false);
-
+        clearbtn.setBorder(BorderFactory.createEmptyBorder());
         clearbtn.addActionListener(e -> {
-            search.Reset();
-            page_counter = 0;
+            search.setText("");
+            search.requestFocus();
             UpdatePages(AllItems.size());
             UpdateTable(AllItems, list_length, page_counter);
         });
+        search.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (search.getText().equals("Search...")) {
+                    search.setText("");
+                    search.setForeground(Color.BLACK); // Normal text color
+                }
+            }
 
-        // Add the clear button next to the search field
-        igbc.gridx = 2;
-        igbc.insets = new Insets(0, 0, 0, 2);
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (search.getText().isEmpty()) {
+                    search.setText("Search...");
+                    search.setForeground(new Color(122, 122, 122)); // Placeholder color
+                }
+            }
+        });
         search_panel.add(clearbtn, igbc);
 
         gbc.gridx = 0;
@@ -142,16 +167,24 @@ public class ItemMng {
         gbc.fill = GridBagConstraints.BOTH;
 
         AllItems = Item.listAllItem("datafile/item.txt");
-        String[] titles = new String[]{"ID", "Name", "Unit Price", "StockCount", "Category", "Supplier Name"};
+        String[] titles = new String[]{"ItemID", "ItemName", "Unit Price", "Unit Cost", "StockCount", "Threshold",
+                                       "Category", "Last Update","Supplier Name"};
         Object[][] data = new Object[AllItems.size()][titles.length];
         int counter = 0;
         for (Item item : AllItems) {
+            String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
+            String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+
             data[counter] = new Object[]{
                     item.ItemID,
                     item.ItemName,
                     item.UnitPrice,
+                    item.UnitCost,
                     item.StockCount,
-                    item.Category
+                    item.Threshold,
+                    item.Category,
+                    item.LastUpdate,
+                    supplierName
             };
             counter += 1;
         }
@@ -365,40 +398,44 @@ public class ItemMng {
     }
 
     public static void UpdateTable(List<Item> filteredItems, int length, int page) {
-        String[] titles = new String[]{"ID", "Name", "Unit Price", "StockCount", "Category", "Supplier Name"};
+        String[] titles = new String[]{"ItemID", "ItemName", "Unit Price", "Unit Cost", "StockCount", "Threshold",
+                "Category", "Last Update", "Supplier Name"};
         Object[][] data;
         int counter = 0;
         int anti_counter = page * length;
 
-        // Adjust the data size based on the page
         if (length >= filteredItems.size() - page * length) {
             data = new Object[filteredItems.size() - page * length][titles.length];
         } else {
             data = new Object[length][titles.length];
         }
 
-        // Populate data with filtered items
         for (Item item : filteredItems) {
             if (anti_counter != 0) {
                 anti_counter -= 1;
                 continue;
             } else {
+                String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
+                String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+
                 data[counter] = new Object[]{
                         item.ItemID,
                         item.ItemName,
                         item.UnitPrice,
+                        item.UnitCost,
                         item.StockCount,
-                        item.Category
+                        item.Threshold,
+                        item.Category,
+                        item.LastUpdate,
+                        supplierName
                 };
                 counter += 1;
                 if (counter == length || counter == filteredItems.size()) { break; }
             }
         }
 
-        // Update the table content
         table_item.UpdateTableContent(titles, data);
 
-        // Update the record indicator (e.g., "Displaying 1 to 10 of 100 records")
         String temp2 = "<html>Displaying <b>%s</b> to <b>%s</b> of <b>%s</b> records</html>";
         int start = page * length + 1;
         int end = Math.min((page + 1) * length, filteredItems.size());
@@ -420,37 +457,40 @@ public class ItemMng {
     }
 
     public static void SearchStuff() {
-        String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search...\r\r")) ?
-                search.getText() : "";
+        String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search..."))
+                ? search.getText().trim() : "";
 
         List<Item> AllItems = Item.listAllItem("datafile/item.txt");
 
         if (searcher.isEmpty()) {
+            // Reset pagination when search is empty
             page_counter = 0;
             UpdatePages(AllItems.size());
             UpdateTable(AllItems, list_length, page_counter);
         } else {
-//            AllItems = Item.listAllItem("datafile/item.txt");
-//            AllItems.removeIf(item -> !(item.Itemname.toLowerCase().contains(searcher.toLowerCase()) ||
-//                    item.ItemID.toLowerCase().contains(searcher.toLowerCase()) ||
-//                    item.Category.toLowerCase().contains(searcher.toLowerCase()) ||
-//                    item.SupplierID.toLowerCase().contains(searcher.toLowerCase())));
+            // Apply search filtering
+            AllItems.removeIf(item -> {
+                String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
+                String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+
+                return !(item.ItemName.toLowerCase().contains(searcher.toLowerCase()) ||
+                        item.ItemID.toLowerCase().contains(searcher.toLowerCase()) ||
+                        item.Category.toLowerCase().contains(searcher.toLowerCase()) ||
+                        supplierName.toLowerCase().contains(searcher.toLowerCase()));
+            });
         }
 
         if (AllItems.isEmpty()) {
-            CustomComponents.CustomOptionPane.showInfoDialog(parent, "No results found.", "Notification",
-                    Color.GRAY, Color.WHITE, Color.GRAY, Color.WHITE);
+            CustomComponents.CustomOptionPane.showInfoDialog(
+                    parent, "No results found.", "Notification",
+                    Color.GRAY, Color.WHITE, Color.GRAY, Color.WHITE
+            );
         } else {
+            // Update pagination and table with full item details
             page_counter = 0;
             UpdatePages(AllItems.size());
             UpdateTable(AllItems, list_length, page_counter);
         }
-
-
-        String temp2 = "<html>Displaying <b>%s</b> to <b>%s</b> of <b>%s</b> records</html>";
-        int start = page_counter * list_length + 1;
-        int end = Math.min((page_counter + 1) * list_length, AllItems.size());
-        lbl_indicate.setText(String.format(temp2, start, end, AllItems.size()));
     }
 
     public static void UpdateComponentSize(int base_size) {
@@ -459,6 +499,16 @@ public class ItemMng {
         search_icon2.UpdateSize((int) (base_size * 0.8));
         s_btn.setSize(search_icon1.getIconWidth(), search_icon1.getIconHeight());
         s_btn.repaint();
+        icon_clear1.UpdateSize((int) (base_size * 0.8));
+        icon_clear2.UpdateSize((int) (base_size * 0.8));
+
+        // Set button size to match the icon dimensions
+        clearbtn.setSize(icon_clear1.getIconWidth(), icon_clear1.getIconHeight());
+        clearbtn.setPreferredSize(new Dimension(icon_clear1.getIconWidth(), icon_clear1.getIconHeight()));
+
+        // Ensure button is repainted
+        clearbtn.revalidate();
+        clearbtn.repaint();
 
         // Update left and right arrow icons dynamically
         left_icon1.UpdateSize(base_size);
