@@ -1,12 +1,6 @@
 package InventoryMgr;
 
-import Admin.AddUser;
-import Admin.DeleteUser;
-import Admin.ViewUser;
-import Common.Buffer;
-import Common.CustomComponents;
-import Common.Main;
-import Common.User;
+import Admin.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -24,7 +18,7 @@ public class InvMng {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static Buffer current_user;
+    private static BufferForUser current_user;
     private static JButton s_btn, p_left, p_right, p_first, p_last, x_btn;
     private static CustomComponents.CustomButton all, view, add, modify,
             delete1, delete2, data_transfer;
@@ -41,7 +35,7 @@ public class InvMng {
     private static final Set<String> deleting_id = new LinkedHashSet<>();
     private static final Set<Integer> previousSelection = new HashSet<>();
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, Buffer current_user) {
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, BufferForUser current_user) {
         InvMng.parent = parent;
         InvMng.merriweather = merriweather;
         InvMng.boldonse = boldonse;
