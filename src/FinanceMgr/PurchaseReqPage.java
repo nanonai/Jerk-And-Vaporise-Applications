@@ -1,9 +1,9 @@
 package FinanceMgr;
 
-import Common.Buffer;
-import Common.CustomComponents;
-import Common.Main;
-import Common.User;
+import Admin.BufferForUser;
+import Admin.CustomComponents;
+import Admin.Main;
+import Admin.User;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,7 +21,7 @@ public class PurchaseReqPage {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content,inner;
-    public static Buffer current_user;
+    public static BufferForUser current_user;
     private static JButton s_btn;
     private static CustomComponents.CustomButton all, purReq, itemID, quan, reqDate,purManID;
     private static CustomComponents.RoundedPanel search_panel;
@@ -33,7 +33,7 @@ public class PurchaseReqPage {
     private static CustomComponents.CustomScrollPane scrollPane1;
 
     public static void Loader(JFrame parent,Font merriweather,Font boldonse,
-                              JPanel content,Buffer current_user){
+                              JPanel content,BufferForUser current_user){
         PurchaseReqPage.parent = parent;
         PurchaseReqPage.merriweather = merriweather;
         PurchaseReqPage.boldonse = boldonse;
@@ -179,28 +179,13 @@ public class PurchaseReqPage {
         igbc.weightx = 1;
         igbc.weighty = 10;
         igbc.insets = new Insets(0, 0, 10, 0);
-        String[] titles = new String[]{"PurchaseReqID", "ItemID", "Quantity", "ReqDate", "UserID"};
+        String[] titles = new String[]{"PurchaseReqID", "ItemID", "SupplierID", "Quantity", "ReqDate","SalesMgrID"};
         List<PurchaseRequisition> purchaseReq_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
-        Object[][] data = new Object[purchaseReq_list.size() * 6][titles.length];
+        Object[][] data = new Object[purchaseReq_list.size()][titles.length];
         int counter = 0;
         for (PurchaseRequisition purchaseRequisition : purchaseReq_list) {
-            data[counter] = new Object[]{purchaseRequisition.purchaseReqID, purchaseRequisition.itemID,purchaseRequisition.quantity,
-                    purchaseRequisition.reqDate, purchaseRequisition.purchaseManID};
-            counter += 1;
-            data[counter] = new Object[]{purchaseRequisition.purchaseReqID, purchaseRequisition.itemID,purchaseRequisition.quantity,
-                    purchaseRequisition.reqDate, purchaseRequisition.purchaseManID};
-            counter += 1;
-            data[counter] = new Object[]{purchaseRequisition.purchaseReqID, purchaseRequisition.itemID,purchaseRequisition.quantity,
-                    purchaseRequisition.reqDate, purchaseRequisition.purchaseManID};
-            counter += 1;
-            data[counter] = new Object[]{purchaseRequisition.purchaseReqID, purchaseRequisition.itemID,purchaseRequisition.quantity,
-                    purchaseRequisition.reqDate, purchaseRequisition.purchaseManID};
-            counter += 1;
-            data[counter] = new Object[]{purchaseRequisition.purchaseReqID, purchaseRequisition.itemID,purchaseRequisition.quantity,
-                    purchaseRequisition.reqDate, purchaseRequisition.purchaseManID};
-            counter += 1;
-            data[counter] = new Object[]{purchaseRequisition.purchaseReqID, purchaseRequisition.itemID,purchaseRequisition.quantity,
-                    purchaseRequisition.reqDate, purchaseRequisition.purchaseManID};
+            data[counter] = new Object[]{purchaseRequisition.PurchaseReqID, purchaseRequisition.ItemID,purchaseRequisition.SupplierID,
+                    purchaseRequisition.Quantity, purchaseRequisition.ReqDate,purchaseRequisition.SalesMgrID};
             counter += 1;
         }
 

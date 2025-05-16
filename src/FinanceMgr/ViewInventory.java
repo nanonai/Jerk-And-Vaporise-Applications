@@ -1,10 +1,10 @@
 package FinanceMgr;
 
 import Admin.ViewUser;
-import Common.CustomComponents;
-import Common.Main;
-import Common.User;
-
+import Admin.CustomComponents;
+import Admin.Main;
+import Admin.User;
+import InventoryMgr.Item;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -143,7 +143,7 @@ public class ViewInventory {
         gbc.gridy = 1;
         gbc.weightx = 2;
         gbc.insets = new Insets(0, 0, 10, 10);
-        JLabel itemID = new JLabel("    " + current_item.itemID);
+        JLabel itemID = new JLabel("    " + current_item.ItemID);
         itemID.setOpaque(true);
         itemID.setBackground(Color.WHITE);
         itemID.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -151,7 +151,7 @@ public class ViewInventory {
         panel.add(itemID, gbc);
 
         gbc.gridy = 2;
-        JLabel itemName = new JLabel("    " + current_item.itemName);
+        JLabel itemName = new JLabel("    " + current_item.ItemName);
         itemName.setOpaque(true);
         itemName.setBackground(Color.WHITE);
         itemName.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -159,7 +159,7 @@ public class ViewInventory {
         panel.add(itemName, gbc);
 
         gbc.gridy = 3;
-        JLabel unitPrice = new JLabel("    " + current_item.unitPrice);
+        JLabel unitPrice = new JLabel("    " + current_item.UnitPrice);
         unitPrice.setOpaque(true);
         unitPrice.setBackground(Color.WHITE);
         unitPrice.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -167,7 +167,7 @@ public class ViewInventory {
         panel.add(unitPrice, gbc);
 
         gbc.gridy = 4;
-        JLabel quantity = new JLabel("    " + current_item.quantity);
+        JLabel quantity = new JLabel("    " + current_item.UnitCost);
         quantity.setOpaque(true);
         quantity.setBackground(Color.WHITE);
         quantity.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -175,7 +175,7 @@ public class ViewInventory {
         panel.add(quantity, gbc);
 
         gbc.gridy = 5;
-        JLabel threshold = new JLabel("    " + current_item.threshold);
+        JLabel threshold = new JLabel("    " + current_item.StockCount);
         threshold.setOpaque(true);
         threshold.setBackground(Color.WHITE);
         threshold.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -183,7 +183,7 @@ public class ViewInventory {
         panel.add(threshold, gbc);
 
         gbc.gridy = 6;
-        JLabel category = new JLabel("    " + current_item.category);
+        JLabel category = new JLabel("    " + current_item.Threshold);
         category.setOpaque(true);
         category.setBackground(Color.WHITE);
         category.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -191,7 +191,7 @@ public class ViewInventory {
         panel.add(category, gbc);
 
         gbc.gridy = 7;
-        JLabel lastUpdateDate = new JLabel("    " + current_item.lastUpdateDate);
+        JLabel lastUpdateDate = new JLabel("    " + current_item.Category);
         lastUpdateDate.setOpaque(true);
         lastUpdateDate.setBackground(Color.WHITE);
         lastUpdateDate.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -199,7 +199,7 @@ public class ViewInventory {
         panel.add(lastUpdateDate, gbc);
 
         gbc.gridy = 8;
-        JLabel supplierID = new JLabel("    " + current_item.supplierID);
+        JLabel supplierID = new JLabel("    " + current_item.LastUpdate);
         supplierID.setOpaque(true);
         supplierID.setBackground(Color.WHITE);
         supplierID.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));

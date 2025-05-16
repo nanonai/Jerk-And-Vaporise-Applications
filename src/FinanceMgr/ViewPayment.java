@@ -1,7 +1,7 @@
 package FinanceMgr;
 
-import Common.CustomComponents;
-import Common.Main;
+import Admin.CustomComponents;
+import Admin.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,13 +79,13 @@ public class ViewPayment {
         panel.add(amount_label, gbc);
 
         gbc.gridy = 4;
-        JLabel date_label = new JLabel("Date :");
+        JLabel date_label = new JLabel("PaymentDate :");
         date_label.setOpaque(false);
         date_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(date_label, gbc);
 
         gbc.gridy = 5;
-        JLabel status_label = new JLabel("Status :");
+        JLabel status_label = new JLabel("FinanceMrgID :");
         status_label.setOpaque(false);
         status_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(status_label, gbc);
@@ -122,7 +122,7 @@ public class ViewPayment {
         gbc.gridy = 1;
         gbc.weightx = 2;
         gbc.insets = new Insets(0, 0, 10, 10);
-        JLabel paymentID = new JLabel("    " + current_payment.paymentID);
+        JLabel paymentID = new JLabel("    " + current_payment.PaymentID);
         paymentID.setOpaque(true);
         paymentID.setBackground(Color.WHITE);
         paymentID.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -130,7 +130,7 @@ public class ViewPayment {
         panel.add(paymentID, gbc);
 
         gbc.gridy = 2;
-        JLabel purchaseOrderID = new JLabel("    " + current_payment.purchaseOrderID);
+        JLabel purchaseOrderID = new JLabel("    " + current_payment.PurchaseOrderID);
         purchaseOrderID.setOpaque(true);
         purchaseOrderID.setBackground(Color.WHITE);
         purchaseOrderID.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -138,7 +138,7 @@ public class ViewPayment {
         panel.add(purchaseOrderID, gbc);
 
         gbc.gridy = 3;
-        JLabel amount = new JLabel("    " + current_payment.amount);
+        JLabel amount = new JLabel("    " + current_payment.Amount);
         amount.setOpaque(true);
         amount.setBackground(Color.WHITE);
         amount.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -146,7 +146,7 @@ public class ViewPayment {
         panel.add(amount, gbc);
 
         gbc.gridy = 4;
-        JLabel date = new JLabel("    " + current_payment.date);
+        JLabel date = new JLabel("    " + current_payment.PaymentDate);
         date.setOpaque(true);
         date.setBackground(Color.WHITE);
         date.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -154,7 +154,7 @@ public class ViewPayment {
         panel.add(date, gbc);
 
         gbc.gridy = 5;
-        JLabel status = new JLabel("    " + current_payment.status);
+        JLabel status = new JLabel("    " + current_payment.FinanceMgrID);
         status.setOpaque(true);
         status.setBackground(Color.WHITE);
         status.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
