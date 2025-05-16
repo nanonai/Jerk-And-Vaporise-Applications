@@ -15,9 +15,6 @@ import java.util.Objects;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-
-
-
 public class ItemMng {
     private static JFrame parent;
     private static Font merriweather, boldonse;

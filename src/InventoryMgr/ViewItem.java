@@ -1,8 +1,8 @@
 package InventoryMgr;
 
-import Common.CustomComponents;
-import Common.Main;
-import Common.User;
+import Admin.CustomComponents;
+import Admin.Main;
+import Admin.User;
 
 import javax.swing.*;
 import java.awt.*;
