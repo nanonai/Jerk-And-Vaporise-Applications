@@ -99,6 +99,10 @@ public class PurchaseHome {
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
+        view_requisition.addActionListener(_ ->{
+            PurchaseHome.indicator = 4;
+            PageChanger();
+        });
         side_bar.add(view_requisition, gbc_side);
 
         gbc_side.gridy = 5;
@@ -107,6 +111,10 @@ public class PurchaseHome {
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
+        generate_po.addActionListener(_ ->{
+            PurchaseHome.indicator = 5;
+            PageChanger();
+        });
         side_bar.add(generate_po, gbc_side);
 
         gbc_side.gridy = 6;
@@ -115,6 +123,10 @@ public class PurchaseHome {
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
+        view_po.addActionListener(_->{
+            PurchaseHome.indicator = 6;
+            PageChanger();
+        });
         side_bar.add(view_po, gbc_side);
 
         gbc_side.gridy = 7;
@@ -224,6 +236,9 @@ public class PurchaseHome {
         Welcome.Loader(parent, merriweather, boldonse, content, current_user);
         ViewItems.Loader(parent, merriweather, boldonse, content, current_user);
         ViewSuppliers.Loader(parent, merriweather, boldonse, content, current_user);
+        ViewRequi.Loader(parent, merriweather, boldonse, content, current_user);
+        GenPurchaseOrder.Loader(parent, merriweather, boldonse, content, current_user);
+        GeneratePO.Loader(parent, merriweather, boldonse, content, current_user);
         PageChanger();
     }
 
@@ -246,6 +261,15 @@ public class PurchaseHome {
                 break;
             case 3:
                 ViewSuppliers.ShowPage();
+                break;
+            case 4:
+                ViewRequi.ShowPage();
+                break;
+            case 5:
+                GenPurchaseOrder.ShowPage();
+                break;
+            case 6:
+                GeneratePO.ShowPage();
                 break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());
