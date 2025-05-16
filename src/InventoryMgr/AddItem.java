@@ -1,9 +1,9 @@
 package InventoryMgr;
 
-import Common.Buffer;
-import Common.CustomComponents;
-import Common.Main;
-import Common.User;
+import Admin.BufferForUser;
+import Admin.CustomComponents;
+import Admin.Main;
+import Admin.User;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
@@ -26,12 +26,12 @@ public class AddItem {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static Buffer current_user;
+    private static BufferForUser current_user;
     private static User past, future;
     private static JComboBox<String> types;
     private static CustomComponents.EmptyTextField itemname, unitprice, startamt, minamt, supplierid;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, Buffer current_user) {
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, BufferForUser current_user) {
         AddItem.parent = parent;
         AddItem.merriweather = merriweather;
         AddItem.boldonse = boldonse;
