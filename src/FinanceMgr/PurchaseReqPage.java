@@ -3,10 +3,19 @@ package FinanceMgr;
 import Admin.BufferForUser;
 import Admin.CustomComponents;
 import Admin.Main;
+import Admin.User;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class PurchaseReqPage {
     private static JFrame parent;
@@ -23,8 +32,8 @@ public class PurchaseReqPage {
     private static CustomComponents.CustomTable table_purReq;
     private static CustomComponents.CustomScrollPane scrollPane1;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, BufferForUser current_user){
+    public static void Loader(JFrame parent,Font merriweather,Font boldonse,
+                              JPanel content,BufferForUser current_user){
         PurchaseReqPage.parent = parent;
         PurchaseReqPage.merriweather = merriweather;
         PurchaseReqPage.boldonse = boldonse;
@@ -62,7 +71,7 @@ public class PurchaseReqPage {
 //        content.add(itemID, gbc);
 //
 //        gbc.gridx = 3;
-//        quan = new CustomComponents.CustomButton("StockCount", merriweather, new Color(255, 255, 255),
+//        quan = new CustomComponents.CustomButton("Quantity", merriweather, new Color(255, 255, 255),
 //                new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
 //                Main.transparent, 0, 20, Main.transparent, false, 5, false,
 //                null, 0, 0, 0);
@@ -170,13 +179,13 @@ public class PurchaseReqPage {
         igbc.weightx = 1;
         igbc.weighty = 10;
         igbc.insets = new Insets(0, 0, 10, 0);
-        String[] titles = new String[]{"PurchaseReqID", "ItemID", "StockCount", "ReqDate", "UserID"};
+        String[] titles = new String[]{"PurchaseReqID", "ItemID", "SupplierID", "Quantity", "ReqDate","SalesMgrID"};
         List<PurchaseRequisition> purchaseReq_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
         Object[][] data = new Object[purchaseReq_list.size()][titles.length];
         int counter = 0;
         for (PurchaseRequisition purchaseRequisition : purchaseReq_list) {
-            data[counter] = new Object[]{purchaseRequisition.PurchaseReqID, purchaseRequisition.ItemID,purchaseRequisition.Quantity,
-                    purchaseRequisition.ReqDate, purchaseRequisition.SalesMgrID};
+            data[counter] = new Object[]{purchaseRequisition.PurchaseReqID, purchaseRequisition.ItemID,purchaseRequisition.SupplierID,
+                    purchaseRequisition.Quantity, purchaseRequisition.ReqDate,purchaseRequisition.SalesMgrID};
             counter += 1;
         }
 

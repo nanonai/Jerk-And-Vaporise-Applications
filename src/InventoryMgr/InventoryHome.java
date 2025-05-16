@@ -25,7 +25,7 @@ public class InventoryHome {
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
     private static CustomComponents.CustomProfileIcon profileIcon1, profileIcon2;
-    private static CustomComponents.CustomButton user_management, profile_drop;
+    private static CustomComponents.CustomButton mng_inv, profile_drop;
     private static JLabel title;
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
@@ -59,12 +59,15 @@ public class InventoryHome {
 
         gbc_side.gridy = 1;
         gbc_side.weighty = 0.8;
-        user_management = new CustomComponents.CustomButton("Manage User", merriweather, Color.WHITE, Color.WHITE,
+        mng_inv = new CustomComponents.CustomButton("Manage Inventory", merriweather, Color.WHITE, Color.WHITE,
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
-        side_bar.add(user_management, gbc_side);
-
+        mng_inv.addActionListener(_ -> {
+            InventoryHome.indicator = 2;
+            PageChanger();
+        });
+        side_bar.add(mng_inv, gbc_side);
         gbc_side.gridy = 2;
         gbc_side.weighty = 8.2;
         JLabel placeholder = new JLabel("");
@@ -169,6 +172,8 @@ public class InventoryHome {
         });
 
         Profile.Loader(parent, merriweather, boldonse, content, current_user);
+        InvMng.Loader(parent, merriweather, boldonse, content, current_user);
+        AddItem.Loader(parent, merriweather, boldonse, content, current_user);
         PageChanger();
     }
 
@@ -177,13 +182,17 @@ public class InventoryHome {
         content.revalidate();
         content.repaint();
         switch (indicator) {
-//    Please indicate the relation of the indicator value and specific java class:
+//    Please indicate the relation of the indicator value and specific java class: no lol
 //    0 -> Inventory Manager Welcome Page
 //    1 -> Profile page
+//    2 -> Totally NOT inventory management page.
             case 0:
                 break;
             case 1:
                 Profile.ShowPage();
+                break;
+            case 2:
+                InvMng.ShowPage();
                 break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());
@@ -199,7 +208,7 @@ public class InventoryHome {
         int finalBase_size = base_size;
         SwingUtilities.invokeLater(() -> {
             logo_cell.repaint();
-            user_management.UpdateCustomButton(0, finalBase_size, null, 0);
+            mng_inv.UpdateCustomButton(0, finalBase_size, null, 0);
             title.setFont(boldonse.deriveFont((float)finalBase_size));
             profile.repaint();
             profileIcon1.UpdateSize((int) (finalBase_size * 2.5));
@@ -211,6 +220,9 @@ public class InventoryHome {
                     break;
                 case 1:
                     Profile.UpdateComponentSize(finalBase_size);
+                    break;
+                case 2:
+                    InvMng.UpdateComponentSize(finalBase_size);
                     break;
             }
         });
