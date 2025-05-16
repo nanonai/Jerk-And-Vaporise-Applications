@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 import Admin.*;
+import SalesMgr.ItemMng;
 
 public class InventoryHome {
     public static int indicator = 0;
@@ -172,8 +173,7 @@ public class InventoryHome {
         });
 
         Profile.Loader(parent, merriweather, boldonse, content, current_user);
-        InvMng.Loader(parent, merriweather, boldonse, content, current_user);
-        AddItem.Loader(parent, merriweather, boldonse, content, current_user);
+        ItemMng.Loader(parent, merriweather, boldonse, content, current_user);
         PageChanger();
     }
 
@@ -192,7 +192,7 @@ public class InventoryHome {
                 Profile.ShowPage();
                 break;
             case 2:
-                InvMng.ShowPage();
+                ItemMng.ShowPage();
                 break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());
@@ -222,7 +222,7 @@ public class InventoryHome {
                     Profile.UpdateComponentSize(finalBase_size);
                     break;
                 case 2:
-                    InvMng.UpdateComponentSize(finalBase_size);
+                    ItemMng.UpdateComponentSize(finalBase_size);
                     break;
             }
         });
