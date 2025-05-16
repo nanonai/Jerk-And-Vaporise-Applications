@@ -94,28 +94,6 @@ public class Item_Supplier {
         }
     }
 
-    public static String getSupplierName(String supplierID, String supplierFilename) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(supplierFilename))) {
-            String line;
-            String foundSupplierID = "", foundSupplierName = "";
-
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("SupplierID:")) {
-                    foundSupplierID = line.substring(16).trim();
-                } else if (line.startsWith("SupplierName:")) {
-                    foundSupplierName = line.substring(16).trim();
-                }
-
-                if (line.startsWith("~~~~~") && Objects.equals(foundSupplierID, supplierID)) {
-                    return foundSupplierName; // Return supplier name if found
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "Unknown Supplier";
-    }
-
     public static String getSupplierIDFromItemID(String itemID, String itemSupplierFilename) {
         try (BufferedReader reader = new BufferedReader(new FileReader(itemSupplierFilename))) {
             String line;
@@ -129,12 +107,34 @@ public class Item_Supplier {
                 }
 
                 if (line.startsWith("~~~~~") && Objects.equals(foundItemID, itemID)) {
-                    return foundSupplierID; // Return the first matching Supplier ID
+                    return foundSupplierID;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return "Unknown";
+    }
+
+    public static String getSupplierName(String supplierID, String supplierFilename) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(supplierFilename))) {
+            String line;
+            String foundSupplierID = "", foundSupplierName = "";
+
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("SupplierID:")) {
+                    foundSupplierID = line.substring(16).trim();
+                } else if (line.startsWith("SupplierName:")) {
+                    foundSupplierName = line.substring(16).trim();
+                }
+
+                if (line.startsWith("~~~~~") && Objects.equals(foundSupplierID, supplierID)) {
+                    return foundSupplierName;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "Unknown Supplier";
     }
 }

@@ -1,9 +1,54 @@
 ItemID:         I7390
 SupplierID:     S0001
 ~~~~~
+ItemID:         I5262
+SupplierID:     S0001
+~~~~~
 ItemID:         I8532
 SupplierID:     S0001
 ~~~~~
-ItemID:         I5262
-SupplierID:     S0001
+ItemID:         I45678
+SupplierID:     S0004
+~~~~~
+ItemID:         I56789
+SupplierID:     S0005
+~~~~~
+ItemID:         I67890
+SupplierID:     S0006
+~~~~~
+ItemID:         I78901
+SupplierID:     S0007
+~~~~~
+ItemID:         I89012
+SupplierID:     S0008
+~~~~~
+ItemID:         I90123
+SupplierID:     S0009
+~~~~~
+ItemID:         I12345
+SupplierID:     S0010
+~~~~~
+ItemID:         I23456
+SupplierID:     S0003
+~~~~~
+ItemID:         I34567
+SupplierID:     S0007
+~~~~~
+ItemID:         I45679
+SupplierID:     S0002
+~~~~~
+ItemID:         I56780
+SupplierID:     S0010
+~~~~~
+ItemID:         I67801
+SupplierID:     S0005
+~~~~~
+ItemID:         I78902
+SupplierID:     S0006
+~~~~~
+ItemID:         I89013
+SupplierID:     S0008
+~~~~~
+ItemID:         I90124
+SupplierID:     S0009
 ~~~~~

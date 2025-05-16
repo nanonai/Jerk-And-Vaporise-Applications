@@ -117,7 +117,6 @@ public class ItemMng {
     s_btn.addActionListener(_ -> SearchStuff());
         search_panel.add(s_btn, igbc);
 
-        // Adding search field
         igbc.gridx = 1;
         igbc.insets = new Insets(6, 0, 6, 0);
         search = new CustomComponents.EmptyTextField(20, "Search...\r\r", new Color(122, 122, 122));
@@ -177,10 +176,7 @@ public class ItemMng {
         int counter = 0;
         for (Item item : AllItems) {
             String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
-            System.out.println("SupplierID for Item " + item.ItemID + ": " + supplierID);
-
             String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
-            System.out.println("Supplier Name: " + supplierName);
 
             data[counter] = new Object[]{
                     item.ItemID,
@@ -417,7 +413,6 @@ public class ItemMng {
             data = new Object[length][titles.length];
         }
 
-        // Populate data with filtered items and supplier name
         for (Item item : filteredItems) {
             if (anti_counter != 0) {
                 anti_counter -= 1;
@@ -425,7 +420,6 @@ public class ItemMng {
             } else {
                 String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
                 String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
-                System.out.println("Supplier Name: " + supplierName);
 
                 data[counter] = new Object[]{
                         item.ItemID,
@@ -466,37 +460,40 @@ public class ItemMng {
     }
 
     public static void SearchStuff() {
-        String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search...\r\r")) ?
-                search.getText() : "";
+        String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search..."))
+                ? search.getText().trim() : "";
 
         List<Item> AllItems = Item.listAllItem("datafile/item.txt");
 
         if (searcher.isEmpty()) {
+            // Reset pagination when search is empty
             page_counter = 0;
             UpdatePages(AllItems.size());
             UpdateTable(AllItems, list_length, page_counter);
         } else {
-//            AllItems = Item.listAllItem("datafile/item.txt");
-//            AllItems.removeIf(item -> !(item.Itemname.toLowerCase().contains(searcher.toLowerCase()) ||
-//                    item.ItemID.toLowerCase().contains(searcher.toLowerCase()) ||
-//                    item.Category.toLowerCase().contains(searcher.toLowerCase()) ||
-//                    item.SupplierID.toLowerCase().contains(searcher.toLowerCase())));
+            // Apply search filtering
+            AllItems.removeIf(item -> {
+                String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
+                String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+
+                return !(item.ItemName.toLowerCase().contains(searcher.toLowerCase()) ||
+                        item.ItemID.toLowerCase().contains(searcher.toLowerCase()) ||
+                        item.Category.toLowerCase().contains(searcher.toLowerCase()) ||
+                        supplierName.toLowerCase().contains(searcher.toLowerCase()));
+            });
         }
 
         if (AllItems.isEmpty()) {
-            CustomComponents.CustomOptionPane.showInfoDialog(parent, "No results found.", "Notification",
-                    Color.GRAY, Color.WHITE, Color.GRAY, Color.WHITE);
+            CustomComponents.CustomOptionPane.showInfoDialog(
+                    parent, "No results found.", "Notification",
+                    Color.GRAY, Color.WHITE, Color.GRAY, Color.WHITE
+            );
         } else {
+            // Update pagination and table with full item details
             page_counter = 0;
             UpdatePages(AllItems.size());
             UpdateTable(AllItems, list_length, page_counter);
         }
-
-
-        String temp2 = "<html>Displaying <b>%s</b> to <b>%s</b> of <b>%s</b> records</html>";
-        int start = page_counter * list_length + 1;
-        int end = Math.min((page_counter + 1) * list_length, AllItems.size());
-        lbl_indicate.setText(String.format(temp2, start, end, AllItems.size()));
     }
 
     public static void UpdateComponentSize(int base_size) {

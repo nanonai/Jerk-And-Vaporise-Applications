@@ -25,3 +25,138 @@ Threshold:      20
 Category:       Skibidi
 LastUpdate:     2025-04-01
 ~~~~~
+ItemID:         I45678
+ItemName:       Organic Farm Eggs (12-pack)
+UnitPrice:      6.50
+UnitCost:       4.00
+StockCount:     100
+Threshold:      20
+Category:       Groceries
+LastUpdate:     2025-05-20
+~~~~~
+ItemID:         I56789
+ItemName:       Fresh Avocados (500g)
+UnitPrice:      5.00
+UnitCost:       3.50
+StockCount:     80
+Threshold:      15
+Category:       Fresh Produce
+LastUpdate:     2025-05-21
+~~~~~
+ItemID:         I67890
+ItemName:       Wholegrain Bread (600g)
+UnitPrice:      3.50
+UnitCost:       2.00
+StockCount:     120
+Threshold:      25
+Category:       Bakery
+LastUpdate:     2025-05-22
+~~~~~
+ItemID:         I78901
+ItemName:       Grass-Fed Beef Steak (500g)
+UnitPrice:      20.00
+UnitCost:       15.00
+StockCount:     50
+Threshold:      10
+Category:       Meat & Seafood
+LastUpdate:     2025-05-23
+~~~~~
+ItemID:         I89012
+ItemName:       Organic Honey (500ml)
+UnitPrice:      10.00
+UnitCost:       6.00
+StockCount:     45
+Threshold:      8
+Category:       Groceries
+LastUpdate:     2025-05-24
+~~~~~
+ItemID:         I90123
+ItemName:       Fresh Salmon Fillet (1kg)
+UnitPrice:      35.00
+UnitCost:       28.00
+StockCount:     40
+Threshold:      6
+Category:       Meat & Seafood
+LastUpdate:     2025-05-25
+~~~~~
+ItemID:         I12345
+ItemName:       Greek Yogurt (500ml)
+UnitPrice:      4.80
+UnitCost:       3.00
+StockCount:     75
+Threshold:      15
+Category:       Dairy
+LastUpdate:     2025-05-26
+~~~~~
+ItemID:         I23456
+ItemName:       Fresh Strawberries (250g)
+UnitPrice:      5.50
+UnitCost:       4.00
+StockCount:     60
+Threshold:      12
+Category:       Fresh Produce
+LastUpdate:     2025-05-27
+~~~~~
+ItemID:         I34567
+ItemName:       Cold-Pressed Orange Juice (1L)
+UnitPrice:      8.50
+UnitCost:       5.50
+StockCount:     90
+Threshold:      18
+Category:       Beverages
+LastUpdate:     2025-05-28
+~~~~~
+ItemID:         I45679
+ItemName:       Whole Almonds (250g)
+UnitPrice:      7.00
+UnitCost:       4.50
+StockCount:     110
+Threshold:      20
+Category:       Snacks
+LastUpdate:     2025-05-29
+~~~~~
+ItemID:         I56780
+ItemName:       Fresh Romaine Lettuce (1pc)
+UnitPrice:      2.80
+UnitCost:       1.80
+StockCount:     85
+Threshold:      15
+Category:       Fresh Produce
+LastUpdate:     2025-05-30
+~~~~~
+ItemID:         I67801
+ItemName:       Cheddar Cheese Block (500g)
+UnitPrice:      9.00
+UnitCost:       6.50
+StockCount:     70
+Threshold:      12
+Category:       Dairy
+LastUpdate:     2025-06-01
+~~~~~
+ItemID:         I78902
+ItemName:       Sparkling Water (750ml)
+UnitPrice:      3.00
+UnitCost:       1.50
+StockCount:     150
+Threshold:      30
+Category:       Beverages
+LastUpdate:     2025-06-02
+~~~~~
+ItemID:         I89013
+ItemName:       Coconut Milk (1L)
+UnitPrice:      6.50
+UnitCost:       4.00
+StockCount:     95
+Threshold:      20
+Category:       Groceries
+LastUpdate:     2025-06-03
+~~~~~
+ItemID:         I90124
+ItemName:       Wholegrain Rice (5kg)
+UnitPrice:      12.00
+UnitCost:       8.00
+StockCount:     50
+Threshold:      10
+Category:       Groceries
+LastUpdate:     2025-06-04
+~~~~~
