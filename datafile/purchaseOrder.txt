@@ -2,89 +2,89 @@ PurchaseOrderID:     PO0001
 ItemID:              I0001
 SupplierID:          S0001
 PurchaseQuantity:    10
-TotalAmt:            15
+TotalAmt:            15.0
 OrderDate:           2025-05-02
-PurchaseMrgID:       PM0971204357
-status:              Pending
-~~~~~
+PurchaseMgrID:       PM0971204357
+Status:              Approved
+~
 PurchaseOrderID:     PO0002
 ItemID:              I0002
 SupplierID:          S0002
 PurchaseQuantity:    25
-TotalAmt:            100
+TotalAmt:            100.0
 OrderDate:           2025-05-03
-PurchaseMrgID:       PM0971204357
+PurchaseMgrID:       PM0971204357
 Status:              Pending
-~~~~~
+~
 PurchaseOrderID:     PO0003
 ItemID:              I0003
 SupplierID:          S0001
 PurchaseQuantity:    15
-TotalAmt:            45
+TotalAmt:            45.0
 OrderDate:           2025-05-03
-PurchaseMrgID:       PM0971204357
+PurchaseMgrID:       PM0971204357
 Status:              Approved
-~~~~~
+~
 PurchaseOrderID:     PO0004
 ItemID:              I0004
 SupplierID:          S0003
 PurchaseQuantity:    8
-TotalAmt:            32
+TotalAmt:            32.0
 OrderDate:           2025-05-04
-PurchaseMrgID:       PM0971204357
-Status:              Completed
-~~~~~
+PurchaseMgrID:       PM0971204357
+Status:              Paid
+~
 PurchaseOrderID:     PO0005
 ItemID:              I0005
 SupplierID:          S0002
 PurchaseQuantity:    20
-TotalAmt:            60
+TotalAmt:            60.0
 OrderDate:           2025-05-04
-PurchaseMrgID:       PM0971204357
+PurchaseMgrID:       PM0971204357
 Status:              Pending
-~~~~~
+~
 PurchaseOrderID:     PO0006
 ItemID:              I0006
 SupplierID:          S0004
 PurchaseQuantity:    5
-TotalAmt:            25
+TotalAmt:            25.0
 OrderDate:           2025-05-05
-PurchaseMrgID:       PM0971204357
+PurchaseMgrID:       PM0971204357
 Status:              Cancelled
-~~~~~
+~
 PurchaseOrderID:     PO0007
 ItemID:              I0007
 SupplierID:          S0001
 PurchaseQuantity:    12
-TotalAmt:            48
+TotalAmt:            48.0
 OrderDate:           2025-05-06
-PurchaseMrgID:       PM0971204357
+PurchaseMgrID:       PM0971204357
 Status:              Approved
-~~~~~
+~
 PurchaseOrderID:     PO0008
 ItemID:              I0008
 SupplierID:          S0005
 PurchaseQuantity:    18
-TotalAmt:            72
+TotalAmt:            72.0
 OrderDate:           2025-05-06
-PurchaseMrgID:       PM0971204357
-Status:              Completed
-~~~~~
+PurchaseMgrID:       PM0971204357
+Status:              Paid
+~
 PurchaseOrderID:     PO0009
 ItemID:              I0009
 SupplierID:          S0003
 PurchaseQuantity:    30
-TotalAmt:            150
+TotalAmt:            150.0
 OrderDate:           2025-05-07
-PurchaseMrgID:       PM0971204357
+PurchaseMgrID:       PM0971204357
 Status:              Pending
-~~~~~
+~
 PurchaseOrderID:     PO0010
 ItemID:              I0100
 SupplierID:          S0002
 PurchaseQuantity:    7
-TotalAmt:            21
+TotalAmt:            21.0
 OrderDate:           2025-05-07
-PurchaseMrgID:       PM0971204357
+PurchaseMgrID:       PM0971204357
 Status:              Approved
-~~~~~
+~
