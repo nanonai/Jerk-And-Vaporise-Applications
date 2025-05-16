@@ -77,7 +77,7 @@ public class PurchaseOrder {
         return allPurchaseOrders;
     }
 
-    public static void ChangePurOrderStatus(String PurchaseOrderID, BufferForPO buffer, String filename, String status) {
+    public static void ChangePurOrderStatus(String PurchaseOrderID, BufferForPO buffer, String filename,String status) {
         List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(filename);
         for (PurchaseOrder po : purchaseOrderList) {
             if (Objects.equals(po.PurchaseOrderID, PurchaseOrderID)) {
@@ -88,7 +88,7 @@ public class PurchaseOrder {
                 po.TotalAmt = buffer.TotalAmt;
                 po.OrderDate = buffer.OrderDate;
                 po.PurchaseMgrID = buffer.PurchaseMgrID;
-                po.Status = buffer.Status;  // change status
+                po.Status = status;  // change status
             }
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
@@ -107,6 +107,39 @@ public class PurchaseOrder {
             e.getStackTrace();
         }
     }
+
+
+    public static void ChangePurOrder(String PurchaseOrderID, BufferForPO buffer, String filename,String supplierID,int quantity, String status) {
+        List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(filename);
+        for (PurchaseOrder po : purchaseOrderList) {
+            if (Objects.equals(po.PurchaseOrderID, PurchaseOrderID)) {
+                po.PurchaseOrderID = buffer.PurchaseOrderID;
+                po.ItemID = buffer.ItemID;
+                po.SupplierID = supplierID;
+                po.PurchaseQuantity = quantity;
+                po.TotalAmt = buffer.TotalAmt;
+                po.OrderDate = buffer.OrderDate;
+                po.PurchaseMgrID = buffer.PurchaseMgrID;
+                po.Status = status;  // change status
+            }
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (PurchaseOrder po : purchaseOrderList) {
+                writer.write("PurchaseOrderID:     " + po.PurchaseOrderID + "\n");
+                writer.write("ItemID:              " + po.ItemID + "\n");
+                writer.write("SupplierID:          " + po.SupplierID + "\n");
+                writer.write("PurchaseQuantity:    " + po.PurchaseQuantity + "\n");
+                writer.write("TotalAmt:            " + po.TotalAmt + "\n");
+                writer.write("OrderDate:           " + po.OrderDate + "\n");
+                writer.write("PurchaseMgrID:       " + po.PurchaseMgrID + "\n");
+                writer.write("Status:              " + po.Status + "\n");
+                writer.write("~\n");
+            }
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+    }
+
 
     public static String idMaker(String filename) {
         List<PurchaseOrder> allPurchaseOrder = listAllPurchaseOrders(filename);

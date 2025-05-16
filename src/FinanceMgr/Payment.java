@@ -89,11 +89,11 @@ public class Payment {
 
     public static void saveNewPayment(Payment payment, String filename) {
         try (FileWriter writer = new FileWriter(filename, true)) {
-            writer.write("PaymentID:             " + payment.PaymentID + "\n");
-            writer.write("PurchaseOrderID:   " + payment.PurchaseOrderID + "\n");
-            writer.write("Amount:                " + payment.Amount + "\n");
-            writer.write("PaymentDate:           " + payment.PaymentDate.format(df) + "\n");
-            writer.write("FinanceMgrID:          " + payment.FinanceMgrID + "\n");
+            writer.write("PaymentID:           " + payment.PaymentID + "\n");
+            writer.write("PurchaseOrderID:     " + payment.PurchaseOrderID + "\n");
+            writer.write("Amount:              " + payment.Amount + "\n");
+            writer.write("PaymentDate:         " + payment.PaymentDate.format(df) + "\n");
+            writer.write("FinanceMgrID:        " + payment.FinanceMgrID + "\n");
             writer.write("~~~~~\n");
         } catch (IOException e) {
             e.getStackTrace();
