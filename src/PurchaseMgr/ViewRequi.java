@@ -1,9 +1,7 @@
-package FinanceMgr;
+package PurchaseMgr;
 
-import Admin.BufferForUser;
-import Admin.CustomComponents;
-import Admin.Main;
-import Admin.User;
+import Admin.*;
+import FinanceMgr.PurchaseRequisition;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,10 +15,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class PurchaseReqPage {
+public class ViewRequi {
     private static JFrame parent;
     private static Font merriweather, boldonse;
-    private static JPanel content,inner;
+    private static JPanel content, inner;
     public static BufferForUser current_user;
     private static JButton s_btn;
     private static CustomComponents.CustomButton all, purReq, itemID, quan, reqDate,purManID;
@@ -34,11 +32,11 @@ public class PurchaseReqPage {
 
     public static void Loader(JFrame parent,Font merriweather,Font boldonse,
                               JPanel content,BufferForUser current_user){
-        PurchaseReqPage.parent = parent;
-        PurchaseReqPage.merriweather = merriweather;
-        PurchaseReqPage.boldonse = boldonse;
-        PurchaseReqPage.content = content;
-        PurchaseReqPage.current_user = current_user;
+        ViewRequi.parent = parent;
+        ViewRequi.merriweather = merriweather;
+        ViewRequi.boldonse = boldonse;
+        ViewRequi.content = content;
+        ViewRequi.current_user = current_user;
 
     }
     public  static void ShowPage(){
@@ -49,47 +47,6 @@ public class PurchaseReqPage {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(20, 20, 0, 0);
-//        all = new CustomComponents.CustomButton("All", merriweather,
-//                Color.BLACK, Color.BLACK, Color.WHITE, Color.WHITE,
-//                Main.transparent, 0, 20, Main.transparent, false, 5, false,
-//                null, 0, 0, 0);
-//        content.add(all, gbc);
-//
-//        gbc.gridx = 1;
-//        gbc.insets = new Insets(20, 0, 0, 0);
-//        purReq = new CustomComponents.CustomButton("PurchaseReqID", merriweather, new Color(255, 255, 255),
-//                new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
-//                Main.transparent, 0, 20, Main.transparent, false, 5, false,
-//                null, 0, 0, 0);
-//        content.add(purReq, gbc);
-//
-//        gbc.gridx = 2;
-//        itemID = new CustomComponents.CustomButton("ItemID", merriweather, new Color(255, 255, 255),
-//                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
-//                Main.transparent, 0, 20, Main.transparent, false, 5, false,
-//                null, 0, 0, 0);
-//        content.add(itemID, gbc);
-//
-//        gbc.gridx = 3;
-//        quan = new CustomComponents.CustomButton("Quantity", merriweather, new Color(255, 255, 255),
-//                new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
-//                Main.transparent, 0, 20, Main.transparent, false, 5, false,
-//                null, 0, 0, 0);
-//        content.add(quan, gbc);
-//
-//        gbc.gridx = 4;
-//        reqDate = new CustomComponents.CustomButton("ReqDate", merriweather, new Color(255, 255, 255),
-//                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
-//                Main.transparent, 0, 20, Main.transparent, false, 5, false,
-//                null, 0, 0, 0);
-//        content.add(reqDate, gbc);
-//
-//        gbc.gridx = 5;
-//        purManID = new CustomComponents.CustomButton("PurchaseManID", merriweather, new Color(255, 255, 255),
-//                new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
-//                Main.transparent, 0, 20, Main.transparent, false, 5, false,
-//                null, 0, 0, 0);
-//        content.add(purManID, gbc);
 
         gbc.gridx = 6;
         gbc.weightx = 14;
@@ -179,14 +136,13 @@ public class PurchaseReqPage {
         igbc.weightx = 1;
         igbc.weighty = 10;
         igbc.insets = new Insets(0, 0, 10, 0);
-        String[] titles = new String[]{"PurchaseReqID", "ItemID", "SupplierID", "Quantity", "ReqDate","SalesMgrID"};
-        List<PurchaseRequisition> purchaseReq_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
-        Object[][] data = new Object[purchaseReq_list.size()][titles.length];
-        int counter = 0;
-        for (PurchaseRequisition purchaseRequisition : purchaseReq_list) {
-            data[counter] = new Object[]{purchaseRequisition.PurchaseReqID, purchaseRequisition.ItemID,purchaseRequisition.SupplierID,
-                    purchaseRequisition.Quantity, purchaseRequisition.ReqDate,purchaseRequisition.SalesMgrID};
-            counter += 1;
+        String[] titles = new String[]{"PurchaseReqID", "ItemID", "Quantity", "ReqDate", "UserID"};
+        List<PurchaseRequisition> list = PurchaseRequisition.listAllPurchaseRequisitions("datafile/purchaseReq.txt");
+        Object[][] data = new Object[list.size()][titles.length];
+        int Counter = 0;
+        for (PurchaseRequisition listItem: list){
+            data[Counter] = new Object[]{listItem.PurchaseReqID, listItem.ItemID, listItem.Quantity, listItem.ReqDate, listItem.PurchaseReqID };
+            Counter += 1;
         }
 
         table_purReq = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
