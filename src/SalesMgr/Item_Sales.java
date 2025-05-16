@@ -1,7 +1,5 @@
 package SalesMgr;
 
-import InventoryMgr.Item;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -9,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.ServiceLoader;
 
 public class Item_Sales {
     public String ItemID, SalesID;

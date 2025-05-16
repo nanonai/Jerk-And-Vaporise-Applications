@@ -128,4 +128,15 @@ public class Item {
             e.getStackTrace();
         }
     }
+    public static Item getItemID(String ItemID, String filename){
+        List<Item> itemList = listAllItem(filename);
+        Item item_temp = null;
+        for (Item item: itemList) {
+            if (Objects.equals(item.ItemID, ItemID)) {
+                item_temp = item;
+                break;
+            }
+        }
+        return item_temp;
+    }
 }

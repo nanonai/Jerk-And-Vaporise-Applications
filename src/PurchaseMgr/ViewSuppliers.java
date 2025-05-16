@@ -11,7 +11,7 @@ import java.util.List;
 public class ViewSuppliers {
     private static JFrame parent;
     private static Font merriweather, boldonse;
-    private static JPanel content,inner;
+    private static JPanel content, inner;
     public static BufferForUser current_user;
     private static JButton s_btn;
     //    private static CustomComponents.CustomButton all, purOrder, purReq, itemID, quan,supplier,orderDate,purMan,status;
@@ -20,7 +20,7 @@ public class ViewSuppliers {
     private static JComboBox<String> entries;
     private static CustomComponents.EmptyTextField search;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
-    private static CustomComponents.CustomTable table_purOrder;
+    private static CustomComponents.CustomTable table_supplier;
     private static CustomComponents.CustomScrollPane scrollPane1;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
@@ -35,25 +35,24 @@ public class ViewSuppliers {
     public  static void ShowPage(){
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1;
         gbc.weighty = 1;
-        gbc.gridx = 0;
         gbc.gridy = 0;
-
-        gbc.gridx = 9;
+        gbc.gridx = 1;
         gbc.weightx = 14;
         gbc.insets = new Insets(0, 0, 0, 20);
         JLabel placeholder1 = new JLabel("");
+        // placeholder1.setBorder(BorderFactory.createLineBorder(Color.RED));
         content.add(placeholder1, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.gridwidth = 10;
         gbc.weightx = 1;
         gbc.weighty = 18;
+        gbc.gridwidth = 2;
         gbc.insets = new Insets(0, 20, 20, 20);
         inner = new JPanel(new GridBagLayout());
         inner.setOpaque(true);
+        // main white panel I change it to blue first
         inner.setBackground(Color.WHITE);
         content.add(inner, gbc);
 
@@ -89,6 +88,8 @@ public class ViewSuppliers {
         igbc.gridx = 3;
         igbc.weightx = 25;
         JLabel placeholder2 = new JLabel("");
+        placeholder2.setBackground(Color.WHITE); // Background color
+        placeholder2.setOpaque(true);
         inner.add(placeholder2, igbc);
 
         igbc.gridx = 4;
@@ -126,9 +127,9 @@ public class ViewSuppliers {
         igbc.gridx = 0;
         igbc.gridy = 1;
         igbc.weightx = 1;
-        igbc.weighty = 10;
+        igbc.weighty = 16;
         igbc.insets = new Insets(0, 0, 10, 0);
-        List<Supplier> list = Supplier.listAllSupplier("datafile/supplier.txt");
+        List<Supplier> list = Supplier.ListAllSupplier("datafile/supplier.txt");
         String[] titles = new String[]{"SupplierID", "SupplierName", "ContactPerson", "Phone", "Email", "Address"};
         Object[][] data = new Object[list.size()][titles.length];
         int Counter = 0;
@@ -137,14 +138,14 @@ public class ViewSuppliers {
             Counter += 1;
         }
 
-        table_purOrder = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
+        table_supplier = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
                 merriweather.deriveFont(Font.PLAIN, 16), Color.BLACK, Color.BLACK,
                 Color.WHITE, new Color(212, 212, 212), 1, 30);
-        table_purOrder.setShowHorizontalLines(true);
-        table_purOrder.setShowVerticalLines(true);
-        table_purOrder.setGridColor(new Color(230, 230, 230));
+        table_supplier.setShowHorizontalLines(true);
+        table_supplier.setShowVerticalLines(true);
+        table_supplier.setGridColor(new Color(230, 230, 230));
 
-        scrollPane1 = new CustomComponents.CustomScrollPane(false, 1, table_purOrder,
+        scrollPane1 = new CustomComponents.CustomScrollPane(false, 1, table_supplier,
                 6, new Color(202, 202, 202), Main.transparent,
                 Main.transparent, Main.transparent, Main.transparent,
                 new Color(170, 170, 170), Color.WHITE,

@@ -3,7 +3,6 @@ package PurchaseMgr;
 import Admin.BufferForUser;
 import Admin.CustomComponents;
 import InventoryMgr.Item;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;

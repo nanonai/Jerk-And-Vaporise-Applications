@@ -1,0 +1,126 @@
+ItemID:              IT001
+ItemName:            Beverages
+CurrentStock :       200
+LastUpdateDate:      2025-05-03
+Threshold:           100
+~~~~~
+ItemID:              IT001
+ItemName:            Beverages
+CurrentStock:        200
+LastUpdateDate:      2025-05-09
+Threshold:           100
+~~~~~
+ItemID:              IT002
+ItemName:            Rice
+CurrentStock:        150
+LastUpdateDate:      2025-05-02
+Threshold:           100
+~~~~~
+ItemID:              IT003
+ItemName:            Canned Tuna
+CurrentStock:        80
+LastUpdateDate:      2025-05-01
+Threshold:           100
+~~~~~
+ItemID:              IT004
+ItemName:            Cooking Oil
+CurrentStock:        300
+LastUpdateDate:      2025-05-02
+Threshold:           150
+~~~~~
+ItemID:              IT005
+ItemName:            Fresh Tomatoes
+CurrentStock:        95
+LastUpdateDate:      2025-05-02
+Threshold:           120
+~~~~~
+ItemID:              IT006
+ItemName:            Instant Noodles
+CurrentStock:        400
+LastUpdateDate:      2025-05-01
+Threshold:           200
+~~~~~
+ItemID:              IT007
+ItemName:            Tissue Paper
+CurrentStock:        60
+LastUpdateDate:      2025-05-02
+Threshold:           100
+~~~~~
+ItemID:              IT008
+ItemName:            Dishwashing Liquid
+CurrentStock:        110
+LastUpdateDate:      2025-05-15
+Threshold:           80
+~~~~~
+ItemID:              IT009
+ItemName:            Mineral Water 1.5L
+CurrentStock:        180
+LastUpdateDate:      2025-04-02
+Threshold:           150
+~~~~~
+ItemID:              IT010
+ItemName:            Sugar 2kg
+CurrentStock:        250
+LastUpdateDate:      2025-05-06
+Threshold:           120
+~~~~~
+ItemID:              IT011
+ItemName:            Salt
+CurrentStock:        190
+LastUpdateDate:      2025-05-11
+Threshold:           100
+~~~~~
+ItemID:              IT012
+ItemName:            Curry Powder 500g
+CurrentStock:        75
+LastUpdateDate:      2025-05-02
+Threshold:           100
+~~~~~
+ItemID:              IT013
+ItemName:            Fresh Onions
+CurrentStock:        50
+LastUpdateDate:      2025-05-02
+Threshold:           80
+~~~~~
+ItemID:              IT014
+ItemName:            Bananas (per bunch)
+CurrentStock:        45
+LastUpdateDate:      2025-05-01
+Threshold:           70
+~~~~~
+ItemID:              IT015
+ItemName:            Coffee Powder 200g
+CurrentStock:        130
+LastUpdateDate:      2025-05-02
+Threshold:           100
+~~~~~
+ItemID:              IT016
+ItemName:            Hand Sanitizer 250ml
+CurrentStock:        160
+LastUpdateDate:      2025-05-02
+Threshold:           100
+~~~~~
+ItemID:              IT017
+ItemName:            Diapers - Medium
+CurrentStock:        95
+LastUpdateDate:      2025-05-01
+Threshold:           120
+~~~~~
+ItemID:              IT018
+ItemName:            Floor Cleaner 2L
+CurrentStock:        135
+LastUpdateDate:      2025-05-02
+Threshold:           100
+~~~~~
+ItemID:              IT019
+ItemName:            Cooking Gas Cylinder
+CurrentStock:        70
+LastUpdateDate:      2025-05-02
+Threshold:           60
+~~~~~
+ItemID:              IT020
+ItemName:            Bread Loaf
+CurrentStock:        180
+LastUpdateDate:      2025-05-02
+Threshold:           100
+~~~~~
