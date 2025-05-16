@@ -1,7 +1,7 @@
 package PurchaseMgr;
 
+import Admin.BufferForUser;
 import Admin.User;
-import InventoryMgr.Item;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -143,6 +143,49 @@ public class PurchaseOrder {
         }
         return purchaseOrder_temp;
     }
+
+//    public static List<PurchaseOrder> listAllPOFromFilter(String filename, String purchaseOrderID, String filter, BufferForPO current_po) {
+//        List<PurchaseOrder> po_list = listAllPurchaseOrders(filename);
+//        List<PurchaseOrder> poID_list = new ArrayList<>();
+//        List<PurchaseOrder> filtered_po_list = new ArrayList<>();
+//        if (type.isEmpty() && filter.isEmpty()) {
+//            if (current_po != null) {
+//                int length = po_list.size();
+//                for (int i = 0; i < length; i++) {
+//                    if (Objects.equals(poID_list.get(i).PurchaseOrderID, current_po.PurchaseOrderID)) {
+//                        poID_list.remove(i);
+//                        break;
+//                    }
+//                }
+//            }
+//            return poID_list;
+//        }
+//        for (PurchaseOrder purchaseOrder: po_list) {
+//            if (!Objects.equals(purchaseOrder.PurchaseOrderID, current_po.PurchaseOrderID)) {
+//                if (Objects.equals(purchaseOrder.PurchaseOrderID, purchaseOrderID)) {
+//                    poID_list.add(purchaseOrder);
+//                } else if (purchaseOrderID.isEmpty()) {
+//                    poID_list.add(purchaseOrder);
+//                }
+//            }
+//        }
+//        if (filter.isEmpty()) {
+//            return poID_list;
+//        }
+//        for (PurchaseOrder purchaseOrder: poID_list) {
+//            if ((purchaseOrder.PurchaseOrderID.toLowerCase().contains(filter.toLowerCase()) ||
+//                    purchaseOrder.ItemID.toLowerCase().contains(filter.toLowerCase()) ||
+//                    purchaseOrder.SupplierID.toLowerCase().contains(filter) ||
+//                    purchaseOrder.PurchaseQuantity.contains(filter) ||
+//                    purchaseOrder.TotalAmt.contains(filter) ||
+//                    purchaseOrder.OrderDate.toString().contains(filter.toLowerCase()) ||
+//                    purchaseOrder.PurchaseMgrID.toLowerCase().contains(filter.toLowerCase()) ||
+//                    purchaseOrder.Status.toLowerCase().contains(filter.toLowerCase()))) {
+//                filtered_po_list.add(purchaseOrder);
+//            }
+//        }
+//        return filtered_po_list;
+//    }
 
 
 }
