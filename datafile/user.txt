@@ -26,7 +26,7 @@ Email:          pm123@gmail.com
 Phone:          0128467057
 AccType:        Purchase Manager
 DateOfRegis:    2025-03-31
-RememberMe:     0
+RememberMe:     1
 ~~~~~
 UserID:         IM0971204357
 Username:       im123
@@ -46,7 +46,7 @@ Email:          fm123@gmail.com
 Phone:          0145323423
 AccType:        Finance Manager
 DateOfRegis:    2025-03-31
-RememberMe:     1
+RememberMe:     0
 ~~~~~
 UserID:         AD7264918352
 Username:       adminX

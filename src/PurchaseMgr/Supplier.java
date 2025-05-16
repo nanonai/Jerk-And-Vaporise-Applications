@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Supplier {
     public String SupplierID;
@@ -24,7 +23,7 @@ public class Supplier {
         this.Address = Address;
     }
 
-    public static List<Supplier> listAllSupplier(String file){
+    public static List<Supplier> ListAllSupplier(String file){
         List<Supplier> listSupplier = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -64,29 +63,5 @@ public class Supplier {
             e.getStackTrace();
         }
         return listSupplier;
-    }
-
-    public static String idMaker(String filename) {
-        List<Supplier> allSupplier = listAllSupplier(filename);
-        boolean repeated = false;
-        boolean success = false;
-        String newId = "";
-        while (!success) {
-            long newNum = (long) (Math.random() * 1E4);
-            StringBuilder number = new StringBuilder(String.valueOf(newNum));
-            while (number.length() < 4) {
-                number.insert(0, "0");
-            }
-            newId = String.format("%s%s", "S", number);
-            for (Supplier supplier : allSupplier) {
-                if (Objects.equals(supplier.SupplierID, newId)) {
-                    repeated = true;
-                    break;
-                }
-            }
-            success = !repeated;
-            repeated = false;
-        }
-        return newId;
     }
 }
