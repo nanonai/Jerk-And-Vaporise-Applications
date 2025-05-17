@@ -127,7 +127,7 @@ public class GeneratePO {
         gbc1.weighty = 10;
         gbc1.insets = new Insets(0, 0, 10, 0);
         List<PurchaseOrder> purchaseOrder_list = PurchaseOrder.listAllPurchaseOrders("datafile/purchaseOrder.txt");
-        String[] titles = new String[]{"PurchaseOrderID", "PurchaseReqID", "ItemID", "Quantity", "SupplierID","OrderDate","UserID","Status"};
+        String[] titles = new String[]{"PurchaseOrderID", "ItemID", "PurchaseQuantity", "SupplierID","OrderDate","PurchaseMgrID","Status"};
         Object[][] data = new Object[purchaseOrder_list.size()][titles.length];
         int counter = 0;
         for (PurchaseOrder purchaseOrder : purchaseOrder_list) {
