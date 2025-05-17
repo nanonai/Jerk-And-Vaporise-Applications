@@ -1,6 +1,9 @@
 package InventoryMgr;
 
-import Admin.*;
+import Admin.BufferForUser;
+import Admin.CustomComponents;
+import Admin.Main;
+import Admin.User;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;

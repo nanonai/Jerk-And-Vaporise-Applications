@@ -93,4 +93,48 @@ public class Item_Supplier {
             e.getStackTrace();
         }
     }
+
+    public static String getSupplierIDFromItemID(String itemID, String itemSupplierFilename) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(itemSupplierFilename))) {
+            String line;
+            String foundItemID = "", foundSupplierID = "";
+
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("ItemID:")) {
+                    foundItemID = line.substring(16).trim();
+                } else if (line.startsWith("SupplierID:")) {
+                    foundSupplierID = line.substring(16).trim();
+                }
+
+                if (line.startsWith("~~~~~") && Objects.equals(foundItemID, itemID)) {
+                    return foundSupplierID;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "Unknown";
+    }
+
+    public static String getSupplierName(String supplierID, String supplierFilename) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(supplierFilename))) {
+            String line;
+            String foundSupplierID = "", foundSupplierName = "";
+
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("SupplierID:")) {
+                    foundSupplierID = line.substring(16).trim();
+                } else if (line.startsWith("SupplierName:")) {
+                    foundSupplierName = line.substring(16).trim();
+                }
+
+                if (line.startsWith("~~~~~") && Objects.equals(foundSupplierID, supplierID)) {
+                    return foundSupplierName;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "Unknown Supplier";
+    }
 }

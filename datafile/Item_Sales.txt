@@ -8,3 +8,253 @@ SalesID:        SL0010
 Quantity:       1
 Amount:         15
 ~~~~~
+ItemID:         I1007
+SalesID:        SL0011
+Quantity:       160
+Amount:         5760.0
+~~~~~
+ItemID:         I6970
+SalesID:        SL0012
+Quantity:       76
+Amount:         2337.0
+~~~~~
+ItemID:         I7962
+SalesID:        SL0013
+Quantity:       84
+Amount:         1260.0
+~~~~~
+ItemID:         I7467
+SalesID:        SL0014
+Quantity:       141
+Amount:         3172.5
+~~~~~
+ItemID:         I7737
+SalesID:        SL0015
+Quantity:       53
+Amount:         1510.5
+~~~~~
+ItemID:         I4734
+SalesID:        SL0016
+Quantity:       87
+Amount:         326.25
+~~~~~
+ItemID:         I2997
+SalesID:        SL0017
+Quantity:       27
+Amount:         384.75
+~~~~~
+ItemID:         I1754
+SalesID:        SL0018
+Quantity:       134
+Amount:         3417.0
+~~~~~
+ItemID:         I7467
+SalesID:        SL0019
+Quantity:       183
+Amount:         4117.5
+~~~~~
+ItemID:         I6970
+SalesID:        SL0020
+Quantity:       150
+Amount:         4612.5
+~~~~~
+ItemID:         I6215
+SalesID:        SL0021
+Quantity:       142
+Amount:         5218.5
+~~~~~
+ItemID:         I7737
+SalesID:        SL0022
+Quantity:       139
+Amount:         3961.5
+~~~~~
+ItemID:         I8494
+SalesID:        SL0023
+Quantity:       31
+Amount:         1116.0
+~~~~~
+ItemID:         I2997
+SalesID:        SL0024
+Quantity:       77
+Amount:         1097.25
+~~~~~
+ItemID:         I2022
+SalesID:        SL0025
+Quantity:       156
+Amount:         4095.0
+~~~~~
+ItemID:         I9994
+SalesID:        SL0026
+Quantity:       121
+Amount:         1361.25
+~~~~~
+ItemID:         I9994
+SalesID:        SL0027
+Quantity:       160
+Amount:         1800.0
+~~~~~
+ItemID:         I7142
+SalesID:        SL0028
+Quantity:       86
+Amount:         3225.0
+~~~~~
+ItemID:         I4734
+SalesID:        SL0029
+Quantity:       141
+Amount:         528.75
+~~~~~
+ItemID:         I1754
+SalesID:        SL0030
+Quantity:       36
+Amount:         918.0
+~~~~~
+ItemID:         I6215
+SalesID:        SL0031
+Quantity:       174
+Amount:         6394.5
+~~~~~
+ItemID:         I7737
+SalesID:        SL0032
+Quantity:       97
+Amount:         2764.5
+~~~~~
+ItemID:         I4493
+SalesID:        SL0033
+Quantity:       177
+Amount:         6106.5
+~~~~~
+ItemID:         I8780
+SalesID:        SL0034
+Quantity:       90
+Amount:         2160.0
+~~~~~
+ItemID:         I8494
+SalesID:        SL0035
+Quantity:       21
+Amount:         756.0
+~~~~~
+ItemID:         I1000
+SalesID:        SL0036
+Quantity:       28
+Amount:         546.0
+~~~~~
+ItemID:         I4734
+SalesID:        SL0037
+Quantity:       31
+Amount:         116.25
+~~~~~
+ItemID:         I8780
+SalesID:        SL0038
+Quantity:       96
+Amount:         2304.0
+~~~~~
+ItemID:         I3718
+SalesID:        SL0039
+Quantity:       34
+Amount:         1249.5
+~~~~~
+ItemID:         I7962
+SalesID:        SL0040
+Quantity:       81
+Amount:         1215.0
+~~~~~
+ItemID:         I4734
+SalesID:        SL0041
+Quantity:       194
+Amount:         727.5
+~~~~~
+ItemID:         I4493
+SalesID:        SL0042
+Quantity:       55
+Amount:         1897.5
+~~~~~
+ItemID:         I2997
+SalesID:        SL0043
+Quantity:       85
+Amount:         1211.25
+~~~~~
+ItemID:         I1000
+SalesID:        SL0044
+Quantity:       133
+Amount:         2593.5
+~~~~~
+ItemID:         I7962
+SalesID:        SL0045
+Quantity:       23
+Amount:         345.0
+~~~~~
+ItemID:         I7142
+SalesID:        SL0046
+Quantity:       146
+Amount:         5475.0
+~~~~~
+ItemID:         I7142
+SalesID:        SL0047
+Quantity:       131
+Amount:         4912.5
+~~~~~
+ItemID:         I4734
+SalesID:        SL0048
+Quantity:       137
+Amount:         513.75
+~~~~~
+ItemID:         I9994
+SalesID:        SL0049
+Quantity:       191
+Amount:         2148.75
+~~~~~
+ItemID:         I6215
+SalesID:        SL0050
+Quantity:       26
+Amount:         955.5
+~~~~~
+ItemID:         I2022
+SalesID:        SL0051
+Quantity:       37
+Amount:         971.25
+~~~~~
+ItemID:         I4734
+SalesID:        SL0052
+Quantity:       195
+Amount:         731.25
+~~~~~
+ItemID:         I1007
+SalesID:        SL0053
+Quantity:       82
+Amount:         2952.0
+~~~~~
+ItemID:         I1754
+SalesID:        SL0054
+Quantity:       132
+Amount:         3366.0
+~~~~~
+ItemID:         I7142
+SalesID:        SL0055
+Quantity:       133
+Amount:         4987.5
+~~~~~
+ItemID:         I1000
+SalesID:        SL0056
+Quantity:       80
+Amount:         1560.0
+~~~~~
+ItemID:         I3580
+SalesID:        SL0057
+Quantity:       62
+Amount:         744.0
+~~~~~
+ItemID:         I7737
+SalesID:        SL0058
+Quantity:       186
+Amount:         5301.0
+~~~~~
+ItemID:         I9994
+SalesID:        SL0059
+Quantity:       128
+Amount:         1440.0
+~~~~~
+ItemID:         I7737
+SalesID:        SL0060
+Quantity:       41
+Amount:         1168.5
+~~~~~

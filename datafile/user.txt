@@ -16,7 +16,7 @@ Email:          sm123@gmail.com
 Phone:          0123354535
 AccType:        Sales Manager
 DateOfRegis:    2025-03-31
-RememberMe:     0
+RememberMe:     1
 ~~~~~
 UserID:         PM0971204357
 Username:       pm123
@@ -26,7 +26,7 @@ Email:          pm123@gmail.com
 Phone:          0128467057
 AccType:        Purchase Manager
 DateOfRegis:    2025-03-31
-RememberMe:     1
+RememberMe:     0
 ~~~~~
 UserID:         IM0971204357
 Username:       im123
