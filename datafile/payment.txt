@@ -64,16 +64,16 @@ Amount:              98.75
 PaymentDate:         2025-05-09
 FinanceMrgID:        FM0971204357
 ~~~~~
-PaymentID:             PY2756
-PurchaseOrderID:       PO0004
-Amount:                32.0
-PaymentDate:           2025-05-16
-FinanceMgrID:          FM0971204357
+PaymentID:           PY2756
+PurchaseOrderID:     PO0004
+Amount:              32.0
+PaymentDate:         2025-05-16
+FinanceMgrID:        FM0971204357
 ~~~~~
-PaymentID:             PY7582
-PurchaseOrderID:       PO0008
-Amount:                72.0
-PaymentDate:           2025-05-16
-FinanceMgrID:          FM0971204357
+PaymentID:           PY7582
+PurchaseOrderID:     PO0008
+Amount:              72.0
+PaymentDate:         2025-05-16
+FinanceMgrID:        FM0971204357
 ~~~~~
 
