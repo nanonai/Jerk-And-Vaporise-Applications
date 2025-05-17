@@ -68,7 +68,7 @@ PurchaseQuantity:    18
 TotalAmt:            72.0
 OrderDate:           2025-05-06
 PurchaseMgrID:       PM0971204357
-Status:              Paid
+Status:              Denied
 ~
 PurchaseOrderID:     PO0009
 ItemID:              I0009

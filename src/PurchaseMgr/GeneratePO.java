@@ -159,9 +159,21 @@ public class GeneratePO {
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0,0);
-        /* AddBtn.addActionListener(_ -> {
+        AddBtn.addActionListener(_ -> {
+            if (table_po.getSelectedRowCount() > 0){
+                CustomComponents.CustomOptionPane.showErrorDialog(parent, "Ei dog u think u can " +
+                                "add something into the selected item? dump...", "Error lah",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255));
+            }
+            else {
+                AddPO.Loader(parent, merriweather, boldonse, content, current_user);
+                AddPO.ShowPage();
+            }
 
-        });*/
+        });
         AddBtn.setPreferredSize(new Dimension(100, 1));
         btnPanel.add(AddBtn, gbc3);
 
@@ -182,8 +194,6 @@ public class GeneratePO {
         JLabel placeholder2 = new JLabel("booon");
         btnPanel.add(placeholder2, gbc3);
 
-
-
         gbc1.gridx = 0;
         gbc1.gridy = 1;
         gbc1.insets = new Insets(0, 0, 0, 0);
@@ -200,6 +210,9 @@ public class GeneratePO {
                 new Color(140, 140, 140), new Color(110, 110, 110),
                 Color.WHITE, Color.WHITE, 6);
         inner.add(scrollPane1, gbc1);
+
     }
+
+
 
 }
