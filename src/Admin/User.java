@@ -1,5 +1,7 @@
 package Admin;
 
+import SalesMgr.Sales;
+
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -101,7 +103,7 @@ public class User {
         return allUser;
     }
 
-    public static List<User> listAllUserFromFilter(String filename, String type, String filter, BufferForUser current_user) {
+    public static List<User> listAllUserFromFilter(String filename, String type, String filter, User current_user) {
         List<User> user_list = listAllUser(filename);
         List<User> type_user_list = new ArrayList<>();
         List<User> filtered_user_list = new ArrayList<>();
@@ -364,7 +366,7 @@ public class User {
         }
     }
 
-    public static void modifyUser(String UserID, BufferForUser bufferForUser, String filename) {
+    public static void modifyUser(String UserID, User bufferForUser, String filename) {
         List<User> allUser = listAllUser(filename);
         for (User user : allUser) {
             if (Objects.equals(user.UserID, UserID)) {
@@ -395,4 +397,6 @@ public class User {
             e.getStackTrace();
         }
     }
+    
+//    public static List<Sales> checkSalesRecordByID(String UserID, )
 }

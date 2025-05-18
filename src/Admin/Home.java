@@ -10,7 +10,7 @@ import FinanceMgr.*;
 
 public class Home {
     public static int indicator = -1;
-    public static BufferForUser current_user;
+    public static User current_user;
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static CustomComponents.ColorPanel background;

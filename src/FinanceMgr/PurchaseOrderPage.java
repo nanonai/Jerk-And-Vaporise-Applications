@@ -18,7 +18,7 @@ public class PurchaseOrderPage {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content,inner;
-    public static BufferForUser current_user;
+    public static User current_user;
     private static JButton s_btn;
     private static CustomComponents.CustomButton updateStatus,makePayment;
 //    private static CustomComponents.CustomButton all, purOrder, purReq, itemID, quan,supplier,orderDate,purMan,status;
@@ -34,7 +34,7 @@ public class PurchaseOrderPage {
     private static List<PurchaseOrder> purchaseOrder_List;
 
     public static void Loader(JFrame parent,Font merriweather,Font boldonse,
-                              JPanel content,BufferForUser current_user){
+                              JPanel content,User current_user){
         PurchaseOrderPage.parent = parent;
         PurchaseOrderPage.merriweather = merriweather;
         PurchaseOrderPage.boldonse = boldonse;
