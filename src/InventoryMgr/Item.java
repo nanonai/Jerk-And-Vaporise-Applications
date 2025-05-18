@@ -128,6 +128,52 @@ public class Item {
             e.getStackTrace();
         }
     }
+
+    public static String validitychecker(String ItemName, String UnitPrice, String UnitCost, String StockCount, String Threshold,
+                                         String SupplierName) {
+        // Sample output: 0X0X00X0X
+        String indicator = "";
+        // Validate ItemName: Length between 8 to 36 characters
+        if (ItemName.length() >= 8 && ItemName.length() <= 36) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        // Validate UnitPrice: Should be a positive number
+        if (UnitPrice.matches("\\d+(\\.\\d{1,2})?") && Double.parseDouble(UnitPrice) > 0) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        // Validate UnitCost: Should be a positive number
+        if (UnitCost.matches("\\d+(\\.\\d{1,2})?") && Double.parseDouble(UnitCost) > 0) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        // Validate StockCount: Should be a non-negative integer
+        if (StockCount.matches("\\d+") && Integer.parseInt(StockCount) >= 0) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        // Validate Threshold: Should be a non-negative integer
+        if (Threshold.matches("\\d+") && Integer.parseInt(Threshold) >= 0) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+
+        // Validate SupplierName: Should not be empty
+        if (!SupplierName.trim().isEmpty()) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+
+        return indicator;
+    }
+
     public static Item getItemID(String ItemID, String filename){
         List<Item> itemList = listAllItem(filename);
         Item item_temp = null;

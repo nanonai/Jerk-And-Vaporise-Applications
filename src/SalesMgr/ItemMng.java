@@ -3,7 +3,6 @@ package SalesMgr;
 import Admin.BufferForUser;
 import Admin.CustomComponents;
 import Admin.Main;
-import InventoryMgr.AddItem;
 import InventoryMgr.Item;
 
 import static PurchaseMgr.Item_Supplier.getSupplierIDFromItemID;
@@ -24,8 +23,7 @@ public class ItemMng {
     private static int indicator, base_size;
     private static List<Item> AllItems;
     private static JButton s_btn,clearbtn,p_first,p_left,p_right,p_last;
-    private static JDialog dialogAdd, dialogDelete, dialogEdit;
-    private static CustomComponents.CustomButton btnRestock, btnAdd,btnDelete,btnEdit, btnView ;
+    private static CustomComponents.CustomButton btnAdd,btnDelete,btnEdit, btnView ;
     private static CustomComponents.CustomScrollPane scrollPane1;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
     private static CustomComponents.CustomXIcon icon_clear1, icon_clear2;
@@ -350,8 +348,8 @@ public class ItemMng {
                 5, false, null, 0, 0, 0);
         btnAdd.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
         btnAdd.addActionListener(_ -> {
-            AddItem.Loader(parent, merriweather, boldonse, content, current_user);
-            AddItem.ShowPage();
+            AddNewItem.Loader(parent, merriweather, boldonse, content, current_user);
+            AddNewItem.ShowPage();
         });
         buttonPanel1.add(btnAdd, buttongbc);
 
@@ -366,19 +364,7 @@ public class ItemMng {
         });
         buttonPanel1.add(btnEdit, buttongbc);
 
-// Move to next column
         buttongbc.gridx = 2;
-        btnRestock = new CustomComponents.CustomButton("Restock", merriweather, Color.WHITE, Color.WHITE,
-                new Color(225, 108, 150), new Color(237, 136, 172),
-                Main.transparent, 0, 20, Main.transparent, false,
-                5, false, null, 0, 0, 0);
-        btnRestock.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
-        btnRestock.addActionListener(_ -> {
-            // Add Restock functionality here
-        });
-        buttonPanel1.add(btnRestock, buttongbc);
-
-        buttongbc.gridx = 3;
         buttongbc.insets = new Insets(0, 7, 5, 7);
         btnView = new CustomComponents.CustomButton("View Item", merriweather, Color.WHITE, Color.WHITE,
                 new Color(225, 108, 150), new Color(237, 136, 172),
@@ -391,7 +377,7 @@ public class ItemMng {
         buttonPanel2.add(btnView, buttongbc);
 
 
-        buttongbc.gridx = 4;
+        buttongbc.gridx =3 ;
         btnDelete = new CustomComponents.CustomButton("Delete Item", merriweather, Color.WHITE, Color.WHITE,
                 new Color(155, 86, 122), new Color(174, 122, 140),
                 Main.transparent, 0, 20, Main.transparent, false,
@@ -474,7 +460,6 @@ public class ItemMng {
             UpdatePages(AllItems.size());
             UpdateTable(AllItems, list_length, page_counter);
         } else {
-            // Apply search filtering
             AllItems.removeIf(item -> {
                 String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
                 String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
@@ -492,7 +477,6 @@ public class ItemMng {
                     Color.GRAY, Color.WHITE, Color.GRAY, Color.WHITE
             );
         } else {
-            // Update pagination and table with full item details
             page_counter = 0;
             UpdatePages(AllItems.size());
             UpdateTable(AllItems, list_length, page_counter);
@@ -552,7 +536,7 @@ public class ItemMng {
         btnEdit.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnDelete.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnView.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
-        btnRestock.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+
 
         // Ensure components revalidate and repaint to reflect size changes
         s_btn.revalidate();
