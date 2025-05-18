@@ -12,7 +12,7 @@ public class GenPurchaseOrder {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content, top_bar;
-    private static BufferForUser current_user;
+    private static User current_user;
     private static int indicator, base_size;
     private static List<PurchaseOrder> AllPO;
     private static JList ItemList;
@@ -30,7 +30,7 @@ public class GenPurchaseOrder {
 
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, BufferForUser current_user) {
+                              JPanel content, User current_user) {
         PurchaseMgr.GenPurchaseOrder.parent = parent;
         PurchaseMgr.GenPurchaseOrder.merriweather = merriweather;
         PurchaseMgr.GenPurchaseOrder.boldonse = boldonse;

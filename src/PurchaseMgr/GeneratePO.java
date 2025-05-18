@@ -15,7 +15,7 @@ public class GeneratePO {
     private static JPanel content, inner, btnPanel;
     private static JLabel lbl_show, lbl_entries, lbl_space;
     private static JComboBox entries;
-    public static BufferForUser current_user;
+    public static User current_user;
     private static CustomComponents.RoundedPanel search_panel;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
     private static CustomComponents.EmptyTextField search;
@@ -25,7 +25,7 @@ public class GeneratePO {
     private static JButton s_btn;
     // private static Buffer current_user;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, BufferForUser current_user){
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user){
         GeneratePO.parent = parent;
         GeneratePO.merriweather = merriweather;
         GeneratePO.boldonse = boldonse;

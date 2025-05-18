@@ -6,7 +6,7 @@ Email:          ad123@gmail.com
 Phone:          0151240129
 AccType:        Administrator
 DateOfRegis:    2025-03-31
-RememberMe:     0
+RememberMe:     1
 ~~~~~
 UserID:         SM1253724128
 Username:       sm123
@@ -16,7 +16,7 @@ Email:          sm123@gmail.com
 Phone:          0123354535
 AccType:        Sales Manager
 DateOfRegis:    2025-03-31
-RememberMe:     1
+RememberMe:     0
 ~~~~~
 UserID:         PM0971204357
 Username:       pm123
