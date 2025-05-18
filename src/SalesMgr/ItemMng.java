@@ -23,7 +23,8 @@ public class ItemMng {
     private static int indicator, base_size;
     private static List<Item> AllItems;
     private static JButton s_btn,clearbtn,p_first,p_left,p_right,p_last;
-    private static CustomComponents.CustomButton btnAdd,btnDelete,btnEdit, btnView ;
+    private static JDialog dialogAdd, dialogDelete, dialogEdit;
+    private static CustomComponents.CustomButton btnRestock, btnAdd,btnDelete,btnEdit, btnView ;
     private static CustomComponents.CustomScrollPane scrollPane1;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
     private static CustomComponents.CustomXIcon icon_clear1, icon_clear2;
