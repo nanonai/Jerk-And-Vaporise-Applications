@@ -11,7 +11,7 @@ public class Dashboard {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static BufferForUser current_user;
+    private static User current_user;
     private static BufferedImage bg, img;
     private static JLabel haha, haha1, haha2;
     private static CustomComponents.ImagePanel pnl;
@@ -22,7 +22,7 @@ public class Dashboard {
     private static CustomComponents.CustomButton btn;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, BufferForUser current_user) {
+                              JPanel content, User current_user) {
         try {
             bg = ImageIO.read(new File("images/login_bg.jpg"));
             img = ImageIO.read(new File("images/info.png"));

@@ -11,7 +11,7 @@ import java.io.FileReader;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-import PurchaseMgr.BufferForPO;
+import PurchaseMgr.PurchaseOrder;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -258,7 +258,7 @@ public class ModifyPOStatus {
             String updatedStatus = statusCombo.getSelectedItem().toString();
             current_PO.Status = updatedStatus;
 
-            BufferForPO buffer = new BufferForPO(
+            PurchaseOrder buffer = new PurchaseOrder(
                     current_PO.PurchaseOrderID,
                     current_PO.ItemID,
                     current_PO.SupplierID,

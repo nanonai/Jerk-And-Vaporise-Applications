@@ -265,11 +265,11 @@ public class SignIn {
                     case "Inventory Manager" -> Home.indicator = 4;
                     case "Finance Manager" -> Home.indicator = 5;
                 }
-                BufferForUser logged_in = null;
+                User logged_in = null;
                 for (User user : allUser) {
                     if (Objects.equals(user.Username, txt1.getText().toLowerCase()) ||
                             Objects.equals(user.Email, txt1.getText())) {
-                        logged_in = new BufferForUser(user.UserID, user.Username, user.Password, user.FullName,
+                        logged_in = new User(user.UserID, user.Username, user.Password, user.FullName,
                                 user.Email, user.Phone, user.AccType, user.DateOfRegis, 1);
                         break;
                     }
@@ -305,7 +305,7 @@ public class SignIn {
 
     public static void LoginRemembered() {
         User user = User.RememberedUser(Main.userdata_file);
-        BufferForUser logged_in = new BufferForUser(user.UserID, user.Username, user.Password, user.FullName,
+        User logged_in = new User(user.UserID, user.Username, user.Password, user.FullName,
                 user.Email, user.Phone, user.AccType, user.DateOfRegis, 1);
         String AccType = logged_in.AccType;
         Main.indicator = 1;

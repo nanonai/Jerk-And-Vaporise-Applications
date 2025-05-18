@@ -1,8 +1,5 @@
 package PurchaseMgr;
 
-import Admin.BufferForUser;
-import Admin.User;
-
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -77,7 +74,7 @@ public class PurchaseOrder {
         return allPurchaseOrders;
     }
 
-    public static void ChangePurOrderStatus(String PurchaseOrderID, BufferForPO buffer, String filename, String status) {
+    public static void ChangePurOrderStatus(String PurchaseOrderID, PurchaseOrder buffer, String filename, String status) {
         List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(filename);
         for (PurchaseOrder po : purchaseOrderList) {
             if (Objects.equals(po.PurchaseOrderID, PurchaseOrderID)) {
@@ -144,7 +141,34 @@ public class PurchaseOrder {
         return purchaseOrder_temp;
     }
 
-//    public static List<PurchaseOrder> listAllPOFromFilter(String filename, String purchaseOrderID, String filter, BufferForPO current_po) {
+    public static List<String> loadItemNames(String filePath) {
+        List<String> itemNames = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            String itemName = null;
+
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+
+                if (line.startsWith("ItemName:")) {
+                    itemName = line.substring("ItemName:".length()).trim();
+                }
+
+                if (line.equals("~~~~~") && itemName != null) {
+                    itemNames.add(itemName);
+                    itemName = null;
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace(); // You can also handle this better in production
+        }
+
+        return itemNames;
+    }
+
+//    public static List<PurchaseOrder> listAllPOFromFilter(String filename, String purchaseOrderID, String filter, PurchaseOrder current_po) {
 //        List<PurchaseOrder> po_list = listAllPurchaseOrders(filename);
 //        List<PurchaseOrder> poID_list = new ArrayList<>();
 //        List<PurchaseOrder> filtered_po_list = new ArrayList<>();

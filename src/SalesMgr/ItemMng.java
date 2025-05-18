@@ -1,8 +1,6 @@
 package SalesMgr;
 
-import Admin.BufferForUser;
-import Admin.CustomComponents;
-import Admin.Main;
+import Admin.*;
 import InventoryMgr.Item;
 
 import static PurchaseMgr.Item_Supplier.getSupplierIDFromItemID;
@@ -19,7 +17,7 @@ public class ItemMng {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content, page_panel, buttonPanel1, buttonPanel2;
-    private static BufferForUser current_user;
+    private static User current_user;
     private static int indicator, base_size;
     private static List<Item> AllItems;
     private static JButton s_btn,clearbtn,p_first,p_left,p_right,p_last;
@@ -37,7 +35,7 @@ public class ItemMng {
 
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, BufferForUser current_user) {
+                              JPanel content, User current_user) {
         SalesMgr.ItemMng.parent = parent;
         SalesMgr.ItemMng.merriweather = merriweather;
         SalesMgr.ItemMng.boldonse = boldonse;

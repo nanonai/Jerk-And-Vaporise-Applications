@@ -15,7 +15,7 @@ public class GeneratePO {
     private static JPanel content, inner, btnPanel;
     private static JLabel lbl_show, lbl_entries, lbl_space;
     private static JComboBox entries;
-    public static BufferForUser current_user;
+    public static User current_user;
     private static CustomComponents.RoundedPanel search_panel;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
     private static CustomComponents.EmptyTextField search;
@@ -25,7 +25,7 @@ public class GeneratePO {
     private static JButton s_btn;
     // private static Buffer current_user;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, BufferForUser current_user){
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user){
         GeneratePO.parent = parent;
         GeneratePO.merriweather = merriweather;
         GeneratePO.boldonse = boldonse;
@@ -127,7 +127,7 @@ public class GeneratePO {
         gbc1.weighty = 10;
         gbc1.insets = new Insets(0, 0, 10, 0);
         List<PurchaseOrder> purchaseOrder_list = PurchaseOrder.listAllPurchaseOrders("datafile/purchaseOrder.txt");
-        String[] titles = new String[]{"PurchaseOrderID", "PurchaseReqID", "ItemID", "Quantity", "SupplierID","OrderDate","UserID","Status"};
+        String[] titles = new String[]{"PurchaseOrderID", "ItemID", "PurchaseQuantity", "SupplierID","OrderDate","PurchaseMgrID","Status"};
         Object[][] data = new Object[purchaseOrder_list.size()][titles.length];
         int counter = 0;
         for (PurchaseOrder purchaseOrder : purchaseOrder_list) {
@@ -159,9 +159,21 @@ public class GeneratePO {
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0,0);
-        /* AddBtn.addActionListener(_ -> {
+        AddBtn.addActionListener(_ -> {
+            if (table_po.getSelectedRowCount() > 0){
+                CustomComponents.CustomOptionPane.showErrorDialog(parent, "Ei dog u think u can " +
+                                "add something into the selected item? dump...", "Error lah",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255));
+            }
+            else {
+                AddPO.Loader(parent, merriweather, boldonse, content, current_user);
+                AddPO.ShowPage();
+            }
 
-        });*/
+        });
         AddBtn.setPreferredSize(new Dimension(100, 1));
         btnPanel.add(AddBtn, gbc3);
 
@@ -182,8 +194,6 @@ public class GeneratePO {
         JLabel placeholder2 = new JLabel("booon");
         btnPanel.add(placeholder2, gbc3);
 
-
-
         gbc1.gridx = 0;
         gbc1.gridy = 1;
         gbc1.insets = new Insets(0, 0, 0, 0);
@@ -200,6 +210,9 @@ public class GeneratePO {
                 new Color(140, 140, 140), new Color(110, 110, 110),
                 Color.WHITE, Color.WHITE, 6);
         inner.add(scrollPane1, gbc1);
+
     }
+
+
 
 }
