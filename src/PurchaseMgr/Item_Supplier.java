@@ -137,4 +137,14 @@ public class Item_Supplier {
         }
         return "Unknown Supplier";
     }
+
+    public static boolean itemIDChecker(String itemID, String filename) {
+        List<Item_Supplier> allItemSupplier = listAllItemSupplier(filename);
+        for (Item_Supplier itemSupplier : allItemSupplier) {
+            if (Objects.equals(itemSupplier.ItemID, itemID)) {
+                return true;  // Found itemID
+            }
+        }
+        return false; // itemID NOT found
+    }
 }
