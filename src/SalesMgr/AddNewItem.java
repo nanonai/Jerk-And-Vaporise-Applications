@@ -1,9 +1,6 @@
 package SalesMgr;
 
-import Admin.BufferForUser;
-import Admin.CustomComponents;
-import Admin.Main;
-import Admin.User;
+import Admin.*;
 import InventoryMgr.Item;
 
 import javax.swing.*;
@@ -24,12 +21,12 @@ public class AddNewItem {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static BufferForUser current_user;
+    private static User current_user;
     private static User past, future;
     private static JComboBox<String> types;
     private static CustomComponents.EmptyTextField itemname, unitprice, unitcost, stockcount, threshold, suppliername;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, BufferForUser current_user) {
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
         AddNewItem.parent = parent;
         AddNewItem.merriweather = merriweather;
         AddNewItem.boldonse = boldonse;
