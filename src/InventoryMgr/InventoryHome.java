@@ -258,6 +258,9 @@ public class InventoryHome {
         SwingUtilities.invokeLater(() -> {
             logo_cell.repaint();
             mng_inv.UpdateCustomButton(0, finalBase_size, null, 0);
+            mng_po.UpdateCustomButton(0, finalBase_size, null, 0);
+            dashboard.UpdateCustomButton(0, finalBase_size, null, 0);
+            test.UpdateCustomButton(0, finalBase_size, null, 0);
             title.setFont(boldonse.deriveFont((float)finalBase_size));
             profile.repaint();
             profileIcon1.UpdateSize((int) (finalBase_size * 2.5));
