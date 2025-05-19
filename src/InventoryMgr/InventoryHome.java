@@ -15,6 +15,7 @@ import java.util.List;
 
 import Admin.*;
 import InventoryMgr.misc.InvStatic;
+import SalesMgr.AddNewItem;
 
 public class InventoryHome {
     public static int indicator = 0;
@@ -70,7 +71,6 @@ public class InventoryHome {
             PageChanger();
         });
         side_bar.add(dashboard, gbc_side);
-
 
         gbc_side.gridy = 2;
         gbc_side.weighty = 0.8;
@@ -213,7 +213,12 @@ public class InventoryHome {
 
         Dashboard.Loader(parent, merriweather, boldonse, content, current_user);
         Profile.Loader(parent, merriweather, boldonse, content, current_user);
+        AddNewItem.Loader(parent, merriweather, boldonse, content, current_user);
         PageChanger();
+
+        SwingUtilities.invokeLater(() -> {
+            StockAlert.Popup(parent);
+        });
     }
 
     public static void PageChanger() {
