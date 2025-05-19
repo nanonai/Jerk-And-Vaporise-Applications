@@ -4,6 +4,7 @@ import Admin.User;
 import Admin.CustomComponents;
 import Admin.Main;
 import Admin.User;
+import InventoryMgr.misc.InvStatic;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
@@ -23,21 +24,13 @@ import java.util.regex.Pattern;
 
 
 public class AddItem {
-    private static JFrame parent;
-    private static Font merriweather, boldonse;
-    private static JPanel content;
-    private static User current_user;
+    private static JFrame parent = InvStatic.parent;
+    private static Font merriweather = InvStatic.merriweather, boldonse = InvStatic.boldonse;
+    private static JPanel content = InvStatic.content;
+    private static User current_user = InvStatic.current_user;
     private static User past, future;
     private static JComboBox<String> types;
     private static CustomComponents.EmptyTextField itemname, unitprice, startamt, minamt, supplierid;
-
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
-        AddItem.parent = parent;
-        AddItem.merriweather = merriweather;
-        AddItem.boldonse = boldonse;
-        AddItem.content = content;
-        AddItem.current_user = current_user;
-    }
 
     public static void ShowPage() {
         final int[][] result = {{0, 0}};
