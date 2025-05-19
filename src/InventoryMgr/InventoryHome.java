@@ -72,7 +72,6 @@ public class InventoryHome {
         });
         side_bar.add(dashboard, gbc_side);
 
-
         gbc_side.gridy = 2;
         gbc_side.weighty = 0.8;
         mng_inv = new CustomComponents.CustomButton("Inventory", merriweather, Color.WHITE, Color.WHITE,
