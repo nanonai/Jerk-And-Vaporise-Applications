@@ -1,43 +1,36 @@
 package FinanceMgr;
 
+import Admin.CustomComponents;
+import Admin.Main;
 import PurchaseMgr.PurchaseOrder;
-import Admin.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.io.*;
-import java.time.LocalDate;
-import Admin.Profile;
 
-public class MakePayment {
+public class ViewPurchaseOrder {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static PurchaseOrder current_PO;
-    private static Payment paymentDetail;
-    private static User current_user;
+    private static PurchaseOrder current_po;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content,PurchaseOrder current_PO,User current_user) {
-        MakePayment.parent = parent;
-        MakePayment.merriweather = merriweather;
-        MakePayment.boldonse = boldonse;
-        MakePayment.content = content;
-        MakePayment.current_PO = current_PO;
-        MakePayment.current_user = current_user;
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, PurchaseOrder current_po) {
+        ViewPurchaseOrder.parent = parent;
+        ViewPurchaseOrder.merriweather = merriweather;
+        ViewPurchaseOrder.boldonse = boldonse;
+        ViewPurchaseOrder.content = content;
+        ViewPurchaseOrder.current_po = current_po;
     }
 
-    public static void UpdatePO(PurchaseOrder purchaseOrder) {
-        MakePayment.current_PO = purchaseOrder;
+    public static void UpdatePurchaseOrder(PurchaseOrder purchaseOrder) {
+        ViewPurchaseOrder.current_po = purchaseOrder;
     }
+
     public static boolean ShowPage() {
         AtomicBoolean view_or_not = new AtomicBoolean(false);
-        JDialog dialog = new JDialog(parent, "Make Payment", true);
+        JDialog dialog = new JDialog(parent, "View Purchase Order Details", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setSize(parent.getWidth() / 2, (int) (parent.getHeight() / 1.5));
         dialog.setResizable(false);
@@ -61,7 +54,7 @@ public class MakePayment {
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.insets = new Insets(10, 10, 10, 0);
-        JLabel title = new JLabel("Make Payment");
+        JLabel title = new JLabel("View PO Details");
         title.setOpaque(false);
         title.setFont(merriweather.deriveFont(Font.BOLD, (float) (base_size * 1.3)));
         panel.add(title, gbc);
@@ -69,46 +62,46 @@ public class MakePayment {
         gbc.gridy = 1;
         gbc.gridwidth = 1;
         gbc.insets = new Insets(0, 10, 10, 0);
-        JLabel purchaseOrderID_label = new JLabel("Purchase OrderID :");
-        purchaseOrderID_label.setOpaque(false);
-        purchaseOrderID_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
-        panel.add(purchaseOrderID_label, gbc);
-
-        gbc.gridy = 2;
-        JLabel itemID_label = new JLabel("ItemID :");
+        JLabel itemID_label = new JLabel("Purchase Order ID:");
         itemID_label.setOpaque(false);
         itemID_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(itemID_label, gbc);
 
+        gbc.gridy = 2;
+        JLabel itemName_label = new JLabel("Item ID :");
+        itemName_label.setOpaque(false);
+        itemName_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(itemName_label, gbc);
+
         gbc.gridy = 3;
-        JLabel supplierID_label = new JLabel("SupplierID :");
-        supplierID_label.setOpaque(false);
-        supplierID_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
-        panel.add(supplierID_label, gbc);
+        JLabel unitPrice_label = new JLabel("Supplier ID :");
+        unitPrice_label.setOpaque(false);
+        unitPrice_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(unitPrice_label, gbc);
 
         gbc.gridy = 4;
-        JLabel quantity_label = new JLabel("PurchaseQuantity :");
+        JLabel quantity_label = new JLabel("Purchase Quantity :");
         quantity_label.setOpaque(false);
         quantity_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(quantity_label, gbc);
 
         gbc.gridy = 5;
-        JLabel TotalAmt_label = new JLabel("TotalAmt :");
-        TotalAmt_label.setOpaque(false);
-        TotalAmt_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
-        panel.add(TotalAmt_label, gbc);
+        JLabel threshold_label = new JLabel("Total Amount :");
+        threshold_label.setOpaque(false);
+        threshold_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(threshold_label, gbc);
 
         gbc.gridy = 6;
-        JLabel orderDate_label = new JLabel("OrderDate :");
-        orderDate_label.setOpaque(false);
-        orderDate_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
-        panel.add(orderDate_label, gbc);
+        JLabel category_label = new JLabel("OrderDate :");
+        category_label.setOpaque(false);
+        category_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(category_label, gbc);
 
         gbc.gridy = 7;
-        JLabel purchaseManID_label = new JLabel("PurchaseMgrID :");
-        purchaseManID_label.setOpaque(false);
-        purchaseManID_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
-        panel.add(purchaseManID_label, gbc);
+        JLabel purchaseMgrID_label = new JLabel("PurchaseMgrID :");
+        purchaseMgrID_label.setOpaque(false);
+        purchaseMgrID_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(purchaseMgrID_label, gbc);
 
         gbc.gridy = 8;
         JLabel status_label = new JLabel("Status :");
@@ -138,17 +131,17 @@ public class MakePayment {
         button_panel.add(placeholder, gbc);
 
         gbc.gridx = 1;
-        CustomComponents.CustomButton makePayment = new CustomComponents.CustomButton("Make Payment",
-                merriweather.deriveFont(Font.PLAIN), new Color(255, 255, 255), new Color(255, 255, 255),
-                new Color(209, 88, 128), new Color(237, 136, 172),
+        CustomComponents.CustomButton view = new CustomComponents.CustomButton(" ",
+                merriweather.deriveFont(Font.PLAIN), new Color(255, 255, 255), new Color(209, 209, 209),
+                new Color(255, 255, 255, 255), new Color(209, 209, 209),
                 Main.transparent, 0, base_size, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
-        button_panel.add(makePayment, gbc);
+        button_panel.add(view, gbc);
 
         gbc.gridy = 1;
         gbc.weightx = 2;
-        gbc.insets = new Insets(0, 0, 10, 10);
-        JLabel purchaseOrderID = new JLabel("    " + current_PO.PurchaseOrderID);
+        gbc.insets = new Insets(0, 0, 10, 10); // retained from above
+        JLabel purchaseOrderID = new JLabel("    " + current_po.PurchaseOrderID);
         purchaseOrderID.setOpaque(true);
         purchaseOrderID.setBackground(Color.WHITE);
         purchaseOrderID.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -156,7 +149,7 @@ public class MakePayment {
         panel.add(purchaseOrderID, gbc);
 
         gbc.gridy = 2;
-        JLabel itemID = new JLabel("    " + current_PO.ItemID);
+        JLabel itemID = new JLabel("    " + current_po.ItemID);
         itemID.setOpaque(true);
         itemID.setBackground(Color.WHITE);
         itemID.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -164,7 +157,7 @@ public class MakePayment {
         panel.add(itemID, gbc);
 
         gbc.gridy = 3;
-        JLabel supplierID = new JLabel("    " + current_PO.SupplierID);
+        JLabel supplierID = new JLabel("    " + current_po.SupplierID);
         supplierID.setOpaque(true);
         supplierID.setBackground(Color.WHITE);
         supplierID.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -172,7 +165,7 @@ public class MakePayment {
         panel.add(supplierID, gbc);
 
         gbc.gridy = 4;
-        JLabel purchaseQuantity = new JLabel("    " + current_PO.PurchaseQuantity);
+        JLabel purchaseQuantity = new JLabel("    " + current_po.PurchaseQuantity);
         purchaseQuantity.setOpaque(true);
         purchaseQuantity.setBackground(Color.WHITE);
         purchaseQuantity.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -180,7 +173,7 @@ public class MakePayment {
         panel.add(purchaseQuantity, gbc);
 
         gbc.gridy = 5;
-        JLabel totalAmt = new JLabel("    " + current_PO.TotalAmt);
+        JLabel totalAmt = new JLabel("    " + current_po.TotalAmt);
         totalAmt.setOpaque(true);
         totalAmt.setBackground(Color.WHITE);
         totalAmt.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -188,7 +181,7 @@ public class MakePayment {
         panel.add(totalAmt, gbc);
 
         gbc.gridy = 6;
-        JLabel orderDate = new JLabel("    " + current_PO.OrderDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        JLabel orderDate = new JLabel("    " + current_po.OrderDate);
         orderDate.setOpaque(true);
         orderDate.setBackground(Color.WHITE);
         orderDate.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -196,7 +189,7 @@ public class MakePayment {
         panel.add(orderDate, gbc);
 
         gbc.gridy = 7;
-        JLabel purchaseMgrID = new JLabel("    " + current_PO.PurchaseMgrID);
+        JLabel purchaseMgrID = new JLabel("    " + current_po.PurchaseMgrID);
         purchaseMgrID.setOpaque(true);
         purchaseMgrID.setBackground(Color.WHITE);
         purchaseMgrID.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -204,53 +197,24 @@ public class MakePayment {
         panel.add(purchaseMgrID, gbc);
 
         gbc.gridy = 8;
-        JLabel status = new JLabel("    " + current_PO.Status);
+        JLabel status = new JLabel("    " + current_po.Status);
         status.setOpaque(true);
         status.setBackground(Color.WHITE);
         status.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
         status.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(status, gbc);
 
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         JPanel inner = new JPanel(new GridBagLayout());
         inner.setOpaque(false);
         panel.add(inner, gbc);
 
-        makePayment.addActionListener(_ -> {
-            String payment_id = Payment.idMaker(Main.payment_file);
-            String po_id = purchaseOrderID.getText();
-            double amountPaid = Double.parseDouble(totalAmt.getText());
-            LocalDate date = LocalDate.now();
-            String financeMgrID = current_user.UserID;
-            paymentDetail = new Payment(payment_id, po_id,amountPaid,date,financeMgrID);
-            Payment.saveNewPayment(paymentDetail,Main.payment_file);
-            String updatedStatus = "Paid";
-            current_PO.Status = updatedStatus;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
 
-            PurchaseOrder po = new PurchaseOrder(
-                    current_PO.PurchaseOrderID,
-                    current_PO.ItemID,
-                    current_PO.SupplierID,
-                    current_PO.PurchaseQuantity,
-                    current_PO.TotalAmt,
-                    current_PO.OrderDate,
-                    current_PO.PurchaseMgrID,
-                    updatedStatus // <-- new status passed here
-            );
-            // Update the status in the file
-            PurchaseOrder.ChangePurOrderStatus(current_PO.PurchaseOrderID, po, Main.purchaseOrder_file);
-            JOptionPane.showMessageDialog(null, "Status updated successfully!");
-
-            view_or_not.set(true); // Flag to indicate something was modified
-            dialog.dispose();      // Close the dialog
-        });
 
         close.addActionListener(_ -> {
-            dialog.dispose();
-        });
-
-        makePayment.addActionListener(_ -> {
-            view_or_not.set(true);
             dialog.dispose();
         });
 
@@ -267,6 +231,9 @@ public class MakePayment {
 
         return view_or_not.get();
     }
-
 }
+
+
+
+
 

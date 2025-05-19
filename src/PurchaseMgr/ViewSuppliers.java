@@ -40,7 +40,7 @@ public class ViewSuppliers {
         gbc.gridx = 1;
         gbc.weightx = 14;
         gbc.insets = new Insets(0, 0, 0, 20);
-        JLabel placeholder1 = new JLabel("");
+        JLabel placeholder1 = new JLabel("8");
         // placeholder1.setBorder(BorderFactory.createLineBorder(Color.RED));
         content.add(placeholder1, gbc);
 
@@ -129,7 +129,7 @@ public class ViewSuppliers {
         igbc.weightx = 1;
         igbc.weighty = 16;
         igbc.insets = new Insets(0, 0, 10, 0);
-        List<Supplier> list = Supplier.ListAllSupplier("datafile/supplier.txt");
+        List<Supplier> list = Supplier.listAllSupplier("datafile/supplier.txt");
         String[] titles = new String[]{"SupplierID", "SupplierName", "ContactPerson", "Phone", "Email", "Address"};
         Object[][] data = new Object[list.size()][titles.length];
         int Counter = 0;
