@@ -1,5 +1,7 @@
 package FinanceMgr;
 
+import PurchaseMgr.PurchaseOrder;
+
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -88,5 +90,16 @@ public class PurchaseRequisition {
             repeated = false;
         }
         return newId;
+    }
+    public static PurchaseRequisition getPurchaseReqID(String purchaseReqID, String filename){
+        List<PurchaseRequisition> purchaseReqList = listAllPurchaseRequisitions(filename);
+        PurchaseRequisition purchaseReq_temp = null;
+        for (PurchaseRequisition purchaseRequisition: purchaseReqList) {
+            if (Objects.equals(purchaseRequisition.PurchaseReqID, purchaseReqID)) {
+                purchaseReq_temp = purchaseRequisition;
+                break;
+            }
+        }
+        return purchaseReq_temp;
     }
 }

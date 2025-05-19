@@ -40,7 +40,7 @@ public class ViewSuppliers {
         gbc.gridx = 1;
         gbc.weightx = 14;
         gbc.insets = new Insets(0, 0, 0, 20);
-        JLabel placeholder1 = new JLabel("");
+        JLabel placeholder1 = new JLabel("8");
         // placeholder1.setBorder(BorderFactory.createLineBorder(Color.RED));
         content.add(placeholder1, gbc);
 
