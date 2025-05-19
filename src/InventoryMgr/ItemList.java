@@ -1,8 +1,10 @@
 package InventoryMgr;
 
-import Admin.BufferForUser;
+import Admin.User;
 import Admin.CustomComponents;
 import Admin.Main;
+import Admin.User;
+import InventoryMgr.misc.InvStatic;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,11 +17,11 @@ import static PurchaseMgr.Item_Supplier.getSupplierIDFromItemID;
 import static PurchaseMgr.Item_Supplier.getSupplierName;
 
 public class ItemList {
-    
-    private static JFrame parent;
-    private static Font merriweather, boldonse;
-    private static JPanel content, top_bar;
-    private static BufferForUser current_user;
+
+    private static JFrame parent = InvStatic.parent;
+    private static Font merriweather = InvStatic.merriweather, boldonse = InvStatic.boldonse;
+    private static JPanel content = InvStatic.content;
+    private static User current_user = InvStatic.current_user;
     private static int indicator, base_size;
     private static java.util.List<Item> AllItems;
     private static JList ItemList;
@@ -35,16 +37,6 @@ public class ItemList {
     private static JLabel lbl_show, lbl_entries,lbl_indicate;
     private static JComboBox entries,pages;
     private static int list_length = 10, page_counter = 0, filter = 0, mode = 1;
-
-
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, BufferForUser current_user) {
-        InventoryMgr.ItemList.parent = parent;
-        InventoryMgr.ItemList.merriweather = merriweather;
-        InventoryMgr.ItemList.boldonse = boldonse;
-        InventoryMgr.ItemList.content = content;
-        InventoryMgr.ItemList.current_user = current_user;
-    }
 
     public static void ShowPage() {
         GridBagConstraints gbc = new GridBagConstraints();
