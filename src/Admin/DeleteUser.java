@@ -64,14 +64,16 @@ public class DeleteUser {
         List<String> data = new ArrayList<>();
         int counter = 1;
         for (User user: users) {
-            data.add(String.format("%s. UserID:              %s", counter, user.UserID));
-            data.add(String.format("    Username:        %s", user.Username));
-            data.add(String.format("    Password:         %s", user.Password));
-            data.add(String.format("    Full Name:        %s", user.FullName));
-            data.add(String.format("    Email:                 %s", user.Email));
-            data.add(String.format("    Phone:               %s", user.Phone));
-            data.add(String.format("    Role:                   %s", user.AccType));
-            data.add(String.format("    Joined Date:     %s", user.DateOfRegis.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+            data.add(counter + ".)");
+            data.add(String.format("UserID:              %s", user.UserID));
+            data.add(String.format("Username:        %s", user.Username));
+            data.add(String.format("Password:         %s", user.Password));
+            data.add(String.format("Full Name:        %s", user.FullName));
+            data.add(String.format("Email:                 %s", user.Email));
+            data.add(String.format("Phone:               %s", user.Phone));
+            data.add(String.format("Role:                   %s", user.AccType));
+            data.add(String.format("Joined Date:     %s", user.DateOfRegis.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+            data.add(" ");
             counter += 1;
         }
         CustomComponents.CustomList<String> list = new CustomComponents.CustomList<>(

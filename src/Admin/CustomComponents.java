@@ -1097,6 +1097,26 @@ public class CustomComponents {
             }
         }
 
+        @SuppressWarnings("unchecked")
+        public void UpdateListContent(Object data) {
+            if (data instanceof List<?> list) {
+                setListData((E[]) list.toArray());
+            } else if (data instanceof Object[]) {
+                setListData((E[]) data);
+            } else {
+                throw new IllegalArgumentException("Data must be a List or an Array.");
+            }
+            if (mode == 1) {
+                setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            } else {
+                setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                if (mode > 1) {
+                    addListSelectionListener(new MaxSelectionEnforcer());
+                }
+            }
+            repaint();
+        }
+
         private class MaxSelectionEnforcer implements ListSelectionListener {
             @Override
             public void valueChanged(ListSelectionEvent e) {

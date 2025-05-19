@@ -1,5 +1,10 @@
 package Admin;
 
+import FinanceMgr.Payment;
+import FinanceMgr.PurchaseRequisition;
+import PurchaseMgr.PurchaseOrder;
+import SalesMgr.Sales;
+
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
@@ -12,8 +17,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 
@@ -22,7 +29,6 @@ public class ModifyUser {
     private static Font merriweather, boldonse;
     private static JPanel content;
     private static User current_user;
-    private static User past, future;
     private static JComboBox<String> types;
     private static CustomComponents.EmptyTextField username, fullname, password, email, phone;
     private static final String EMAIL_REGEX =
@@ -38,9 +44,13 @@ public class ModifyUser {
         ModifyUser.current_user = current_user;
     }
 
-    public static int[] ShowPage(int filter) {
-        final int[][] result = {{0, 0}};
-        JDialog dialog = new JDialog(parent, "Add New User", true);
+    public static void UpdateUser(User user) {
+        ModifyUser.current_user = user;
+    }
+
+    public static boolean[] ShowPage() {
+        boolean[] result = new boolean[]{false, false};
+        JDialog dialog = new JDialog(parent, "Modify User", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setSize(parent.getWidth() / 2, parent.getHeight() / 2);
         dialog.setResizable(false);
@@ -64,7 +74,7 @@ public class ModifyUser {
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.insets = new Insets(10, 10, 10, 0);
-        JLabel title = new JLabel("Add New User");
+        JLabel title = new JLabel("Modify User");
         title.setOpaque(false);
         title.setFont(merriweather.deriveFont(Font.BOLD, (float) (base_size * 1.3)));
         panel.add(title, gbc);
@@ -153,18 +163,37 @@ public class ModifyUser {
         types.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         types.setFocusable(false);
         types.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
-        switch (filter) {
-            case 1:
+        switch (current_user.AccType) {
+            case "Finance Manager":
                 types.setSelectedItem("Finance Manager");
+                List<PurchaseOrder> po_record = User.checkPORecordByID(current_user.UserID, Main.purchaseOrder_file);
+                if (!po_record.isEmpty()) {
+                    types.setEnabled(false);
+                    types.setToolTipText("<html>This account has related activities/history.<br>" +
+                            "You are not allowed to change its role!</html>");
+                }
                 break;
-            case 2:
+            case "Purchase Manager":
                 types.setSelectedItem("Purchase Manager");
+                List<Payment> py_record = User.checkPYRecordByID(current_user.UserID, Main.payment_file);
+                if (!py_record.isEmpty()) {
+                    types.setEnabled(false);
+                    types.setToolTipText("<html>This account has related activities/history.<br>" +
+                            "You are not allowed to change its role!</html>");
+                }
                 break;
-            case 3:
+            case "Inventory Manager":
                 types.setSelectedItem("Inventory Manager");
                 break;
-            case 4:
+            case "Sales Manager":
                 types.setSelectedItem("Sales Manager");
+                List<Sales> sales_record = User.checkSalesRecordByID(current_user.UserID, Main.sales_file);
+                List<PurchaseRequisition> pr_record = User.checkPRRecordByID(current_user.UserID, Main.purchaseReq_file);
+                if (!sales_record.isEmpty() || !pr_record.isEmpty()) {
+                    types.setEnabled(false);
+                    types.setToolTipText("<html>This account has related activities/history.<br>" +
+                            "You are not allowed to change its role!</html>");
+                }
                 break;
         };
         types.addActionListener(_ -> {SwingUtilities.invokeLater(username::requestFocusInWindow);});
@@ -212,8 +241,9 @@ public class ModifyUser {
         igbc.weightx = 5;
         igbc.weighty = 1;
         username = new CustomComponents.EmptyTextField(20, "",
-                new Color(122, 122, 122));
+                new Color(0, 0, 0));
         username.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        username.setText(current_user.Username);
         username.addActionListener(_ -> {SwingUtilities.invokeLater(fullname::requestFocusInWindow);});
         username.addFocusListener(new FocusListener() {
             @Override
@@ -227,20 +257,22 @@ public class ModifyUser {
             public void focusLost(FocusEvent e) {
                 username.setToolTipText("");
                 String input = username.getText();
-                if (!User.usernameChecker(input, Main.userdata_file) && !input.isEmpty()) {
-                    username.setForeground(new Color(159, 4, 4));
-                    Font font = username.getFont();
-                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
-                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-                    username.setFont(font.deriveFont(attributes));
-                    username.setToolTipText("Username has been taken.");
-                } else if ((input.length() < 8 || input.length() > 36) && !input.isEmpty()) {
-                    username.setForeground(new Color(159, 4, 4));
-                    Font font = username.getFont();
-                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
-                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-                    username.setFont(font.deriveFont(attributes));
-                    username.setToolTipText("Username length must be 8 to 36.");
+                if (!Objects.equals(input, current_user.Username)) {
+                    if (!User.usernameChecker(input, Main.userdata_file) && !input.isEmpty()) {
+                        username.setForeground(new Color(159, 4, 4));
+                        Font font = username.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        username.setFont(font.deriveFont(attributes));
+                        username.setToolTipText("Username has been taken.");
+                    } else if ((input.length() < 8 || input.length() > 36) && !input.isEmpty()) {
+                        username.setForeground(new Color(159, 4, 4));
+                        Font font = username.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        username.setFont(font.deriveFont(attributes));
+                        username.setToolTipText("Username length must be 8 to 36.");
+                    }
                 }
             }
         });
@@ -248,8 +280,9 @@ public class ModifyUser {
         inner1.add(username, igbc);
 
         fullname = new CustomComponents.EmptyTextField(20, "",
-                new Color(122, 122, 122));
+                new Color(0, 0, 0));
         fullname.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        fullname.setText(current_user.FullName);
         fullname.addActionListener(_ -> {SwingUtilities.invokeLater(password::requestFocusInWindow);});
         fullname.addFocusListener(new FocusListener() {
             @Override
@@ -263,21 +296,24 @@ public class ModifyUser {
             public void focusLost(FocusEvent e) {
                 fullname.setToolTipText("");
                 String input = fullname.getText().trim();
-                if ((input.length() < 8 || input.length() > 48)  && !input.isEmpty()) {
-                    fullname.setForeground(new Color(159, 4, 4));
-                    Font font = fullname.getFont();
-                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
-                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-                    fullname.setFont(font.deriveFont(attributes));
-                    fullname.setToolTipText("Full name length must be 8 to 48.");
+                if (!input.equals(current_user.FullName)) {
+                    if ((input.length() < 8 || input.length() > 48)  && !input.isEmpty()) {
+                        fullname.setForeground(new Color(159, 4, 4));
+                        Font font = fullname.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        fullname.setFont(font.deriveFont(attributes));
+                        fullname.setToolTipText("Full name length must be 8 to 48.");
+                    }
                 }
             }
         });
         inner2.add(fullname, igbc);
 
         password = new CustomComponents.EmptyTextField(20, "",
-                new Color(122, 122, 122));
+                new Color(0, 0, 0));
         password.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        password.setText(current_user.Password);
         password.addActionListener(_ -> {SwingUtilities.invokeLater(email::requestFocusInWindow);});
         password.addFocusListener(new FocusListener() {
             @Override
@@ -291,21 +327,23 @@ public class ModifyUser {
             public void focusLost(FocusEvent e) {
                 password.setToolTipText("");
                 String input = password.getText();
-                if (!User.passwordChecker(input) && !input.isEmpty()) {
-                    password.setForeground(new Color(159, 4, 4));
-                    Font font = password.getFont();
-                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
-                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-                    password.setFont(font.deriveFont(attributes));
-                    password.setToolTipText("Password must contains at least one of each\n" +
-                            "lowercase, uppercase, digit, and special character.");
-                } else if (input.length() < 8 && !input.isEmpty()) {
-                    password.setForeground(new Color(159, 4, 4));
-                    Font font = password.getFont();
-                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
-                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-                    password.setFont(font.deriveFont(attributes));
-                    password.setToolTipText("Password length must be at least 8.");
+                if (!input.equals(current_user.Password)) {
+                    if (!User.passwordChecker(input) && !input.isEmpty()) {
+                        password.setForeground(new Color(159, 4, 4));
+                        Font font = password.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        password.setFont(font.deriveFont(attributes));
+                        password.setToolTipText("Password must contains at least one of each\n" +
+                                "lowercase, uppercase, digit, and special character.");
+                    } else if (input.length() < 8 && !input.isEmpty()) {
+                        password.setForeground(new Color(159, 4, 4));
+                        Font font = password.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        password.setFont(font.deriveFont(attributes));
+                        password.setToolTipText("Password length must be at least 8.");
+                    }
                 }
             }
         });
@@ -313,8 +351,9 @@ public class ModifyUser {
         inner3.add(password, igbc);
 
         email = new CustomComponents.EmptyTextField(20, "",
-                new Color(122, 122, 122));
+                new Color(0, 0, 0));
         email.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        email.setText(current_user.Email);
         email.addActionListener(_ -> {SwingUtilities.invokeLater(phone::requestFocusInWindow);});
         email.addFocusListener(new FocusListener() {
             @Override
@@ -328,20 +367,22 @@ public class ModifyUser {
             public void focusLost(FocusEvent e) {
                 email.setToolTipText("");
                 String input = email.getText();
-                if (!User.emailChecker(input, Main.userdata_file) && !input.isEmpty()) {
-                    email.setForeground(new Color(159, 4, 4));
-                    Font font = email.getFont();
-                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
-                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-                    email.setFont(font.deriveFont(attributes));
-                    email.setToolTipText("This email address is already\nregistered under another account.");
-                } else if (!Pattern.compile(EMAIL_REGEX).matcher(input).matches() && !input.isEmpty()) {
-                    email.setForeground(new Color(159, 4, 4));
-                    Font font = email.getFont();
-                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
-                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-                    email.setFont(font.deriveFont(attributes));
-                    email.setToolTipText("Invalid email address.");
+                if (!input.equals(current_user.Email)) {
+                    if (!User.emailChecker(input, Main.userdata_file) && !input.isEmpty()) {
+                        email.setForeground(new Color(159, 4, 4));
+                        Font font = email.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        email.setFont(font.deriveFont(attributes));
+                        email.setToolTipText("This email address is already\nregistered under another account.");
+                    } else if (!Pattern.compile(EMAIL_REGEX).matcher(input).matches() && !input.isEmpty()) {
+                        email.setForeground(new Color(159, 4, 4));
+                        Font font = email.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        email.setFont(font.deriveFont(attributes));
+                        email.setToolTipText("Invalid email address.");
+                    }
                 }
             }
         });
@@ -363,7 +404,9 @@ public class ModifyUser {
         igbc.gridx = 2;
         igbc.weightx = 4.8;
         phone = new CustomComponents.EmptyTextField(16, "",
-                new Color(122, 122, 122));
+                new Color(0, 0, 0));
+        phone.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        phone.setText(current_user.Phone.substring(1));
         phone.addActionListener(_ -> {confirm.doClick();});
         phone.addFocusListener(new FocusListener() {
             @Override
@@ -377,26 +420,27 @@ public class ModifyUser {
             public void focusLost(FocusEvent e) {
                 phone.setToolTipText("");
                 String input = phone.getText();
-                if (!User.phoneChecker("0" + input, Main.userdata_file) && !input.isEmpty()) {
-                    phone.setForeground(new Color(159, 4, 4));
-                    Font font = phone.getFont();
-                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
-                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-                    phone.setFont(font.deriveFont(attributes));
-                    phone.setToolTipText("This phone number is already\nregistered under another account.");
-                } else if (!Pattern.compile(PHONE_REGEX).matcher("0" + input).matches() && !input.isEmpty()) {
-                    phone.setForeground(new Color(159, 4, 4));
-                    Font font = phone.getFont();
-                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
-                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-                    phone.setFont(font.deriveFont(attributes));
-                    phone.setToolTipText("Invalid phone number format.");
+                if (!input.equals(current_user.Phone.substring(1))) {
+                    if (!User.phoneChecker("0" + input, Main.userdata_file) && !input.isEmpty()) {
+                        phone.setForeground(new Color(159, 4, 4));
+                        Font font = phone.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        phone.setFont(font.deriveFont(attributes));
+                        phone.setToolTipText("This phone number is already\nregistered under another account.");
+                    } else if (!Pattern.compile(PHONE_REGEX).matcher("0" + input).matches() && !input.isEmpty()) {
+                        phone.setForeground(new Color(159, 4, 4));
+                        Font font = phone.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        phone.setFont(font.deriveFont(attributes));
+                        phone.setToolTipText("Invalid phone number format.");
+                    }
                 }
             }
         });
         ((AbstractDocument) phone.getDocument()).setDocumentFilter(new DigitFilter());
         ((AbstractDocument) phone.getDocument()).setDocumentFilter(new DigitLimitFilter(9));
-        phone.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         inner5.add(phone, igbc);
 
         CustomComponents.CustomXIcon icon_clear1 = new CustomComponents.CustomXIcon((int) (base_size * 0.8), 3,
@@ -463,8 +507,8 @@ public class ModifyUser {
                         new Color(255, 255, 255)
                 );
             } else {
-                String validity = User.validityChecker(username.getText(), password.getText(), fullname.getText().trim(),
-                        email.getText(), "0" + phone.getText(), Main.userdata_file);
+                String validity = User.validityCheckerWithHistory(username.getText(), password.getText(), fullname.getText().trim(),
+                        email.getText(), "0" + phone.getText(), Main.userdata_file, current_user);
                 if (validity.charAt(0) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -557,49 +601,40 @@ public class ModifyUser {
                             new Color(255, 255, 255)
                     );
                 } else {
-                    if (future != null) {
-                        past = future;
-                    }
                     String acc_type = (String) Objects.requireNonNull(types.getSelectedItem());
-                    String new_id = User.idMaker(acc_type, Main.userdata_file);
-                    LocalDate currentDate = LocalDate.now();
-                    future = new User(new_id, username.getText(), password.getText(), fullname.getText().trim(),
-                            email.getText(), "0" + phone.getText(), acc_type, currentDate, 0);
-                    User.saveNewUser(future, Main.userdata_file);
-                    result[0][0] = 1;
-                    if (past != null && !Objects.equals(past.AccType, future.AccType)) {
-                        result[0][1] = 0;
-                    } else {
-                        result[0][1] = switch (future.AccType) {
-                            case "Finance Manager" -> 1;
-                            case "Purchase Manager" -> 2;
-                            case "Inventory Manager" -> 3;
-                            case "Sales Manager" -> 4;
-                            default -> 0;
-                        };
+                    User modified = new User(current_user.UserID, username.getText(), password.getText(), fullname.getText().trim(),
+                            email.getText(), "0" + phone.getText(), acc_type, current_user.DateOfRegis, 0);
+                    if (!Objects.equals(current_user.AccType, acc_type)) {
+                        modified.UserID = User.idMaker(acc_type, Main.userdata_file);
+                        result[1] = true;
                     }
-                    boolean keep_adding = CustomComponents.CustomOptionPane.showConfirmDialog(
-                            parent,
-                            "Keep adding new users?",
-                            "Confirmation",
-                            new Color(209, 88, 128),
-                            new Color(255, 255, 255),
-                            new Color(237, 136, 172),
-                            new Color(255, 255, 255),
-                            new Color(56, 53, 70),
-                            new Color(255, 255, 255),
-                            new Color(73, 69, 87),
-                            new Color(255, 255, 255),
-                            true
-                    );
-                    if (!keep_adding) {
-                        dialog.dispose();
+                    if (!Objects.equals(modified.Username, current_user.Username) ||
+                            !Objects.equals(modified.Password, current_user.Password) ||
+                            !Objects.equals(modified.FullName, current_user.FullName) ||
+                            !Objects.equals(modified.Email, current_user.Email) ||
+                            !Objects.equals(modified.Phone, current_user.Phone) ||
+                            !Objects.equals(modified.AccType, current_user.AccType)) {
+                        boolean sure = CustomComponents.CustomOptionPane.showConfirmDialog(
+                                parent,
+                                "Confirm to modify user data and all related history?",
+                                "Confirmation",
+                                new Color(209, 88, 128),
+                                new Color(255, 255, 255),
+                                new Color(237, 136, 172),
+                                new Color(255, 255, 255),
+                                new Color(56, 53, 70),
+                                new Color(255, 255, 255),
+                                new Color(73, 69, 87),
+                                new Color(255, 255, 255),
+                                false
+                        );
+                        if (sure) {
+                            User.modifyUser(current_user.UserID, modified, Main.userdata_file);
+                            result[0] = true;
+                            dialog.dispose();
+                        }
                     } else {
-                        username.Reset();
-                        fullname.Reset();
-                        password.Reset();
-                        email.Reset();
-                        phone.Reset();
+                        dialog.dispose();
                     }
                 }
             }
@@ -616,7 +651,7 @@ public class ModifyUser {
         dialog.setVisible(true);
         SwingUtilities.invokeLater(title::requestFocusInWindow);
 
-        return result[0];
+        return result;
     }
 
     static class DigitFilter extends DocumentFilter {
@@ -698,7 +733,7 @@ public class ModifyUser {
                         super.replace(fb, offset, length, text.substring(0, allowed), attrs);
                     }
                 }
-            } else if (text.isEmpty()) {
+            } else if (Objects.requireNonNull(text).isEmpty()) {
                 super.replace(fb, offset, length, text, attrs);
             }
         }
