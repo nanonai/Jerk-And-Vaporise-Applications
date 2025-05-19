@@ -5,6 +5,7 @@ import Admin.CustomComponents;
 import Admin.Main;
 import Admin.User;
 import InventoryMgr.misc.InvStatic;
+import SalesMgr.AddNewItem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -320,8 +321,7 @@ public class ItemList {
                 5, false, null, 0, 0,0);
         btnAdd.setPreferredSize(new Dimension(165, 45));  // Increase width and height of the "Add Item" button
         btnAdd.addActionListener(_ -> {
-            InventoryMgr.ItemList.indicator = 0;
-            PageChanger();
+            AddNewItem.ShowPage();
         });
         buttonPanel.add(btnAdd, buttonGbc);
 
@@ -333,8 +333,10 @@ public class ItemList {
                 5, false, null, 0, 0,0);
         btnEdit.setPreferredSize(new Dimension(165, 45));  // Increase width and height of the "Edit Item" button
         btnEdit.addActionListener(_ -> {
-            InventoryMgr.ItemList.indicator = 1;
-            PageChanger();
+            int selectedRowIndex = table_item.getSelectedRow();
+            Object value = table_item.getValueAt(selectedRowIndex, 0);
+            Item itm = Item.getItemByID(value.toString(), "datafile/item.txt");
+            EditItem.ShowPage(itm);
         });
         buttonPanel.add(btnEdit, buttonGbc);
 
