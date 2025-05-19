@@ -2,6 +2,7 @@ package FinanceMgr;
 
 import Admin.CustomComponents;
 import Admin.Main;
+import InventoryMgr.Item;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +15,7 @@ public class ViewPayment {
     private static Font merriweather, boldonse;
     private static JPanel content;
     private static Payment current_payment;
+    private static CustomComponents.CustomTable table_payment;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, Payment current_payment) {
         ViewPayment.parent = parent;
@@ -175,8 +177,27 @@ public class ViewPayment {
         });
 
         view.addActionListener(_ -> {
-            view_or_not.set(true);
-            dialog.dispose();
+//            if (.getSelectedRowCount() == 0) {
+//                CustomComponents.CustomOptionPane.showErrorDialog(
+//                        parent,
+//                        "Please select an account to view!",
+//                        "Error",
+//                        new Color(209, 88, 128),
+//                        new Color(255, 255, 255),
+//                        new Color(237, 136, 172),
+//                        new Color(255, 255, 255)
+//                );
+//            } else {
+//                String selected_id = table_item.getValueAt(table_item.getSelectedRow(),
+//                        table_item.getColumnModel().getColumnIndex("ItemID")).toString();
+//                ViewInventory.UpdateInventory(Item.getItemID(selected_id, Main.item_file));
+//                boolean see = ViewInventory.ShowPage();
+//                if (see) {
+//                    System.out.println(" ");
+//                }
+//            }
+//            panel.add(viewInventory, ii_gbc);
+//        ViewInventory.Loader(parent, merriweather, boldonse, content, null);
         });
 
         dialog.addMouseListener(new MouseAdapter() {

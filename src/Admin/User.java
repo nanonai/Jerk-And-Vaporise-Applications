@@ -135,13 +135,13 @@ public class User {
             return type_user_list;
         }
         for (User user: type_user_list) {
-            if ((user.UserID.toLowerCase().contains(filter.toLowerCase()) ||
-                    user.Email.toLowerCase().contains(filter.toLowerCase()) ||
+            if ((user.UserID.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
+                    user.Email.toLowerCase().replace(" ", "").contains(filter.toLowerCase().replace(" ", "")) ||
                     user.Phone.contains(filter) ||
-                    user.DateOfRegis.toString().contains(filter.toLowerCase()) ||
-                    user.Username.toLowerCase().contains(filter.toLowerCase()) ||
-                    user.FullName.toLowerCase().contains(filter.toLowerCase()) ||
-                    user.AccType.toLowerCase().contains(filter.toLowerCase()))) {
+                    user.DateOfRegis.toString().contains(filter.toLowerCase().replace(" ", "")) ||
+                    user.Username.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
+                    user.FullName.toLowerCase().replace(" ", "").contains(filter.toLowerCase().replace(" ", "")) ||
+                    user.AccType.toLowerCase().replace(" ", "").contains(filter.toLowerCase().replace(" ", "")))) {
                 filtered_user_list.add(user);
             }
         }
@@ -331,6 +331,70 @@ public class User {
         return indicator;
     }
 
+    public static String validityCheckerWithHistory(String Username, String Password, String FullName,
+                                         String Email, String Phone, String filename, User old) {
+//      Sample output: 0X0X00X0X
+        String indicator = "";
+        if (Username.length() >= 8 && Username.length() <= 36) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        if (usernameChecker(Username, filename)) {
+            indicator += "O";
+        } else {
+            if (Username.equals(old.Username)) {
+                indicator += "O";
+            } else {
+                indicator += "X";
+            }
+        }
+        if (Password.length() >= 8) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        if (passwordChecker(Password)) {
+            indicator += "O";
+        } else {
+            indicator += "X";
+        }
+        if (FullName.length() >= 8 && FullName.length() <= 48) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        if (Pattern.compile(EMAIL_REGEX).matcher(Email).matches()) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        if (emailChecker(Email, filename)) {
+            indicator += "O";
+        } else {
+            if (Email.equals(old.Email)) {
+                indicator += "O";
+            } else {
+                indicator += "X";
+            }
+        }
+        if (Pattern.compile(PHONE_REGEX).matcher(Phone).matches()) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        if (phoneChecker(Phone, filename)) {
+            indicator += "O";
+        } else {
+            if (Phone.equals(old.Phone)) {
+                indicator += "O";
+            } else {
+                indicator += "X";
+            }
+        }
+        return indicator;
+    }
+
     public static void saveNewUser(User user, String filename) {
         try (FileWriter writer = new FileWriter(filename, true)) {
             writer.write("UserID:         " + user.UserID + "\n");
@@ -373,6 +437,7 @@ public class User {
         List<User> allUser = listAllUser(filename);
         for (User user : allUser) {
             if (Objects.equals(user.UserID, UserID)) {
+                user.UserID = Incoming.UserID;
                 user.Username = Incoming.Username;
                 user.FullName = Incoming.FullName;
                 user.Password = Incoming.Password;
