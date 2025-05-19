@@ -4,7 +4,6 @@ import Admin.User;
 import Admin.CustomComponents;
 import Admin.Main;
 import InventoryMgr.Item;
-import InventoryMgr.misc.InvStatic;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,12 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddPO {
-    private static JFrame parent = InvStatic.parent;
-    private static Font merriweather = InvStatic.merriweather, boldonse = InvStatic.boldonse;
-    private static JPanel content = InvStatic.content;
-    private static User current_user = InvStatic.current_user;
+    private static JFrame parent;
+    private static Font merriweather, boldonse;
+    private static JPanel content;
+    private static User current_user;
     private static String itemNames;
 
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
+        AddPO.parent = parent;
+        AddPO.merriweather = merriweather;
+        AddPO.boldonse = boldonse;
+        AddPO.content = content;
+        AddPO.current_user = current_user;
+    }
 
     public static void ShowPage(){
         JDialog dialog = new JDialog(parent, "Add Purchase Order", true);
