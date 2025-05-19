@@ -359,8 +359,18 @@ public class ItemList {
                 5, false, null, 0, 0,0);
         btnModify.setPreferredSize(new Dimension(165, 45));
         btnModify.addActionListener(_ -> {
-            InventoryMgr.ItemList.indicator = 3;
-            PageChanger();
+            try {
+                int selectedRowIndex = table_item.getSelectedRow();
+                Object value = table_item.getValueAt(selectedRowIndex, 0);
+                Item itm = Item.getItemID(value.toString(), "datafile/item.txt");
+                UpdateStock.ShowPage(itm);
+            } catch (Exception e){
+                CustomComponents.CustomOptionPane.showErrorDialog(parent, "You might want to select something before doing this", "Invalid selection",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255));
+            }
         });
         buttonPanel.add(btnModify, buttonGbc);
 
