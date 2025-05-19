@@ -162,7 +162,7 @@ public class GeneratePO {
         AddBtn.addActionListener(_ -> {
             if (table_po.getSelectedRowCount() > 0){
                 CustomComponents.CustomOptionPane.showErrorDialog(parent, "Ei dog u think u can " +
-                                "add something into the selected item? dump...", "Error lah",
+                                "add something into the selected item? dumb...", "Error lah",
                         new Color(209, 88, 128),
                         new Color(255, 255, 255),
                         new Color(237, 136, 172),
@@ -212,7 +212,4 @@ public class GeneratePO {
         inner.add(scrollPane1, gbc1);
 
     }
-
-
-
 }
