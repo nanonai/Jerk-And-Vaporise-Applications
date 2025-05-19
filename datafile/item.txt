@@ -36,12 +36,12 @@ LastUpdate:     2025-04-01
 ~~~~~
 ItemID:         I1007
 ItemName:       Yuzaki Laundry detergent
-UnitPrice:      48.0
+UnitPrice:      47.0
 UnitCost:       36.0
 StockCount:     106
 Threshold:      15
-Category:       Household Items
-LastUpdate:     2025-04-01
+Category:       Fruits
+LastUpdate:     2025-05-19
 ~~~~~
 ItemID:         I7962
 ItemName:       Nedzura Pretzels
