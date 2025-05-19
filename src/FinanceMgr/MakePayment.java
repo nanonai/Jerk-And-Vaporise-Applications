@@ -239,7 +239,7 @@ public class MakePayment {
                     updatedStatus // <-- new status passed here
             );
             // Update the status in the file
-            PurchaseOrder.ChangePurOrderStatus(current_PO.PurchaseOrderID, buffer, Main.purchaseOrder_file, updatedStatus);
+            PurchaseOrder.ChangePurOrderStatus(current_PO.PurchaseOrderID, buffer, Main.purchaseOrder_file);
             JOptionPane.showMessageDialog(null, "Status updated successfully!");
 
             view_or_not.set(true); // Flag to indicate something was modified

@@ -238,9 +238,6 @@ public class InventoryHome {
             case 3:
                 POList.ShowPage();
                 break;
-            case 69:
-                UpdateStock.ShowPage();
-                break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());
     }

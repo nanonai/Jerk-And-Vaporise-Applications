@@ -74,7 +74,7 @@ public class PurchaseOrder {
         return allPurchaseOrders;
     }
 
-    public static void ChangePurOrderStatus(String PurchaseOrderID, PurchaseOrder buffer, String filename, String status) {
+    public static void ChangePurOrderStatus(String PurchaseOrderID, PurchaseOrder buffer, String filename) {
         List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(filename);
         for (PurchaseOrder po : purchaseOrderList) {
             if (Objects.equals(po.PurchaseOrderID, PurchaseOrderID)) {
