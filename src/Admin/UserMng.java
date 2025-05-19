@@ -63,10 +63,13 @@ public class UserMng {
                     new Color(209, 88, 128), new Color(237, 136, 172), Main.transparent);
             sls.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
                     new Color(225, 108, 150), new Color(237, 136, 172), Main.transparent);
-            filter = 0;
-            SearchStuff();
-            UpdatePages(list_length);
-            UpdateTable(list_length, page_counter);
+            if (filter != 0) {
+                filter = 0;
+                search.Reset();
+                SearchStuff();
+                UpdatePages(list_length);
+                UpdateTable(list_length, page_counter);
+            }
         });
         content.add(all, gbc);
 
@@ -86,10 +89,13 @@ public class UserMng {
                     new Color(209, 88, 128), new Color(237, 136, 172), Main.transparent);
             sls.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
                     new Color(225, 108, 150), new Color(237, 136, 172), Main.transparent);
-            filter = 1;
-            SearchStuff();
-            UpdatePages(list_length);
-            UpdateTable(list_length, page_counter);
+            if (filter != 1) {
+                filter = 1;
+                search.Reset();
+                SearchStuff();
+                UpdatePages(list_length);
+                UpdateTable(list_length, page_counter);
+            }
         });
         content.add(fin, gbc);
 
@@ -108,10 +114,13 @@ public class UserMng {
                     new Color(209, 88, 128), new Color(237, 136, 172), Main.transparent);
             sls.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
                     new Color(225, 108, 150), new Color(237, 136, 172), Main.transparent);
-            filter = 2;
-            SearchStuff();
-            UpdatePages(list_length);
-            UpdateTable(list_length, page_counter);
+            if (filter != 2) {
+                filter = 2;
+                search.Reset();
+                SearchStuff();
+                UpdatePages(list_length);
+                UpdateTable(list_length, page_counter);
+            }
         });
         content.add(pur, gbc);
 
@@ -130,10 +139,13 @@ public class UserMng {
             inv.UpdateColor(Color.BLACK, Color.BLACK, Color.WHITE, Color.WHITE, Main.transparent);
             sls.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
                     new Color(225, 108, 150), new Color(237, 136, 172), Main.transparent);
-            filter = 3;
-            SearchStuff();
-            UpdatePages(list_length);
-            UpdateTable(list_length, page_counter);
+            if (filter != 3) {
+                filter = 3;
+                search.Reset();
+                SearchStuff();
+                UpdatePages(list_length);
+                UpdateTable(list_length, page_counter);
+            }
         });
         content.add(inv, gbc);
 
@@ -152,10 +164,13 @@ public class UserMng {
             inv.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
                     new Color(209, 88, 128), new Color(237, 136, 172), Main.transparent);
             sls.UpdateColor(Color.BLACK, Color.BLACK, Color.WHITE, Color.WHITE, Main.transparent);
-            filter = 4;
-            SearchStuff();
-            UpdatePages(list_length);
-            UpdateTable(list_length, page_counter);
+            if (filter != 4) {
+                filter = 4;
+                search.Reset();
+                SearchStuff();
+                UpdatePages(list_length);
+                UpdateTable(list_length, page_counter);
+            }
         });
         content.add(sls, gbc);
 
@@ -581,8 +596,7 @@ public class UserMng {
             int[] added = AddUser.ShowPage(filter);
             if (added[0] == 1) {
                 search.Reset();
-                filter = added[1];
-                switch(filter) {
+                switch(added[1]) {
                     case 0:
                         all.doClick();
                         break;
@@ -614,6 +628,77 @@ public class UserMng {
                 new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 16, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
+        modify.addActionListener(_ -> {
+            if (table_user.getSelectedRowCount() == 0) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select an account to modify!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else {
+                int interval = table_user.getSelectedRow();
+                String selected_id = table_user.getValueAt(table_user.getSelectedRow(),
+                        table_user.getColumnModel().getColumnIndex("Id")).toString();
+                int position = 0;
+                List<User> allUser = User.listAllUser(Main.userdata_file);
+                for (User item: allUser) {
+                    if (!Objects.equals(item.UserID, selected_id)) {
+                        position += 1;
+                    } else {
+                        break;
+                    }
+                }
+                ModifyUser.UpdateUser(User.GetUserById(selected_id, Main.userdata_file));
+                boolean[] modified = ModifyUser.ShowPage();
+                if (modified[0] && !modified[1]) {
+                    search.Reset();
+                    SearchStuff();
+                    UpdateTable(list_length, page_counter);
+                    table_user.clearSelection();
+                    table_user.addRowSelectionInterval(interval, interval);
+                } else if (modified[0]) {
+                    allUser = User.listAllUser(Main.userdata_file);
+                    String id = allUser.get(position).UserID;
+                    search.Reset();
+                    switch (allUser.get(position).AccType) {
+                        case "Finance Manager":
+                            fin.doClick();
+                            break;
+                        case "Purchase Manager":
+                            pur.doClick();
+                            break;
+                        case "Inventory Manager":
+                            inv.doClick();
+                            break;
+                        case "Sales Manager":
+                            sls.doClick();
+                            break;
+                    }
+                    SearchStuff();
+                    int temp = 0;
+                    for (User user: user_list) {
+                        if (!Objects.equals(user.UserID, id)) {
+                            temp += 1;
+                        } else {
+                            break;
+                        }
+                    }
+                    page_counter = temp / list_length;
+                    UpdatePages(list_length);
+                    pages.setSelectedIndex(page_counter);
+                    UpdateTable(list_length, page_counter);
+                    table_user.clearSelection();
+                    table_user.addRowSelectionInterval(temp % list_length, temp % list_length);
+                } else {
+                    table_user.clearSelection();
+                    table_user.addRowSelectionInterval(interval, interval);
+                }
+            }
+        });
         button_panel1.add(modify, ii_gbc);
 
         ii_gbc.gridx = 3;
@@ -625,6 +710,7 @@ public class UserMng {
                 new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
                 Main.transparent, 0, 16, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
+
         button_panel2.add(data_transfer, ii_gbc);
 
         cancel_delete = new CustomComponents.CustomButton("Cancel", merriweather, Color.WHITE, Color.WHITE,
@@ -732,46 +818,65 @@ public class UserMng {
                 );
             } else {
                 List<String> ids = new ArrayList<>(deleting_id);
-                List<User> d_users = User.GetUsersByIds(ids, Main.userdata_file);
-                DeleteUser.UpdateUsers(d_users);
-                boolean delete = DeleteUser.ShowPage();
-                if (delete) {
-                    deleting = false;
-                    for (User user: d_users) {
-                        User.removeUser(user.UserID, Main.userdata_file);
+                List<User> related_user = new ArrayList<>();
+                for (String id: ids) {
+                    if (id.startsWith("SM") && (!User.checkSalesRecordByID(id, Main.sales_file).isEmpty() ||
+                            !User.checkPRRecordByID(id, Main.purchaseReq_file).isEmpty())) {
+                        related_user.add(User.GetUserById(id, Main.userdata_file));
+                    } else if (id.startsWith("PM") && !User.checkPORecordByID(id, Main.purchaseOrder_file).isEmpty()) {
+                        related_user.add(User.GetUserById(id, Main.userdata_file));
+                    } else if (id.startsWith("FM") && !User.checkPYRecordByID(id, Main.payment_file).isEmpty()) {
+                        related_user.add(User.GetUserById(id, Main.userdata_file));
                     }
-                    user_list = User.listAllUser(Main.userdata_file);
-                    deleting_id.clear();
-                    view.setEnabled(true);
-                    add.setEnabled(true);
-                    modify.setEnabled(true);
-                    data_transfer.setVisible(true);
-                    cancel_delete.setVisible(false);
-                    view.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
-                            new Color(225, 108, 150), new Color(237, 136, 172),
-                            Main.transparent);
-                    add.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
-                            new Color(209, 88, 128), new Color(237, 136, 172),
-                            Main.transparent);
-                    modify.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
-                            new Color(225, 108, 150), new Color(237, 136, 172),
-                            Main.transparent);
-                    data_transfer.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
-                            new Color(209, 88, 128), new Color(237, 136, 172),
-                            Main.transparent);
-                    table_user.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(212, 212, 212));
-                    mode = 1;
-                    table_user.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
-                            merriweather.deriveFont(Font.PLAIN, 16), mode);
-                    scrollPane1.UpdateBorder(1, new Color(202, 202, 202), Main.transparent,
-                            Main.transparent, Main.transparent, Main.transparent);
-                    filter = 0;
-                    page_counter = 0;
-                    UpdatePages(list_length);
-                    pages.setSelectedIndex(0);
-                    UpdateTable(list_length, 0);
-                    delete2.setVisible(false);
-                    delete1.setVisible(true);
+                }
+                if (!related_user.isEmpty()) {
+                    DeleteBridge.UpdateList(related_user);
+                    int[] resolve = DeleteBridge.ShowPage();
+                    if (resolve[0] != 0) {
+                        System.out.println("Skibidi " + resolve[1]);
+                    }
+                } else {
+                    List<User> d_users = User.GetUsersByIds(ids, Main.userdata_file);
+                    DeleteUser.UpdateUsers(d_users);
+                    boolean delete = DeleteUser.ShowPage();
+                    if (delete) {
+                        search.Reset();
+                        deleting = false;
+                        for (User user: d_users) {
+                            User.removeUser(user.UserID, Main.userdata_file);
+                        }
+                        SearchStuff();
+                        deleting_id.clear();
+                        view.setEnabled(true);
+                        add.setEnabled(true);
+                        modify.setEnabled(true);
+                        data_transfer.setVisible(true);
+                        cancel_delete.setVisible(false);
+                        view.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                                new Color(225, 108, 150), new Color(237, 136, 172),
+                                Main.transparent);
+                        add.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                                new Color(209, 88, 128), new Color(237, 136, 172),
+                                Main.transparent);
+                        modify.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                                new Color(225, 108, 150), new Color(237, 136, 172),
+                                Main.transparent);
+                        data_transfer.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                                new Color(209, 88, 128), new Color(237, 136, 172),
+                                Main.transparent);
+                        table_user.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(212, 212, 212));
+                        mode = 1;
+                        table_user.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
+                                merriweather.deriveFont(Font.PLAIN, 16), mode);
+                        scrollPane1.UpdateBorder(1, new Color(202, 202, 202), Main.transparent,
+                                Main.transparent, Main.transparent, Main.transparent);
+                        UpdatePages(list_length);
+                        page_counter = Math.min(page_counter, pages.getItemCount());
+                        pages.setSelectedIndex(page_counter);
+                        UpdateTable(list_length, page_counter);
+                        delete2.setVisible(false);
+                        delete1.setVisible(true);
+                    }
                 }
             }
         });
@@ -780,7 +885,9 @@ public class UserMng {
 
         AddUser.Loader(parent, merriweather, boldonse, content, current_user);
         ViewUser.Loader(parent, merriweather, boldonse, content, null);
+        ModifyUser.Loader(parent, merriweather, boldonse, content, null);
         DeleteUser.Loader(parent, merriweather, boldonse, content, current_user);
+        DeleteBridge.Loader(parent, merriweather, boldonse, content, current_user, null);
     }
 
     public static void UpdateTable(int length, int page) {
@@ -796,7 +903,6 @@ public class UserMng {
         for (User user : user_list) {
             if (anti_counter != 0) {
                 anti_counter -= 1;
-                continue;
             } else {
                 data[counter] = new Object[]{user.UserID, user.AccType, user.Username,
                         user.FullName, user.Phone, user.Email, user.DateOfRegis.toString()};
