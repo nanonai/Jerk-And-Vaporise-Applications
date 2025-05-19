@@ -16,6 +16,7 @@ public class Main {
     public static final String purchaseReq_file = "datafile/purchaseReq.txt";
     public static final String purchaseOrder_file = "datafile/purchaseOrder.txt";
     public static final String item_file = "datafile/item.txt";
+    public static final String item_Supplier_file = "datafile/Item_Supplier.txt";
     public  static  final  String payment_file = "datafile/payment.txt";
     public static final String supplier_file = "datafile/supplier.txt";
     public static final String item_supplier_file = "datafile/Item_Supplier.txt";

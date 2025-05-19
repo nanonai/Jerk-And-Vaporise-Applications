@@ -223,6 +223,7 @@ public class FinanceHome {
             }
         });
 
+        ReportPage.Loader(parent, merriweather, boldonse, content, current_user);
         PaymentPage.Loader(parent, merriweather, boldonse, content, current_user);
         InventoryPage.Loader(parent, merriweather, boldonse, content, current_user);
         PurchaseReqPage.Loader(parent, merriweather, boldonse, content, current_user);
@@ -262,6 +263,7 @@ public class FinanceHome {
                 PaymentPage.ShowPage();
                 break;
             case 6:
+                ReportPage.ShowPage();
                 break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());
