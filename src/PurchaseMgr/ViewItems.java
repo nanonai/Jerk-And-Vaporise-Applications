@@ -1,6 +1,6 @@
 package PurchaseMgr;
 
-import Admin.BufferForUser;
+import Admin.User;
 import Admin.CustomComponents;
 import InventoryMgr.Item;
 import javax.swing.*;
@@ -12,11 +12,11 @@ public class ViewItems {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static BufferForUser current_user;
+    private static User current_user;
     private static java.util.List<String> list = new ArrayList<>();
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, BufferForUser current_user) {
+                              JPanel content, User current_user) {
         ViewItems.parent = parent;
         ViewItems.merriweather = merriweather;
         ViewItems.boldonse = boldonse;

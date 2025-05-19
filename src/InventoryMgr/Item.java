@@ -1,9 +1,6 @@
 package InventoryMgr;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -127,6 +124,105 @@ public class Item {
         } catch (IOException e) {
             e.getStackTrace();
         }
+    }
+
+    public static boolean addStock(Item item, int amount) {
+        try {
+            String filePath = "datafile/item.txt";
+            String targetId = item.ItemID;
+
+            List<String> updatedLines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+
+            String line;
+            boolean found = false;
+            boolean inItemBlock = false;
+            String currentId = null;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().equals("~~~~~")) {
+                    inItemBlock = false;
+                    updatedLines.add(line);
+                    continue;
+                }
+
+                if (line.startsWith("ItemID:")) {
+                    currentId = line.split(":")[1].trim();
+                    inItemBlock = true;
+                }
+
+                if (inItemBlock && currentId != null && currentId.equals(targetId) && line.startsWith("StockCount:")) {
+                    int currentStock = Integer.parseInt(line.split(":")[1].trim());
+                    int newStock = currentStock + amount;
+                    line = "StockCount:     " + newStock;
+                    found = true;
+                }
+
+                updatedLines.add(line);
+            }
+
+            reader.close();
+
+            if (found) {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+                for (String updatedLine : updatedLines) {
+                    writer.write(updatedLine);
+                    writer.newLine();
+                }
+                writer.close();
+                return true;
+            } else {
+                return false;
+            }
+        } catch (IOException e) {
+            e.getStackTrace();
+            return false;
+        }
+    }
+
+    public static String validitychecker(String ItemName, String UnitPrice, String UnitCost, String StockCount, String Threshold,
+                                         String SupplierName) {
+        // Sample output: 0X0X00X0X
+        String indicator = "";
+        // Validate ItemName: Length between 8 to 36 characters
+        if (ItemName.length() >= 8 && ItemName.length() <= 36) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        // Validate UnitPrice: Should be a positive number
+        if (UnitPrice.matches("\\d+(\\.\\d{1,2})?") && Double.parseDouble(UnitPrice) > 0) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        // Validate UnitCost: Should be a positive number
+        if (UnitCost.matches("\\d+(\\.\\d{1,2})?") && Double.parseDouble(UnitCost) > 0) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        // Validate StockCount: Should be a non-negative integer
+        if (StockCount.matches("\\d+") && Integer.parseInt(StockCount) >= 0) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        // Validate Threshold: Should be a non-negative integer
+        if (Threshold.matches("\\d+") && Integer.parseInt(Threshold) >= 0) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+
+        // Validate SupplierName: Should not be empty
+        if (!SupplierName.trim().isEmpty()) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+
+        return indicator;
     }
 
     public static Item getItemByID(String ItemID, String filename){

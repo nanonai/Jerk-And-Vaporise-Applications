@@ -1,5 +1,10 @@
 package Admin;
 
+import FinanceMgr.Payment;
+import FinanceMgr.PurchaseRequisition;
+import PurchaseMgr.PurchaseOrder;
+import SalesMgr.Sales;
+
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -101,7 +106,7 @@ public class User {
         return allUser;
     }
 
-    public static List<User> listAllUserFromFilter(String filename, String type, String filter, BufferForUser current_user) {
+    public static List<User> listAllUserFromFilter(String filename, String type, String filter, User current_user) {
         List<User> user_list = listAllUser(filename);
         List<User> type_user_list = new ArrayList<>();
         List<User> filtered_user_list = new ArrayList<>();
@@ -364,18 +369,18 @@ public class User {
         }
     }
 
-    public static void modifyUser(String UserID, BufferForUser bufferForUser, String filename) {
+    public static void modifyUser(String UserID, User Incoming, String filename) {
         List<User> allUser = listAllUser(filename);
         for (User user : allUser) {
             if (Objects.equals(user.UserID, UserID)) {
-                user.Username = bufferForUser.Username;
-                user.FullName = bufferForUser.FullName;
-                user.Password = bufferForUser.Password;
-                user.Phone = bufferForUser.Phone;
-                user.Email = bufferForUser.Email;
-                user.AccType = bufferForUser.AccType;
-                user.DateOfRegis = bufferForUser.DateOfRegis;
-                user.RememberMe = bufferForUser.RememberMe;
+                user.Username = Incoming.Username;
+                user.FullName = Incoming.FullName;
+                user.Password = Incoming.Password;
+                user.Phone = Incoming.Phone;
+                user.Email = Incoming.Email;
+                user.AccType = Incoming.AccType;
+                user.DateOfRegis = Incoming.DateOfRegis;
+                user.RememberMe = Incoming.RememberMe;
             }
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
@@ -394,5 +399,49 @@ public class User {
         } catch (IOException e) {
             e.getStackTrace();
         }
+    }
+    
+    public static List<Sales> checkSalesRecordByID(String UserID, String filename) {
+        List<Sales> userRelatedRecords = new ArrayList<>();
+        List<Sales> allSales = Sales.listAllSales(filename);
+        for (Sales sales: allSales) {
+            if (Objects.equals(sales.SalesMgrID, UserID)) {
+                userRelatedRecords.add(sales);
+            }
+        }
+        return userRelatedRecords;
+    }
+
+    public static List<PurchaseRequisition> checkPRRecordByID(String UserID, String filename) {
+        List<PurchaseRequisition> userRelatedRecords = new ArrayList<>();
+        List<PurchaseRequisition> allPR = PurchaseRequisition.listAllPurchaseRequisitions(filename);
+        for (PurchaseRequisition pr: allPR) {
+            if (Objects.equals(pr.SalesMgrID, UserID)) {
+                userRelatedRecords.add(pr);
+            }
+        }
+        return userRelatedRecords;
+    }
+
+    public static List<PurchaseOrder> checkPORecordByID(String UserID, String filename) {
+        List<PurchaseOrder> userRelatedRecords = new ArrayList<>();
+        List<PurchaseOrder> allPO = PurchaseOrder.listAllPurchaseOrders(filename);
+        for (PurchaseOrder po: allPO) {
+            if (Objects.equals(po.PurchaseMgrID, UserID)) {
+                userRelatedRecords.add(po);
+            }
+        }
+        return userRelatedRecords;
+    }
+
+    public static List<Payment> checkPYRecordByID(String UserID, String filename) {
+        List<Payment> userRelatedRecords = new ArrayList<>();
+        List<Payment> allPY = Payment.listAllPayment(filename);
+        for (Payment py: allPY) {
+            if (Objects.equals(py.FinanceMgrID, UserID)) {
+                userRelatedRecords.add(py);
+            }
+        }
+        return userRelatedRecords;
     }
 }

@@ -1,6 +1,6 @@
 package PurchaseMgr;
 
-import Admin.BufferForUser;
+import Admin.User;
 import Admin.CustomComponents;
 import Admin.Main;
 import InventoryMgr.Item;
@@ -18,12 +18,12 @@ public class AddPO {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static BufferForUser current_user;
+    private static User current_user;
     private static String itemNames;
     private static JComboBox<Object> itemComboBox, supplierComboBox;
     private static CustomComponents.EmptyTextField quantity, price, total;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, BufferForUser current_user) {
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
         AddPO.parent = parent;
         AddPO.merriweather = merriweather;
         AddPO.boldonse = boldonse;

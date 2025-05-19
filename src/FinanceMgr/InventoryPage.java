@@ -1,6 +1,6 @@
 package FinanceMgr;
 
-import Admin.BufferForUser;
+import Admin.User;
 import Admin.CustomComponents;
 import Admin.Main;
 import InventoryMgr.Item;
@@ -13,7 +13,7 @@ public class InventoryPage {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content,inner;
-    public static BufferForUser current_user;
+    public static User current_user;
     private static JButton s_btn;
     private static CustomComponents.RoundedPanel search_panel;
     private static JLabel lbl_show, lbl_entries;
@@ -25,7 +25,7 @@ public class InventoryPage {
     private static CustomComponents.CustomButton viewInventory;
 
     public static void Loader(JFrame parent,Font merriweather,Font boldonse,
-                              JPanel content,BufferForUser current_user){
+                              JPanel content,User current_user){
         InventoryPage.parent = parent;
         InventoryPage.merriweather = merriweather;
         InventoryPage.boldonse = boldonse;

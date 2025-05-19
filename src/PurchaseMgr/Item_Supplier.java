@@ -139,6 +139,7 @@ public class Item_Supplier {
         return "Unknown Supplier";
     }
 
+  
     public static List<Supplier> getSuppliersByItemID(String ItemID, String filename){
         List<Supplier> filterList = new ArrayList<>();
         List<Item_Supplier> itemSupplierList = listAllItemSupplier(filename);
@@ -148,5 +149,15 @@ public class Item_Supplier {
             }
         }
         return filterList;
+  
+    public static boolean itemIDChecker(String itemID, String filename) {
+        List<Item_Supplier> allItemSupplier = listAllItemSupplier(filename);
+        for (Item_Supplier itemSupplier : allItemSupplier) {
+            if (Objects.equals(itemSupplier.ItemID, itemID)) {
+                return true;  // Found itemID
+            }
+        }
+        return false; // itemID NOT found
+  
     }
 }

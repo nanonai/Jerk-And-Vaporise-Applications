@@ -1,10 +1,7 @@
-package InventoryMgr;
+package SalesMgr;
 
-import Admin.User;
-import Admin.CustomComponents;
-import Admin.Main;
-import Admin.User;
-import InventoryMgr.misc.InvStatic;
+import Admin.*;
+import InventoryMgr.Item;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
@@ -16,21 +13,26 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.font.TextAttribute;
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 
-public class AddItem {
-    private static JFrame parent = InvStatic.parent;
-    private static Font merriweather = InvStatic.merriweather, boldonse = InvStatic.boldonse;
-    private static JPanel content = InvStatic.content;
-    private static User current_user = InvStatic.current_user;
+public class AddNewItem {
+    private static JFrame parent;
+    private static Font merriweather, boldonse;
+    private static JPanel content;
+    private static User current_user;
     private static User past, future;
     private static JComboBox<String> types;
-    private static CustomComponents.EmptyTextField itemname, unitprice, startamt, minamt, supplierid;
+    private static CustomComponents.EmptyTextField itemname, unitprice, unitcost, stockcount, threshold, suppliername;
+
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
+        AddNewItem.parent = parent;
+        AddNewItem.merriweather = merriweather;
+        AddNewItem.boldonse = boldonse;
+        AddNewItem.content = content;
+        AddNewItem.current_user = current_user;
+    }
 
     public static void ShowPage() {
         final int[][] result = {{0, 0}};
@@ -78,30 +80,36 @@ public class AddItem {
         panel.add(name_label, gbc);
 
         gbc.gridy = 3;
-        JLabel price_label = new JLabel("Item Price:");
+        JLabel price_label = new JLabel("Unit Price:");
         price_label.setOpaque(false);
         price_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(price_label, gbc);
 
         gbc.gridy = 4;
+        JLabel unitcost_label = new JLabel("Unit Cost:");
+        unitcost_label.setOpaque(false);
+        unitcost_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(unitcost_label, gbc);
+
+        gbc.gridy = 5;
         JLabel qty_label = new JLabel("Inv Quantity:");
         qty_label.setOpaque(false);
         qty_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(qty_label, gbc);
 
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         JLabel min_label = new JLabel("Minimum Threshold:");
         min_label.setOpaque(false);
         min_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(min_label, gbc);
 
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         JLabel supplier_label = new JLabel("Supplier(s):");
         supplier_label.setOpaque(false);
         supplier_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(supplier_label, gbc);
 
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         gbc.insets = new Insets(0, 10, 10, 0);
         CustomComponents.CustomButton cancel = new CustomComponents.CustomButton("Cancel",
                 merriweather.deriveFont(Font.PLAIN), Color.WHITE, Color.WHITE,
@@ -184,6 +192,13 @@ public class AddItem {
         inner5.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
         panel.add(inner5, gbc);
 
+        gbc.gridy = 7;
+        JPanel inner6 = new JPanel(new GridBagLayout());
+        inner6.setOpaque(true);
+        inner6.setBackground(Color.WHITE);
+        inner6.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        panel.add(inner6, gbc);
+
         GridBagConstraints igbc = new GridBagConstraints();
         igbc.fill = GridBagConstraints.BOTH;
         igbc.gridx = 0;
@@ -213,7 +228,7 @@ public class AddItem {
         unitprice = new CustomComponents.EmptyTextField(20, "",
                 new Color(122, 122, 122));
         unitprice.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-        unitprice.addActionListener(_ -> {SwingUtilities.invokeLater(startamt::requestFocusInWindow);});
+        unitprice.addActionListener(_ -> {SwingUtilities.invokeLater(unitcost::requestFocusInWindow);});
         unitprice.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -230,68 +245,88 @@ public class AddItem {
         });
         inner2.add(unitprice, igbc);
 
-        startamt = new CustomComponents.EmptyTextField(20, "",
+        unitcost = new CustomComponents.EmptyTextField(20, "",
                 new Color(122, 122, 122));
-        startamt.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-        startamt.addActionListener(_ -> {SwingUtilities.invokeLater(minamt::requestFocusInWindow);});
-        startamt.addFocusListener(new FocusListener() {
+        unitcost.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        unitcost.addActionListener(_ -> {SwingUtilities.invokeLater(stockcount::requestFocusInWindow);});
+        unitcost.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                startamt.setForeground(Color.BLACK);
-                startamt.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-                startamt.setToolTipText("");
+                unitcost.setForeground(Color.BLACK);
+                unitcost.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+                unitcost.setToolTipText("");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                startamt.setToolTipText("");
-                String input = startamt.getText();
+                unitcost.setToolTipText("");
+                String input = unitcost.getText();
             }
         });
-        ((AbstractDocument) startamt.getDocument()).setDocumentFilter(new NoSpaceFilter());
-        inner3.add(startamt, igbc);
+        ((AbstractDocument) unitcost.getDocument()).setDocumentFilter(new NoSpaceFilter());
+        inner3.add(unitcost, igbc);
 
-        minamt = new CustomComponents.EmptyTextField(20, "",
+        stockcount = new CustomComponents.EmptyTextField(20, "",
                 new Color(122, 122, 122));
-        minamt.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-        minamt.addActionListener(_ -> {SwingUtilities.invokeLater(supplierid::requestFocusInWindow);});
-        minamt.addFocusListener(new FocusListener() {
+        stockcount.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        stockcount.addActionListener(_ -> {SwingUtilities.invokeLater(threshold::requestFocusInWindow);});
+        stockcount.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                minamt.setForeground(Color.BLACK);
-                minamt.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-                minamt.setToolTipText("");
+                stockcount.setForeground(Color.BLACK);
+                stockcount.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+                stockcount.setToolTipText("");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                minamt.setToolTipText("");
-                String input = minamt.getText();
+                stockcount.setToolTipText("");
+                String input = stockcount.getText();
             }
         });
-        ((AbstractDocument) minamt.getDocument()).setDocumentFilter(new NoSpaceFilter());
-        inner4.add(minamt, igbc);
+        ((AbstractDocument) stockcount.getDocument()).setDocumentFilter(new NoSpaceFilter());
+        inner4.add(stockcount, igbc);
 
-
-        supplierid = new CustomComponents.EmptyTextField(20, "",
-                new Color(122, 122, 122));
-        supplierid.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-        supplierid.addFocusListener(new FocusListener() {
+        threshold = new CustomComponents.EmptyTextField(20, "", new Color(122, 122, 122));
+        threshold.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        threshold.addActionListener(_ -> {SwingUtilities.invokeLater(suppliername::requestFocusInWindow);});
+        threshold.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                supplierid.setForeground(Color.BLACK);
-                supplierid.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-                supplierid.setToolTipText("");
+                threshold.setForeground(Color.BLACK);
+                threshold.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+                threshold.setToolTipText("");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                minamt.setToolTipText("");
-                String input = minamt.getText();
+                threshold.setToolTipText("");
+                String input = threshold.getText();
             }
         });
-        ((AbstractDocument) minamt.getDocument()).setDocumentFilter(new NoSpaceFilter());
-        inner5.add(supplierid, igbc);
+        ((AbstractDocument) threshold.getDocument()).setDocumentFilter(new NoSpaceFilter());
+        inner5.add(threshold, igbc);
+
+
+        suppliername = new CustomComponents.EmptyTextField(20, "",
+                new Color(122, 122, 122));
+        suppliername.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        suppliername.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                suppliername.setForeground(Color.BLACK);
+                suppliername.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+                suppliername.setToolTipText("");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                suppliername.setToolTipText("");
+                String input = suppliername.getText();
+            }
+        });
+        ((AbstractDocument) suppliername.getDocument()).setDocumentFilter(new NoSpaceFilter());
+        inner6.add(suppliername, igbc);
 
         CustomComponents.CustomXIcon icon_clear1 = new CustomComponents.CustomXIcon((int) (base_size * 0.8), 3,
                 new Color(209, 209, 209), true);
@@ -321,7 +356,7 @@ public class AddItem {
         clear3.setOpaque(false);
         clear3.setFocusable(false);
         clear3.setBorder(BorderFactory.createEmptyBorder());
-        clear3.addActionListener(_ -> {startamt.Reset();});
+        clear3.addActionListener(_ -> {unitcost.Reset();});
         inner3.add(clear3, igbc);
 
         JButton clear4 = new JButton(icon_clear1);
@@ -329,7 +364,7 @@ public class AddItem {
         clear4.setOpaque(false);
         clear4.setFocusable(false);
         clear4.setBorder(BorderFactory.createEmptyBorder());
-        clear4.addActionListener(_ -> {minamt.Reset();});
+        clear4.addActionListener(_ -> {stockcount.Reset();});
         inner4.add(clear4, igbc);
 
         JButton clear5 = new JButton(icon_clear1);
@@ -337,19 +372,30 @@ public class AddItem {
         clear5.setOpaque(false);
         clear5.setFocusable(false);
         clear5.setBorder(BorderFactory.createEmptyBorder());
-        clear5.addActionListener(_ -> {supplierid.Reset();});
+        clear5.addActionListener(_ -> {threshold.Reset();});
         inner5.add(clear5, igbc);
+
+        JButton clear6 = new JButton(icon_clear1);
+        clear6.setRolloverIcon(icon_clear2);
+        clear6.setOpaque(false);
+        clear6.setFocusable(false);
+        clear6.setBorder(BorderFactory.createEmptyBorder());
+        clear6.addActionListener(_ -> {suppliername.Reset();});
+        inner6.add(clear5, igbc);
 
         cancel.addActionListener(_ -> {
             dialog.dispose();
         });
 
         confirm.addActionListener(_ -> {
-            if (itemname.getText().isEmpty() || unitprice.getText().isEmpty() || startamt.getText().isEmpty() ||
-                    minamt.getText().isEmpty() || supplierid.getText().isEmpty() || unitprice.getText().isBlank()) {
+            // Check if any of the fields are empty or just contain spaces
+            if (itemname.getText().isEmpty() || unitprice.getText().isEmpty() || unitcost.getText().isEmpty() ||
+                    stockcount.getText().isEmpty() || threshold.getText().isEmpty() || suppliername.getText().isEmpty() ||
+                    unitprice.getText().isBlank() || unitcost.getText().isBlank()) {
+
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,
-                        "Areas cannot be left empty or just spaces!",
+                        "Fields cannot be left empty or just contain spaces!",
                         "Error",
                         new Color(209, 88, 128),
                         new Color(255, 255, 255),
@@ -357,12 +403,16 @@ public class AddItem {
                         new Color(255, 255, 255)
                 );
             } else {
-                String validity = User.validityChecker(itemname.getText(), startamt.getText(), unitprice.getText().trim(),
-                        minamt.getText(), "0" + supplierid.getText(), Main.userdata_file);
+                // Perform item-specific validity check
+                String validity = Item.validitychecker(itemname.getText(), unitprice.getText().trim(),
+                        unitcost.getText().trim(), stockcount.getText(), threshold.getText(), suppliername.getText());
+
+
+                // Handle validation errors
                 if (validity.charAt(0) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
-                            "itemname length must be 8 to 36!",
+                            "Item name must be between 8 and 36 characters!",
                             "Error",
                             new Color(209, 88, 128),
                             new Color(255, 255, 255),
@@ -372,17 +422,7 @@ public class AddItem {
                 } else if (validity.charAt(1) == 'X') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
-                            "itemname has been taken!",
-                            "Error",
-                            new Color(209, 88, 128),
-                            new Color(255, 255, 255),
-                            new Color(237, 136, 172),
-                            new Color(255, 255, 255)
-                    );
-                } else if (validity.charAt(4) == '0') {
-                    CustomComponents.CustomOptionPane.showErrorDialog(
-                            parent,
-                            "Full name length must be 8 to 48.",
+                            "Item name already exists!",
                             "Error",
                             new Color(209, 88, 128),
                             new Color(255, 255, 255),
@@ -392,18 +432,27 @@ public class AddItem {
                 } else if (validity.charAt(2) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
-                            "startamt length must be at least 8!",
+                            "Unit price must be a valid positive number!",
                             "Error",
                             new Color(209, 88, 128),
                             new Color(255, 255, 255),
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                } else if (validity.charAt(3) == 'X') {
+                } else if (validity.charAt(3) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
-                            "<html>startamt must contains at least one of each<br>" +
-                                    "lowercase, uppercase, digit, and special character.</html>",
+                            "Unit cost must be a valid positive number!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                } else if (validity.charAt(4) == '0') {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Stock count must be a valid non-negative integer!",
                             "Error",
                             new Color(209, 88, 128),
                             new Color(255, 255, 255),
@@ -413,37 +462,17 @@ public class AddItem {
                 } else if (validity.charAt(5) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
-                            "Invalid minamt address.",
+                            "Threshold must be a valid non-negative integer!",
                             "Error",
                             new Color(209, 88, 128),
                             new Color(255, 255, 255),
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                } else if (validity.charAt(6) == 'X') {
+                } else if (validity.charAt(6) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
-                            "<html>This minamt address is already<br>registered under another account.</html>",
-                            "Error",
-                            new Color(209, 88, 128),
-                            new Color(255, 255, 255),
-                            new Color(237, 136, 172),
-                            new Color(255, 255, 255)
-                    );
-                } else if (validity.charAt(7) == '0') {
-                    CustomComponents.CustomOptionPane.showErrorDialog(
-                            parent,
-                            "Invalid supplierid number format.",
-                            "Error",
-                            new Color(209, 88, 128),
-                            new Color(255, 255, 255),
-                            new Color(237, 136, 172),
-                            new Color(255, 255, 255)
-                    );
-                } else if (validity.charAt(8) == 'X') {
-                    CustomComponents.CustomOptionPane.showErrorDialog(
-                            parent,
-                            "<html>This supplierid number is already<br>registered under another account.</html>",
+                            "Supplier name cannot be empty!",
                             "Error",
                             new Color(209, 88, 128),
                             new Color(255, 255, 255),
@@ -451,30 +480,22 @@ public class AddItem {
                             new Color(255, 255, 255)
                     );
                 } else {
-                    if (future != null) {
-                        past = future;
-                    }
-                    String acc_type = (String) Objects.requireNonNull(types.getSelectedItem());
-                    String new_id = User.idMaker(acc_type, Main.userdata_file);
+                    // If all validations pass, proceed with saving the new item
+
+                    // Create a new item object with the provided data
+                    String new_id = User.idMaker("Item", Main.userdata_file);  // You can define your own ID maker logic
                     LocalDate currentDate = LocalDate.now();
-                    future = new User(new_id, itemname.getText(), startamt.getText(), unitprice.getText().trim(),
-                            minamt.getText(), "0" + supplierid.getText(), acc_type, currentDate, 0);
-                    User.saveNewUser(future, Main.userdata_file);
-                    result[0][0] = 1;
-                    if (past != null && !Objects.equals(past.AccType, future.AccType)) {
-                        result[0][1] = 0;
-                    } else {
-                        result[0][1] = switch (future.AccType) {
-                            case "Finance Manager" -> 1;
-                            case "Purchase Manager" -> 2;
-                            case "Inventory Manager" -> 3;
-                            case "Sales Manager" -> 4;
-                            default -> 0;
-                        };
-                    }
+
+//                    future = new Item(new_id, itemname.getText(), unitprice.getText().trim(), unitcost.getText().trim(),
+//                            stockcount.getText(), threshold.getText(), types.getSelectedItem().toString(), currentDate, suppliername.getText());
+//
+//                    // Save the item to the file or database
+//                    Item.saveNewItem(future, Main.userdata_file);  // Assuming Item class has this method to save the data
+
+                    // Ask if user wants to continue adding more items
                     boolean keep_adding = CustomComponents.CustomOptionPane.showConfirmDialog(
                             parent,
-                            "Keep adding new users?",
+                            "Keep adding new items?",
                             "Confirmation",
                             new Color(209, 88, 128),
                             new Color(255, 255, 255),
@@ -486,18 +507,22 @@ public class AddItem {
                             new Color(255, 255, 255),
                             true
                     );
+
                     if (!keep_adding) {
-                        dialog.dispose();
+                        dialog.dispose();  // Close dialog if user does not want to continue
                     } else {
+                        // Reset fields for adding a new item
                         itemname.Reset();
                         unitprice.Reset();
-                        startamt.Reset();
-                        minamt.Reset();
-                        supplierid.Reset();
+                        unitcost.Reset();
+                        stockcount.Reset();
+                        threshold.Reset();
+                        suppliername.Reset();
                     }
                 }
             }
         });
+
 
         dialog.addMouseListener(new MouseAdapter() {
             @Override

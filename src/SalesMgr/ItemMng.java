@@ -1,8 +1,6 @@
 package SalesMgr;
 
-import Admin.BufferForUser;
-import Admin.CustomComponents;
-import Admin.Main;
+import Admin.*;
 import InventoryMgr.Item;
 
 import static PurchaseMgr.Item_Supplier.getSupplierIDFromItemID;
@@ -18,14 +16,13 @@ import java.awt.event.FocusEvent;
 public class ItemMng {
     private static JFrame parent;
     private static Font merriweather, boldonse;
-    private static JPanel content, top_bar;
-    private static BufferForUser current_user;
+    private static JPanel content, page_panel, buttonPanel1, buttonPanel2;
+    private static User current_user;
     private static int indicator, base_size;
     private static List<Item> AllItems;
-    private static JList ItemList;
     private static JButton s_btn,clearbtn,p_first,p_left,p_right,p_last;
     private static JDialog dialogAdd, dialogDelete, dialogEdit;
-    private static CustomComponents.CustomButton btnAdd,btnDelete,btnEdit;
+    private static CustomComponents.CustomButton btnRestock, btnAdd,btnDelete,btnEdit, btnView ;
     private static CustomComponents.CustomScrollPane scrollPane1;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
     private static CustomComponents.CustomXIcon icon_clear1, icon_clear2;
@@ -38,7 +35,7 @@ public class ItemMng {
 
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, BufferForUser current_user) {
+                              JPanel content, User current_user) {
         SalesMgr.ItemMng.parent = parent;
         SalesMgr.ItemMng.merriweather = merriweather;
         SalesMgr.ItemMng.boldonse = boldonse;
@@ -51,18 +48,27 @@ public class ItemMng {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 1;
-        gbc.weighty = 1;
+        gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(10, 10, 0, 10);
+        JPanel entriesPanel = new JPanel(new GridBagLayout());
+        entriesPanel.setOpaque(false);
+        
+        GridBagConstraints epgbc = new GridBagConstraints();
+        epgbc.gridx = 0;
+        epgbc.gridy = 0;
+        epgbc.weightx = 1;
+        epgbc.weighty = 1;
+        epgbc.fill = GridBagConstraints.BOTH;
+        epgbc.insets = new Insets(10, 10, 0, 10);
         lbl_show = new JLabel("Show");
         lbl_show.setFont(merriweather.deriveFont(Font.BOLD, 16));
-        lbl_show.setOpaque(false);
         lbl_show.setForeground(new Color(122, 122, 122));
-        content.add(lbl_show, gbc);
+        entriesPanel.add(lbl_show, epgbc);
 
-        gbc.gridx = 1;
-        gbc.insets = new Insets(10, 5, 0, 5);
+        epgbc.gridx = 1;
+        epgbc.weightx = 1;
+        epgbc.insets = new Insets(10, 5, 0, 5);
         String[] entry_item = {"5", "10", "15", "20"};
         entries = new JComboBox<>(entry_item);
         entries.setFont(merriweather.deriveFont(Font.BOLD, 14));
@@ -74,16 +80,16 @@ public class ItemMng {
             UpdatePages(AllItems.size());
             page_counter = 0;
             UpdateTable(AllItems, list_length, page_counter);
-
         });
-        content.add(entries, gbc);
+        entriesPanel.add(entries, epgbc);
 
-        gbc.gridx = 2;
+        epgbc.gridx = 2;
+        epgbc.weightx = 1;
         lbl_entries = new JLabel("entries");
         lbl_entries.setFont(merriweather.deriveFont(Font.BOLD, 16));
-        lbl_entries.setOpaque(false);
         lbl_entries.setForeground(new Color(122, 122, 122));
-        content.add(lbl_entries, gbc);
+        entriesPanel.add(lbl_entries, epgbc);
+        content.add(entriesPanel, gbc);
 
         gbc.gridx = 3;
         gbc.weightx = 25;
@@ -91,7 +97,7 @@ public class ItemMng {
         content.add(placeholder1, gbc);
 
         gbc.gridx = 4;
-        gbc.weightx = 1;
+        gbc.weightx = 3;
         CustomComponents.RoundedPanel search_panel = new CustomComponents.RoundedPanel(8, 0, 1, Color.WHITE,
                 new Color(209, 209, 209));
         search_panel.setLayout(new GridBagLayout());
@@ -224,8 +230,10 @@ public class ItemMng {
         gbc.gridx = 4;
         gbc.gridy = 2;
         gbc.weightx = 1;
+        gbc.gridwidth = 1;
+        gbc.insets = new Insets(0,0,0,11);
         gbc.fill = GridBagConstraints.BOTH;
-        JPanel page_panel = new JPanel(new GridBagLayout());
+        page_panel = new JPanel(new GridBagLayout());
         page_panel.setOpaque(false);
         content.add(page_panel, gbc);
 
@@ -294,7 +302,6 @@ public class ItemMng {
         });
         page_panel.add(p_right, ii_gbc);
 
-// Add "Last" button
         ii_gbc.gridx = 4;
         p_last = new JButton("Last");
         p_last.setFont(merriweather.deriveFont(Font.BOLD, 16));
@@ -311,90 +318,74 @@ public class ItemMng {
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.weightx = 1;
-        gbc.weighty = 1;
+        gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridBagLayout()); // Using GridBagLayout for better alignment of buttons
-        buttonPanel.setOpaque(false); // Set the panel background to transparent
-        content.add(buttonPanel, gbc);
+        buttonPanel1 = new JPanel(new GridBagLayout());
+        buttonPanel1.setOpaque(false);
+        content.add(buttonPanel1, gbc);
 
-        GridBagConstraints buttonGbc = new GridBagConstraints();
-        buttonGbc.gridx = 0;
-        buttonGbc.gridy = 0;
-        buttonGbc.insets = new Insets(0, 7, 5, 7);  // Reduced horizontal space (left and right padding)
+        gbc.gridx = 2;
+        gbc.weightx = 10;
+        JLabel placeholder3 = new JLabel("");
+        content.add(placeholder3, gbc);
 
-        // Add "Add Item" button
+        gbc.gridx = 4;
+        gbc.weightx = 1;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        buttonPanel2 = new JPanel(new GridBagLayout());
+        buttonPanel2.setOpaque(false); // Set the panel background to transparent
+        content.add(buttonPanel2, gbc);
+
+        GridBagConstraints buttongbc = new GridBagConstraints();
+        buttongbc.gridx = 0;
+        buttongbc.gridy = 0;
+        buttongbc.insets = new Insets(0, 7, 5, 7);  // Reduced horizontal space (left and right padding)
         btnAdd = new CustomComponents.CustomButton("Add Item", merriweather, Color.WHITE, Color.WHITE,
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
-                5, false, null, 0, 0,0);
-        btnAdd.setPreferredSize(new Dimension(165, 45));  // Increase width and height of the "Add Item" button
+                5, false, null, 0, 0, 0);
+        btnAdd.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
         btnAdd.addActionListener(_ -> {
-            ItemMng.indicator = 0;
-            PageChanger();
+            AddNewItem.Loader(parent, merriweather, boldonse, content, current_user);
+            AddNewItem.ShowPage();
         });
-        buttonPanel.add(btnAdd, buttonGbc);
+        buttonPanel1.add(btnAdd, buttongbc);
 
-// Add "Edit Item" button
-        buttonGbc.gridx = 1; // Move to the next column
+        buttongbc.gridx = 1;
         btnEdit = new CustomComponents.CustomButton("Edit Item", merriweather, Color.WHITE, Color.WHITE,
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
-                5, false, null, 0, 0,0);
-        btnEdit.setPreferredSize(new Dimension(165, 45));  // Increase width and height of the "Edit Item" button
+                5, false, null, 0, 0, 0);
+        btnEdit.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
         btnEdit.addActionListener(_ -> {
-            ItemMng.indicator = 1;
-            PageChanger();
+            // Add Edit Item functionality here
         });
-        buttonPanel.add(btnEdit, buttonGbc);
+        buttonPanel1.add(btnEdit, buttongbc);
 
-// Add "Delete Item" button
-        buttonGbc.gridx = 2; // Move to the next column
-        btnDelete = new CustomComponents.CustomButton("Delete Item", merriweather, Color.WHITE, Color.WHITE,
+        buttongbc.gridx = 2;
+        buttongbc.insets = new Insets(0, 7, 5, 7);
+        btnView = new CustomComponents.CustomButton("View Item", merriweather, Color.WHITE, Color.WHITE,
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
-                5, false, null, 0, 0,0);
-        btnDelete.setPreferredSize(new Dimension(165, 45)); // Increase width and height of the "Delete Item" button
-        btnDelete.addActionListener(_ -> {
-            ItemMng.indicator = 2;
-            PageChanger();
+                5, false, null, 0, 0, 0);
+        btnView.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
+        btnView.addActionListener(_ -> {
+            // Add View Item functionality here
         });
-        buttonPanel.add(btnDelete, buttonGbc);
-    }
+        buttonPanel2.add(btnView, buttongbc);
 
-    public static void PageChanger() {
-        switch (indicator) {
-            case 0:
-                // Create a dialog with a text field
-                JTextField textField = new JTextField(20); // Create a text field with a width of 20 columns
 
-                // Create a panel to hold the text field and a button
-                JPanel dialogPanel = new JPanel();
-                dialogPanel.add(new JLabel("Enter something:"));
-                dialogPanel.add(textField);
-
-                // Create a confirmation button for the dialog
-                JButton confirmButton = new JButton("Confirm");
-                confirmButton.addActionListener(e -> {
-                    String enteredText = textField.getText();
-                    System.out.println("Entered text: " + enteredText); // Handle the entered text
-                    // You can perform other actions with the entered text if needed
-                    JOptionPane.showMessageDialog(content, "You entered: " + enteredText);
-                });
-                dialogPanel.add(confirmButton);
-
-                // Show the dialog
-                JOptionPane.showOptionDialog(content, dialogPanel, "Input Dialog",
-                        JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                        null, new Object[]{}, null);
-
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-        }
-        UpdateComponentSize(base_size);
+        buttongbc.gridx =3 ;
+        btnDelete = new CustomComponents.CustomButton("Delete Item", merriweather, Color.WHITE, Color.WHITE,
+                new Color(155, 86, 122), new Color(174, 122, 140),
+                Main.transparent, 0, 20, Main.transparent, false,
+                5, false, null, 0, 0, 0);
+        btnDelete.setPreferredSize(new Dimension(185, 40)); // Adjusted width and height
+        btnDelete.addActionListener(_ -> {
+            // Add Delete Item functionality here
+        });
+        buttonPanel2.add(btnDelete, buttongbc);
     }
 
     public static void UpdateTable(List<Item> filteredItems, int length, int page) {
@@ -468,7 +459,6 @@ public class ItemMng {
             UpdatePages(AllItems.size());
             UpdateTable(AllItems, list_length, page_counter);
         } else {
-            // Apply search filtering
             AllItems.removeIf(item -> {
                 String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
                 String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
@@ -486,7 +476,6 @@ public class ItemMng {
                     Color.GRAY, Color.WHITE, Color.GRAY, Color.WHITE
             );
         } else {
-            // Update pagination and table with full item details
             page_counter = 0;
             UpdatePages(AllItems.size());
             UpdateTable(AllItems, list_length, page_counter);
@@ -545,6 +534,8 @@ public class ItemMng {
         btnAdd.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnEdit.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnDelete.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        btnView.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+
 
         // Ensure components revalidate and repaint to reflect size changes
         s_btn.revalidate();
