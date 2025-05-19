@@ -21,7 +21,7 @@ public class AddUser {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static BufferForUser current_user;
+    private static User current_user;
     private static User past, future;
     private static JComboBox<String> types;
     private static CustomComponents.EmptyTextField username, fullname, password, email, phone;
@@ -30,7 +30,7 @@ public class AddUser {
                     + "@([a-zA-Z0-9.-]+)\\.([a-zA-Z]{2,})$";
     private static final String PHONE_REGEX = "^01[0-9]{8}$";
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, BufferForUser current_user) {
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
         AddUser.parent = parent;
         AddUser.merriweather = merriweather;
         AddUser.boldonse = boldonse;
@@ -244,7 +244,7 @@ public class AddUser {
                 }
             }
         });
-        ((AbstractDocument) username.getDocument()).setDocumentFilter(new NoSpaceFilter());
+        ((AbstractDocument) username.getDocument()).setDocumentFilter(new AlphaNumericSpaceFilter());
         inner1.add(username, igbc);
 
         fullname = new CustomComponents.EmptyTextField(20, "",
@@ -273,6 +273,7 @@ public class AddUser {
                 }
             }
         });
+        ((AbstractDocument) fullname.getDocument()).setDocumentFilter(new AlphaNumericFilter());
         inner2.add(fullname, igbc);
 
         password = new CustomComponents.EmptyTextField(20, "",
@@ -394,7 +395,6 @@ public class AddUser {
                 }
             }
         });
-        ((AbstractDocument) phone.getDocument()).setDocumentFilter(new DigitFilter());
         ((AbstractDocument) phone.getDocument()).setDocumentFilter(new DigitLimitFilter(9));
         phone.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         inner5.add(phone, igbc);
@@ -411,7 +411,10 @@ public class AddUser {
         clear1.setOpaque(false);
         clear1.setFocusable(false);
         clear1.setBorder(BorderFactory.createEmptyBorder());
-        clear1.addActionListener(_ -> {username.Reset();});
+        clear1.addActionListener(_ -> {
+            username.Reset();
+            SwingUtilities.invokeLater(title::requestFocusInWindow);
+        });
         inner1.add(clear1, igbc);
 
         JButton clear2 = new JButton(icon_clear1);
@@ -419,7 +422,10 @@ public class AddUser {
         clear2.setOpaque(false);
         clear2.setFocusable(false);
         clear2.setBorder(BorderFactory.createEmptyBorder());
-        clear2.addActionListener(_ -> {fullname.Reset();});
+        clear2.addActionListener(_ -> {
+            fullname.Reset();
+            SwingUtilities.invokeLater(title::requestFocusInWindow);
+        });
         inner2.add(clear2, igbc);
 
         JButton clear3 = new JButton(icon_clear1);
@@ -427,7 +433,10 @@ public class AddUser {
         clear3.setOpaque(false);
         clear3.setFocusable(false);
         clear3.setBorder(BorderFactory.createEmptyBorder());
-        clear3.addActionListener(_ -> {password.Reset();});
+        clear3.addActionListener(_ -> {
+            password.Reset();
+            SwingUtilities.invokeLater(title::requestFocusInWindow);
+        });
         inner3.add(clear3, igbc);
 
         JButton clear4 = new JButton(icon_clear1);
@@ -435,7 +444,10 @@ public class AddUser {
         clear4.setOpaque(false);
         clear4.setFocusable(false);
         clear4.setBorder(BorderFactory.createEmptyBorder());
-        clear4.addActionListener(_ -> {email.Reset();});
+        clear4.addActionListener(_ -> {
+            email.Reset();
+            SwingUtilities.invokeLater(title::requestFocusInWindow);
+        });
         inner4.add(clear4, igbc);
 
         JButton clear5 = new JButton(icon_clear1);
@@ -443,7 +455,10 @@ public class AddUser {
         clear5.setOpaque(false);
         clear5.setFocusable(false);
         clear5.setBorder(BorderFactory.createEmptyBorder());
-        clear5.addActionListener(_ -> {phone.Reset();});
+        clear5.addActionListener(_ -> {
+            phone.Reset();
+            SwingUtilities.invokeLater(title::requestFocusInWindow);
+        });
         inner5.add(clear5, igbc);
 
         cancel.addActionListener(_ -> {
@@ -619,36 +634,17 @@ public class AddUser {
         return result[0];
     }
 
-    static class DigitFilter extends DocumentFilter {
-        @Override
-        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
-                throws BadLocationException {
-            if (string != null && string.matches("\\d+")) {
-                super.insertString(fb, offset, string, attr);
-            }
-        }
-
-        @Override
-        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
-                throws BadLocationException {
-            if (text != null && text.matches("\\d+")) {
-                super.replace(fb, offset, length, text, attrs);
-            }
-        }
-
-        @Override
-        public void remove(FilterBypass fb, int offset, int length)
-                throws BadLocationException {
-            super.remove(fb, offset, length);
-        }
-    }
-
     static class NoSpaceFilter extends DocumentFilter {
+        private static final int MAX_LENGTH = 255;
+
         @Override
         public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
                 throws BadLocationException {
             if (string != null && !string.contains(" ")) {
-                super.insertString(fb, offset, string, attr);
+                int currentLength = fb.getDocument().getLength();
+                if ((currentLength + string.length()) <= MAX_LENGTH) {
+                    super.insertString(fb, offset, string, attr);
+                }
             }
         }
 
@@ -656,7 +652,11 @@ public class AddUser {
         public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
                 throws BadLocationException {
             if (text != null && !text.contains(" ")) {
-                super.replace(fb, offset, length, text, attrs);
+                int currentLength = fb.getDocument().getLength();
+                int newLength = currentLength - length + text.length();
+                if (newLength <= MAX_LENGTH) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
             }
         }
     }
@@ -698,7 +698,7 @@ public class AddUser {
                         super.replace(fb, offset, length, text.substring(0, allowed), attrs);
                     }
                 }
-            } else if (text.isEmpty()) {
+            } else if (Objects.requireNonNull(text).isEmpty()) {
                 super.replace(fb, offset, length, text, attrs);
             }
         }
@@ -707,6 +707,58 @@ public class AddUser {
         public void remove(FilterBypass fb, int offset, int length)
                 throws BadLocationException {
             super.remove(fb, offset, length);
+        }
+    }
+
+    static class AlphaNumericFilter extends DocumentFilter {
+        private static final int MAX_LENGTH = 255;
+        private static final String ALPHA_NUMERIC_REGEX = "[a-zA-Z0-9]+";
+
+        @Override
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+            if (string != null && string.matches(ALPHA_NUMERIC_REGEX)) {
+                int currentLength = fb.getDocument().getLength();
+                if ((currentLength + string.length()) <= MAX_LENGTH) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            if (text == null || text.isEmpty() || text.matches(ALPHA_NUMERIC_REGEX)) {
+                int currentLength = fb.getDocument().getLength();
+                int newLength = currentLength - length + (text != null ? text.length() : 0);
+                if (newLength <= MAX_LENGTH) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        }
+    }
+
+    static class AlphaNumericSpaceFilter extends DocumentFilter {
+        private static final String ALPHA_NUMERIC_REGEX = "[a-zA-Z0-9]+";
+        private static final int MAX_LENGTH = 255;
+
+        @Override
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+            if (string != null && string.matches(ALPHA_NUMERIC_REGEX)) {
+                int currentLength = fb.getDocument().getLength();
+                if ((currentLength + string.length()) <= MAX_LENGTH) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            if (text == null || text.isEmpty() || text.matches(ALPHA_NUMERIC_REGEX)) {
+                int currentLength = fb.getDocument().getLength();
+                int newLength = currentLength - length + (text != null ? text.length() : 0);
+                if (newLength <= MAX_LENGTH) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
         }
     }
 }
