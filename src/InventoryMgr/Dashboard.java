@@ -48,6 +48,7 @@ public class Dashboard {
         gbc.weighty = 1;
 
         label1 = new JLabel("I am going to shove this shovel up your ass.");
+        label1.setSize(2000, 2000);
         label1.setOpaque(true);
         content.add(label1, gbc);
 

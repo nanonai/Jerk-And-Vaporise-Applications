@@ -1,5 +1,7 @@
 package PurchaseMgr;
 
+import Admin.User;
+
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -74,18 +76,18 @@ public class PurchaseOrder {
         return allPurchaseOrders;
     }
 
-    public static void ChangePurOrderStatus(String PurchaseOrderID, PurchaseOrder buffer, String filename, String status) {
+    public static void ChangePurOrderStatus(String PurchaseOrderID, PurchaseOrder purchaseOrder, String filename) {
         List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(filename);
         for (PurchaseOrder po : purchaseOrderList) {
             if (Objects.equals(po.PurchaseOrderID, PurchaseOrderID)) {
-                po.PurchaseOrderID = buffer.PurchaseOrderID;
-                po.ItemID = buffer.ItemID;
-                po.SupplierID = buffer.SupplierID;
-                po.PurchaseQuantity = buffer.PurchaseQuantity;
-                po.TotalAmt = buffer.TotalAmt;
-                po.OrderDate = buffer.OrderDate;
-                po.PurchaseMgrID = buffer.PurchaseMgrID;
-                po.Status = buffer.Status;  // change status
+                po.PurchaseOrderID = purchaseOrder.PurchaseOrderID;
+                po.ItemID = purchaseOrder.ItemID;
+                po.SupplierID = purchaseOrder.SupplierID;
+                po.PurchaseQuantity = purchaseOrder.PurchaseQuantity;
+                po.TotalAmt = purchaseOrder.TotalAmt;
+                po.OrderDate = purchaseOrder.OrderDate;
+                po.PurchaseMgrID = purchaseOrder.PurchaseMgrID;
+                po.Status = purchaseOrder.Status;  // change status
             }
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
@@ -104,6 +106,38 @@ public class PurchaseOrder {
             e.getStackTrace();
         }
     }
+
+    public static void ChangePurOrder(String PurchaseOrderID, PurchaseOrder purchaseOrder, String filename,String supplierID,int quantity, String status) {
+        List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(filename);
+        for (PurchaseOrder po : purchaseOrderList) {
+            if (Objects.equals(po.PurchaseOrderID, PurchaseOrderID)) {
+                po.PurchaseOrderID = purchaseOrder.PurchaseOrderID;
+                po.ItemID = purchaseOrder.ItemID;
+                po.SupplierID = supplierID;
+                po.PurchaseQuantity = quantity;
+                po.TotalAmt = purchaseOrder.TotalAmt;
+                po.OrderDate = purchaseOrder.OrderDate;
+                po.PurchaseMgrID = purchaseOrder.PurchaseMgrID;
+                po.Status = status;  // change status
+            }
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (PurchaseOrder po : purchaseOrderList) {
+                writer.write("PurchaseOrderID:     " + po.PurchaseOrderID + "\n");
+                writer.write("ItemID:              " + po.ItemID + "\n");
+                writer.write("SupplierID:          " + po.SupplierID + "\n");
+                writer.write("PurchaseQuantity:    " + po.PurchaseQuantity + "\n");
+                writer.write("TotalAmt:            " + po.TotalAmt + "\n");
+                writer.write("OrderDate:           " + po.OrderDate + "\n");
+                writer.write("PurchaseMgrID:       " + po.PurchaseMgrID + "\n");
+                writer.write("Status:              " + po.Status + "\n");
+                writer.write("~\n");
+            }
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+    }
+
 
     public static String idMaker(String filename) {
         List<PurchaseOrder> allPurchaseOrder = listAllPurchaseOrders(filename);
@@ -141,34 +175,7 @@ public class PurchaseOrder {
         return purchaseOrder_temp;
     }
 
-    public static List<String> loadItemNames(String filePath) {
-        List<String> itemNames = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            String itemName = null;
-
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-
-                if (line.startsWith("ItemName:")) {
-                    itemName = line.substring("ItemName:".length()).trim();
-                }
-
-                if (line.equals("~~~~~") && itemName != null) {
-                    itemNames.add(itemName);
-                    itemName = null;
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace(); // You can also handle this better in production
-        }
-
-        return itemNames;
-    }
-
-//    public static List<PurchaseOrder> listAllPOFromFilter(String filename, String purchaseOrderID, String filter, PurchaseOrder current_po) {
+//    public static List<PurchaseOrder> listAllPOFromFilter(String filename, String purchaseOrderID, String filter, BufferForPO current_po) {
 //        List<PurchaseOrder> po_list = listAllPurchaseOrders(filename);
 //        List<PurchaseOrder> poID_list = new ArrayList<>();
 //        List<PurchaseOrder> filtered_po_list = new ArrayList<>();
