@@ -1,6 +1,5 @@
 package FinanceMgr;
 
-import Admin.BufferForUser;
 import Admin.CustomComponents;
 import Admin.Main;
 import Admin.User;
@@ -24,7 +23,7 @@ public class InventoryPage {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content,inner;
-    public static BufferForUser current_user;
+    public static User current_user;
     private static CustomComponents.RoundedPanel search_panel;
     private static JComboBox<String> entries;
     private static CustomComponents.EmptyTextField search;
@@ -44,7 +43,7 @@ public class InventoryPage {
     private static CustomComponents.CustomArrowIcon left_icon1, left_icon2, right_icon1, right_icon2;
 
     public static void Loader(JFrame parent,Font merriweather,Font boldonse,
-                              JPanel content,BufferForUser current_user){
+                              JPanel content,User current_user){
         InventoryPage.parent = parent;
         InventoryPage.merriweather = merriweather;
         InventoryPage.boldonse = boldonse;
@@ -428,7 +427,7 @@ public class InventoryPage {
             } else {
                 String selected_id = table_item.getValueAt(table_item.getSelectedRow(),
                         table_item.getColumnModel().getColumnIndex("ItemID")).toString();
-                ViewInventory.UpdateInventory(Item.getItemID(selected_id, Main.item_file));
+                ViewInventory.UpdateInventory(Item.getItemByID(selected_id, Main.item_file));
                 boolean see = ViewInventory.ShowPage();
                 if (see) {
                     System.out.println(" ");

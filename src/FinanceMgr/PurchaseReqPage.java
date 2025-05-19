@@ -1,8 +1,8 @@
 package FinanceMgr;
 
-import Admin.BufferForUser;
 import Admin.CustomComponents;
 import Admin.Main;
+import Admin.User;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -17,7 +17,7 @@ public class PurchaseReqPage {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content,inner;
-    public static BufferForUser current_user;
+    public static User current_user;
     private static CustomComponents.CustomButton all, purReq, itemID, quan, reqDate,purManID;
     private static CustomComponents.RoundedPanel search_panel;
     private static JComboBox<String> entries;
@@ -37,7 +37,7 @@ public class PurchaseReqPage {
     private static CustomComponents.CustomArrowIcon left_icon1, left_icon2, right_icon1, right_icon2;
 
     public static void Loader(JFrame parent,Font merriweather,Font boldonse,
-                              JPanel content,BufferForUser current_user){
+                              JPanel content,User current_user){
         PurchaseReqPage.parent = parent;
         PurchaseReqPage.merriweather = merriweather;
         PurchaseReqPage.boldonse = boldonse;

@@ -14,7 +14,7 @@ public class PurchaseOrderPage {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content,inner;
-    public static BufferForUser current_user;
+    public static User current_user;
     private static CustomComponents.CustomButton all, fin, pur, inv, sls, view, add, modify,
             delete1, delete2, data_transfer;
     private static CustomComponents.CustomButton updateStatus,makePayment,viewPO;
@@ -37,7 +37,7 @@ public class PurchaseOrderPage {
     private static CustomComponents.CustomArrowIcon left_icon1, left_icon2, right_icon1, right_icon2;
 
     public static void Loader(JFrame parent,Font merriweather,Font boldonse,
-                              JPanel content,BufferForUser current_user){
+                              JPanel content,User current_user){
         PurchaseOrderPage.parent = parent;
         PurchaseOrderPage.merriweather = merriweather;
         PurchaseOrderPage.boldonse = boldonse;

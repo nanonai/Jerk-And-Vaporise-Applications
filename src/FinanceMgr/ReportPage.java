@@ -1,8 +1,9 @@
 package FinanceMgr;
 
-import Admin.BufferForUser;
+
 import Admin.CustomComponents;
 import Admin.Main;
+import Admin.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,11 +13,11 @@ public class ReportPage {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content,inner;
-    public static BufferForUser current_user;
+    public static User current_user;
     private static JLabel lbl_begin_date,lbl_to,lbl_po_approve,lbl_payment_made;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, BufferForUser current_user){
+                              JPanel content, User current_user){
         ReportPage.parent = parent;
         ReportPage.merriweather = merriweather;
         ReportPage.boldonse = boldonse;

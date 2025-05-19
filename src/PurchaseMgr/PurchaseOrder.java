@@ -1,6 +1,5 @@
 package PurchaseMgr;
 
-import Admin.BufferForUser;
 import Admin.User;
 
 import java.io.*;
@@ -77,7 +76,7 @@ public class PurchaseOrder {
         return allPurchaseOrders;
     }
 
-    public static void ChangePurOrderStatus(String PurchaseOrderID, PurchaseOrder purchaseOrder, String filename,String status) {
+    public static void ChangePurOrderStatus(String PurchaseOrderID, PurchaseOrder purchaseOrder, String filename) {
         List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(filename);
         for (PurchaseOrder po : purchaseOrderList) {
             if (Objects.equals(po.PurchaseOrderID, PurchaseOrderID)) {
@@ -88,7 +87,7 @@ public class PurchaseOrder {
                 po.TotalAmt = purchaseOrder.TotalAmt;
                 po.OrderDate = purchaseOrder.OrderDate;
                 po.PurchaseMgrID = purchaseOrder.PurchaseMgrID;
-                po.Status = status;  // change status
+                po.Status = purchaseOrder.Status;  // change status
             }
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {

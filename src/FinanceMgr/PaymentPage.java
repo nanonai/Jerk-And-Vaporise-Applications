@@ -20,7 +20,7 @@ public class PaymentPage {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content,inner;
-    public static BufferForUser current_user;
+    public static User current_user;
     private static CustomComponents.RoundedPanel search_panel;
     private static JLabel lbl_show, lbl_entries,lbl_indicate;
     private static JComboBox<String> entries;
@@ -41,7 +41,7 @@ public class PaymentPage {
     private static CustomComponents.CustomButton delete2;
 
     public static void Loader(JFrame parent,Font merriweather,Font boldonse,
-                              JPanel content,BufferForUser current_user){
+                              JPanel content,User current_user){
         PaymentPage.parent = parent;
         PaymentPage.merriweather = merriweather;
         PaymentPage.boldonse = boldonse;
