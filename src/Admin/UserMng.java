@@ -710,7 +710,40 @@ public class UserMng {
                 new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
                 Main.transparent, 0, 16, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
-
+        data_transfer.addActionListener(_ -> {
+            if (table_user.getSelectedRowCount() == 0) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select an account to transfer data from!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else {
+                String selected_id = table_user.getValueAt(table_user.getSelectedRow(),
+                        table_user.getColumnModel().getColumnIndex("Id")).toString();
+                User selected = User.GetUserById(selected_id, Main.userdata_file);
+                if (User.checkSalesRecordByID(selected_id, Main.sales_file).isEmpty() &&
+                        User.checkPRRecordByID(selected_id, Main.purchaseReq_file).isEmpty() &&
+                        User.checkPORecordByID(selected_id, Main.purchaseOrder_file).isEmpty() &&
+                        User.checkPYRecordByID(selected_id, Main.payment_file).isEmpty()) {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "This account has no data/records to transfer!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                } else {
+                    TransferData.UpdateUser(selected);
+                    TransferData.ShowPage();
+                }
+            }
+        });
         button_panel2.add(data_transfer, ii_gbc);
 
         cancel_delete = new CustomComponents.CustomButton("Cancel", merriweather, Color.WHITE, Color.WHITE,
@@ -888,6 +921,7 @@ public class UserMng {
         ModifyUser.Loader(parent, merriweather, boldonse, content, null);
         DeleteUser.Loader(parent, merriweather, boldonse, content, current_user);
         DeleteBridge.Loader(parent, merriweather, boldonse, content, current_user, null);
+        TransferData.Loader(parent, merriweather, boldonse, content, null);
     }
 
     public static void UpdateTable(int length, int page) {
