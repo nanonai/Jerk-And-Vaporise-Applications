@@ -128,7 +128,8 @@ public class Item {
             e.getStackTrace();
         }
     }
-    public static Item getItemID(String ItemID, String filename){
+
+    public static Item getItemByID(String ItemID, String filename){
         List<Item> itemList = listAllItem(filename);
         Item item_temp = null;
         for (Item item: itemList) {
@@ -138,5 +139,18 @@ public class Item {
             }
         }
         return item_temp;
+    }
+
+    // getItem (general)
+    public static Item getItemByName(String ItemName, String filename) {
+        // itemList is data inside txt file
+        List<Item> itemList = listAllItem(filename);
+        // item (each item inside txt file)
+        for (Item item : itemList) {  //    below store ItemName inside combobox
+            if (Objects.equals(item.ItemName, ItemName)) {
+                return item;
+            }
+        }
+        return null;
     }
 }

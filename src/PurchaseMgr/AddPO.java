@@ -7,8 +7,12 @@ import InventoryMgr.Item;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AddPO {
     private static JFrame parent;
@@ -16,6 +20,8 @@ public class AddPO {
     private static JPanel content;
     private static BufferForUser current_user;
     private static String itemNames;
+    private static JComboBox<Object> itemComboBox, supplierComboBox;
+    private static CustomComponents.EmptyTextField quantity, price, total;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, BufferForUser current_user) {
         AddPO.parent = parent;
@@ -138,7 +144,6 @@ public class AddPO {
 
         gbc.gridx = 1;
         gbc.gridy = 1;
-
         // ArrayList
         List<String> itemComboBoxData = new ArrayList<>();
         // Save data to an Arraylist
@@ -147,17 +152,50 @@ public class AddPO {
         for (Item item : itemsForPO){
             itemComboBoxData.add(item.ItemName);
         }
-        JComboBox<Object> itemComboBox = new JComboBox<>(itemComboBoxData.toArray());
+        itemComboBox = new JComboBox<>(itemComboBoxData.toArray());
+        itemComboBox.setFocusable(false);
+        itemComboBox.setFont(merriweather.deriveFont(Font.PLAIN));
+        itemComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    List<Supplier> suppliersForPO = Item_Supplier.getSuppliersByItemID(
+                            Objects.requireNonNull(Item.getItemByName(Objects.requireNonNull(
+                                    itemComboBox.getSelectedItem()).toString(), Main.item_file)).ItemID,
+                            Main.item_supplier_file
+                    );
+                    supplierComboBox.removeAllItems();
+                    for (Supplier supplier : suppliersForPO) {
+                        supplierComboBox.addItem(supplier.SupplierName);
+                    }
+                    supplierComboBox.repaint();
+                    supplierComboBox.revalidate();
+                });
+            }
+        });
         panel.add(itemComboBox, gbc);
 
-
-
-        /*List<String> itemNames = PurchaseOrder.loadItemNames("item.txt");
-        for (String name : itemNames) {
-            comboBox.addItem(name);
+        gbc.gridy = 2;
+        List<Supplier> suppliersForPO = Item_Supplier.getSuppliersByItemID(
+                Objects.requireNonNull(Item.getItemByName(Objects.requireNonNull(
+                        itemComboBox.getSelectedItem()).toString(), Main.item_file)).ItemID,
+                Main.item_supplier_file
+        );
+        List<String> supplierComboBoxData = new ArrayList<>();
+        for (Supplier supplier : suppliersForPO){
+            supplierComboBoxData.add(supplier.SupplierName);
         }
-        panel.add(frame, gbc);*/
+        supplierComboBox = new JComboBox<>(supplierComboBoxData.toArray());
+        supplierComboBox.setFocusable(false);
+        supplierComboBox.setFont(merriweather.deriveFont(Font.PLAIN));
+        panel.add(supplierComboBox, gbc);
 
+        gbc.gridy = 3;
+        quantity = new CustomComponents.EmptyTextField(20, "", new Color(122, 122, 122));
+        quantity.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        //quantity.addActionListener(_ -> {SwingUtilities.invokeLater(fullname::requestFocusInWindow);});
+        //quantity.addFocusListener(new FocusListener() {
+        panel.add(quantity, gbc);
 
         dialog.setContentPane(panel);
         dialog.setVisible(true);

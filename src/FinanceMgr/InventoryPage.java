@@ -3,16 +3,11 @@ package FinanceMgr;
 import Admin.BufferForUser;
 import Admin.CustomComponents;
 import Admin.Main;
-import Admin.User;
 import InventoryMgr.Item;
-import javax.imageio.ImageIO;
+
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Objects;
 
 public class InventoryPage {
     private static JFrame parent;
@@ -192,7 +187,7 @@ public class InventoryPage {
             } else {
                 String selected_id = table_item.getValueAt(table_item.getSelectedRow(),
                         table_item.getColumnModel().getColumnIndex("ItemID")).toString();
-                ViewInventory.UpdateInventory(Item.getItemID(selected_id, Main.item_file));
+                ViewInventory.UpdateInventory(Item.getItemByID(selected_id, Main.item_file));
                 boolean see = ViewInventory.ShowPage();
                 if (see) {
                     System.out.println(" ");
