@@ -11,7 +11,6 @@ import java.io.FileReader;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-import PurchaseMgr.BufferForPO;
 import java.io.*;
 import java.time.LocalDate;
 import Admin.Profile;
@@ -228,7 +227,7 @@ public class MakePayment {
             String updatedStatus = "Paid";
             current_PO.Status = updatedStatus;
 
-            BufferForPO buffer = new BufferForPO(
+            PurchaseOrder po = new PurchaseOrder(
                     current_PO.PurchaseOrderID,
                     current_PO.ItemID,
                     current_PO.SupplierID,
@@ -239,7 +238,7 @@ public class MakePayment {
                     updatedStatus // <-- new status passed here
             );
             // Update the status in the file
-            PurchaseOrder.ChangePurOrderStatus(current_PO.PurchaseOrderID, buffer, Main.purchaseOrder_file, updatedStatus);
+            PurchaseOrder.ChangePurOrderStatus(current_PO.PurchaseOrderID, po, Main.purchaseOrder_file, updatedStatus);
             JOptionPane.showMessageDialog(null, "Status updated successfully!");
 
             view_or_not.set(true); // Flag to indicate something was modified

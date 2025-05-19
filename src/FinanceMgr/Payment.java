@@ -34,6 +34,7 @@ public class Payment {
             int counter = 1;
             String line;
             while ((line = reader.readLine()) != null) {
+                System.out.println(line);
                 switch (counter) {
                     case 1:
                         PaymentID = line.substring(21);

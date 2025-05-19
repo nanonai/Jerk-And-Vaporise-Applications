@@ -77,17 +77,17 @@ public class PurchaseOrder {
         return allPurchaseOrders;
     }
 
-    public static void ChangePurOrderStatus(String PurchaseOrderID, BufferForPO buffer, String filename,String status) {
+    public static void ChangePurOrderStatus(String PurchaseOrderID, PurchaseOrder purchaseOrder, String filename,String status) {
         List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(filename);
         for (PurchaseOrder po : purchaseOrderList) {
             if (Objects.equals(po.PurchaseOrderID, PurchaseOrderID)) {
-                po.PurchaseOrderID = buffer.PurchaseOrderID;
-                po.ItemID = buffer.ItemID;
-                po.SupplierID = buffer.SupplierID;
-                po.PurchaseQuantity = buffer.PurchaseQuantity;
-                po.TotalAmt = buffer.TotalAmt;
-                po.OrderDate = buffer.OrderDate;
-                po.PurchaseMgrID = buffer.PurchaseMgrID;
+                po.PurchaseOrderID = purchaseOrder.PurchaseOrderID;
+                po.ItemID = purchaseOrder.ItemID;
+                po.SupplierID = purchaseOrder.SupplierID;
+                po.PurchaseQuantity = purchaseOrder.PurchaseQuantity;
+                po.TotalAmt = purchaseOrder.TotalAmt;
+                po.OrderDate = purchaseOrder.OrderDate;
+                po.PurchaseMgrID = purchaseOrder.PurchaseMgrID;
                 po.Status = status;  // change status
             }
         }
@@ -108,18 +108,17 @@ public class PurchaseOrder {
         }
     }
 
-
-    public static void ChangePurOrder(String PurchaseOrderID, BufferForPO buffer, String filename,String supplierID,int quantity, String status) {
+    public static void ChangePurOrder(String PurchaseOrderID, PurchaseOrder purchaseOrder, String filename,String supplierID,int quantity, String status) {
         List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(filename);
         for (PurchaseOrder po : purchaseOrderList) {
             if (Objects.equals(po.PurchaseOrderID, PurchaseOrderID)) {
-                po.PurchaseOrderID = buffer.PurchaseOrderID;
-                po.ItemID = buffer.ItemID;
+                po.PurchaseOrderID = purchaseOrder.PurchaseOrderID;
+                po.ItemID = purchaseOrder.ItemID;
                 po.SupplierID = supplierID;
                 po.PurchaseQuantity = quantity;
-                po.TotalAmt = buffer.TotalAmt;
-                po.OrderDate = buffer.OrderDate;
-                po.PurchaseMgrID = buffer.PurchaseMgrID;
+                po.TotalAmt = purchaseOrder.TotalAmt;
+                po.OrderDate = purchaseOrder.OrderDate;
+                po.PurchaseMgrID = purchaseOrder.PurchaseMgrID;
                 po.Status = status;  // change status
             }
         }

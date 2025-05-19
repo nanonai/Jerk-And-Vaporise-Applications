@@ -12,7 +12,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicBoolean;
-import PurchaseMgr.BufferForPO;
 import InventoryMgr.Item;
 import java.util.List;
 import java.util.ArrayList;
@@ -258,7 +257,7 @@ public class ModifyPO {
             String updateSupplierID = supplierIdCombo.getSelectedItem().toString();
             int updatedQuantity = Integer.parseInt(quantityTxtField.getText());
             current_PO.Status = updatedStatus;
-            BufferForPO buffer = new BufferForPO(
+            PurchaseOrder po = new PurchaseOrder(
                     current_PO.PurchaseOrderID,
                     current_PO.ItemID,
                     updateSupplierID,
@@ -270,7 +269,7 @@ public class ModifyPO {
             );
 
             // Update the status in the file
-            PurchaseOrder.ChangePurOrder(current_PO.PurchaseOrderID, buffer, Main.purchaseOrder_file,updateSupplierID,updatedQuantity, updatedStatus);
+            PurchaseOrder.ChangePurOrder(current_PO.PurchaseOrderID, po, Main.purchaseOrder_file,updateSupplierID,updatedQuantity, updatedStatus);
             JOptionPane.showMessageDialog(null, "Updated successfully!");
             view_or_not.set(true); // Flag to indicate something was modified
             dialog.dispose();      // Close the dialog
