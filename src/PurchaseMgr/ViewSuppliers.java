@@ -1,6 +1,6 @@
 package PurchaseMgr;
 
-import Admin.BufferForUser;
+import Admin.User;
 import Admin.CustomComponents;
 import Admin.Main;
 
@@ -12,7 +12,7 @@ public class ViewSuppliers {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content, inner;
-    public static BufferForUser current_user;
+    public static User current_user;
     private static JButton s_btn;
     //    private static CustomComponents.CustomButton all, purOrder, purReq, itemID, quan,supplier,orderDate,purMan,status;
     private static CustomComponents.RoundedPanel search_panel;
@@ -24,7 +24,7 @@ public class ViewSuppliers {
     private static CustomComponents.CustomScrollPane scrollPane1;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, BufferForUser current_user){
+                              JPanel content, User current_user){
         ViewSuppliers.parent = parent;
         ViewSuppliers.merriweather = merriweather;
         ViewSuppliers.boldonse = boldonse;
@@ -129,7 +129,7 @@ public class ViewSuppliers {
         igbc.weightx = 1;
         igbc.weighty = 16;
         igbc.insets = new Insets(0, 0, 10, 0);
-        List<Supplier> list = Supplier.ListAllSupplier("datafile/supplier.txt");
+        List<Supplier> list = Supplier.listAllSupplier("datafile/supplier.txt");
         String[] titles = new String[]{"SupplierID", "SupplierName", "ContactPerson", "Phone", "Email", "Address"};
         Object[][] data = new Object[list.size()][titles.length];
         int Counter = 0;

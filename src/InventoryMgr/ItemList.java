@@ -1,42 +1,42 @@
-package PurchaseMgr;
+package InventoryMgr;
 
-import Admin.*;
+import Admin.User;
+import Admin.CustomComponents;
+import Admin.Main;
+import Admin.User;
+import InventoryMgr.misc.InvStatic;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.List;
 import java.util.Objects;
 
-public class GenPurchaseOrder {
-    private static JFrame parent;
-    private static Font merriweather, boldonse;
-    private static JPanel content, top_bar;
-    private static User current_user;
+import static PurchaseMgr.Item_Supplier.getSupplierIDFromItemID;
+import static PurchaseMgr.Item_Supplier.getSupplierName;
+
+public class ItemList {
+
+    private static JFrame parent = InvStatic.parent;
+    private static Font merriweather = InvStatic.merriweather, boldonse = InvStatic.boldonse;
+    private static JPanel content = InvStatic.content;
+    private static User current_user = InvStatic.current_user;
     private static int indicator, base_size;
-    private static List<PurchaseOrder> AllPO;
+    private static java.util.List<Item> AllItems;
     private static JList ItemList;
     private static JButton s_btn,clearbtn,p_first,p_left,p_right,p_last;
     private static JDialog dialogAdd, dialogDelete, dialogEdit;
-    private static CustomComponents.CustomButton btnAdd,btnDelete,btnEdit;
+    private static CustomComponents.CustomButton btnAdd,btnDelete,btnEdit,btnModify,btnStockReport;
     private static CustomComponents.CustomScrollPane scrollPane1;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
+    private static CustomComponents.CustomXIcon icon_clear1, icon_clear2;
     private static CustomComponents.EmptyTextField search;
     private static CustomComponents.CustomTable table_item;
     private static CustomComponents.CustomArrowIcon right_icon1,right_icon2, left_icon1, left_icon2;
     private static JLabel lbl_show, lbl_entries,lbl_indicate;
     private static JComboBox entries,pages;
     private static int list_length = 10, page_counter = 0, filter = 0, mode = 1;
-
-
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, User current_user) {
-        PurchaseMgr.GenPurchaseOrder.parent = parent;
-        PurchaseMgr.GenPurchaseOrder.merriweather = merriweather;
-        PurchaseMgr.GenPurchaseOrder.boldonse = boldonse;
-        PurchaseMgr.GenPurchaseOrder.content = content;
-        PurchaseMgr.GenPurchaseOrder.current_user = current_user;
-    }
 
     public static void ShowPage() {
         GridBagConstraints gbc = new GridBagConstraints();
@@ -61,12 +61,11 @@ public class GenPurchaseOrder {
         entries.setForeground(new Color(122, 122, 122));
         entries.setFocusable(false);
         entries.setSelectedItem("10");
-        // key
         entries.addActionListener(e -> {
             list_length = Integer.parseInt((String) Objects.requireNonNull(entries.getSelectedItem()));
-            UpdatePages(AllPO.size());
+            UpdatePages(AllItems.size());
             page_counter = 0;
-            UpdateTable(AllPO, list_length, page_counter);
+            UpdateTable(AllItems, list_length, page_counter);
 
         });
         content.add(entries, gbc);
@@ -107,7 +106,6 @@ public class GenPurchaseOrder {
         s_btn.addActionListener(_ -> SearchStuff());
         search_panel.add(s_btn, igbc);
 
-        // Adding search field
         igbc.gridx = 1;
         igbc.insets = new Insets(6, 0, 6, 0);
         search = new CustomComponents.EmptyTextField(20, "Search...\r\r", new Color(122, 122, 122));
@@ -115,23 +113,42 @@ public class GenPurchaseOrder {
         search.addActionListener(_ -> SearchStuff());
         search_panel.add(search, igbc);
 
-        clearbtn = new JButton("X");
-        clearbtn.setFont(merriweather.deriveFont(Font.BOLD, 14));
-        clearbtn.setForeground(new Color(122, 122, 122));
-        clearbtn.setContentAreaFilled(false);
-        clearbtn.setBorder(BorderFactory.createEmptyBorder());
-        clearbtn.setFocusable(false);
-        // key
-        clearbtn.addActionListener(e -> {
-            search.Reset();
-            page_counter = 0;
-            UpdatePages(AllPO.size());
-            UpdateTable(AllPO, list_length, page_counter);
-        });
-
-        // Add the clear button next to the search field
         igbc.gridx = 2;
-        igbc.insets = new Insets(0, 0, 0, 2);
+        igbc.weightx = 0.9;
+        igbc.weighty = 0.9;
+        igbc.fill = GridBagConstraints.BOTH;
+        icon_clear1 = new CustomComponents.CustomXIcon(23, 3,
+                new Color(209, 209, 209), true);
+        icon_clear2 = new CustomComponents.CustomXIcon( 23, 3,
+                Color.BLACK, true);
+        clearbtn = new JButton(icon_clear1);
+        clearbtn.setRolloverIcon(icon_clear2);
+        clearbtn.setOpaque(false);
+        clearbtn.setFocusable(false);
+        clearbtn.setBorder(BorderFactory.createEmptyBorder());
+        clearbtn.addActionListener(e -> {
+            search.setText("");
+            search.requestFocus();
+            UpdatePages(AllItems.size());
+            UpdateTable(AllItems, list_length, page_counter);
+        });
+        search.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (search.getText().equals("Search...")) {
+                    search.setText("");
+                    search.setForeground(Color.BLACK); // Normal text color
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (search.getText().isEmpty()) {
+                    search.setText("Search...");
+                    search.setForeground(new Color(122, 122, 122)); // Placeholder color
+                }
+            }
+        });
         search_panel.add(clearbtn, igbc);
 
         gbc.gridx = 0;
@@ -141,14 +158,26 @@ public class GenPurchaseOrder {
         gbc.gridwidth = 6;
         gbc.fill = GridBagConstraints.BOTH;
 
-        AllPO = PurchaseOrder.listAllPurchaseOrders("datafile/purchaseOrder.txt");
-        String[] titles = new String[]{"PurchaseOrderID", "PurchaseReqID", "ItemID", "Quantity", "SupplierID","OrderDate","UserID","Status"};
-        List<PurchaseOrder> purchaseOrder_list = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
-        Object[][] data = new Object[purchaseOrder_list.size()][titles.length];
+        AllItems = Item.listAllItem("datafile/item.txt");
+        String[] titles = new String[]{"ItemID", "ItemName", "Unit Price", "Unit Cost", "StockCount", "Threshold",
+                "Category", "Last Update","Supplier Name"};
+        Object[][] data = new Object[AllItems.size()][titles.length];
         int counter = 0;
-        for (PurchaseOrder purchaseOrder : purchaseOrder_list) {
-            data[counter] = new Object[]{purchaseOrder.PurchaseOrderID, purchaseOrder.ItemID,purchaseOrder.PurchaseQuantity,
-                    purchaseOrder.SupplierID,purchaseOrder.OrderDate, purchaseOrder.PurchaseMgrID,purchaseOrder.Status};
+        for (Item item : AllItems) {
+            String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
+            String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+
+            data[counter] = new Object[]{
+                    item.ItemID,
+                    item.ItemName,
+                    item.UnitPrice,
+                    item.UnitCost,
+                    item.StockCount,
+                    item.Threshold,
+                    item.Category,
+                    item.LastUpdate,
+                    supplierName
+            };
             counter += 1;
         }
 
@@ -162,12 +191,11 @@ public class GenPurchaseOrder {
         lbl_indicate.setForeground(new Color(122, 122, 122));
 
         pages = new JComboBox<>();
-        UpdateTable(AllPO, list_length, page_counter);
-        UpdatePages(AllPO.size());
+        UpdateTable(AllItems, list_length, page_counter);
+        UpdatePages(AllItems.size());
         table_item.setShowHorizontalLines(true);
         table_item.setShowVerticalLines(true);
         table_item.setGridColor(new Color(230, 230, 230));
-
 
         scrollPane1 = new CustomComponents.CustomScrollPane(false, 1, table_item,
                 6, new Color(202, 202, 202), Main.transparent,
@@ -207,7 +235,7 @@ public class GenPurchaseOrder {
         p_first.addActionListener(_ -> {
             page_counter = 0;
             pages.setSelectedIndex(page_counter);
-            UpdateTable(AllPO,list_length, page_counter);
+            UpdateTable(AllItems,list_length, page_counter);
         });
         page_panel.add(p_first, ii_gbc);
 
@@ -222,7 +250,7 @@ public class GenPurchaseOrder {
             if (page_counter > 0) {
                 page_counter--;
                 pages.setSelectedIndex(page_counter);
-                UpdateTable(AllPO,list_length, page_counter);
+                UpdateTable(AllItems,list_length, page_counter);
             }
         });
         page_panel.add(p_left, ii_gbc);
@@ -236,7 +264,7 @@ public class GenPurchaseOrder {
         pages.addActionListener(e -> {
             if (pages.getItemCount() > 0) {
                 page_counter = pages.getSelectedIndex();
-                UpdateTable(AllPO,list_length, page_counter);
+                UpdateTable(AllItems,list_length, page_counter);
             }
         });
         page_panel.add(pages, ii_gbc);
@@ -252,12 +280,11 @@ public class GenPurchaseOrder {
             if (page_counter < pages.getItemCount() - 1) {
                 page_counter++;
                 pages.setSelectedIndex(page_counter);
-                UpdateTable(AllPO,list_length, page_counter);
+                UpdateTable(AllItems,list_length, page_counter);
             }
         });
         page_panel.add(p_right, ii_gbc);
 
-// Add "Last" button
         ii_gbc.gridx = 4;
         p_last = new JButton("Last");
         p_last.setFont(merriweather.deriveFont(Font.BOLD, 16));
@@ -267,7 +294,7 @@ public class GenPurchaseOrder {
         p_last.addActionListener(_ -> {
             page_counter = pages.getItemCount() - 1;
             pages.setSelectedIndex(page_counter);
-            UpdateTable(AllPO,list_length, page_counter);
+            UpdateTable(AllItems,list_length, page_counter);
         });
         page_panel.add(p_last, ii_gbc);
 
@@ -293,109 +320,129 @@ public class GenPurchaseOrder {
                 5, false, null, 0, 0,0);
         btnAdd.setPreferredSize(new Dimension(165, 45));  // Increase width and height of the "Add Item" button
         btnAdd.addActionListener(_ -> {
-            GenPurchaseOrder.indicator = 0;
+            InventoryMgr.ItemList.indicator = 0;
             PageChanger();
         });
         buttonPanel.add(btnAdd, buttonGbc);
 
-// Add "Edit Item" button
-        buttonGbc.gridx = 1; // Move to the next column
+        // Add "Edit Item" button
+        buttonGbc.gridx = 1;
         btnEdit = new CustomComponents.CustomButton("Edit Item", merriweather, Color.WHITE, Color.WHITE,
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0,0);
         btnEdit.setPreferredSize(new Dimension(165, 45));  // Increase width and height of the "Edit Item" button
         btnEdit.addActionListener(_ -> {
-            GenPurchaseOrder.indicator = 1;
+            InventoryMgr.ItemList.indicator = 1;
             PageChanger();
         });
         buttonPanel.add(btnEdit, buttonGbc);
 
-// Add "Delete Item" button
-        buttonGbc.gridx = 2; // Move to the next column
+        // Add "Delete Item" button
+        buttonGbc.gridx = 2;
         btnDelete = new CustomComponents.CustomButton("Delete Item", merriweather, Color.WHITE, Color.WHITE,
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0,0);
-        btnDelete.setPreferredSize(new Dimension(165, 45)); // Increase width and height of the "Delete Item" button
+        btnDelete.setPreferredSize(new Dimension(165, 45));
         btnDelete.addActionListener(_ -> {
-            GenPurchaseOrder.indicator = 2;
+            InventoryMgr.ItemList.indicator = 2;
             PageChanger();
         });
         buttonPanel.add(btnDelete, buttonGbc);
+        
+        // Add "Modify Stock" button
+        buttonGbc.gridx = 3;
+        btnModify = new CustomComponents.CustomButton("Modify Stock", merriweather, Color.WHITE, Color.WHITE,
+                new Color(225, 108, 150), new Color(237, 136, 172),
+                Main.transparent, 0, 20, Main.transparent, false,
+                5, false, null, 0, 0,0);
+        btnModify.setPreferredSize(new Dimension(165, 45));
+        btnModify.addActionListener(_ -> {
+            try {
+                int selectedRowIndex = table_item.getSelectedRow();
+                Object value = table_item.getValueAt(selectedRowIndex, 0);
+                Item itm = Item.getItemByID(value.toString(), "datafile/item.txt");
+                UpdateStock.ShowPage(itm);
+            } catch (Exception e){
+                CustomComponents.CustomOptionPane.showErrorDialog(parent, "You might want to select something before doing this", "Invalid selection",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255));
+            }
+        });
+        buttonPanel.add(btnModify, buttonGbc);
+
+        // Add "Stock Report" button
+        buttonGbc.gridx = 4;
+        btnStockReport = new CustomComponents.CustomButton("Stock Report", merriweather, Color.WHITE, Color.WHITE,
+                new Color(225, 108, 150), new Color(237, 136, 172),
+                Main.transparent, 0, 20, Main.transparent, false,
+                5, false, null, 0, 0,0);
+        btnStockReport.setPreferredSize(new Dimension(165, 45));
+        btnStockReport.addActionListener(_ -> {
+            InventoryMgr.ItemList.indicator = 4;
+            PageChanger();
+        });
+        buttonPanel.add(btnStockReport, buttonGbc);
     }
 
     public static void PageChanger() {
         switch (indicator) {
-            case 0:
-                // Create a dialog with a text field
-                JTextField textField = new JTextField(20); // Create a text field with a width of 20 columns
-
-                // Create a panel to hold the text field and a button
-                JPanel dialogPanel = new JPanel();
-                dialogPanel.add(new JLabel("Enter something:"));
-                dialogPanel.add(textField);
-
-                // Create a confirmation button for the dialog
-                JButton confirmButton = new JButton("Confirm");
-                confirmButton.addActionListener(e -> {
-                    String enteredText = textField.getText();
-                    System.out.println("Entered text: " + enteredText); // Handle the entered text
-                    // You can perform other actions with the entered text if needed
-                    JOptionPane.showMessageDialog(content, "You entered: " + enteredText);
-                });
-                dialogPanel.add(confirmButton);
-
-                // Show the dialog
-                JOptionPane.showOptionDialog(content, dialogPanel, "Input Dialog",
-                        JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                        null, new Object[]{}, null);
+            case 0: // Add Item
                 break;
-            case 1:
+            case 1: // Edit Item
                 break;
-            case 2:
+            case 2: // Delete Item
+                break;
+            case 3: // Modify Stock
+                break;
+            case 4: // Report
                 break;
         }
         UpdateComponentSize(base_size);
     }
 
-    public static void UpdateTable(List<PurchaseOrder> filteredItems, int length, int page) {
-        String[] titles = new String[]{"PurchaseOrderID", "PurchaseReqID", "ItemID", "Quantity", "SupplierID","OrderDate","UserID","Status"};
+    public static void UpdateTable(java.util.List<Item> filteredItems, int length, int page) {
+        String[] titles = new String[]{"ItemID", "ItemName", "Unit Price", "Unit Cost", "StockCount", "Threshold",
+                "Category", "Last Update", "Supplier Name"};
         Object[][] data;
         int counter = 0;
         int anti_counter = page * length;
 
-        // Adjust the data size based on the page
         if (length >= filteredItems.size() - page * length) {
             data = new Object[filteredItems.size() - page * length][titles.length];
         } else {
             data = new Object[length][titles.length];
         }
 
-        // Populate data with filtered items
-        for (PurchaseOrder po : filteredItems) {
+        for (Item item : filteredItems) {
             if (anti_counter != 0) {
                 anti_counter -= 1;
                 continue;
             } else {
+                String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
+                String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+
                 data[counter] = new Object[]{
-                        po.PurchaseOrderID,
-                        po.ItemID,
-                        po.SupplierID,
-                        po.PurchaseQuantity,
-                        po.TotalAmt,
-                        po.OrderDate,
-                        po.PurchaseMgrID
+                        item.ItemID,
+                        item.ItemName,
+                        item.UnitPrice,
+                        item.UnitCost,
+                        item.StockCount,
+                        item.Threshold,
+                        item.Category,
+                        item.LastUpdate,
+                        supplierName
                 };
                 counter += 1;
                 if (counter == length || counter == filteredItems.size()) { break; }
             }
         }
 
-        // Update the table content
         table_item.UpdateTableContent(titles, data);
 
-        // Update the record indicator (e.g., "Displaying 1 to 10 of 100 records")
         String temp2 = "<html>Displaying <b>%s</b> to <b>%s</b> of <b>%s</b> records</html>";
         int start = page * length + 1;
         int end = Math.min((page + 1) * length, filteredItems.size());
@@ -417,37 +464,40 @@ public class GenPurchaseOrder {
     }
 
     public static void SearchStuff() {
-        String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search...\r\r")) ?
-                search.getText() : "";
+        String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search..."))
+                ? search.getText().trim() : "";
 
-        List<PurchaseOrder> AllPO = PurchaseOrder.listAllPurchaseOrders("datafile/purchaseOrder.txt");
+        List<Item> AllItems = Item.listAllItem("datafile/item.txt");
 
         if (searcher.isEmpty()) {
+            // Reset pagination when search is empty
             page_counter = 0;
-            UpdatePages(AllPO.size());
-            UpdateTable(AllPO, list_length, page_counter);
+            UpdatePages(AllItems.size());
+            UpdateTable(AllItems, list_length, page_counter);
         } else {
-//            AllPO = Item.listAllItem("datafile/item.txt");
-//            AllPO.removeIf(item -> !(item.Itemname.toLowerCase().contains(searcher.toLowerCase()) ||
-//                    item.ItemID.toLowerCase().contains(searcher.toLowerCase()) ||
-//                    item.Category.toLowerCase().contains(searcher.toLowerCase()) ||
-//                    item.SupplierID.toLowerCase().contains(searcher.toLowerCase())));
+            // Apply search filtering
+            AllItems.removeIf(item -> {
+                String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
+                String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+
+                return !(item.ItemName.toLowerCase().contains(searcher.toLowerCase()) ||
+                        item.ItemID.toLowerCase().contains(searcher.toLowerCase()) ||
+                        item.Category.toLowerCase().contains(searcher.toLowerCase()) ||
+                        supplierName.toLowerCase().contains(searcher.toLowerCase()));
+            });
         }
 
-        if (AllPO.isEmpty()) {
-            CustomComponents.CustomOptionPane.showInfoDialog(parent, "No results found.", "Notification",
-                    Color.GRAY, Color.WHITE, Color.GRAY, Color.WHITE);
+        if (AllItems.isEmpty()) {
+            CustomComponents.CustomOptionPane.showInfoDialog(
+                    parent, "No results found.", "Notification",
+                    Color.GRAY, Color.WHITE, Color.GRAY, Color.WHITE
+            );
         } else {
+            // Update pagination and table with full item details
             page_counter = 0;
-            UpdatePages(AllPO.size());
-            UpdateTable(AllPO, list_length, page_counter);
+            UpdatePages(AllItems.size());
+            UpdateTable(AllItems, list_length, page_counter);
         }
-
-
-        String temp2 = "<html>Displaying <b>%s</b> to <b>%s</b> of <b>%s</b> records</html>";
-        int start = page_counter * list_length + 1;
-        int end = Math.min((page_counter + 1) * list_length, AllPO.size());
-        lbl_indicate.setText(String.format(temp2, start, end, AllPO.size()));
     }
 
     public static void UpdateComponentSize(int base_size) {
@@ -456,6 +506,16 @@ public class GenPurchaseOrder {
         search_icon2.UpdateSize((int) (base_size * 0.8));
         s_btn.setSize(search_icon1.getIconWidth(), search_icon1.getIconHeight());
         s_btn.repaint();
+        icon_clear1.UpdateSize((int) (base_size * 0.8));
+        icon_clear2.UpdateSize((int) (base_size * 0.8));
+
+        // Set button size to match the icon dimensions
+        clearbtn.setSize(icon_clear1.getIconWidth(), icon_clear1.getIconHeight());
+        clearbtn.setPreferredSize(new Dimension(icon_clear1.getIconWidth(), icon_clear1.getIconHeight()));
+
+        // Ensure button is repainted
+        clearbtn.revalidate();
+        clearbtn.repaint();
 
         // Update left and right arrow icons dynamically
         left_icon1.UpdateSize(base_size);
@@ -492,6 +552,8 @@ public class GenPurchaseOrder {
         btnAdd.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnEdit.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnDelete.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        btnModify.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        btnStockReport.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
 
         // Ensure components revalidate and repaint to reflect size changes
         s_btn.revalidate();
@@ -509,6 +571,8 @@ public class GenPurchaseOrder {
         btnAdd.revalidate();
         btnEdit.revalidate();
         btnDelete.revalidate();
+        btnModify.revalidate();
+        btnStockReport.revalidate();
 
         s_btn.repaint();
         p_left.repaint();
@@ -525,5 +589,7 @@ public class GenPurchaseOrder {
         btnAdd.repaint();
         btnEdit.repaint();
         btnDelete.repaint();
+        btnModify.repaint();
+        btnStockReport.repaint();
     }
 }

@@ -1,6 +1,6 @@
 package InventoryMgr;
 
-import Admin.BufferForUser;
+import Admin.User;
 import Admin.CustomComponents;
 
 import javax.imageio.ImageIO;
@@ -14,7 +14,7 @@ public class Dashboard {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static BufferForUser current_user;
+    private static User current_user;
     private static BufferedImage bg, img;
     private static JLabel label1;
     private static CustomComponents.ImagePanel pnl;
@@ -25,7 +25,7 @@ public class Dashboard {
     private static CustomComponents.CustomButton btn;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, BufferForUser current_user) {
+                              JPanel content, User current_user) {
         try {
             bg = ImageIO.read(new File("images/login_bg.jpg"));
             img = ImageIO.read(new File("images/info.png"));
@@ -48,6 +48,7 @@ public class Dashboard {
         gbc.weighty = 1;
 
         label1 = new JLabel("I am going to shove this shovel up your ass.");
+        label1.setSize(2000, 2000);
         label1.setOpaque(true);
         content.add(label1, gbc);
 

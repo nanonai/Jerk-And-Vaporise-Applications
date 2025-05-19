@@ -21,7 +21,7 @@ public class FinanceHome {
     private static Font merriweather, boldonse;
 
     private static JPanel side_bar, top_bar, content;
-    public static BufferForUser current_user;
+    public static User current_user;
     private static BufferedImage logo, caret_up, caret_down;
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
@@ -31,7 +31,7 @@ public class FinanceHome {
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel side_bar, JPanel top_bar, JPanel content, BufferForUser current_user) {
+                              JPanel side_bar, JPanel top_bar, JPanel content, User current_user) {
         try {
             logo = ImageIO.read(new File("images/logo_sidebar.png"));
             caret_up = ImageIO.read(new File("images/caret_up.png"));

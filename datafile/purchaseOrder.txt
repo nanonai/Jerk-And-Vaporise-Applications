@@ -1,14 +1,14 @@
 PurchaseOrderID:     PO0001
-ItemID:              I0001
+ItemID:              I3580
 SupplierID:          S0001
 PurchaseQuantity:    10
 TotalAmt:            15.0
 OrderDate:           2025-05-02
 PurchaseMgrID:       PM0971204357
-Status:              Approved
+Status:              Received
 ~
 PurchaseOrderID:     PO0002
-ItemID:              I0002
+ItemID:              I3580
 SupplierID:          S0002
 PurchaseQuantity:    25
 TotalAmt:            100.0
@@ -68,7 +68,7 @@ PurchaseQuantity:    18
 TotalAmt:            72.0
 OrderDate:           2025-05-06
 PurchaseMgrID:       PM0971204357
-Status:              Paid
+Status:              Denied
 ~
 PurchaseOrderID:     PO0009
 ItemID:              I0009
