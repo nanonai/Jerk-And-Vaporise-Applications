@@ -362,7 +362,7 @@ public class ItemList {
             try {
                 int selectedRowIndex = table_item.getSelectedRow();
                 Object value = table_item.getValueAt(selectedRowIndex, 0);
-                Item itm = Item.getItemID(value.toString(), "datafile/item.txt");
+                Item itm = Item.getItemByID(value.toString(), "datafile/item.txt");
                 UpdateStock.ShowPage(itm);
             } catch (Exception e){
                 CustomComponents.CustomOptionPane.showErrorDialog(parent, "You might want to select something before doing this", "Invalid selection",

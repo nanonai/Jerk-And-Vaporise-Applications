@@ -202,7 +202,7 @@ public class UpdateStock {
 
     static boolean MarkPOReceived(PurchaseOrder po) {
 
-        Item item = Item.getItemID(po.ItemID, "datafile/item.txt");
+        Item item = Item.getItemByID(po.ItemID, "datafile/item.txt");
         Item.addStock(item, po.PurchaseQuantity);
         po.Status = "Received";
         PurchaseOrder.ChangePurOrderStatus(po.PurchaseOrderID, po, "datafile/purchaseOrder.txt");
