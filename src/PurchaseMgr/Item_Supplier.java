@@ -140,16 +140,17 @@ public class Item_Supplier {
     }
 
   
-    public static List<Supplier> getSuppliersByItemID(String ItemID, String filename){
+    public static List<Supplier> getSuppliersByItemID(String ItemID, String filename) {
         List<Supplier> filterList = new ArrayList<>();
         List<Item_Supplier> itemSupplierList = listAllItemSupplier(filename);
-        for (Item_Supplier itemSupplier : itemSupplierList){
+        for (Item_Supplier itemSupplier : itemSupplierList) {
             if (Objects.equals(itemSupplier.ItemID, ItemID)) {
                 filterList.add(Supplier.getSupplierByID(itemSupplier.SupplierID, Main.supplier_file));
             }
         }
         return filterList;
-  
+    }
+
     public static boolean itemIDChecker(String itemID, String filename) {
         List<Item_Supplier> allItemSupplier = listAllItemSupplier(filename);
         for (Item_Supplier itemSupplier : allItemSupplier) {
