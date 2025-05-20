@@ -1,5 +1,7 @@
 package InventoryMgr;
 
+import Admin.User;
+
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -121,6 +123,37 @@ public class Item {
             writer.write("Category:       " + item.Category + "\n");
             writer.write("LastUpdate:     " + item.LastUpdate + "\n");
             writer.write("~~~~~\n");
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+    }
+
+    public static void modifyItem(Item Incoming, String filename) {
+        List<Item> allItem = listAllItem(filename);
+        for (Item item : allItem) {
+            if (Objects.equals(item.ItemID, Incoming.ItemID)) {
+                item.ItemID = Incoming.ItemID;
+                item.ItemName = Incoming.ItemName;
+                item.UnitPrice = Incoming.UnitPrice;
+                item.UnitCost = Incoming.UnitCost;
+                item.StockCount = Incoming.StockCount;
+                item.Threshold = Incoming.Threshold;
+                item.Category = Incoming.Category;
+                item.LastUpdate = Incoming.LastUpdate;
+            }
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Item item : allItem) {
+                writer.write("ItemID:         " + item.ItemID + "\n");
+                writer.write("ItemName:       " + item.ItemName + "\n");
+                writer.write("UnitPrice:      " + item.UnitPrice + "\n");
+                writer.write("UnitCost:       " + item.UnitCost + "\n");
+                writer.write("StockCount:     " + item.StockCount + "\n");
+                writer.write("Threshold:      " + item.Threshold + "\n");
+                writer.write("Category:       " + item.Category + "\n");
+                writer.write("LastUpdate:     " + item.LastUpdate + "\n");
+                writer.write("~~~~~\n");
+            }
         } catch (IOException e) {
             e.getStackTrace();
         }
