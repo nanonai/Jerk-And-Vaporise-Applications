@@ -205,7 +205,7 @@ public class UpdateStock {
         Item item = Item.getItemByID(po.ItemID, "datafile/item.txt");
         Item.addStock(item, po.PurchaseQuantity);
         po.Status = "Received";
-        PurchaseOrder.ChangePurOrderStatus(po.PurchaseOrderID, po, "datafile/purchaseOrder.txt");
+        PurchaseOrder.ModifyPurchaseOrder(po.PurchaseOrderID, po, "datafile/purchaseOrder.txt");
         return true;
     }
 }

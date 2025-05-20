@@ -596,6 +596,7 @@ public class UserMng {
             int[] added = AddUser.ShowPage(filter);
             if (added[0] == 1) {
                 search.Reset();
+                filter = 5;
                 switch(added[1]) {
                     case 0:
                         all.doClick();
@@ -732,6 +733,22 @@ public class UserMng {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
                             "This account has no data/records to transfer!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                } else if (User.listAllUserFromFilter(
+                        Main.userdata_file,
+                        selected.AccType,
+                        "",
+                        selected
+                ).isEmpty()) {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "<html>There is no other account of the same role<br>" +
+                                    "to transfer data/records to!</html>",
                             "Error",
                             new Color(209, 88, 128),
                             new Color(255, 255, 255),
