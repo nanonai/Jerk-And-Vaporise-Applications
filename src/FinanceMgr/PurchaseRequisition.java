@@ -91,6 +91,7 @@ public class PurchaseRequisition {
         }
         return newId;
     }
+
     public static PurchaseRequisition getPurchaseReqID(String purchaseReqID, String filename){
         List<PurchaseRequisition> purchaseReqList = listAllPurchaseRequisitions(filename);
         PurchaseRequisition purchaseReq_temp = null;
@@ -101,5 +102,32 @@ public class PurchaseRequisition {
             }
         }
         return purchaseReq_temp;
+    }
+
+    public static void ModifyPurchaseRequisition(String PurchaseReqID, PurchaseRequisition purchaseRequisition, String filename) {
+        List<PurchaseRequisition> purchaseRequisitionList = listAllPurchaseRequisitions(filename);
+        for (PurchaseRequisition pr : purchaseRequisitionList) {
+            if (Objects.equals(pr.PurchaseReqID, PurchaseReqID)) {
+                pr.PurchaseReqID = purchaseRequisition.PurchaseReqID;
+                pr.ItemID = purchaseRequisition.ItemID;
+                pr.SupplierID = purchaseRequisition.SupplierID;
+                pr.Quantity = purchaseRequisition.Quantity;
+                pr.ReqDate = purchaseRequisition.ReqDate;
+                pr.SalesMgrID = purchaseRequisition.SalesMgrID;
+            }
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (PurchaseRequisition pr : purchaseRequisitionList) {
+                writer.write("PurchaseReqID :      " + pr.PurchaseReqID + "\n");
+                writer.write("ItemID:              " + pr.ItemID + "\n");
+                writer.write("SupplierID:          " + pr.SupplierID + "\n");
+                writer.write("Quantity:            " + pr.Quantity + "\n");
+                writer.write("ReqDate:             " + pr.ReqDate + "\n");
+                writer.write("SalesMgrID:          " + pr.SalesMgrID + "\n");
+                writer.write("~~~~~\n");
+            }
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
     }
 }

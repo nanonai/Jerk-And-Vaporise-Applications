@@ -248,7 +248,7 @@ public class SignIn {
             boolean correct = false;
             String AccType = "";
             for (User user : allUser) {
-                if ((Objects.equals(user.Username, txt1.getText().toLowerCase()) ||
+                if ((Objects.equals(user.Username.toLowerCase(), txt1.getText().toLowerCase()) ||
                         Objects.equals(user.Email, txt1.getText())) &&
                         Objects.equals(user.Password, new String(txt2.getPassword()))) {
                     correct = true;
@@ -267,7 +267,7 @@ public class SignIn {
                 }
                 User logged_in = null;
                 for (User user : allUser) {
-                    if (Objects.equals(user.Username, txt1.getText().toLowerCase()) ||
+                    if (Objects.equals(user.Username.toLowerCase(), txt1.getText().toLowerCase()) ||
                             Objects.equals(user.Email, txt1.getText())) {
                         logged_in = new User(user.UserID, user.Username, user.Password, user.FullName,
                                 user.Email, user.Phone, user.AccType, user.DateOfRegis, 1);
