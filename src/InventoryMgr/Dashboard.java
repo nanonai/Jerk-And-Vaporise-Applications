@@ -74,7 +74,7 @@ public class Dashboard {
                 18, 1500, 90, new Color(211, 67, 115), new Color(238, 184, 202), "Financial Target", "RM18 / RM1500"
         );
 
-        SwitchPanel sp = new SwitchPanel(5000, stats1, stats2);
+        FadePanel sp = new FadePanel(stats1, stats2);
         sp.setOpaque(true);
         sp.setBackground(new Color(255, 246, 250));
         content.add(sp, gbc);

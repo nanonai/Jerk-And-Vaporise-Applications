@@ -413,7 +413,7 @@ public class PurchaseReqPage {
             } else {
                 String selected_id = table_purReq.getValueAt(table_purReq.getSelectedRow(),
                         table_purReq.getColumnModel().getColumnIndex("PurchaseReqID")).toString();
-                ViewPurchaseReq.UpdatePurchaseReq(PurchaseRequisition.getPurchaseReqID(selected_id, Main.purchaseReq_file));
+                ViewPurchaseReq.UpdatePurchaseReq(PurchaseRequisition.getPurchaseReqByID(selected_id, Main.purchaseReq_file));
                 boolean see = ViewPurchaseReq.ShowPage();
                 if (see) {
                     System.out.println(" ");

@@ -49,7 +49,7 @@ public class FadePanel extends JPanel {
 
     private void startFade() {
         if (getWidth() <= 0 || getHeight() <= 0) {
-            System.out.println("Width or height 0, skipping fade");
+            System.out.println("Invalid size, skipping fade");
             return;
         }
 
@@ -66,40 +66,33 @@ public class FadePanel extends JPanel {
         alpha = 1f;
         fading = true;
         fadingOut = true;
-
         setOpaque(false);
 
-        Timer fadeTimer = new Timer(50, null);
-        fadeTimer.addActionListener(new AbstractAction() {
+        Timer fadeOutTimer = new Timer(50, null);
+        fadeOutTimer.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (fadingOut) {
-                    alpha -= 0.05f;
-                    if (alpha <= 0f) {
-                        alpha = 0f;
-                        fadingOut = false;
-                        ((Timer) e.getSource()).stop();
-
-                        // 150 ms pause with only background visible
-                        Timer pauseTimer = new Timer(150, e2 -> {
-                            currentIndex = nextIndex;
-                            prevImage = nextImage;
-                            nextImage = null;
-                            alpha = 0f;
-                            ((Timer) e2.getSource()).stop();
-                            startFadeIn();
-                        });
-
-                        repaint();
-                        pauseTimer.setRepeats(false);
-                        pauseTimer.start();
-                        return;
-                    }
-                }
+                alpha -= 0.05f;
                 repaint();
+
+                if (alpha <= 0f) {
+                    alpha = 0f;
+                    ((Timer) e.getSource()).stop();
+
+                    // 150ms blank screen pause
+                    Timer pauseTimer = new Timer(150, e2 -> {
+                        currentIndex = nextIndex;
+                        fadingOut = false;
+                        alpha = 0f; // reset for fade-in
+                        ((Timer) e2.getSource()).stop();
+                        startFadeIn();
+                    });
+                    pauseTimer.setRepeats(false);
+                    pauseTimer.start();
+                }
             }
         });
-        fadeTimer.start();
+        fadeOutTimer.start();
     }
 
     private void startFadeIn() {
@@ -108,16 +101,15 @@ public class FadePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 alpha += 0.05f;
+                repaint();
+
                 if (alpha >= 1f) {
                     alpha = 1f;
                     fading = false;
                     setOpaque(true);
-                    showPanel(currentIndex);
-                    repaint();
+                    showPanel(currentIndex); // switch to the real JPanel
                     ((Timer) e.getSource()).stop();
-                    return;
                 }
-                repaint();
             }
         });
         fadeInTimer.start();
@@ -140,30 +132,27 @@ public class FadePanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g); // Optional: paints background
+
         Graphics2D g2 = (Graphics2D) g.create();
 
-        // Fill background first
+        // Fill background (e.g., black or panel background color)
         g2.setColor(getBackground());
         g2.fillRect(0, 0, getWidth(), getHeight());
 
-        if (!fading || prevImage == null) {
-            // No fade, draw normally
-            super.paintComponent(g);
+        if (!fading) {
             g2.dispose();
             return;
         }
 
-        if (fadingOut) {
-            // Fade out previous panel
+        if (fadingOut && prevImage != null) {
+            // Fade out previous image
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
             g2.drawImage(prevImage, 0, 0, null);
-        } else {
-            // Fade in next panel
-            if (nextImage != null) {
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-                g2.drawImage(nextImage, 0, 0, null);
-            }
-            // else only background shown during pause
+        } else if (!fadingOut && nextImage != null) {
+            // Fade in next image
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+            g2.drawImage(nextImage, 0, 0, null);
         }
 
         g2.dispose();
