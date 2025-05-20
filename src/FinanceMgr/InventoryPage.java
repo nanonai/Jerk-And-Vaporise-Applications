@@ -58,7 +58,7 @@ public class InventoryPage {
         gbc.weighty = 1;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridx = 9;
+        gbc.gridx = 6;
         gbc.weightx = 14;
         gbc.insets = new Insets(0, 0, 0, 20);
         JLabel placeholder1 = new JLabel("");

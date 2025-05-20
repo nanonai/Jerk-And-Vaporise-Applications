@@ -133,9 +133,9 @@ public class ViewInventory {
         button_panel.add(placeholder, gbc);
 
         gbc.gridx = 1;
-        CustomComponents.CustomButton view = new CustomComponents.CustomButton("View Related Payment",
+        CustomComponents.CustomButton view = new CustomComponents.CustomButton("",
                 merriweather.deriveFont(Font.PLAIN), new Color(255, 255, 255), new Color(255, 255, 255),
-                new Color(209, 88, 128), new Color(237, 136, 172),
+                new Color(240, 240, 240), new Color(240, 240, 240),
                 Main.transparent, 0, base_size, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         button_panel.add(view, gbc);
