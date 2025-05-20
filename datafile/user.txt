@@ -36,7 +36,7 @@ Email:          im123@gmail.com
 Phone:          0123574252
 AccType:        Inventory Manager
 DateOfRegis:    2025-03-31
-RememberMe:     1
+RememberMe:     0
 ~~~~~
 UserID:         FM0971204357
 Username:       fm123
@@ -46,7 +46,7 @@ Email:          fm123@gmail.com
 Phone:          0145323423
 AccType:        Finance Manager
 DateOfRegis:    2025-03-31
-RememberMe:     1
+RememberMe:     0
 ~~~~~
 UserID:         SM6352871092
 Username:       salesY
