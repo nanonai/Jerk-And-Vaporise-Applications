@@ -167,7 +167,7 @@ public class ModifyPO {
         gbc.gridy = 3;
         String itemIDValue = ItemID.getText().trim();
         List<String> supplierIDs = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(Main.item_Supplier_file))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(Main.item_supplier_file))) {
             String currentSupplierID = null;
             String currentItemID = null;
             String line;
