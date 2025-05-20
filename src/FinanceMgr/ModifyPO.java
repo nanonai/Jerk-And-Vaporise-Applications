@@ -269,7 +269,7 @@ public class ModifyPO {
             );
 
             // Update the status in the file
-            PurchaseOrder.ChangePurOrder(current_PO.PurchaseOrderID, po, Main.purchaseOrder_file,updateSupplierID,updatedQuantity, updatedStatus);
+            PurchaseOrder.ModifyPurchaseOrder(current_PO.PurchaseOrderID, po, Main.purchaseOrder_file);
             JOptionPane.showMessageDialog(null, "Updated successfully!");
             view_or_not.set(true); // Flag to indicate something was modified
             dialog.dispose();      // Close the dialog

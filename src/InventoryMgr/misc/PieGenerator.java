@@ -1,3 +1,4 @@
+
 package InventoryMgr.misc;
 
 import javax.swing.*;

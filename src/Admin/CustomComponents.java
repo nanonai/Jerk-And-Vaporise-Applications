@@ -13,6 +13,7 @@ import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Objects;
 
 public class CustomComponents {
     public static class ImagePanel extends JPanel {
@@ -1038,12 +1039,14 @@ public class CustomComponents {
         private int mode;
         private int[] previousSelection = new int[0];
         private boolean suppressListener = false;
+        private Object data;
 
         @SuppressWarnings("unchecked")
         public CustomList(Object data, int mode, int text_size, Font text_font,
                           Color t_normal, Color t_select, Color bg_normal, Color bg_select) {
             super(new DefaultListModel<>());
             this.mode = mode;
+            this.data = data;
             setBorder(BorderFactory.createEmptyBorder());
             setFocusable(false);
             setCellRenderer(new DefaultListCellRenderer() {
@@ -1078,6 +1081,8 @@ public class CustomComponents {
                 }
             }
         }
+
+        public Object getData() { return this.data;}
 
         public void SetChanges(Font text_font, int text_size, int mode) {
             if (text_size >= 0) {
