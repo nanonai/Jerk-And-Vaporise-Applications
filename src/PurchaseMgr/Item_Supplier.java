@@ -139,7 +139,6 @@ public class Item_Supplier {
         return "Unknown Supplier";
     }
 
-  
     public static List<Supplier> getSuppliersByItemID(String ItemID, String filename) {
         List<Supplier> filterList = new ArrayList<>();
         List<Item_Supplier> itemSupplierList = listAllItemSupplier(filename);
@@ -159,6 +158,5 @@ public class Item_Supplier {
             }
         }
         return false; // itemID NOT found
-  
     }
 }

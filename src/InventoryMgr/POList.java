@@ -3,9 +3,7 @@ package InventoryMgr;
 import Admin.User;
 import Admin.CustomComponents;
 import Admin.Main;
-import Admin.User;
 import InventoryMgr.misc.InvStatic;
-import PurchaseMgr.AddPO;
 import PurchaseMgr.PurchaseOrder;
 
 import javax.swing.*;
