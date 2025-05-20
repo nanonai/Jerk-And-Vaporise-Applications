@@ -193,7 +193,6 @@ public class Item {
         return indicator;
     }
 
-
     public static Item getItemID(String ItemID, String filename){
         List<Item> itemList = listAllItem(filename);
         Item item_temp = null;
@@ -205,6 +204,7 @@ public class Item {
         }
         return item_temp;
     }
+
     public static void removeItem(String ItemID, String filename) {
         List<Item> allItems = Item.listAllItem(filename);  // Assuming `listAllItem` fetches all items
         allItems.removeIf(item -> Objects.equals(item.ItemID, ItemID));  // Remove item with matching ItemID
