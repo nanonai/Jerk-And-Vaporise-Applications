@@ -2,12 +2,15 @@ package InventoryMgr;
 
 import Admin.User;
 import Admin.CustomComponents;
-import InventoryMgr.misc.ListGenerator;
-import InventoryMgr.misc.PieGenerator;
+import InventoryMgr.misc.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +42,7 @@ public class Dashboard {
     }
 
     public static void ShowPage() {
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -51,18 +55,29 @@ public class Dashboard {
         label1.setHorizontalAlignment(SwingConstants.CENTER);
         label1.setVerticalAlignment(SwingConstants.CENTER);
         label1.setOpaque(true);
-        label1.setBackground(Color.PINK);
+        label1.setBackground(new Color(255, 246, 250));
         content.setLayout(new GridBagLayout());
         content.add(label1, gbc);
 
         gbc.gridx++;
-        JLabel label2 = new JLabel("You know the rules, and so do i.", SwingConstants.CENTER);
-        label2.setFont(merriweather.deriveFont(20f).deriveFont(Font.BOLD));
-        label2.setHorizontalAlignment(SwingConstants.CENTER);
-        label2.setVerticalAlignment(SwingConstants.CENTER);
-        label2.setOpaque(true);
-        label2.setBackground(Color.PINK);
-        content.add(label2, gbc);
+//        JLabel label2 = new JLabel("You know the rules, and so do i.", SwingConstants.CENTER);
+//        label2.setFont(merriweather.deriveFont(20f).deriveFont(Font.BOLD));
+//        label2.setHorizontalAlignment(SwingConstants.CENTER);
+//        label2.setVerticalAlignment(SwingConstants.CENTER);
+//        label2.setOpaque(true);
+//        label2.setBackground(Color.PINK);
+        JPanel stats1 = StatsGenerator.createStatPanel(
+                90, 100, 90, new Color(211, 67, 115), new Color(238, 184, 202), "Inventory Occupation Rate", "90%"
+        );
+
+        JPanel stats2 = StatsGenerator.createStatPanel(
+                18, 1500, 90, new Color(211, 67, 115), new Color(238, 184, 202), "Financial Target", "RM18 / RM1500"
+        );
+
+        SwitchPanel sp = new SwitchPanel(5000, stats1, stats2);
+        sp.setOpaque(true);
+        sp.setBackground(new Color(255, 246, 250));
+        content.add(sp, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
