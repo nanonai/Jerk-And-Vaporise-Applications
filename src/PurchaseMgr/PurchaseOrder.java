@@ -2,10 +2,13 @@ package PurchaseMgr;
 
 import Admin.User;
 
+import javax.swing.*;
+import javax.swing.text.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class PurchaseOrder {
     public static PurchaseOrder getPurchaseOrderID;
@@ -107,7 +110,6 @@ public class PurchaseOrder {
         }
     }
 
-
     public static String idMaker(String filename) {
         List<PurchaseOrder> allPurchaseOrder = listAllPurchaseOrders(filename);
         boolean repeated = false;
@@ -144,48 +146,25 @@ public class PurchaseOrder {
         return purchaseOrder_temp;
     }
 
-//    public static List<PurchaseOrder> listAllPOFromFilter(String filename, String purchaseOrderID, String filter, BufferForPO current_po) {
-//        List<PurchaseOrder> po_list = listAllPurchaseOrders(filename);
-//        List<PurchaseOrder> poID_list = new ArrayList<>();
-//        List<PurchaseOrder> filtered_po_list = new ArrayList<>();
-//        if (type.isEmpty() && filter.isEmpty()) {
-//            if (current_po != null) {
-//                int length = po_list.size();
-//                for (int i = 0; i < length; i++) {
-//                    if (Objects.equals(poID_list.get(i).PurchaseOrderID, current_po.PurchaseOrderID)) {
-//                        poID_list.remove(i);
-//                        break;
-//                    }
-//                }
-//            }
-//            return poID_list;
-//        }
-//        for (PurchaseOrder purchaseOrder: po_list) {
-//            if (!Objects.equals(purchaseOrder.PurchaseOrderID, current_po.PurchaseOrderID)) {
-//                if (Objects.equals(purchaseOrder.PurchaseOrderID, purchaseOrderID)) {
-//                    poID_list.add(purchaseOrder);
-//                } else if (purchaseOrderID.isEmpty()) {
-//                    poID_list.add(purchaseOrder);
-//                }
-//            }
-//        }
-//        if (filter.isEmpty()) {
-//            return poID_list;
-//        }
-//        for (PurchaseOrder purchaseOrder: poID_list) {
-//            if ((purchaseOrder.PurchaseOrderID.toLowerCase().contains(filter.toLowerCase()) ||
-//                    purchaseOrder.ItemID.toLowerCase().contains(filter.toLowerCase()) ||
-//                    purchaseOrder.SupplierID.toLowerCase().contains(filter) ||
-//                    purchaseOrder.PurchaseQuantity.contains(filter) ||
-//                    purchaseOrder.TotalAmt.contains(filter) ||
-//                    purchaseOrder.OrderDate.toString().contains(filter.toLowerCase()) ||
-//                    purchaseOrder.PurchaseMgrID.toLowerCase().contains(filter.toLowerCase()) ||
-//                    purchaseOrder.Status.toLowerCase().contains(filter.toLowerCase()))) {
-//                filtered_po_list.add(purchaseOrder);
-//            }
-//        }
-//        return filtered_po_list;
-//    }
+    public static void savePurchaseOrder(
+            PurchaseOrder PO,
+            String filename,
+            JFrame parentFrame // for JOptionPane
+    ) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+            writer.write("PurchaseOrderID:     " + PO.PurchaseOrderID + "\n");
+            writer.write("ItemID:              " + PO.ItemID + "\n");
+            writer.write("SupplierID:          " + PO.SupplierID + "\n");
+            writer.write("PurchaseQuantity:    " + PO.PurchaseQuantity + "\n");
+            writer.write("TotalAmt:            " + PO.TotalAmt + "\n");
+            writer.write("OrderDate:           " + PO.OrderDate.format(df) + "\n");
+            writer.write("PurchaseMgrID:       " + PO.PurchaseMgrID + "\n");
+            writer.write("Status:              " + PO.Status + "\n");
+            writer.write("~~~~~\n");
 
-
+            JOptionPane.showMessageDialog(parentFrame, "Purchase order saved successfully.");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(parentFrame, "Error saving purchase order:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

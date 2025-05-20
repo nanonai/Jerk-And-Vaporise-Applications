@@ -133,7 +133,7 @@ public class ViewPurchaseOrder {
         gbc.gridx = 1;
         CustomComponents.CustomButton view = new CustomComponents.CustomButton(" ",
                 merriweather.deriveFont(Font.PLAIN), new Color(255, 255, 255), new Color(209, 209, 209),
-                new Color(255, 255, 255, 255), new Color(209, 209, 209),
+                new Color(240, 240, 240, 255), new Color(240, 240, 240),
                 Main.transparent, 0, base_size, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         button_panel.add(view, gbc);
