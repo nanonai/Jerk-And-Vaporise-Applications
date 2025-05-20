@@ -32,10 +32,6 @@ public class FadePanel extends JPanel {
     }
 
     private void showPanel(int index) {
-        if (fading) {
-            // Don't change panels during fade to avoid flicker
-            return;
-        }
         removeAll();
         add(panels[index]);
         revalidate();
