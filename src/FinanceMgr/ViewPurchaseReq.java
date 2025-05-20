@@ -1,38 +1,34 @@
 package FinanceMgr;
 
-import Admin.ViewUser;
 import Admin.CustomComponents;
 import Admin.Main;
-import Admin.User;
-import InventoryMgr.Item;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ViewInventory {
+public class ViewPurchaseReq {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static Item current_item;
+    private static PurchaseRequisition current_pr;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, Item current_item) {
-        ViewInventory.parent = parent;
-        ViewInventory.merriweather = merriweather;
-        ViewInventory.boldonse = boldonse;
-        ViewInventory.content = content;
-        ViewInventory.current_item = current_item;
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, PurchaseRequisition current_pr) {
+        ViewPurchaseReq.parent = parent;
+        ViewPurchaseReq.merriweather = merriweather;
+        ViewPurchaseReq.boldonse = boldonse;
+        ViewPurchaseReq.content = content;
+        ViewPurchaseReq.current_pr = current_pr;
     }
 
-    public static void UpdateInventory(Item item) {
-        ViewInventory.current_item = item;
+    public static void UpdatePurchaseReq(PurchaseRequisition purchaseRequisition) {
+        ViewPurchaseReq.current_pr = purchaseRequisition;
     }
 
     public static boolean ShowPage() {
         AtomicBoolean view_or_not = new AtomicBoolean(false);
-        JDialog dialog = new JDialog(parent, "View Item Details", true);
+        JDialog dialog = new JDialog(parent, "View Purchase Requisition Details", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setSize(parent.getWidth() / 2, (int) (parent.getHeight() / 1.5));
         dialog.setResizable(false);
@@ -56,7 +52,7 @@ public class ViewInventory {
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.insets = new Insets(10, 10, 10, 0);
-        JLabel title = new JLabel("View Item Details");
+        JLabel title = new JLabel("View PR Details");
         title.setOpaque(false);
         title.setFont(merriweather.deriveFont(Font.BOLD, (float) (base_size * 1.3)));
         panel.add(title, gbc);
@@ -64,19 +60,19 @@ public class ViewInventory {
         gbc.gridy = 1;
         gbc.gridwidth = 1;
         gbc.insets = new Insets(0, 10, 10, 0);
-        JLabel itemID_label = new JLabel("Item ID:");
+        JLabel itemID_label = new JLabel("Purchase Req ID:");
         itemID_label.setOpaque(false);
         itemID_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(itemID_label, gbc);
 
         gbc.gridy = 2;
-        JLabel itemName_label = new JLabel("Item Name :");
+        JLabel itemName_label = new JLabel("Item ID :");
         itemName_label.setOpaque(false);
         itemName_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(itemName_label, gbc);
 
         gbc.gridy = 3;
-        JLabel unitPrice_label = new JLabel("Unit Price :");
+        JLabel unitPrice_label = new JLabel("Supplier ID :");
         unitPrice_label.setOpaque(false);
         unitPrice_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(unitPrice_label, gbc);
@@ -88,30 +84,24 @@ public class ViewInventory {
         panel.add(quantity_label, gbc);
 
         gbc.gridy = 5;
-        JLabel threshold_label = new JLabel("Threshold :");
+        JLabel threshold_label = new JLabel("ReqDate :");
         threshold_label.setOpaque(false);
         threshold_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(threshold_label, gbc);
 
         gbc.gridy = 6;
-        JLabel category_label = new JLabel("Category :");
+        JLabel category_label = new JLabel("SalesMrgID :");
         category_label.setOpaque(false);
         category_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(category_label, gbc);
 
         gbc.gridy = 7;
-        JLabel lastUpDate_label = new JLabel("Last Update Date:");
-        lastUpDate_label.setOpaque(false);
-        lastUpDate_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
-        panel.add(lastUpDate_label, gbc);
+        JLabel status_label = new JLabel("Status :");
+        status_label.setOpaque(false);
+        status_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(status_label, gbc);
 
-        gbc.gridy =8;
-        JLabel supplierID_label = new JLabel("Supplier ID :");
-        supplierID_label.setOpaque(true);
-        supplierID_label.setFont(merriweather.deriveFont(Font.PLAIN,(float) (base_size)));
-        panel.add(supplierID_label,gbc);
-
-        gbc.gridy = 9;
+        gbc.gridy = 8;
         gbc.insets = new Insets(0, 10, 10, 0);
         CustomComponents.CustomButton close = new CustomComponents.CustomButton("Close",
                 merriweather.deriveFont(Font.PLAIN), Color.WHITE, Color.WHITE,
@@ -134,16 +124,16 @@ public class ViewInventory {
 
         gbc.gridx = 1;
         CustomComponents.CustomButton view = new CustomComponents.CustomButton("",
-                merriweather.deriveFont(Font.PLAIN), new Color(255, 255, 255), new Color(255, 255, 255),
-                new Color(240, 240, 240), new Color(240, 240, 240),
+                merriweather.deriveFont(Font.PLAIN), new Color(255, 255, 255), new Color(209, 209, 209),
+                new Color(240, 240, 240, 255), new Color(240, 240, 240),
                 Main.transparent, 0, base_size, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         button_panel.add(view, gbc);
 
         gbc.gridy = 1;
         gbc.weightx = 2;
-        gbc.insets = new Insets(0, 0, 10, 10);
-        JLabel itemID = new JLabel("    " + current_item.ItemID);
+        gbc.insets = new Insets(0, 0, 10, 10); // retained from above
+        JLabel itemID = new JLabel("    " + current_pr.PurchaseReqID);
         itemID.setOpaque(true);
         itemID.setBackground(Color.WHITE);
         itemID.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -151,7 +141,7 @@ public class ViewInventory {
         panel.add(itemID, gbc);
 
         gbc.gridy = 2;
-        JLabel itemName = new JLabel("    " + current_item.ItemName);
+        JLabel itemName = new JLabel("    " + current_pr.ItemID);
         itemName.setOpaque(true);
         itemName.setBackground(Color.WHITE);
         itemName.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -159,7 +149,7 @@ public class ViewInventory {
         panel.add(itemName, gbc);
 
         gbc.gridy = 3;
-        JLabel unitPrice = new JLabel("    " + current_item.UnitPrice);
+        JLabel unitPrice = new JLabel("    " + current_pr.SupplierID);
         unitPrice.setOpaque(true);
         unitPrice.setBackground(Color.WHITE);
         unitPrice.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -167,7 +157,7 @@ public class ViewInventory {
         panel.add(unitPrice, gbc);
 
         gbc.gridy = 4;
-        JLabel quantity = new JLabel("    " + current_item.UnitCost);
+        JLabel quantity = new JLabel("    " + current_pr.Quantity);
         quantity.setOpaque(true);
         quantity.setBackground(Color.WHITE);
         quantity.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -175,7 +165,7 @@ public class ViewInventory {
         panel.add(quantity, gbc);
 
         gbc.gridy = 5;
-        JLabel threshold = new JLabel("    " + current_item.StockCount);
+        JLabel threshold = new JLabel("    " + current_pr.ReqDate);
         threshold.setOpaque(true);
         threshold.setBackground(Color.WHITE);
         threshold.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -183,7 +173,7 @@ public class ViewInventory {
         panel.add(threshold, gbc);
 
         gbc.gridy = 6;
-        JLabel category = new JLabel("    " + current_item.Threshold);
+        JLabel category = new JLabel("    " + current_pr.SalesMgrID);
         category.setOpaque(true);
         category.setBackground(Color.WHITE);
         category.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -191,36 +181,15 @@ public class ViewInventory {
         panel.add(category, gbc);
 
         gbc.gridy = 7;
-        JLabel lastUpdateDate = new JLabel("    " + current_item.Category);
-        lastUpdateDate.setOpaque(true);
-        lastUpdateDate.setBackground(Color.WHITE);
-        lastUpdateDate.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
-        lastUpdateDate.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
-        panel.add(lastUpdateDate, gbc);
-
-        gbc.gridy = 8;
-        JLabel supplierID = new JLabel("    " + current_item.LastUpdate);
-        supplierID.setOpaque(true);
-        supplierID.setBackground(Color.WHITE);
-        supplierID.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
-        supplierID.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
-        panel.add(supplierID, gbc);
-
-        gbc.gridy = 7;
-        JPanel inner = new JPanel(new GridBagLayout());
-        inner.setOpaque(false);
-        panel.add(inner, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1;
+        String status_text = (current_pr.Status == 0) ? "Pending" : "Processed";
+        JLabel status = new JLabel("    " + status_text);
+        status.setOpaque(true);
+        status.setBackground(Color.WHITE);
+        status.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        status.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(status, gbc);
 
         close.addActionListener(_ -> {
-            dialog.dispose();
-        });
-
-        view.addActionListener(_ -> {
-            view_or_not.set(true);
             dialog.dispose();
         });
 
@@ -237,5 +206,6 @@ public class ViewInventory {
 
         return view_or_not.get();
     }
-
 }
+
+

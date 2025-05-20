@@ -14,7 +14,8 @@ import java.io.IOException;
 import java.util.List;
 
 import Admin.*;
-import SalesMgr.ItemMng;
+import InventoryMgr.misc.InvStatic;
+import SalesMgr.AddNewItem;
 
 public class InventoryHome {
     public static int indicator = 0;
@@ -26,7 +27,7 @@ public class InventoryHome {
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
     private static CustomComponents.CustomProfileIcon profileIcon1, profileIcon2;
-    private static CustomComponents.CustomButton dashboard, mng_inv, profile_drop;
+    private static CustomComponents.CustomButton dashboard, mng_inv, mng_po, profile_drop, test;
     private static JLabel title;
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
@@ -46,6 +47,7 @@ public class InventoryHome {
         InventoryHome.top_bar = top_bar;
         InventoryHome.content = content;
         InventoryHome.current_user = current_user;
+        InvStatic.Initialize(parent, content, current_user);
     }
 
     public static void ShowPage() {
@@ -61,7 +63,7 @@ public class InventoryHome {
         gbc_side.gridy = 1;
         gbc_side.weighty = 0.8;
         dashboard = new CustomComponents.CustomButton("Dashboard", merriweather, Color.WHITE, Color.WHITE,
-                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 18,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
         dashboard.addActionListener(_ -> {
@@ -69,7 +71,6 @@ public class InventoryHome {
             PageChanger();
         });
         side_bar.add(dashboard, gbc_side);
-
 
         gbc_side.gridy = 2;
         gbc_side.weighty = 0.8;
@@ -84,6 +85,30 @@ public class InventoryHome {
         side_bar.add(mng_inv, gbc_side);
 
         gbc_side.gridy = 3;
+        gbc_side.weighty = 0.8;
+        mng_po = new CustomComponents.CustomButton("Purchase Order", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        mng_po.addActionListener(_ -> {
+            InventoryHome.indicator = 3;
+            PageChanger();
+        });
+        side_bar.add(mng_po, gbc_side);
+
+        gbc_side.gridy = 4;
+        gbc_side.weighty = 0.8;
+        test = new CustomComponents.CustomButton("Test", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        test.addActionListener(_ -> {
+            InventoryHome.indicator = 69;
+            PageChanger();
+        });
+        side_bar.add(test, gbc_side);
+
+        gbc_side.gridy = 5;
         gbc_side.weighty = 8.2;
         JLabel placeholder = new JLabel("");
         side_bar.add(placeholder, gbc_side);
@@ -188,8 +213,12 @@ public class InventoryHome {
 
         Dashboard.Loader(parent, merriweather, boldonse, content, current_user);
         Profile.Loader(parent, merriweather, boldonse, content, current_user);
-        ItemMng.Loader(parent, merriweather, boldonse, content, current_user);
+        AddNewItem.Loader(parent, merriweather, boldonse, content, current_user);
         PageChanger();
+
+        SwingUtilities.invokeLater(() -> {
+            StockAlert.Popup(parent);
+        });
     }
 
     public static void PageChanger() {
@@ -201,6 +230,7 @@ public class InventoryHome {
 //    0 -> Inventory Manager Welcome Page
 //    1 -> Profile page
 //    2 -> Totally NOT inventory management page.
+//    3 -> Totally NOT view po page.
             case 0:
                 Dashboard.ShowPage();
                 break;
@@ -208,7 +238,10 @@ public class InventoryHome {
                 Profile.ShowPage();
                 break;
             case 2:
-                ItemMng.ShowPage();
+                ItemList.ShowPage();
+                break;
+            case 3:
+                POList.ShowPage();
                 break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());
@@ -225,6 +258,9 @@ public class InventoryHome {
         SwingUtilities.invokeLater(() -> {
             logo_cell.repaint();
             mng_inv.UpdateCustomButton(0, finalBase_size, null, 0);
+            mng_po.UpdateCustomButton(0, finalBase_size, null, 0);
+            dashboard.UpdateCustomButton(0, finalBase_size, null, 0);
+            test.UpdateCustomButton(0, finalBase_size, null, 0);
             title.setFont(boldonse.deriveFont((float)finalBase_size));
             profile.repaint();
             profileIcon1.UpdateSize((int) (finalBase_size * 2.5));
@@ -239,8 +275,11 @@ public class InventoryHome {
                     Profile.UpdateComponentSize(finalBase_size);
                     break;
                 case 2:
-                    ItemMng.UpdateComponentSize(finalBase_size);
+                    ItemList.UpdateComponentSize(finalBase_size);
                     break;
+//                case 3:
+//                    POList.UpdateComponentSize(finalBase_size);
+//                    break;
             }
         });
     }

@@ -1,4 +1,4 @@
-ItemID:         I7390
+ItemID:         I0001
 SupplierID:     S0001
 ~~~~~
 ItemID:         I7390
@@ -10,8 +10,8 @@ SupplierID:     S0003
 ItemID:         I8532
 SupplierID:     S0001
 ~~~~~
-ItemID:         I5262
-SupplierID:     S0001
+ItemID:         I0001
+SupplierID:     S0002
 ~~~~~
 ItemID:         I6687
 SupplierID:     S0001

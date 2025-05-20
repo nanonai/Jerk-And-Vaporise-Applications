@@ -1,16 +1,12 @@
 package FinanceMgr;
 import PurchaseMgr.PurchaseOrder;
-import Admin.AddUser;
-import Admin.ViewUser;
 import Admin.*;
 import javax.swing.*;
-import javax.swing.border.StrokeBorder;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.text.View;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 
@@ -19,9 +15,9 @@ public class PurchaseOrderPage {
     private static Font merriweather, boldonse;
     private static JPanel content,inner;
     public static User current_user;
-    private static JButton s_btn;
-    private static CustomComponents.CustomButton updateStatus,makePayment;
-//    private static CustomComponents.CustomButton all, purOrder, purReq, itemID, quan,supplier,orderDate,purMan,status;
+    private static CustomComponents.CustomButton all, fin, pur, inv, sls, view, add, modify,
+            delete1, delete2, data_transfer;
+    private static CustomComponents.CustomButton updateStatus,makePayment,viewPO;
     private static CustomComponents.RoundedPanel search_panel;
     private static JLabel lbl_show, lbl_entries,lbl_indicate;
     private static JComboBox<String> entries;
@@ -31,7 +27,14 @@ public class PurchaseOrderPage {
     private static CustomComponents.CustomScrollPane scrollPane1;
     private static int list_length = 10, page_counter = 0, filter = 0, mode = 1;
     private static JComboBox<String>  pages;
+    private static boolean deleting = false;
+    private static final Set<String> deleting_id = new LinkedHashSet<>();
+    private static final Set<Integer> previousSelection = new HashSet<>();
     private static List<PurchaseOrder> purchaseOrder_List;
+    private static PurchaseOrder current_po;
+    private static CustomComponents.CustomXIcon icon_clear1, icon_clear2;
+    private static JButton s_btn, p_left, p_right, p_first, p_last, x_btn;
+    private static CustomComponents.CustomArrowIcon left_icon1, left_icon2, right_icon1, right_icon2;
 
     public static void Loader(JFrame parent,Font merriweather,Font boldonse,
                               JPanel content,User current_user){
@@ -50,7 +53,7 @@ public class PurchaseOrderPage {
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        gbc.gridx = 9;
+        gbc.gridx = 6;
         gbc.weightx = 14;
         gbc.insets = new Insets(0, 0, 0, 20);
         JLabel placeholder1 = new JLabel("");
@@ -74,6 +77,7 @@ public class PurchaseOrderPage {
         igbc.weighty = 1;
         igbc.fill = GridBagConstraints.BOTH;
         igbc.insets = new Insets(10, 10, 10, 10);
+
         lbl_show = new JLabel("Show");
         lbl_show.setFont(merriweather.deriveFont(Font.BOLD, 16));
         lbl_show.setOpaque(false);
@@ -87,6 +91,13 @@ public class PurchaseOrderPage {
         entries.setFont(merriweather.deriveFont(Font.BOLD, 14));
         entries.setForeground(new Color(122, 122, 122));
         entries.setFocusable(false);
+        entries.setSelectedItem("10");
+        entries.addActionListener(e -> {
+            list_length = Integer.parseInt((String) Objects.requireNonNull(entries.getSelectedItem()));
+            UpdatePOPages(list_length);
+            page_counter = 0;
+            UpdatePOTable(list_length, page_counter);
+        });
         inner.add(entries, igbc);
 
         igbc.gridx = 2;
@@ -115,6 +126,7 @@ public class PurchaseOrderPage {
         ii_gbc.weighty = 1;
         ii_gbc.fill = GridBagConstraints.BOTH;
         ii_gbc.insets = new Insets(6, 6, 10, 5);
+
         search_icon1 = new CustomComponents.CustomSearchIcon(16, 3,
                 new Color(122, 122, 122), Color.WHITE);
         search_icon2 = new CustomComponents.CustomSearchIcon(16, 3,
@@ -129,7 +141,7 @@ public class PurchaseOrderPage {
         ii_gbc.gridx = 1;
         ii_gbc.insets = new Insets(6, 0, 8, 0);
         search = new CustomComponents.EmptyTextField(19, "Search...\r\r", new Color(122, 122, 122));
-//        search.setFont(merriweather.deriveFont(Font.BOLD, 14));
+        search.setFont(merriweather.deriveFont(Font.BOLD, 14));
 //        search.addActionListener(_ -> SearchStuff());
 //        search.getDocument().addDocumentListener(new DocumentListener() {
 //            private void update() {
@@ -137,7 +149,46 @@ public class PurchaseOrderPage {
 //                boolean isPlaceholder = text.equals(search.GetPlaceHolder());
 //                x_btn.setVisible(!text.isEmpty() && !isPlaceholder);
 //                search.UpdateColumns((!text.isEmpty() && !isPlaceholder) ? 17 : 19);
-//            });
+//            }
+//
+//            @Override
+//            public void insertUpdate(DocumentEvent e) { update(); }
+//
+//            @Override
+//            public void removeUpdate(DocumentEvent e) { update(); }
+//
+//            @Override
+//            public void changedUpdate(DocumentEvent e) { update(); }
+//        });
+//        search.addFocusListener(new FocusListener() {
+//            @Override
+//            public void focusGained(FocusEvent e) {}
+//
+//            @Override
+//            public void focusLost(FocusEvent e) {
+//                String text = search.getText();
+//                boolean isPlaceholder = text.equals(search.GetPlaceHolder());
+//                x_btn.setVisible(!text.isEmpty() && !isPlaceholder);
+//                search.UpdateColumns((!text.isEmpty() && !isPlaceholder) ? 17 : 19);
+//            }
+//        });
+        search_panel.add(search, ii_gbc);
+
+        ii_gbc.gridx = 2;
+        ii_gbc.insets = new Insets(0, 8, 0, 0);
+        x_btn = new JButton(icon_clear1);
+        x_btn.setRolloverIcon(icon_clear2);
+        x_btn.setFocusable(false);
+        x_btn.setBorderPainted(false);
+        x_btn.setVisible(false);
+        x_btn.addActionListener(_ -> {
+            search.Reset();
+            x_btn.setVisible(false);
+            search.UpdateColumns(19);
+            SwingUtilities.invokeLater(lbl_show::requestFocusInWindow);
+            SearchStuff();
+        });
+        search_panel.add(x_btn, ii_gbc);
 
         igbc.gridwidth = 5;
         igbc.gridx = 0;
@@ -146,10 +197,10 @@ public class PurchaseOrderPage {
         igbc.weighty = 10;
         igbc.insets = new Insets(0, 0, 10, 0);
         String[] titles = new String[]{"PurchaseOrderID", "ItemID","SupplierID","PurchaseQuantity", "TotalAmt","OrderDate","PurchaseMgrID","Status"};
-        List<PurchaseOrder> purchaseOrder_list = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
-        Object[][] data = new Object[purchaseOrder_list.size()][titles.length];
+        purchaseOrder_List = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
+        Object[][] data = new Object[purchaseOrder_List.size()][titles.length];
         int counter = 0;
-        for (PurchaseOrder purchaseOrder : purchaseOrder_list) {
+        for (PurchaseOrder purchaseOrder : purchaseOrder_List) {
             data[counter] = new Object[]{purchaseOrder.PurchaseOrderID, purchaseOrder.ItemID,purchaseOrder.SupplierID,
                     purchaseOrder.PurchaseQuantity,purchaseOrder.TotalAmt, purchaseOrder.OrderDate,purchaseOrder.PurchaseMgrID,purchaseOrder.Status};
             counter += 1;
@@ -158,6 +209,39 @@ public class PurchaseOrderPage {
         table_purOrder = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
                 merriweather.deriveFont(Font.PLAIN, 16), Color.BLACK, Color.BLACK,
                 Color.WHITE, new Color(212, 212, 212), 1, 30);
+        table_purOrder.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting() && deleting) {
+                    SwingUtilities.invokeLater(() -> {
+                        int[] selectedRows = table_purOrder.getSelectedRows();
+                        Set<Integer> currentSelection = new HashSet<>();
+                        for (int row : selectedRows) {
+                            currentSelection.add(row);
+                        }
+                        Set<Integer> newlySelected = new HashSet<>(currentSelection);
+                        newlySelected.removeAll(previousSelection);
+                        Set<Integer> deselected = new HashSet<>(previousSelection);
+                        deselected.removeAll(currentSelection);
+                        for (int row : newlySelected) {
+                            deleting_id.add(table_purOrder.getValueAt(row,
+                                    table_purOrder.getColumnModel().getColumnIndex("Id")).toString());
+                        }
+                        for (int row : deselected) {
+                            deleting_id.remove(table_purOrder.getValueAt(row,
+                                    table_purOrder.getColumnModel().getColumnIndex("Id")).toString());
+                        }
+                        delete2.setText(String.format("Delete User (%s)", deleting_id.size()));
+                        previousSelection.clear();
+                        previousSelection.addAll(currentSelection);
+                    });
+                }
+            }
+        });
+        lbl_indicate = new JLabel("");
+        pages = new JComboBox<>();
+        UpdatePOTable(list_length, page_counter);
+        UpdatePOPages(list_length);
         table_purOrder.setShowHorizontalLines(true);
         table_purOrder.setShowVerticalLines(true);
         table_purOrder.setGridColor(new Color(230, 230, 230));
@@ -169,6 +253,170 @@ public class PurchaseOrderPage {
                 new Color(140, 140, 140), new Color(110, 110, 110),
                 Color.WHITE, Color.WHITE, 6);
         inner.add(scrollPane1, igbc);
+
+        igbc.gridwidth = 4;
+        igbc.gridx = 0;
+        igbc.gridy = 2;
+        igbc.weighty = 1;
+        igbc.insets = new Insets(0, 10, 2, 0);
+        lbl_indicate.setFont(merriweather.deriveFont(Font.BOLD, 16));
+        lbl_indicate.setOpaque(false);
+        lbl_indicate.setForeground(new Color(122, 122, 122));
+        inner.add(lbl_indicate, igbc);
+
+        igbc.gridwidth = 1;
+        igbc.gridx = 4;
+        igbc.insets = new Insets(0, 0, 2, 5);
+        JPanel page_panel = new JPanel(new GridBagLayout());
+        page_panel.setOpaque(false);
+        inner.add(page_panel, igbc);
+
+        ii_gbc.gridx = 0;
+        ii_gbc.gridy = 0;
+        ii_gbc.weightx = 1;
+        ii_gbc.weighty = 1;
+        ii_gbc.insets = new Insets(0, 0, 0, 0);
+        p_first = new JButton("First");
+        p_first.setFont(merriweather.deriveFont(Font.BOLD, 16));
+        p_first.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        p_first.setForeground(new Color(122, 122, 122));
+        p_first.addActionListener(_ -> {
+            page_counter = 0;
+            pages.setSelectedIndex(0);
+            UpdatePOTable(list_length, page_counter);
+            previousSelection.clear();
+            SwingUtilities.invokeLater(() -> {
+                RememberDeletion(deleting_id, table_purOrder);
+            });
+        });
+        p_first.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                p_first.setForeground(Color.BLACK);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                p_first.setForeground(new Color(122, 122, 122));
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                p_first.setForeground(new Color(122, 122, 122));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                Point point = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), p_first);
+                if (p_first.contains(point)) {
+                    p_first.setForeground(Color.BLACK);
+                } else {
+                    p_first.setForeground(new Color(122, 122, 122));
+                }
+            }
+        });
+        page_panel.add(p_first, ii_gbc);
+
+        ii_gbc.gridx = 1;
+        left_icon1 = new CustomComponents.CustomArrowIcon(16, 3,
+                new Color(122, 122, 122), true);
+        left_icon2 = new CustomComponents.CustomArrowIcon(16, 3,
+                Color.BLACK, true);
+        p_left = new JButton(left_icon1);
+        p_left.setRolloverIcon(left_icon2);
+        p_left.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        p_left.addActionListener(_ -> {
+            if (page_counter > 0) {
+                page_counter -= 1;
+                pages.setSelectedIndex(page_counter);
+                UpdatePOTable(list_length, page_counter);
+                previousSelection.clear();
+                SwingUtilities.invokeLater(() -> {
+                    RememberDeletion(deleting_id, table_purOrder);
+                });
+            }
+        });
+        page_panel.add(p_left, ii_gbc);
+
+        ii_gbc.gridx = 2;
+        pages.setFont(merriweather.deriveFont(Font.BOLD, 16));
+        pages.setForeground(new Color(122, 122, 122));
+        pages.setFocusable(false);
+        pages.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        pages.addActionListener(e -> {
+            if (pages.getItemCount() > 0) {
+                page_counter = pages.getSelectedIndex();
+                UpdatePOTable(list_length, page_counter);
+                previousSelection.clear();
+                SwingUtilities.invokeLater(() -> {
+                    RememberDeletion(deleting_id, table_purOrder);
+                });
+            }
+        });
+        page_panel.add(pages, ii_gbc);
+
+        ii_gbc.gridx = 3;
+        right_icon1 = new CustomComponents.CustomArrowIcon(16, 3,
+                new Color(122, 122, 122), false);
+        right_icon2 = new CustomComponents.CustomArrowIcon(16, 3,
+                Color.BLACK, false);
+        p_right = new JButton(right_icon1);
+        p_right.setRolloverIcon(right_icon2);
+        p_right.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        p_right.addActionListener(_ -> {
+            if (page_counter < pages.getItemCount() - 1) {
+                page_counter += 1;
+                pages.setSelectedIndex(page_counter);
+                UpdatePOTable(list_length, page_counter);
+                previousSelection.clear();
+                SwingUtilities.invokeLater(() -> {
+                    RememberDeletion(deleting_id, table_purOrder);
+                });
+            }
+        });
+        page_panel.add(p_right, ii_gbc);
+
+        ii_gbc.gridx = 4;
+        p_last = new JButton("Last");
+        p_last.setFont(merriweather.deriveFont(Font.BOLD, 16));
+        p_last.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        p_last.setForeground(new Color(122, 122, 122));
+        p_last.addActionListener(_ -> {
+            page_counter = pages.getItemCount() - 1;
+            pages.setSelectedIndex(page_counter);
+            UpdatePOTable(list_length, page_counter);
+            previousSelection.clear();
+            SwingUtilities.invokeLater(() -> {
+                RememberDeletion(deleting_id, table_purOrder);
+            });
+        });
+        p_last.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                p_last.setForeground(Color.BLACK);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                p_last.setForeground(new Color(122, 122, 122));
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                p_last.setForeground(new Color(122, 122, 122));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                Point point = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), p_last);
+                if (p_last.contains(point)) {
+                    p_last.setForeground(Color.BLACK);
+                } else {
+                    p_last.setForeground(new Color(122, 122, 122));
+                }
+            }
+        });
+        page_panel.add(p_last, ii_gbc);
 
         igbc.gridwidth = 4;
         igbc.gridx = 0;
@@ -187,8 +435,36 @@ public class PurchaseOrderPage {
         inner.add(button_panel2, igbc);
 
         ii_gbc.gridx = 1;
-        updateStatus = new CustomComponents.CustomButton("Update Status", merriweather, new Color(255, 255, 255),
+        viewPO = new CustomComponents.CustomButton("View Purchase Order", merriweather, new Color(255, 255, 255),
                 new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
+                Main.transparent, 0, 16, Main.transparent, false, 5, false,
+                null, 0, 0, 0);
+        viewPO.addActionListener(_ -> {
+            if (table_purOrder.getSelectedRowCount() == 0) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select a PO to View!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else {
+                String selected_id = table_purOrder.getValueAt(table_purOrder.getSelectedRow(),
+                        table_purOrder.getColumnModel().getColumnIndex("PurchaseOrderID")).toString();
+                ViewPurchaseOrder.UpdatePurchaseOrder(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));
+                boolean see = ViewPurchaseOrder.ShowPage();
+                if (see) {
+                    System.out.println(" ");
+                }
+            }
+        });
+        button_panel1.add(viewPO, ii_gbc);
+
+        ii_gbc.gridx = 2;
+        updateStatus = new CustomComponents.CustomButton("Update Status", merriweather, new Color(255, 255, 255),
+                new Color(236, 227, 227), new Color(158, 47, 84), new Color(237, 136, 172),
                 Main.transparent, 0, 16, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         updateStatus.addActionListener(_ -> {
@@ -205,8 +481,8 @@ public class PurchaseOrderPage {
             } else {
                 String selected_id = table_purOrder.getValueAt(table_purOrder.getSelectedRow(),
                         table_purOrder.getColumnModel().getColumnIndex("PurchaseOrderID")).toString();
-                ModifyPOStatus.UpdatePO(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));
-                boolean see = ModifyPOStatus.ShowPage();
+                ModifyPO.UpdatePO(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));
+                boolean see = ModifyPO.ShowPage();
                 if (see) {
                     System.out.println(" ");
                 }
@@ -214,9 +490,9 @@ public class PurchaseOrderPage {
         });
         button_panel1.add(updateStatus, ii_gbc);
 
-        ii_gbc.gridx = 2;
+        ii_gbc.gridx = 3;
         makePayment = new CustomComponents.CustomButton("Make Payment", merriweather, new Color(255, 255, 255),
-                new Color(236, 227, 227), new Color(158, 47, 84), new Color(237, 136, 172),
+                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 16, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         makePayment.addActionListener(_ -> {
@@ -272,10 +548,11 @@ public class PurchaseOrderPage {
         });
         button_panel1.add(makePayment, ii_gbc);
 
-        ModifyPOStatus.Loader(parent, merriweather, boldonse, content, null);
+        ViewPurchaseOrder.Loader(parent, merriweather, boldonse, content, null);
+        ModifyPO.Loader(parent, merriweather, boldonse, content, null);
         MakePayment.Loader(parent, merriweather, boldonse, content, null, current_user);
 }
-    public static void UpdateTable(int length, int page) {
+    public static void UpdatePOTable(int length, int page) {
         String[] titles = new String[]{"PurchaseOrderID", "ItemID", "SupplierID", "PurchaseQuantity", "TotalAmt", "OrderDate", "PurchaseMgrID","Status"};
         Object[][] data;
         int counter = 0;
@@ -308,34 +585,53 @@ public class PurchaseOrderPage {
                     purchaseOrder_List.size()));
         }
     }
-//        public static void SearchStuff() {
-//            String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search...\r\r")) ?
-//                    search.getText() : "";
-//            String temp = switch (filter) {
-//                case 1 -> "Finance Manager";
-//                case 2 -> "Purchase Manager";
-//                case 3 -> "Inventory Manager";
-//                case 4 -> "Sales Manager";
-//                default -> "";
-//            };
-//            List<PurchaseOrder> temp_po_list = PurchaseOrder.listAllPOFromFilter(Main.purchaseOrder_file, temp, searcher, c);
-//            if (temp_po_list.isEmpty()) {
-//                CustomComponents.CustomOptionPane.showInfoDialog(
-//                        parent,
-//                        "No results found.",
-//                        "Notification",
-//                        new Color(88, 149, 209),
-//                        new Color(255, 255, 255),
-//                        new Color(125, 178, 228),
-//                        new Color(255, 255, 255)
-//                );
-//            } else {
-//                purchaseOrder_List = temp_user_list;
-//                page_counter = 0;
-//                UpdatePages(list_length);
-//                UpdateTable(list_length, page_counter);
-//                SwingUtilities.invokeLater(table_user::requestFocusInWindow);
-//            }
-//        }
 
+    public static void UpdatePOPages(int length) {
+        int pageCount = (int) Math.ceil(purchaseOrder_List.size() / (double) length);
+        if (purchaseOrder_List.size() <= length) {
+            pageCount = 1;
+        }
+        pages.removeAllItems();
+        for (int i = 1; i <= pageCount; i++) {
+            pages.addItem(String.format("Page %s of %s", i, pageCount));
+        }
+        pages.repaint();
+        pages.revalidate();
+    }
+
+    public static void SearchStuff() {
+        String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search...\r\r")) ?
+                search.getText() : "";
+        List<PurchaseOrder> temp_po_list = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
+        if (temp_po_list.isEmpty()) {
+            CustomComponents.CustomOptionPane.showInfoDialog(
+                    parent,
+                    "No results found.",
+                    "Notification",
+                    new Color(88, 149, 209),
+                    new Color(255, 255, 255),
+                    new Color(125, 178, 228),
+                    new Color(255, 255, 255)
+            );
+        } else {
+            purchaseOrder_List = temp_po_list;
+            page_counter = 0;
+            UpdatePOPages(list_length);
+            UpdatePOTable(list_length, page_counter);
+            SwingUtilities.invokeLater(table_purOrder::requestFocusInWindow);
+        }
+    }
+    public static void RememberDeletion(Set<String> deleting_id, CustomComponents.CustomTable table) {
+        if (deleting) {
+            int rowCount = table.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                Object value = table.getValueAt(i, table.getColumnModel().getColumnIndex("Id"));
+                if (value != null && deleting_id.contains(value.toString())) {
+                    table.addRowSelectionInterval(i, i);
+                }
+            }
+            table.revalidate();
+            table.repaint();
+        }
+    }
 }
