@@ -69,7 +69,6 @@ public class PieGenerator {
                 centerX += r * Math.cos(midAngleRad);
                 centerY += r * Math.sin(midAngleRad);
             }
-//            System.out.println(centerX + "," + centerY);
 
             g.setColor(Color.BLACK);
             String label = String.format("%s (%.1f%%)", entry.getKey(), (value / total) * 100);
