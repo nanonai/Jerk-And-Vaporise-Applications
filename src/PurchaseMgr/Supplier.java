@@ -24,7 +24,7 @@ public class Supplier {
         this.Address = Address;
     }
 
-    public static List<Supplier> ListAllSupplier(String file){
+    public static List<Supplier> listAllSupplier(String file){
         List<Supplier> listSupplier = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -66,6 +66,28 @@ public class Supplier {
         return listSupplier;
     }
 
+    public static Supplier getSupplierByID(String SupplierID, String filename){
+        List<Supplier> supplierList = listAllSupplier(filename);
+        for (Supplier supplier : supplierList){
+            if (Objects.equals(supplier.SupplierID, SupplierID)){
+                return supplier;
+            }
+        }
+        return null;
+    }
+
+    public static Supplier getSupplierByName(String SupplierName, String filename) {
+        // itemList is data inside txt file
+        List<Supplier> supplierList = listAllSupplier(filename);
+        // item (each item inside txt file)
+        for (Supplier supplier : supplierList) {  //    below store ItemName inside combobox
+            if (Objects.equals(supplier.SupplierName, SupplierName)) {
+                return supplier;
+            }
+        }
+        return null;
+    }
+
     public static String getSupplierID(String supplierName) {
         String filePath = "datafile/supplier.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -89,56 +111,6 @@ public class Supplier {
             e.printStackTrace();
         }
         return "Unknown";  // Return a default value if no matching SupplierID was found
-    }
-
-    public static Supplier getSupplierByID(String supplierID, String file) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String SupplierID = "", SupplierName = "", ContactPerson = "", Phone = "", Email = "", Address = "";
-            String line;
-            int counter = 1;
-
-            while ((line = reader.readLine()) != null) {
-                switch (counter) {
-                    case 1:
-                        SupplierID = line.substring(16).trim();
-                        break;
-                    case 2:
-                        SupplierName = line.substring(16).trim();
-                        break;
-                    case 3:
-                        ContactPerson = line.substring(16).trim();
-                        break;
-                    case 4:
-                        Phone = line.substring(16).trim();
-                        break;
-                    case 5:
-                        Email = line.substring(16).trim();
-                        break;
-                    case 6:
-                        Address = line.substring(16).trim();
-                        break;
-                    default:
-                        // End of one supplier block
-                        if (SupplierID.equals(supplierID)) {
-                            return new Supplier(SupplierID, SupplierName, ContactPerson, Phone, Email, Address);
-                        }
-                        // Reset counter and fields for next supplier
-                        counter = 0;
-                        SupplierID = SupplierName = ContactPerson = Phone = Email = Address = "";
-                        break;
-                }
-                counter++;
-            }
-
-            // After last line, check the last read supplier
-            if (SupplierID.equals(supplierID)) {
-                return new Supplier(SupplierID, SupplierName, ContactPerson, Phone, Email, Address);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;  // Return null if not found
     }
 
 }

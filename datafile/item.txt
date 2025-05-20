@@ -34,12 +34,3 @@ Threshold:      1
 Category:       Fruits
 LastUpdate:     2025-05-19
 ~~~~~
-ItemID:         I8108
-ItemName:       LebronJames
-UnitPrice:      12.0
-UnitCost:       313.0
-StockCount:     13
-Threshold:      13
-Category:       Fruits
-LastUpdate:     2025-05-19
-~~~~~

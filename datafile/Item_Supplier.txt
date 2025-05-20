@@ -16,6 +16,3 @@ SupplierID:     S0002
 ItemID:         I6687
 SupplierID:     S0001
 ~~~~~
-ItemID:         I8108
-SupplierID:     S0001
-~~~~~

@@ -418,7 +418,8 @@ public class EditItem {
             } else {
                 // Perform item-specific validity check
                 String validity = Item.validitychecker(itemname.getText(), unitprice.getText().trim(),
-                        unitcost.getText().trim(), stockcount.getText(), threshold.getText(), suppliername.getText());
+                        unitcost.getText().trim(), stockcount.getText(), threshold.getText(), suppliername.getText(),
+                        Main.item_file);
                 
                 // Handle validation errors
                 if (validity.charAt(0) == '0') {

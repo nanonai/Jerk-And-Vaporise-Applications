@@ -128,6 +128,91 @@ public class Item {
         }
     }
 
+    public static void modifyItem(Item Incoming, String filename) {
+        List<Item> allItem = listAllItem(filename);
+        for (Item item : allItem) {
+            if (Objects.equals(item.ItemID, Incoming.ItemID)) {
+                item.ItemID = Incoming.ItemID;
+                item.ItemName = Incoming.ItemName;
+                item.UnitPrice = Incoming.UnitPrice;
+                item.UnitCost = Incoming.UnitCost;
+                item.StockCount = Incoming.StockCount;
+                item.Threshold = Incoming.Threshold;
+                item.Category = Incoming.Category;
+                item.LastUpdate = Incoming.LastUpdate;
+            }
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Item item : allItem) {
+                writer.write("ItemID:         " + item.ItemID + "\n");
+                writer.write("ItemName:       " + item.ItemName + "\n");
+                writer.write("UnitPrice:      " + item.UnitPrice + "\n");
+                writer.write("UnitCost:       " + item.UnitCost + "\n");
+                writer.write("StockCount:     " + item.StockCount + "\n");
+                writer.write("Threshold:      " + item.Threshold + "\n");
+                writer.write("Category:       " + item.Category + "\n");
+                writer.write("LastUpdate:     " + item.LastUpdate + "\n");
+                writer.write("~\n");
+            }
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+    }
+
+    public static boolean addStock(Item item, int amount) {
+        try {
+            String filePath = "datafile/item.txt";
+            String targetId = item.ItemID;
+
+            List<String> updatedLines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+
+            String line;
+            boolean found = false;
+            boolean inItemBlock = false;
+            String currentId = null;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().equals("~")) {
+                    inItemBlock = false;
+                    updatedLines.add(line);
+                    continue;
+                }
+
+                if (line.startsWith("ItemID:")) {
+                    currentId = line.split(":")[1].trim();
+                    inItemBlock = true;
+                }
+
+                if (inItemBlock && currentId != null && currentId.equals(targetId) && line.startsWith("StockCount:")) {
+                    int currentStock = Integer.parseInt(line.split(":")[1].trim());
+                    int newStock = currentStock + amount;
+                    line = "StockCount:     " + newStock;
+                    found = true;
+                }
+
+                updatedLines.add(line);
+            }
+
+            reader.close();
+
+            if (found) {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+                for (String updatedLine : updatedLines) {
+                    writer.write(updatedLine);
+                    writer.newLine();
+                }
+                writer.close();
+                return true;
+            } else {
+                return false;
+            }
+        } catch (IOException e) {
+            e.getStackTrace();
+            return false;
+        }
+    }
+
     public static String validitychecker(String ItemName, String UnitPrice, String UnitCost, String StockCount,
                                          String Threshold,
                                          String SupplierName, String filename) {
@@ -193,7 +278,7 @@ public class Item {
         return indicator;
     }
 
-    public static Item getItemID(String ItemID, String filename){
+    public static Item getItemByID(String ItemID, String filename){
         List<Item> itemList = listAllItem(filename);
         Item item_temp = null;
         for (Item item: itemList) {
@@ -203,6 +288,19 @@ public class Item {
             }
         }
         return item_temp;
+    }
+
+    // getItem (general)
+    public static Item getItemByName(String ItemName, String filename) {
+        // itemList is data inside txt file
+        List<Item> itemList = listAllItem(filename);
+        // item (each item inside txt file)
+        for (Item item : itemList) {  //    below store ItemName inside combobox
+            if (Objects.equals(item.ItemName, ItemName)) {
+                return item;
+            }
+        }
+        return null;
     }
 
     public static void removeItem(String ItemID, String filename) {

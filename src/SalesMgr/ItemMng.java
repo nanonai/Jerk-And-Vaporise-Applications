@@ -547,7 +547,7 @@ public class ItemMng {
 
                 List<Item> itemsToDelete = new ArrayList<>();
                 for (String itemId : ids) {
-                    Item item = Item.getItemID(itemId, "datafile/item.txt");
+                    Item item = Item.getItemByID(itemId, "datafile/item.txt");
                     if (item != null) {
                         itemsToDelete.add(item);
                     }
