@@ -167,7 +167,7 @@ public class ModifyPO {
         gbc.gridy = 3;
         String itemIDValue = ItemID.getText().trim();
         List<String> supplierIDs = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(Main.item_Supplier_file))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(Main.item_supplier_file))) {
             String currentSupplierID = null;
             String currentItemID = null;
             String line;
@@ -269,7 +269,7 @@ public class ModifyPO {
             );
 
             // Update the status in the file
-            PurchaseOrder.ChangePurOrder(current_PO.PurchaseOrderID, po, Main.purchaseOrder_file,updateSupplierID,updatedQuantity, updatedStatus);
+            PurchaseOrder.ModifyPurchaseOrder(current_PO.PurchaseOrderID, po, Main.purchaseOrder_file);
             JOptionPane.showMessageDialog(null, "Updated successfully!");
             view_or_not.set(true); // Flag to indicate something was modified
             dialog.dispose();      // Close the dialog

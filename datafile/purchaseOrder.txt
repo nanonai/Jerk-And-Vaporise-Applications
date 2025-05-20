@@ -1,12 +1,12 @@
 PurchaseOrderID:     PO0001
 ItemID:              I3580
-SupplierID:          S0001
+SupplierID:          S0006
 PurchaseQuantity:    10
 TotalAmt:            15.0
 OrderDate:           2025-05-02
 PurchaseMgrID:       PM0971204357
 Status:              Approved
-~
+~~~~~
 PurchaseOrderID:     PO0002
 ItemID:              I3580
 SupplierID:          S0002
@@ -15,7 +15,7 @@ TotalAmt:            100.0
 OrderDate:           2025-05-03
 PurchaseMgrID:       PM0971204357
 Status:              Pending
-~
+~~~~~
 PurchaseOrderID:     PO0003
 ItemID:              I0003
 SupplierID:          S0001
@@ -24,7 +24,7 @@ TotalAmt:            45.0
 OrderDate:           2025-05-03
 PurchaseMgrID:       PM0971204357
 Status:              Approved
-~
+~~~~~
 PurchaseOrderID:     PO0004
 ItemID:              I0004
 SupplierID:          S0003
@@ -33,7 +33,7 @@ TotalAmt:            32.0
 OrderDate:           2025-05-04
 PurchaseMgrID:       PM0971204357
 Status:              Paid
-~
+~~~~~
 PurchaseOrderID:     PO0005
 ItemID:              I0005
 SupplierID:          S0002
@@ -42,7 +42,7 @@ TotalAmt:            60.0
 OrderDate:           2025-05-04
 PurchaseMgrID:       PM0971204357
 Status:              Pending
-~
+~~~~~
 PurchaseOrderID:     PO0006
 ItemID:              I0006
 SupplierID:          S0004
@@ -51,7 +51,7 @@ TotalAmt:            25.0
 OrderDate:           2025-05-05
 PurchaseMgrID:       PM0971204357
 Status:              Cancelled
-~
+~~~~~
 PurchaseOrderID:     PO0007
 ItemID:              I0007
 SupplierID:          S0001
@@ -60,7 +60,7 @@ TotalAmt:            48.0
 OrderDate:           2025-05-06
 PurchaseMgrID:       PM0971204357
 Status:              Approved
-~
+~~~~~
 PurchaseOrderID:     PO0008
 ItemID:              I0008
 SupplierID:          S0005
@@ -69,7 +69,7 @@ TotalAmt:            72.0
 OrderDate:           2025-05-06
 PurchaseMgrID:       PM0971204357
 Status:              Denied
-~
+~~~~~
 PurchaseOrderID:     PO0009
 ItemID:              I0009
 SupplierID:          S0003
@@ -78,7 +78,7 @@ TotalAmt:            150.0
 OrderDate:           2025-05-07
 PurchaseMgrID:       PM0971204357
 Status:              Pending
-~
+~~~~~
 PurchaseOrderID:     PO0010
 ItemID:              I0100
 SupplierID:          S0002
@@ -87,4 +87,85 @@ TotalAmt:            21.0
 OrderDate:           2025-05-07
 PurchaseMgrID:       PM0971204357
 Status:              Approved
-~
+~~~~~
+PurchaseOrderID:     PO0011
+ItemID:              Harukei Frozen pizza
+SupplierID:          Rapid Logistics
+PurchaseQuantity:    5
+TotalAmt:            50.0
+OrderDate:           2025-05-20
+PurchaseMgrID:       PM0971204357
+Status:              Pending
+~~~~~
+PurchaseOrderID:     PO5668
+ItemID:              Akeno Carrots
+SupplierID:          Omega Resources
+PurchaseQuantity:    99
+TotalAmt:            217.8
+OrderDate:           2025-05-20
+PurchaseMgrID:       PM0971204357
+Status:              Pending
+~~~~~
+PurchaseOrderID:     PO0989
+ItemID:              Nayanti Frozen pizza
+SupplierID:          Rapid Logistics
+PurchaseQuantity:    55
+TotalAmt:            275.0
+OrderDate:           2025-05-20
+PurchaseMgrID:       PM0971204357
+Status:              Pending
+~~~~~
+PurchaseOrderID:     PO4352
+ItemID:              I6215
+SupplierID:          S0010
+PurchaseQuantity:    3
+TotalAmt:            9.0
+OrderDate:           2025-05-20
+PurchaseMgrID:       PM0971204357
+Status:              Pending
+~~~~~
+PurchaseOrderID:     PO6112
+ItemID:              I7962
+SupplierID:          S0005
+PurchaseQuantity:    2
+TotalAmt:            4.0
+OrderDate:           2025-05-20
+PurchaseMgrID:       PM0971204357
+Status:              Pending
+~~~~~
+PurchaseOrderID:     PO4974
+ItemID:              I1754
+SupplierID:          S0010
+PurchaseQuantity:    33
+TotalAmt:            726.0
+OrderDate:           2025-05-20
+PurchaseMgrID:       PM0971204357
+Status:              Pending
+~~~~~
+PurchaseOrderID:     PO9092
+ItemID:              I6215
+SupplierID:          S0010
+PurchaseQuantity:    4
+TotalAmt:            12.0
+OrderDate:           2025-05-20
+PurchaseMgrID:       PM0971204357
+Status:              Pending
+~~~~~
+PurchaseOrderID:     PO6878
+ItemID:              I2997
+SupplierID:          S0006
+PurchaseQuantity:    7
+TotalAmt:            21.0
+OrderDate:           2025-05-20
+PurchaseMgrID:       PM0971204357
+Status:              Pending
+~~~~~
+PurchaseOrderID:     PO8359
+ItemID:              I4493
+SupplierID:          S0009
+PurchaseQuantity:    11
+TotalAmt:            11.0
+OrderDate:           2025-05-20
+PurchaseMgrID:       PM9274618301
+Status:              Pending
+~~~~~

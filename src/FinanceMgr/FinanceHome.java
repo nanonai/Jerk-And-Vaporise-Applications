@@ -222,7 +222,6 @@ public class FinanceHome {
                 UpdateComponentSize(parent.getWidth(), parent.getHeight());
             }
         });
-
         ReportPage.Loader(parent, merriweather, boldonse, content, current_user);
         PaymentPage.Loader(parent, merriweather, boldonse, content, current_user);
         InventoryPage.Loader(parent, merriweather, boldonse, content, current_user);

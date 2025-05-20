@@ -36,6 +36,6 @@ public class InvStatic {
             merriweather = new Font("Serif", Font.PLAIN, 14);
         }
 
-        System.out.print("Finished loading Fonts for InventoryManager under InvStatic");
+//        System.out.print("Finished loading Fonts for InventoryManager under InvStatic");
     }
 }

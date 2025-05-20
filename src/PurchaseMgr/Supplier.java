@@ -1,5 +1,7 @@
 package PurchaseMgr;
 
+import InventoryMgr.Item;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -74,5 +76,21 @@ public class Supplier {
             }
         }
         return null;
+    }
+
+    public static Supplier getSupplierByName(String SupplierName, String filename) {
+        // itemList is data inside txt file
+        List<Supplier> supplierList = listAllSupplier(filename);
+        // item (each item inside txt file)
+        for (Supplier supplier : supplierList) {  //    below store ItemName inside combobox
+            if (Objects.equals(supplier.SupplierName, SupplierName)) {
+                return supplier;
+            }
+        }
+        return null;
+    }
+
+    public String getSupplierID() {
+        return SupplierID;
     }
 }

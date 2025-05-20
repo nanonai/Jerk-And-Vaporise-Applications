@@ -1,9 +1,8 @@
 package FinanceMgr;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import Admin.User;
+
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -34,7 +33,6 @@ public class Payment {
             int counter = 1;
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
                 switch (counter) {
                     case 1:
                         PaymentID = line.substring(21);
@@ -111,5 +109,30 @@ public class Payment {
             }
         }
         return payment_temp;
+    }
+
+    public static void ModifyPayment(String paymentID, Payment Incoming, String filename) {
+        List<Payment> allPY = listAllPayment(filename);
+        for (Payment py: allPY) {
+            if (Objects.equals(py.PaymentID, paymentID)) {
+                py.PaymentID = Incoming.PaymentID;
+                py.PurchaseOrderID = Incoming.PurchaseOrderID;
+                py.Amount = Incoming.Amount;
+                py.PaymentDate = Incoming.PaymentDate;
+                py.FinanceMgrID = Incoming.FinanceMgrID;
+            }
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Payment py: allPY) {
+                writer.write("PaymentID:           " + py.PaymentID + "\n");
+                writer.write("PurchaseOrderID :    " + py.PurchaseOrderID + "\n");
+                writer.write("Amount:              " + py.Amount + "\n");
+                writer.write("PaymentDate:         " + py.PaymentDate + "\n");
+                writer.write("FinanceMrgID:        " + py.FinanceMgrID + "\n");
+                writer.write("~~~~~\n");
+            }
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
     }
 }

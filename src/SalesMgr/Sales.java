@@ -1,9 +1,8 @@
 package SalesMgr;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import FinanceMgr.PurchaseRequisition;
+
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -83,6 +82,27 @@ public class Sales {
             writer.write("SalesDate:      " + sales.SalesDate + "\n");
             writer.write("SalesMgrID:     " + sales.SalesMgrID + "\n");
             writer.write("~~~~~\n");
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+    }
+
+    public static void ModifySales(String SalesID, Sales sales, String filename) {
+        List<Sales> salesList = listAllSales(filename);
+        for (Sales sl : salesList) {
+            if (Objects.equals(sl.SalesID, SalesID)) {
+                sl.SalesID = sales.SalesID;
+                sl.SalesDate = sales.SalesDate;
+                sl.SalesMgrID = sales.SalesMgrID;
+            }
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Sales sl : salesList) {
+                writer.write("SalesID:        " + sl.SalesID + "\n");
+                writer.write("SalesDate:      " + sl.SalesDate + "\n");
+                writer.write("SalesMgrID:     " + sl.SalesMgrID + "\n");
+                writer.write("~~~~~\n");
+            }
         } catch (IOException e) {
             e.getStackTrace();
         }

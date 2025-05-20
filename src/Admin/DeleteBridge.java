@@ -90,10 +90,10 @@ public class DeleteBridge {
         panel.add(type_label, gbc);
 
         gbc.gridy = 4;
-        JLabel table_label = new JLabel("Records:");
-        table_label.setOpaque(false);
-        table_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
-        panel.add(table_label, gbc);
+        JLabel rec_label = new JLabel("Records:");
+        rec_label.setOpaque(false);
+        rec_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(rec_label, gbc);
 
         gbc.gridy = 5;
         gbc.weighty = 4;

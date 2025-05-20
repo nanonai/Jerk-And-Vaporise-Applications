@@ -36,7 +36,7 @@ Email:          im123@gmail.com
 Phone:          0123574252
 AccType:        Inventory Manager
 DateOfRegis:    2025-03-31
-RememberMe:     1
+RememberMe:     0
 ~~~~~
 UserID:         FM0971204357
 Username:       fm123
@@ -55,16 +55,6 @@ FullName:       Lim Jin Wei
 Email:          salesy@gmail.com
 Phone:          0112345678
 AccType:        Sales Manager
-DateOfRegis:    2025-04-01
-RememberMe:     0
-~~~~~
-UserID:         PM9274618301
-Username:       purchaseZ
-Password:       Purchase$789
-FullName:       Chua Mei Lin
-Email:          purchasez@gmail.com
-Phone:          0198765432
-AccType:        Purchase Manager
 DateOfRegis:    2025-04-01
 RememberMe:     0
 ~~~~~
@@ -216,5 +206,15 @@ Email:          ss@rgg.gdgs
 Phone:          0124326345
 AccType:        Finance Manager
 DateOfRegis:    2025-05-19
+RememberMe:     0
+~~~~~
+UserID:         PM6739068018
+Username:       dummyacc
+Password:       dumDUM!@#123
+FullName:       dummyacc
+Email:          dum@email.com
+Phone:          0124567876
+AccType:        Purchase Manager
+DateOfRegis:    2025-05-20
 RememberMe:     0
 ~~~~~

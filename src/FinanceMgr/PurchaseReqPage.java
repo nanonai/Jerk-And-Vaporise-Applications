@@ -18,7 +18,6 @@ public class PurchaseReqPage {
     private static Font merriweather, boldonse;
     private static JPanel content,inner;
     public static User current_user;
-    private static CustomComponents.CustomButton all, purReq, itemID, quan, reqDate,purManID;
     private static CustomComponents.RoundedPanel search_panel;
     private static JComboBox<String> entries;
     private static CustomComponents.EmptyTextField search;
@@ -26,14 +25,11 @@ public class PurchaseReqPage {
     private static CustomComponents.CustomTable table_purReq;
     private static CustomComponents.CustomScrollPane scrollPane1;
     private static List<PurchaseRequisition> purchaseReq_list;
-    private static CustomComponents.CustomButton viewPurchaseReq,delete2;
-    private static final Set<String> deleting_id = new LinkedHashSet<>();
-    private static final Set<Integer> previousSelection = new HashSet<>();
-    private static boolean deleting = false;
+    private static CustomComponents.CustomButton viewPurchaseReq;
     private static JLabel lbl_show, lbl_entries,lbl_indicate;
     private static JComboBox<String>  pages;
-    private static int list_length = 10, page_counter = 0, filter = 0, mode = 1;
-    private static JButton s_btn, p_left, p_right, p_first, p_last, x_btn;
+    private static int list_length = 10, page_counter = 0;
+    private static JButton s_btn, p_left, p_right, p_first, p_last;
     private static CustomComponents.CustomArrowIcon left_icon1, left_icon2, right_icon1, right_icon2;
 
     public static void Loader(JFrame parent,Font merriweather,Font boldonse,
@@ -148,48 +144,21 @@ public class PurchaseReqPage {
         igbc.weightx = 1;
         igbc.weighty = 10;
         igbc.insets = new Insets(0, 0, 10, 0);
-        String[] titles = new String[]{"PurchaseReqID", "ItemID", "SupplierID", "Quantity", "ReqDate","SalesMgrID"};
+        String[] titles = new String[]{"PurchaseReqID", "ItemID", "SupplierID", "Quantity", "ReqDate", "SalesMgrID", "Status"};
         purchaseReq_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
         Object[][] data = new Object[purchaseReq_list.size()][titles.length];
         int counter = 0;
         for (PurchaseRequisition purchaseRequisition : purchaseReq_list) {
             data[counter] = new Object[]{purchaseRequisition.PurchaseReqID, purchaseRequisition.ItemID,purchaseRequisition.SupplierID,
-                    purchaseRequisition.Quantity, purchaseRequisition.ReqDate,purchaseRequisition.SalesMgrID};
+                    purchaseRequisition.Quantity, purchaseRequisition.ReqDate,purchaseRequisition.SalesMgrID,
+                    (purchaseRequisition.Status == 0) ? "Pending" : "Processed"};
             counter += 1;
         }
 
         table_purReq = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
                 merriweather.deriveFont(Font.PLAIN, 16), Color.BLACK, Color.BLACK,
                 Color.WHITE, new Color(212, 212, 212), 1, 30);
-        table_purReq.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting() && deleting) {
-                    SwingUtilities.invokeLater(() -> {
-                        int[] selectedRows = table_purReq.getSelectedRows();
-                        Set<Integer> currentSelection = new HashSet<>();
-                        for (int row : selectedRows) {
-                            currentSelection.add(row);
-                        }
-                        Set<Integer> newlySelected = new HashSet<>(currentSelection);
-                        newlySelected.removeAll(previousSelection);
-                        Set<Integer> deselected = new HashSet<>(previousSelection);
-                        deselected.removeAll(currentSelection);
-                        for (int row : newlySelected) {
-                            deleting_id.add(table_purReq.getValueAt(row,
-                                    table_purReq.getColumnModel().getColumnIndex("Id")).toString());
-                        }
-                        for (int row : deselected) {
-                            deleting_id.remove(table_purReq.getValueAt(row,
-                                    table_purReq.getColumnModel().getColumnIndex("Id")).toString());
-                        }
-                        delete2.setText(String.format("Delete User (%s)", deleting_id.size()));
-                        previousSelection.clear();
-                        previousSelection.addAll(currentSelection);
-                    });
-                }
-            }
-        });
+
         lbl_indicate = new JLabel("");
         pages = new JComboBox<>();
         UpdatePRTable(list_length, page_counter);
@@ -259,10 +228,6 @@ public class PurchaseReqPage {
             page_counter = 0;
             pages.setSelectedIndex(0);
             UpdatePRTable(list_length, page_counter);
-            previousSelection.clear();
-            SwingUtilities.invokeLater(() -> {
-                RememberDeletion(deleting_id, table_purReq);
-            });
         });
         p_first.addMouseListener(new MouseAdapter() {
             @Override
@@ -305,10 +270,6 @@ public class PurchaseReqPage {
                 page_counter -= 1;
                 pages.setSelectedIndex(page_counter);
                 UpdatePRTable(list_length, page_counter);
-                previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_purReq);
-                });
             }
         });
         page_panel.add(p_left, ii_gbc);
@@ -322,10 +283,6 @@ public class PurchaseReqPage {
             if (pages.getItemCount() > 0) {
                 page_counter = pages.getSelectedIndex();
                 UpdatePRTable(list_length, page_counter);
-                previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_purReq);
-                });
             }
         });
         page_panel.add(pages, ii_gbc);
@@ -343,10 +300,6 @@ public class PurchaseReqPage {
                 page_counter += 1;
                 pages.setSelectedIndex(page_counter);
                 UpdatePRTable(list_length, page_counter);
-                previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_purReq);
-                });
             }
         });
         page_panel.add(p_right, ii_gbc);
@@ -360,10 +313,6 @@ public class PurchaseReqPage {
             page_counter = pages.getItemCount() - 1;
             pages.setSelectedIndex(page_counter);
             UpdatePRTable(list_length, page_counter);
-            previousSelection.clear();
-            SwingUtilities.invokeLater(() -> {
-                RememberDeletion(deleting_id, table_purReq);
-            });
         });
         p_last.addMouseListener(new MouseAdapter() {
             @Override
@@ -413,7 +362,7 @@ public class PurchaseReqPage {
             } else {
                 String selected_id = table_purReq.getValueAt(table_purReq.getSelectedRow(),
                         table_purReq.getColumnModel().getColumnIndex("PurchaseReqID")).toString();
-                ViewPurchaseReq.UpdatePurchaseReq(PurchaseRequisition.getPurchaseReqID(selected_id, Main.purchaseReq_file));
+                ViewPurchaseReq.UpdatePurchaseReq(PurchaseRequisition.getPurchaseReqByID(selected_id, Main.purchaseReq_file));
                 boolean see = ViewPurchaseReq.ShowPage();
                 if (see) {
                     System.out.println(" ");
@@ -424,7 +373,7 @@ public class PurchaseReqPage {
         ViewPurchaseReq.Loader(parent, merriweather, boldonse, content, null);
     }
     public static void UpdatePRTable(int length, int page) {
-        String[] titles = new String[]{"PurchaseReqID", "ItemID", "SupplierID", "Quantity", "ReqDate", "SalesMrgID"};
+        String[] titles = new String[]{"PurchaseReqID", "ItemID", "SupplierID", "Quantity", "ReqDate", "SalesMrgID", "Status"};
         Object[][] data;
         int counter = 0;
         int anti_counter = page * length;
@@ -439,7 +388,8 @@ public class PurchaseReqPage {
                 continue;
             } else {
                 data[counter] = new Object[]{purchaseRequisition.PurchaseReqID,purchaseRequisition.ItemID,purchaseRequisition.SupplierID,
-                        purchaseRequisition.Quantity,purchaseRequisition.ReqDate,purchaseRequisition.SalesMgrID};
+                        purchaseRequisition.Quantity,purchaseRequisition.ReqDate,purchaseRequisition.SalesMgrID,
+                        (purchaseRequisition.Status == 0) ? "Pending" : "Processed"};
                 counter += 1;
                 if (counter == length || counter == purchaseReq_list.size()) { break; }
             }
@@ -467,19 +417,5 @@ public class PurchaseReqPage {
         }
         pages.repaint();
         pages.revalidate();
-    }
-
-    public static void RememberDeletion(Set<String> deleting_id, CustomComponents.CustomTable table) {
-        if (deleting) {
-            int rowCount = table.getRowCount();
-            for (int i = 0; i < rowCount; i++) {
-                Object value = table.getValueAt(i, table.getColumnModel().getColumnIndex("Id"));
-                if (value != null && deleting_id.contains(value.toString())) {
-                    table.addRowSelectionInterval(i, i);
-                }
-            }
-            table.revalidate();
-            table.repaint();
-        }
     }
 }
