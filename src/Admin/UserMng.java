@@ -10,7 +10,6 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-
 public class UserMng {
     private static JFrame parent;
     private static Font merriweather, boldonse;

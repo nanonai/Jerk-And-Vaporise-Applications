@@ -75,6 +75,7 @@ public class Dashboard {
         );
 
         SwitchPanel sp = new SwitchPanel(5000, stats1, stats2);
+//        FadePanel sp = new FadePanel(stats1, stats2);
         sp.setOpaque(true);
         sp.setBackground(new Color(255, 246, 250));
         content.add(sp, gbc);

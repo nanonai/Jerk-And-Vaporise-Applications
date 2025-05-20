@@ -143,14 +143,14 @@ public class SignIn {
 
         gbc_inner.gridx = 0;
         gbc_inner.gridy = 0;
-        gbc_inner.weightx = 5.8;
+        gbc_inner.weightx = 4;
         gbc_inner.insets = new Insets(0, 0, 0, 0);
         txt_icon2 = new CustomComponents.ImageCell(
                 lock_icon, 0.5, 5);
         txt_grid2.add(txt_icon2, gbc_inner);
 
         gbc_inner.gridx = 1;
-        gbc_inner.weightx = 9.1;
+        gbc_inner.weightx = 5.9;
         txt2 = new CustomComponents.EmptyPasswordField(
                 7, "Password \r\r", new Color(178, 181, 180));
         txt2.setEchoChar((char) 0);
@@ -158,7 +158,7 @@ public class SignIn {
         txt_grid2.add(txt2, gbc_inner);
 
         gbc_inner.gridx = 2;
-        gbc_inner.weightx = 0.5;
+        gbc_inner.weightx = 0.1;
         hidden = new CustomComponents.CustomButton("", merriweather,
                 Main.transparent, Main.transparent, Main.transparent, Main.transparent, Main.transparent,
                 0, 0, Main.transparent, false, 4,

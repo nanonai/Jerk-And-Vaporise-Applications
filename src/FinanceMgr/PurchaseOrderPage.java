@@ -53,7 +53,7 @@ public class PurchaseOrderPage {
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        gbc.gridx = 9;
+        gbc.gridx = 6;
         gbc.weightx = 14;
         gbc.insets = new Insets(0, 0, 0, 20);
         JLabel placeholder1 = new JLabel("");
@@ -126,6 +126,7 @@ public class PurchaseOrderPage {
         ii_gbc.weighty = 1;
         ii_gbc.fill = GridBagConstraints.BOTH;
         ii_gbc.insets = new Insets(6, 6, 10, 5);
+
         search_icon1 = new CustomComponents.CustomSearchIcon(16, 3,
                 new Color(122, 122, 122), Color.WHITE);
         search_icon2 = new CustomComponents.CustomSearchIcon(16, 3,
