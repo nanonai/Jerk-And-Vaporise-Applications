@@ -13,6 +13,7 @@ import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class CustomComponents {
@@ -1754,6 +1755,126 @@ public class CustomComponents {
             g2d.drawLine(x1, y1, x2, y2);
             g2d.drawLine(x3, y3, x4, y4);
 
+            g2d.dispose();
+        }
+    }
+
+    public static class CustomRoundChart extends JPanel {
+        private final Map<String, Double> data;
+        private final Color[] colors;
+        private final Color bg, txt;
+        private final Font font;
+        private final int mode;
+        private int thickness;
+        private double center_factor, size_factor;
+
+        public CustomRoundChart(Map<String, Double> data, Color[] colors,
+                Color bg, Color txt, Font font, int mode, int thickness, double center_factor, double size_factor) {
+            this.data = data;
+            this.colors = colors;
+            this.bg = bg;
+            this.txt = txt;
+            this.font = font;
+            this.mode = mode;
+            this.thickness = thickness;
+            this.center_factor = center_factor;
+            this.size_factor = size_factor;
+            setLayout(null);
+        }
+
+        public void UpdateSizeThickness(double size_factor, int thickness, int center_factor) {
+            this.size_factor = size_factor;
+            this.thickness = thickness;
+            this.center_factor = center_factor;
+            repaint();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (data == null || data.isEmpty()) return;
+            Graphics2D g2d = (Graphics2D) g.create();
+
+            int width = getWidth();
+            int height = getHeight();
+
+            g2d.setColor(bg);
+            g2d.fillRect(0, 0, width, height);
+
+            int diameter = (int) (Math.min(width, height) * size_factor);
+            int x = (width - diameter) / 2;
+            int y = (height - diameter) / 2;
+
+            double total = data.values().stream().mapToDouble(Double::doubleValue).sum();
+            int startAngle = 0;
+            int colorIndex = 0;
+
+            for (Map.Entry<String, Double> entry : data.entrySet()) {
+                double value = entry.getValue();
+                int arcAngle = (int) Math.round((value / (double) total) * 360);
+
+                g2d.setColor(colors[colorIndex % colors.length]);
+                g2d.fillArc(x, y, diameter, diameter, startAngle, arcAngle);
+                startAngle += arcAngle;
+                colorIndex++;
+            }
+            if (mode == 1) {
+                g2d.setColor(bg);
+                g2d.fillOval((width - (diameter - 2 * thickness)) / 2, (height - (diameter - 2 * thickness)) / 2, diameter - 2 * thickness, diameter - 2 * thickness);
+            }
+
+            startAngle = 0;
+            colorIndex = 0;
+            for (Map.Entry<String, Double> entry : data.entrySet()) {
+                Double value = entry.getValue();
+                int arcAngle = (int) Math.round((value / (double) total) * 360);
+                double midAngle = (arcAngle + 2 * startAngle) / 2.0;
+
+                int r = (int) (diameter / 2f * center_factor);
+                int centerX = width / 2;
+                int centerY = height / 2;
+                if (midAngle < 90) {
+                    double midAngleRad = Math.toRadians(midAngle);
+                    centerX += (int) (r * Math.cos(midAngleRad));
+                    centerY -= (int) (r * Math.sin(midAngleRad));
+                } else if (midAngle < 180) {
+                    midAngle = 180 - midAngle;
+                    double midAngleRad = Math.toRadians(midAngle);
+                    centerX -= (int) (r * Math.cos(midAngleRad));
+                    centerY -= (int) (r * Math.sin(midAngleRad));
+                } else if (midAngle < 270) {
+                    midAngle -= 180;
+                    double midAngleRad = Math.toRadians(midAngle);
+                    centerX -= (int) (r * Math.cos(midAngleRad));
+                    centerY += (int) (r * Math.sin(midAngleRad));
+                } else {
+                    midAngle = 360 - midAngle;
+                    double midAngleRad = Math.toRadians(midAngle);
+                    centerX += (int) (r * Math.cos(midAngleRad));
+                    centerY += (int) (r * Math.sin(midAngleRad));
+                }
+
+                g2d.setColor(txt);
+                String[] lines = {
+                        entry.getKey(),
+                        String.format("(%.1f%%)", (value / total) * 100f)
+                };
+                g2d.setFont(font);
+                FontMetrics fm = g2d.getFontMetrics();
+                int lineHeight = fm.getHeight();
+                int totalTextHeight = lineHeight * lines.length;
+
+                for (int i = 0; i < lines.length; i++) {
+                    String line = lines[i];
+                    int lineWidth = fm.stringWidth(line);
+                    int drawX = centerX - lineWidth / 2;
+                    int drawY = centerY - totalTextHeight / 2 + (i * lineHeight) + fm.getAscent();
+                    g2d.drawString(line, drawX, drawY);
+                }
+
+                startAngle += arcAngle;
+                colorIndex++;
+            }
             g2d.dispose();
         }
     }
