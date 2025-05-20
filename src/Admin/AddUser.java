@@ -376,6 +376,8 @@ public class AddUser {
 
             @Override
             public void focusLost(FocusEvent e) {
+                phone.setForeground(Color.BLACK);
+                phone.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
                 phone.setToolTipText("");
                 String input = phone.getText();
                 if (!User.phoneChecker("0" + input, Main.userdata_file) && !input.isEmpty()) {

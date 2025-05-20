@@ -1,9 +1,14 @@
 package PurchaseMgr;
 
+import Admin.User;
+
+import javax.swing.*;
+import javax.swing.text.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class PurchaseOrder {
     public static PurchaseOrder getPurchaseOrderID;
@@ -74,18 +79,18 @@ public class PurchaseOrder {
         return allPurchaseOrders;
     }
 
-    public static void ChangePurOrderStatus(String PurchaseOrderID, PurchaseOrder buffer, String filename, String status) {
+    public static void ModifyPurchaseOrder(String PurchaseOrderID, PurchaseOrder purchaseOrder, String filename) {
         List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(filename);
         for (PurchaseOrder po : purchaseOrderList) {
             if (Objects.equals(po.PurchaseOrderID, PurchaseOrderID)) {
-                po.PurchaseOrderID = buffer.PurchaseOrderID;
-                po.ItemID = buffer.ItemID;
-                po.SupplierID = buffer.SupplierID;
-                po.PurchaseQuantity = buffer.PurchaseQuantity;
-                po.TotalAmt = buffer.TotalAmt;
-                po.OrderDate = buffer.OrderDate;
-                po.PurchaseMgrID = buffer.PurchaseMgrID;
-                po.Status = buffer.Status;  // change status
+                po.PurchaseOrderID = purchaseOrder.PurchaseOrderID;
+                po.ItemID = purchaseOrder.ItemID;
+                po.SupplierID = purchaseOrder.SupplierID;
+                po.PurchaseQuantity = purchaseOrder.PurchaseQuantity;
+                po.TotalAmt = purchaseOrder.TotalAmt;
+                po.OrderDate = purchaseOrder.OrderDate;
+                po.PurchaseMgrID = purchaseOrder.PurchaseMgrID;
+                po.Status = purchaseOrder.Status;
             }
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
@@ -98,7 +103,7 @@ public class PurchaseOrder {
                 writer.write("OrderDate:           " + po.OrderDate + "\n");
                 writer.write("PurchaseMgrID:       " + po.PurchaseMgrID + "\n");
                 writer.write("Status:              " + po.Status + "\n");
-                writer.write("~\n");
+                writer.write("~~~~~\n");
             }
         } catch (IOException e) {
             e.getStackTrace();
@@ -141,75 +146,25 @@ public class PurchaseOrder {
         return purchaseOrder_temp;
     }
 
-    public static List<String> loadItemNames(String filePath) {
-        List<String> itemNames = new ArrayList<>();
+    public static void savePurchaseOrder(
+            PurchaseOrder PO,
+            String filename,
+            JFrame parentFrame // for JOptionPane
+    ) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+            writer.write("PurchaseOrderID:     " + PO.PurchaseOrderID + "\n");
+            writer.write("ItemID:              " + PO.ItemID + "\n");
+            writer.write("SupplierID:          " + PO.SupplierID + "\n");
+            writer.write("PurchaseQuantity:    " + PO.PurchaseQuantity + "\n");
+            writer.write("TotalAmt:            " + PO.TotalAmt + "\n");
+            writer.write("OrderDate:           " + PO.OrderDate.format(df) + "\n");
+            writer.write("PurchaseMgrID:       " + PO.PurchaseMgrID + "\n");
+            writer.write("Status:              " + PO.Status + "\n");
+            writer.write("~~~~~\n");
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            String itemName = null;
-
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-
-                if (line.startsWith("ItemName:")) {
-                    itemName = line.substring("ItemName:".length()).trim();
-                }
-
-                if (line.equals("~~~~~") && itemName != null) {
-                    itemNames.add(itemName);
-                    itemName = null;
-                }
-            }
-
+            JOptionPane.showMessageDialog(parentFrame, "Purchase order saved successfully.");
         } catch (IOException e) {
-            e.printStackTrace(); // You can also handle this better in production
+            JOptionPane.showMessageDialog(parentFrame, "Error saving purchase order:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        return itemNames;
     }
-
-//    public static List<PurchaseOrder> listAllPOFromFilter(String filename, String purchaseOrderID, String filter, PurchaseOrder current_po) {
-//        List<PurchaseOrder> po_list = listAllPurchaseOrders(filename);
-//        List<PurchaseOrder> poID_list = new ArrayList<>();
-//        List<PurchaseOrder> filtered_po_list = new ArrayList<>();
-//        if (type.isEmpty() && filter.isEmpty()) {
-//            if (current_po != null) {
-//                int length = po_list.size();
-//                for (int i = 0; i < length; i++) {
-//                    if (Objects.equals(poID_list.get(i).PurchaseOrderID, current_po.PurchaseOrderID)) {
-//                        poID_list.remove(i);
-//                        break;
-//                    }
-//                }
-//            }
-//            return poID_list;
-//        }
-//        for (PurchaseOrder purchaseOrder: po_list) {
-//            if (!Objects.equals(purchaseOrder.PurchaseOrderID, current_po.PurchaseOrderID)) {
-//                if (Objects.equals(purchaseOrder.PurchaseOrderID, purchaseOrderID)) {
-//                    poID_list.add(purchaseOrder);
-//                } else if (purchaseOrderID.isEmpty()) {
-//                    poID_list.add(purchaseOrder);
-//                }
-//            }
-//        }
-//        if (filter.isEmpty()) {
-//            return poID_list;
-//        }
-//        for (PurchaseOrder purchaseOrder: poID_list) {
-//            if ((purchaseOrder.PurchaseOrderID.toLowerCase().contains(filter.toLowerCase()) ||
-//                    purchaseOrder.ItemID.toLowerCase().contains(filter.toLowerCase()) ||
-//                    purchaseOrder.SupplierID.toLowerCase().contains(filter) ||
-//                    purchaseOrder.PurchaseQuantity.contains(filter) ||
-//                    purchaseOrder.TotalAmt.contains(filter) ||
-//                    purchaseOrder.OrderDate.toString().contains(filter.toLowerCase()) ||
-//                    purchaseOrder.PurchaseMgrID.toLowerCase().contains(filter.toLowerCase()) ||
-//                    purchaseOrder.Status.toLowerCase().contains(filter.toLowerCase()))) {
-//                filtered_po_list.add(purchaseOrder);
-//            }
-//        }
-//        return filtered_po_list;
-//    }
-
-
 }

@@ -1,10 +1,13 @@
 package PurchaseMgr;
 
+import InventoryMgr.Item;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Supplier {
     public String SupplierID;
@@ -23,7 +26,7 @@ public class Supplier {
         this.Address = Address;
     }
 
-    public static List<Supplier> ListAllSupplier(String file){
+    public static List<Supplier> listAllSupplier(String file){
         List<Supplier> listSupplier = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -63,5 +66,31 @@ public class Supplier {
             e.getStackTrace();
         }
         return listSupplier;
+    }
+
+    public static Supplier getSupplierByID(String SupplierID, String filename){
+        List<Supplier> supplierList = listAllSupplier(filename);
+        for (Supplier supplier : supplierList){
+            if (Objects.equals(supplier.SupplierID, SupplierID)){
+                return supplier;
+            }
+        }
+        return null;
+    }
+
+    public static Supplier getSupplierByName(String SupplierName, String filename) {
+        // itemList is data inside txt file
+        List<Supplier> supplierList = listAllSupplier(filename);
+        // item (each item inside txt file)
+        for (Supplier supplier : supplierList) {  //    below store ItemName inside combobox
+            if (Objects.equals(supplier.SupplierName, SupplierName)) {
+                return supplier;
+            }
+        }
+        return null;
+    }
+
+    public String getSupplierID() {
+        return SupplierID;
     }
 }
