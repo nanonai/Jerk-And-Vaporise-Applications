@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Dashboard {
     private static JFrame parent;
@@ -43,7 +45,23 @@ public class Dashboard {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1;
         gbc.weighty = 1;
-
+        Map<String, Double> data = new LinkedHashMap<>();
+        data.put("Wong Jia Le", 50.0);
+        data.put("Vanessa", 15.0);
+        data.put("Eason", 15.0);
+        data.put("Whei Hung", 15.0);
+        data.put("Booboon", 5.0);
+        Color[] colors = {
+                Color.RED,
+                Color.PINK,
+                Color.ORANGE,
+                Color.YELLOW,
+                Color.GREEN
+        };
+        CustomComponents.CustomRoundChart donut1 = new CustomComponents.CustomRoundChart(
+                data, colors, Color.WHITE, Color.BLACK, merriweather.deriveFont(Font.BOLD, 50), 1, 100, 1.3, 0.6
+        );
+        content.add(donut1, gbc);
 
     }
 

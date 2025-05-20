@@ -16,7 +16,7 @@ Email:          sm123@gmail.com
 Phone:          0123354535
 AccType:        Sales Manager
 DateOfRegis:    2025-03-31
-RememberMe:     0
+RememberMe:     1
 ~~~~~
 UserID:         PM0971204357
 Username:       pm123
@@ -36,7 +36,7 @@ Email:          im123@gmail.com
 Phone:          0123574252
 AccType:        Inventory Manager
 DateOfRegis:    2025-03-31
-RememberMe:     1
+RememberMe:     0
 ~~~~~
 UserID:         FM0971204357
 Username:       fm123
@@ -48,6 +48,16 @@ AccType:        Finance Manager
 DateOfRegis:    2025-03-31
 RememberMe:     0
 ~~~~~
+UserID:         AD7264918352
+Username:       adminX
+Password:       Admin@123
+FullName:       Tan Ai Ling
+Email:          adminx@gmail.com
+Phone:          0123456789
+AccType:        Administrator
+DateOfRegis:    2025-04-01
+RememberMe:     0
+~~~~~
 UserID:         SM6352871092
 Username:       salesY
 Password:       Sales#456
@@ -55,6 +65,16 @@ FullName:       Lim Jin Wei
 Email:          salesy@gmail.com
 Phone:          0112345678
 AccType:        Sales Manager
+DateOfRegis:    2025-04-01
+RememberMe:     0
+~~~~~
+UserID:         PM9274618301
+Username:       purchaseZ
+Password:       Purchase$789
+FullName:       Chua Mei Lin
+Email:          purchasez@gmail.com
+Phone:          0198765432
+AccType:        Purchase Manager
 DateOfRegis:    2025-04-01
 RememberMe:     0
 ~~~~~
@@ -68,153 +88,23 @@ AccType:        Inventory Manager
 DateOfRegis:    2025-04-01
 RememberMe:     0
 ~~~~~
-UserID:         FM7833553669
-Username:       woshixiaojiejie
-Password:       Finmgr&654
-FullName:       Xiao Jie Jie
-Email:          ad123@gmail.con
-Phone:          0128467232
-AccType:        Finance Manager
-DateOfRegis:    2025-04-01
-RememberMe:     0
-~~~~~
-UserID:         SM5592118047
-Username:       Iamthebest
-Password:       Skibidi1@
-FullName:       skibidi wong
-Email:          skibidi2@dfdf.com
-Phone:          0124506943
-AccType:        Sales Manager
-DateOfRegis:    2025-05-13
-RememberMe:     0
-~~~~~
-UserID:         FM1031172337
-Username:       fdsgdsgdsgds
-Password:       sdsgdsgdsg@!1fgwEF
-FullName:       gdsgdsgdsgdsgsd
-Email:          sdgfsfgerfr@dfdsfds.dfdsfds
-Phone:          0123434346
-AccType:        Finance Manager
-DateOfRegis:    2025-05-13
-RememberMe:     0
-~~~~~
-UserID:         FM9821970536
-Username:       oodeilibandagongzai
+UserID:         FM3108412680
+Username:       ddsgdgdsg
 Password:       @13WDdwefe
-FullName:       san fen tian zhu ding
+FullName:       sgdsgdgsgsgsdgds
 Email:          wege@dfghfe.wegweg
 Phone:          0122423523
 AccType:        Finance Manager
 DateOfRegis:    2025-05-14
 RememberMe:     0
 ~~~~~
-UserID:         IM3841043388
-Username:       daxiangjiao
+UserID:         FM3975333726
+Username:       gdsgsgds
 Password:       dhdfhdf@123sdgdfsgdsaFWEFWE
-FullName:       chao ji wu di da xiang jiao
+FullName:       gdfsghfdsgds
 Email:          sdgsgsd@sgsg.sdgdsg
 Phone:          0112345347
-AccType:        Inventory Manager
+AccType:        Finance Manager
 DateOfRegis:    2025-05-14
-RememberMe:     0
-~~~~~
-UserID:         IM9805123383
-Username:       woshiyizhizhu
-Password:       fdsfdsfdsfdsfdsfds@#!12WEF
-FullName:       fsdfdsfsdfdsfds
-Email:          wewer@sgw.wegwe
-Phone:          0123243265
-AccType:        Inventory Manager
-DateOfRegis:    2025-05-19
-RememberMe:     0
-~~~~~
-UserID:         FM0505724893
-Username:       sdfsdgsdfadsfdsds
-Password:       !@!2313wdefhrekgerNVUH
-FullName:       fsdgsdsgdjgdfgdf
-Email:          fkijgwej@sdsjbs.dsdgsdgs
-Phone:          0123445346
-AccType:        Finance Manager
-DateOfRegis:    2025-05-19
-RememberMe:     0
-~~~~~
-UserID:         FM6346679738
-Username:       dedgwegwre
-Password:       gregre#^#%^fufuYUFU134
-FullName:       gwregwregwregre
-Email:          ggwew@dsfwegf.wefewg
-Phone:          0121432534
-AccType:        Finance Manager
-DateOfRegis:    2025-05-19
-RememberMe:     0
-~~~~~
-UserID:         FM8333317201
-Username:       greregrehrehreh
-Password:       iwdfg^&$*$587587HFIGF
-FullName:       rehejrtjgjrejreje
-Email:          dfhf@kdfjgnfeo.dfehgdi
-Phone:          0165675855
-AccType:        Finance Manager
-DateOfRegis:    2025-05-19
-RememberMe:     0
-~~~~~
-UserID:         FM0699048731
-Username:       ijwfiwefwehwei
-Password:       jdsghidfshgiwd$*^%^*758975HFHU
-FullName:       grigrehigeighg
-Email:          kdsij@disgdi.saifdsg
-Phone:          0132347546
-AccType:        Finance Manager
-DateOfRegis:    2025-05-19
-RememberMe:     0
-~~~~~
-UserID:         FM5304965595
-Username:       wdgwegwegweg
-Password:       wgwe%*%&uhfifuYRYU658
-FullName:       ewgwegwegwegweg
-Email:          egireij@uduisdds.dsgds
-Phone:          0125656768
-AccType:        Finance Manager
-DateOfRegis:    2025-05-19
-RememberMe:     0
-~~~~~
-UserID:         FM1888001875
-Username:       dfdgfgdgf
-Password:       dgfdgfdgf$^$%66565F
-FullName:       dgfdgfdgfdgf
-Email:          dsgds@sfgf.sdgdsg
-Phone:          0124376597
-AccType:        Finance Manager
-DateOfRegis:    2025-05-19
-RememberMe:     0
-~~~~~
-UserID:         FM5013369887
-Username:       dfhfjgffdgdfhkh
-Password:       kdgjgdjkh&%*&85658uiigUIUGI
-FullName:       kgfjfgkjhksfkjlyfhjdgjgfkfh
-Email:          hugug@hijbijg.dsgijf
-Phone:          0132353489
-AccType:        Finance Manager
-DateOfRegis:    2025-05-19
-RememberMe:     0
-~~~~~
-UserID:         FM9289906351
-Username:       dsvdsgdsgds
-Password:       sdgfs^#%7467IHGH\
-FullName:       sdsgdsgdsgsd
-Email:          ss@rgg.gdgs
-Phone:          0124326345
-AccType:        Finance Manager
-DateOfRegis:    2025-05-19
-RememberMe:     0
-~~~~~
-UserID:         PM6739068018
-Username:       dummyacc
-Password:       dumDUM!@#123
-FullName:       dummyacc
-Email:          dum@email.com
-Phone:          0124567876
-AccType:        Purchase Manager
-DateOfRegis:    2025-05-20
 RememberMe:     0
 ~~~~~
