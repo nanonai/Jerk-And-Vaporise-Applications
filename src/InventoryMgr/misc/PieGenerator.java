@@ -15,7 +15,7 @@ public class PieGenerator {
         Graphics2D g = chartImage.createGraphics();
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setColor(Color.WHITE);
+        g.setColor(new Color(239, 239, 239));
         g.fillRect(0, 0, width, height);
 
         double total = data.values().stream().mapToDouble(Double::doubleValue).sum();

@@ -56,10 +56,10 @@ ItemID:         I8494
 ItemName:       Nayanti Frozen pizza
 UnitPrice:      48.0
 UnitCost:       36.0
-StockCount:     29
+StockCount:     5
 Threshold:      10
-Category:       Frozen Foods
-LastUpdate:     2025-04-01
+Category:       Fruits
+LastUpdate:     2025-05-20
 ~~~~~
 ItemID:         I2022
 ItemName:       Vergrün Juice
@@ -138,7 +138,7 @@ ItemName:       Tronquet Ham
 UnitPrice:      30.0
 UnitCost:       22.5
 StockCount:     15
-Threshold:      15
+Threshold:      14
 Category:       Meat & Seafood
 LastUpdate:     2025-04-01
 ~~~~~
