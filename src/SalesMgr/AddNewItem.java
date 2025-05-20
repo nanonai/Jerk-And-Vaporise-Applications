@@ -1,10 +1,11 @@
 package SalesMgr;
 
-import Admin.BufferForUser;
 import Admin.CustomComponents;
 import Admin.Main;
 import Admin.User;
 import InventoryMgr.Item;
+import PurchaseMgr.Item_Supplier;
+import PurchaseMgr.Supplier;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
@@ -18,18 +19,26 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.awt.Font;
+import java.awt.Color;
+import java.awt.font.TextAttribute;
+import java.util.HashMap;
+import java.util.Map;
+
+
+import static PurchaseMgr.Supplier.getSupplierID;
 
 
 public class AddNewItem {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static BufferForUser current_user;
-    private static User past, future;
+    private static User current_user;
+    private static Item past, future;
     private static JComboBox<String> types;
     private static CustomComponents.EmptyTextField itemname, unitprice, unitcost, stockcount, threshold, suppliername;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, BufferForUser current_user) {
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
         AddNewItem.parent = parent;
         AddNewItem.merriweather = merriweather;
         AddNewItem.boldonse = boldonse;
@@ -95,7 +104,7 @@ public class AddNewItem {
         panel.add(unitcost_label, gbc);
 
         gbc.gridy = 5;
-        JLabel qty_label = new JLabel("Inv Quantity:");
+        JLabel qty_label = new JLabel("Stock Count:");
         qty_label.setOpaque(false);
         qty_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(qty_label, gbc);
@@ -107,7 +116,7 @@ public class AddNewItem {
         panel.add(min_label, gbc);
 
         gbc.gridy = 7;
-        JLabel supplier_label = new JLabel("Supplier(s):");
+        JLabel supplier_label = new JLabel("Supplier Name:");
         supplier_label.setOpaque(false);
         supplier_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(supplier_label, gbc);
@@ -144,7 +153,16 @@ public class AddNewItem {
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.insets = new Insets(0, 0, 10, 10);
-        types = new JComboBox<>(new String[]{"Fruits", "Vegetables", "Foods", "Drinks"});
+        types = new JComboBox<>(new String[]{
+                "Fruits",
+                "Vegetables",
+                "Groceries",
+                "Drinks",
+                "Dairy",
+                "Meat & Seafood",
+                "Bakery",
+                "Others"
+        });
         types.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
@@ -217,13 +235,21 @@ public class AddNewItem {
             public void focusGained(FocusEvent e) {
                 itemname.setForeground(Color.BLACK);
                 itemname.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-                itemname.setToolTipText("");
+                itemname.setToolTipText("Enter the item name (8 to 48 characters).");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 itemname.setToolTipText("");
                 String input = itemname.getText();
+                if ((input.length() < 8 || input.length() > 48) && !input.isEmpty()) {
+                    itemname.setForeground(new Color(159, 4, 4));
+                    Font font = itemname.getFont();
+                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    itemname.setFont(font.deriveFont(attributes));
+                    itemname.setToolTipText("Item name length must be between 8 and 48 characters.");
+                }
             }
         });
         inner1.add(itemname, igbc);
@@ -237,13 +263,31 @@ public class AddNewItem {
             public void focusGained(FocusEvent e) {
                 unitprice.setForeground(Color.BLACK);
                 unitprice.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-                unitprice.setToolTipText("");
+                unitprice.setToolTipText("Enter unit price (positive number).");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 unitprice.setToolTipText("");
                 String input = unitprice.getText().trim();
+                try {
+                    double value = Double.parseDouble(input);
+                    if (value <= 0) {
+                        unitprice.setForeground(new Color(159, 4, 4));
+                        Font font = unitprice.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        unitprice.setFont(font.deriveFont(attributes));
+                        unitprice.setToolTipText("Unit price must be a positive value.");
+                    }
+                } catch (NumberFormatException ex) {
+                    unitprice.setForeground(new Color(159, 4, 4));
+                    Font font = unitprice.getFont();
+                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    unitprice.setFont(font.deriveFont(attributes));
+                    unitprice.setToolTipText("Unit price must be a valid number.");
+                }
             }
         });
         inner2.add(unitprice, igbc);
@@ -257,13 +301,31 @@ public class AddNewItem {
             public void focusGained(FocusEvent e) {
                 unitcost.setForeground(Color.BLACK);
                 unitcost.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-                unitcost.setToolTipText("");
+                unitcost.setToolTipText("Enter unit cost (positive number).");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 unitcost.setToolTipText("");
                 String input = unitcost.getText();
+                try {
+                    double value = Double.parseDouble(input);
+                    if (value <= 0) {
+                        unitcost.setForeground(new Color(159, 4, 4));
+                        Font font = unitcost.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        unitcost.setFont(font.deriveFont(attributes));
+                        unitcost.setToolTipText("Unit cost must be a positive value.");
+                    }
+                } catch (NumberFormatException ex) {
+                    unitcost.setForeground(new Color(159, 4, 4));
+                    Font font = unitcost.getFont();
+                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    unitcost.setFont(font.deriveFont(attributes));
+                    unitcost.setToolTipText("Unit cost must be a valid number.");
+                }
             }
         });
         ((AbstractDocument) unitcost.getDocument()).setDocumentFilter(new NoSpaceFilter());
@@ -278,13 +340,31 @@ public class AddNewItem {
             public void focusGained(FocusEvent e) {
                 stockcount.setForeground(Color.BLACK);
                 stockcount.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-                stockcount.setToolTipText("");
+                stockcount.setToolTipText("Enter stock count (non-negative integer).");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 stockcount.setToolTipText("");
                 String input = stockcount.getText();
+                try {
+                    int value = Integer.parseInt(input);
+                    if (value < 0) {
+                        stockcount.setForeground(new Color(159, 4, 4));
+                        Font font = stockcount.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        stockcount.setFont(font.deriveFont(attributes));
+                        stockcount.setToolTipText("Stock count must be a non-negative integer.");
+                    }
+                } catch (NumberFormatException ex) {
+                    stockcount.setForeground(new Color(159, 4, 4));
+                    Font font = stockcount.getFont();
+                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    stockcount.setFont(font.deriveFont(attributes));
+                    stockcount.setToolTipText("Stock count must be an integer.");
+                }
             }
         });
         ((AbstractDocument) stockcount.getDocument()).setDocumentFilter(new NoSpaceFilter());
@@ -298,13 +378,31 @@ public class AddNewItem {
             public void focusGained(FocusEvent e) {
                 threshold.setForeground(Color.BLACK);
                 threshold.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-                threshold.setToolTipText("");
+                threshold.setToolTipText("Enter threshold (non-negative integer).");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 threshold.setToolTipText("");
                 String input = threshold.getText();
+                try {
+                    int value = Integer.parseInt(input);
+                    if (value < 0) {
+                        threshold.setForeground(new Color(159, 4, 4));
+                        Font font = threshold.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        threshold.setFont(font.deriveFont(attributes));
+                        threshold.setToolTipText("Threshold must be a non-negative integer.");
+                    }
+                } catch (NumberFormatException ex) {
+                    threshold.setForeground(new Color(159, 4, 4));
+                    Font font = threshold.getFont();
+                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    threshold.setFont(font.deriveFont(attributes));
+                    threshold.setToolTipText("Threshold must be an integer.");
+                }
             }
         });
         ((AbstractDocument) threshold.getDocument()).setDocumentFilter(new NoSpaceFilter());
@@ -314,21 +412,49 @@ public class AddNewItem {
         suppliername = new CustomComponents.EmptyTextField(20, "",
                 new Color(122, 122, 122));
         suppliername.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        suppliername.addActionListener(_ -> {SwingUtilities.invokeLater(() -> confirm.doClick());});
         suppliername.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                 suppliername.setForeground(Color.BLACK);
                 suppliername.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-                suppliername.setToolTipText("");
+                suppliername.setToolTipText("Enter supplier name.");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 suppliername.setToolTipText("");
-                String input = suppliername.getText();
+                String input = suppliername.getText().trim();
+
+                // Check if supplier name is empty
+                if (input.isEmpty()) {
+                    suppliername.setForeground(new Color(159, 4, 4));
+                    Font font = suppliername.getFont();
+                    Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
+                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    suppliername.setFont(font.deriveFont(attributes));
+                    suppliername.setToolTipText("Supplier name cannot be empty.");
+                } else {
+                    // Check if the supplier ID exists for the entered supplier name
+                    String supplierID = Supplier.getSupplierID(input);  // Call method to get SupplierID
+
+                    if ("Unknown".equals(supplierID)) {
+                        // Supplier not found, show error
+                        suppliername.setForeground(new Color(159, 4, 4));
+                        Font font = suppliername.getFont();
+                        Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        suppliername.setFont(font.deriveFont(attributes));
+                        suppliername.setToolTipText("Supplier ID not found or does not exist!");
+                    } else {
+                        // Supplier exists, reset text field style
+                        suppliername.setForeground(Color.BLACK);
+                        suppliername.setFont(suppliername.getFont().deriveFont(Font.PLAIN));
+                        suppliername.setToolTipText("");
+                    }
+                }
             }
         });
-        ((AbstractDocument) suppliername.getDocument()).setDocumentFilter(new NoSpaceFilter());
         inner6.add(suppliername, igbc);
 
         CustomComponents.CustomXIcon icon_clear1 = new CustomComponents.CustomXIcon((int) (base_size * 0.8), 3,
@@ -384,7 +510,7 @@ public class AddNewItem {
         clear6.setFocusable(false);
         clear6.setBorder(BorderFactory.createEmptyBorder());
         clear6.addActionListener(_ -> {suppliername.Reset();});
-        inner6.add(clear5, igbc);
+        inner6.add(clear6, igbc);
 
         cancel.addActionListener(_ -> {
             dialog.dispose();
@@ -393,8 +519,7 @@ public class AddNewItem {
         confirm.addActionListener(_ -> {
             // Check if any of the fields are empty or just contain spaces
             if (itemname.getText().isEmpty() || unitprice.getText().isEmpty() || unitcost.getText().isEmpty() ||
-                    stockcount.getText().isEmpty() || threshold.getText().isEmpty() || suppliername.getText().isEmpty() ||
-                    unitprice.getText().isBlank() || unitcost.getText().isBlank()) {
+                    stockcount.getText().isEmpty() || threshold.getText().isEmpty() || suppliername.getText().isEmpty()) {
 
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,
@@ -408,21 +533,39 @@ public class AddNewItem {
             } else {
                 // Perform item-specific validity check
                 String validity = Item.validitychecker(itemname.getText(), unitprice.getText().trim(),
-                        unitcost.getText().trim(), stockcount.getText(), threshold.getText(), suppliername.getText());
+                        unitcost.getText().trim(), stockcount.getText(), threshold.getText(), suppliername.getText(),
+                        "datafile/item.txt");
 
-
-                // Handle validation errors
-                if (validity.charAt(0) == '0') {
+                // Check if the validity string length is exactly 6
+                if (validity.length() != 7) {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
-                            "Item name must be between 8 and 36 characters!",
+                            "Invalid validity string length (Expected 6 characters).",
                             "Error",
                             new Color(209, 88, 128),
                             new Color(255, 255, 255),
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                } else if (validity.charAt(1) == 'X') {
+                    return;  // Exit if the length is not 6
+                }
+
+                // Handle Item Name Error
+                if (validity.charAt(0) == '0') {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Item name must be between 8 and 48 characters!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                    return;
+                }
+
+                // Handle Item Name Already Exists Error
+                if (validity.charAt(1) == 'X') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
                             "Item name already exists!",
@@ -432,7 +575,11 @@ public class AddNewItem {
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                } else if (validity.charAt(2) == '0') {
+                    return;
+                }
+
+                // Handle Unit Price Error
+                if (validity.charAt(2) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
                             "Unit price must be a valid positive number!",
@@ -442,7 +589,11 @@ public class AddNewItem {
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                } else if (validity.charAt(3) == '0') {
+                    return;
+                }
+
+                // Handle Unit Cost Error
+                if (validity.charAt(3) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
                             "Unit cost must be a valid positive number!",
@@ -452,7 +603,25 @@ public class AddNewItem {
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                } else if (validity.charAt(4) == '0') {
+                    return;
+                }
+                double unitPricegt = Double.parseDouble(unitprice.getText().trim());
+                double unitCostgt = Double.parseDouble(unitcost.getText().trim());
+                if (unitCostgt > unitPricegt) {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Unit cost cannot be greater than unit price!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                    return;
+                }
+
+                // Handle Stock Count Error
+                if (validity.charAt(4) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
                             "Stock count must be a valid non-negative integer!",
@@ -462,7 +631,11 @@ public class AddNewItem {
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                } else if (validity.charAt(5) == '0') {
+                    return;
+                }
+
+                // Handle Threshold Error
+                if (validity.charAt(5) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
                             "Threshold must be a valid non-negative integer!",
@@ -472,59 +645,100 @@ public class AddNewItem {
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                } else if (validity.charAt(6) == '0') {
+                    return;
+                }
+
+                // Handle Supplier Error
+                if (validity.charAt(6) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
-                            "Supplier name cannot be empty!",
+                            "Supplier not found! PLease add supplier!",
                             "Error",
                             new Color(209, 88, 128),
                             new Color(255, 255, 255),
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                } else {
-                    // If all validations pass, proceed with saving the new item
+                    return;
+                }
 
-                    // Create a new item object with the provided data
-                    String new_id = User.idMaker("Item", Main.userdata_file);  // You can define your own ID maker logic
+                // All validations passed, proceed with item creation
+                try {
+                    double unitPriceValue = Double.parseDouble(unitprice.getText().trim());
+                    double unitCostValue = Double.parseDouble(unitcost.getText().trim());
+                    int stockCountValue = Integer.parseInt(stockcount.getText().trim());
+                    int thresholdValue = Integer.parseInt(threshold.getText().trim());
+
+                    // If no exception was thrown, proceed with item creation
+                    String item_type = (String) Objects.requireNonNull(types.getSelectedItem());
+                    String new_id = Item.idMaker("datafile/item.txt");  // You can define your own ID maker logic
                     LocalDate currentDate = LocalDate.now();
+                    future = new Item(new_id, itemname.getText(), unitPriceValue, unitCostValue,
+                            stockCountValue, thresholdValue, item_type, currentDate);
+                    Item.saveNewItem(future, "datafile/item.txt");
 
-//                    future = new Item(new_id, itemname.getText(), unitprice.getText().trim(), unitcost.getText().trim(),
-//                            stockcount.getText(), threshold.getText(), types.getSelectedItem().toString(), currentDate, suppliername.getText());
-//
-//                    // Save the item to the file or database
-//                    Item.saveNewItem(future, Main.userdata_file);  // Assuming Item class has this method to save the data
+                    String supplierName = suppliername.getText().trim();
+                    String supplierID = Supplier.getSupplierID(supplierName);  // Use the method you already created to get SupplierID
 
-                    // Ask if user wants to continue adding more items
-                    boolean keep_adding = CustomComponents.CustomOptionPane.showConfirmDialog(
+                    if ("Unknown".equals(supplierID)) {
+                        // If supplier doesn't exist, show error message
+                        CustomComponents.CustomOptionPane.showErrorDialog(
+                                parent,
+                                "Supplier name does not exist in the system!",
+                                "Error",
+                                new Color(209, 88, 128),
+                                new Color(255, 255, 255),
+                                new Color(237, 136, 172),
+                                new Color(255, 255, 255)
+                        );
+                    } else {
+                        // If supplier exists, create an Item_Supplier instance
+                        Item_Supplier itemSupplier = new Item_Supplier(new_id, supplierID);
+                        Item_Supplier.saveNewItemSupplier(itemSupplier, "datafile/item_supplier.txt");
+
+                        // Ask user if they want to continue adding more items
+                        boolean keep_adding = CustomComponents.CustomOptionPane.showConfirmDialog(
+                                parent,
+                                "Keep adding new items?",
+                                "Confirmation",
+                                new Color(209, 88, 128),
+                                new Color(255, 255, 255),
+                                new Color(237, 136, 172),
+                                new Color(255, 255, 255),
+                                new Color(56, 53, 70),
+                                new Color(255, 255, 255),
+                                new Color(73, 69, 87),
+                                new Color(255, 255, 255),
+                                true
+                        );
+
+                        if (!keep_adding) {
+                            dialog.dispose();
+                        } else {
+                            // Reset fields for the next item entry
+                            itemname.Reset();
+                            unitprice.Reset();
+                            unitcost.Reset();
+                            stockcount.Reset();
+                            threshold.Reset();
+                            suppliername.Reset();
+                        }
+                    }
+
+                } catch (NumberFormatException ex) {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
-                            "Keep adding new items?",
-                            "Confirmation",
+                            "Please enter valid numeric values for price, cost, stock count, and threshold!",
+                            "Error",
                             new Color(209, 88, 128),
                             new Color(255, 255, 255),
                             new Color(237, 136, 172),
-                            new Color(255, 255, 255),
-                            new Color(56, 53, 70),
-                            new Color(255, 255, 255),
-                            new Color(73, 69, 87),
-                            new Color(255, 255, 255),
-                            true
+                            new Color(255, 255, 255)
                     );
-
-                    if (!keep_adding) {
-                        dialog.dispose();  // Close dialog if user does not want to continue
-                    } else {
-                        // Reset fields for adding a new item
-                        itemname.Reset();
-                        unitprice.Reset();
-                        unitcost.Reset();
-                        stockcount.Reset();
-                        threshold.Reset();
-                        suppliername.Reset();
-                    }
                 }
             }
         });
+
 
 
         dialog.addMouseListener(new MouseAdapter() {

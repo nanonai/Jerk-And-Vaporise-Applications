@@ -6,7 +6,7 @@ Email:          ad123@gmail.com
 Phone:          0151240129
 AccType:        Administrator
 DateOfRegis:    2025-03-31
-RememberMe:     1
+RememberMe:     0
 ~~~~~
 UserID:         SM1253724128
 Username:       sm123
@@ -16,7 +16,7 @@ Email:          sm123@gmail.com
 Phone:          0123354535
 AccType:        Sales Manager
 DateOfRegis:    2025-03-31
-RememberMe:     0
+RememberMe:     1
 ~~~~~
 UserID:         PM0971204357
 Username:       pm123
@@ -86,36 +86,6 @@ Email:          invmana@gmail.com
 Phone:          0181234567
 AccType:        Inventory Manager
 DateOfRegis:    2025-04-01
-RememberMe:     0
-~~~~~
-UserID:         FM8374920156
-Username:       finmgrB
-Password:       Finmgr&654
-FullName:       Lee Siew Yeen
-Email:          finmgrb@gmail.com
-Phone:          0176543210
-AccType:        Finance Manager
-DateOfRegis:    2025-04-01
-RememberMe:     0
-~~~~~
-UserID:         SM5592118047
-Username:       """"""""""
-Password:       Skibidi1@
-FullName:       skibidi wong
-Email:          skibidi2@pornhub.com
-Phone:          0124506943
-AccType:        Sales Manager
-DateOfRegis:    2025-05-13
-RememberMe:     0
-~~~~~
-UserID:         FM1031172337
-Username:       fdsgdsgdsgds
-Password:       sdsgdsgdsg@!1fgwEF
-FullName:       gdsgdsgdsgdsgsd
-Email:          sdgfsfgerfr@dfdsfds.dfdsfds
-Phone:          0123434346
-AccType:        Finance Manager
-DateOfRegis:    2025-05-13
 RememberMe:     0
 ~~~~~
 UserID:         FM3108412680

@@ -1,7 +1,7 @@
 ItemID:         I7390
 ItemName:       Yamamoto San No Ringo | Mr Yamamoto's Apple
-UnitPrice:      12.00
-UnitCost:       7
+UnitPrice:      12.0
+UnitCost:       7.0
 StockCount:     24
 Threshold:      12
 Category:       Fruits
@@ -9,8 +9,8 @@ LastUpdate:     2025-04-01
 ~~~~~
 ItemID:         I5262
 ItemName:       asdasfasf
-UnitPrice:      15
-UnitCost:       10
+UnitPrice:      15.0
+UnitCost:       10.0
 StockCount:     29
 Threshold:      7
 Category:       Skibidi
@@ -18,10 +18,37 @@ LastUpdate:     2025-04-01
 ~~~~~
 ItemID:         I8532
 ItemName:       asdasfasfsdfsd
-UnitPrice:      23
-UnitCost:       20
+UnitPrice:      23.0
+UnitCost:       20.0
 StockCount:     32
 Threshold:      20
 Category:       Skibidi
 LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I6687
+ItemName:       Diddy Apple
+UnitPrice:      12.0
+UnitCost:       11.0
+StockCount:     1
+Threshold:      1
+Category:       Fruits
+LastUpdate:     2025-05-19
+~~~~~
+ItemID:         I8108
+ItemName:       LebronJames
+UnitPrice:      12.0
+UnitCost:       313.0
+StockCount:     13
+Threshold:      13
+Category:       Fruits
+LastUpdate:     2025-05-19
+~~~~~
+ItemID:         I1985
+ItemName:       CooperFlag
+UnitPrice:      12.0
+UnitCost:       12.0
+StockCount:     1
+Threshold:      1
+Category:       Fruits
+LastUpdate:     2025-05-19
 ~~~~~
