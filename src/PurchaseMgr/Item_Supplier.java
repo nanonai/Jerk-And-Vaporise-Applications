@@ -1,12 +1,10 @@
 package PurchaseMgr;
 
 import Admin.Main;
+import Admin.User;
 import SalesMgr.Item_Sales;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -150,12 +148,31 @@ public class Item_Supplier {
         return filterList;
     }
 
-    public static boolean itemIDChecker(String itemID, String filename) {
-        List<Item_Supplier> allItemSupplier = listAllItemSupplier(filename);
-        for (Item_Supplier itemSupplier : allItemSupplier) {
-            if (Objects.equals(itemSupplier.ItemID, itemID)) {
-                return true;  // Found itemID
+    public static List<Item_Supplier> GetItemSupplierByItemIds(List<String> ids, String filename) {
+        List<Item_Supplier> itemSupplierList = new ArrayList<>();
+        for (String id : ids) {
+            // Retrieve the Item_Supplier list based on ItemID
+            List<Item_Supplier> itemSuppliers = Item_Supplier.listAllItemSupplierFromItemID(id, filename);
+            itemSupplierList.addAll(itemSuppliers); // Add all matching Item_Supplier objects to the list
+        }
+        return itemSupplierList;
+    }
+    public static void removeItemSupplier(String ItemID, String SupplierID, String filename) {
+        List<Item_Supplier> allItemSuppliers = Item_Supplier.listAllItemSupplier(filename); // Fetch all item-supplier pairs
+        // Remove the item-supplier pair with the matching ItemID and SupplierID
+        allItemSuppliers.removeIf(itemSupplier ->
+                Objects.equals(itemSupplier.ItemID, ItemID) && Objects.equals(itemSupplier.SupplierID, SupplierID)
+        );
+
+        // Write the updated list back to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Item_Supplier itemSupplier : allItemSuppliers) {
+                writer.write("ItemID:         " + itemSupplier.ItemID + "\n");
+                writer.write("SupplierID:     " + itemSupplier.SupplierID + "\n");
+                writer.write("~~~~~\n");  // Write the delimiter after each entry
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return false; // itemID NOT found
     }
