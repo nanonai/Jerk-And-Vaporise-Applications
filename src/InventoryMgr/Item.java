@@ -152,7 +152,7 @@ public class Item {
                 writer.write("Threshold:      " + item.Threshold + "\n");
                 writer.write("Category:       " + item.Category + "\n");
                 writer.write("LastUpdate:     " + item.LastUpdate + "\n");
-                writer.write("~\n");
+                writer.write("~~~~~\n");
             }
         } catch (IOException e) {
             e.getStackTrace();

@@ -1,11 +1,11 @@
 ItemID:         I7390
-ItemName:       Yamamoto San No Ringo | Mr Yamamoto's Apple
-UnitPrice:      12.0
-UnitCost:       7.0
-StockCount:     24
-Threshold:      12
-Category:       Fruits
-LastUpdate:     2025-04-01
+ItemName:       Diddy Carrot
+UnitPrice:      1.0
+UnitCost:       1.0
+StockCount:     1
+Threshold:      1
+Category:       Vegetables
+LastUpdate:     2025-05-21
 ~~~~~
 ItemID:         I5262
 ItemName:       asdasfasf
@@ -25,12 +25,12 @@ Threshold:      20
 Category:       Skibidi
 LastUpdate:     2025-04-01
 ~~~~~
-ItemID:         I6687
-ItemName:       Diddy Apple
-UnitPrice:      12.0
-UnitCost:       11.0
+ItemID:         I0846
+ItemName:       Diddy Milk
+UnitPrice:      1.0
+UnitCost:       1.0
 StockCount:     1
 Threshold:      1
-Category:       Fruits
-LastUpdate:     2025-05-19
+Category:       Dairy
+LastUpdate:     2025-05-21
 ~~~~~
