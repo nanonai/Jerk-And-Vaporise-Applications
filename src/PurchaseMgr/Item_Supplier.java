@@ -174,5 +174,6 @@ public class Item_Supplier {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false; // itemID NOT found
     }
 }
