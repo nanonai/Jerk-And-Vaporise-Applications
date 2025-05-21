@@ -65,13 +65,14 @@ public class AddNewItem {
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1;
-        gbc.weighty = 1;
+
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
         gbc.gridwidth = 2;
         gbc.insets = new Insets(10, 10, 10, 0);
+        gbc.fill = GridBagConstraints.BOTH;
         JLabel title = new JLabel("Add New Item");
         title.setOpaque(false);
         title.setFont(merriweather.deriveFont(Font.BOLD, (float) (base_size * 1.3)));

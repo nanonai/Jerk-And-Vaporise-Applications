@@ -1,8 +1,6 @@
 package PurchaseMgr;
 
 import Admin.Main;
-import Admin.User;
-import SalesMgr.Item_Sales;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -137,6 +135,16 @@ public class Item_Supplier {
         return "Unknown Supplier";
     }
 
+    public static String getSupplierNameByItemID(String ItemID, String itemSupplierFilename, String supplierFilename) {
+        String supplierID = getSupplierIDFromItemID(ItemID, itemSupplierFilename);
+
+        if (!"Unknown".equals(supplierID)) {
+            return getSupplierName(supplierID, supplierFilename);
+        }
+
+        return "Supplier not found";
+    }
+
     public static List<Supplier> getSuppliersByItemID(String ItemID, String filename) {
         List<Supplier> filterList = new ArrayList<>();
         List<Item_Supplier> itemSupplierList = listAllItemSupplier(filename);
@@ -174,6 +182,32 @@ public class Item_Supplier {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false; // itemID NOT found
+    }
+       public static boolean updateSupplierForItem(String ItemID, String newSupplierID, String filename) {
+        List<Item_Supplier> allItemSuppliers = listAllItemSupplier(filename);
+        boolean found = false;
+
+        for (Item_Supplier itemSupplier : allItemSuppliers) {
+            if (Objects.equals(itemSupplier.ItemID, ItemID)) {
+                itemSupplier.SupplierID = newSupplierID;
+                found = true;
+                break;
+            }
+        }
+
+        if (found) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+                for (Item_Supplier itemSupplier : allItemSuppliers) {
+                    writer.write("ItemID:         " + itemSupplier.ItemID + "\n");
+                    writer.write("SupplierID:     " + itemSupplier.SupplierID + "\n");
+                    writer.write("~~~~~\n");
+                }
+                return true;  // Return true if updated and saved successfully
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;  // Return false on error writing file
+            }
+        }
+        return false;  // ItemID not found
     }
 }
