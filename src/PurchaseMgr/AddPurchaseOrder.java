@@ -13,13 +13,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class AddPO {
+public class AddPurchaseOrder {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
@@ -31,11 +30,11 @@ public class AddPO {
     private static JDialog dialog;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
-        AddPO.parent = parent;
-        AddPO.merriweather = merriweather;
-        AddPO.boldonse = boldonse;
-        AddPO.content = content;
-        AddPO.current_user = current_user;
+        AddPurchaseOrder.parent = parent;
+        AddPurchaseOrder.merriweather = merriweather;
+        AddPurchaseOrder.boldonse = boldonse;
+        AddPurchaseOrder.content = content;
+        AddPurchaseOrder.current_user = current_user;
     }
 
     public static void ShowPage(){
@@ -326,8 +325,6 @@ public class AddPO {
 // Attach listener to quantity and price fields
         quantity.getDocument().addDocumentListener(listener);
         price.getDocument().addDocumentListener(listener);
-
-
         dialog.setContentPane(panel);
         dialog.setVisible(true);
     }
