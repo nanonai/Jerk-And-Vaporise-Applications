@@ -157,56 +157,72 @@ public class Supplier {
         return !repeated;
     }
 
-//    public static String validitychecker(String supplierName, String contactPerson,
-//                                         String phone, String email, String address, String filename) {
-//
-//        String indicator = "";
-//
-//        // 1. Supplier Name (min 3 characters)
-//        if (supplierName.length() >= 8 && supplierName.length() <= 48) {
-//            indicator += "1";
-//        } else {
-//            indicator += "0";
-//        }
-//        // 2. Contact Person (non-empty)
-//        if (contactPerson.length() >= 8 && contactPerson.length() <= 30) {
-//            indicator += "1";
-//        } else {
-//            indicator += "0";
-//        }
-//
-//        if (Pattern.compile(PHONE_REGEX).matcher(phone).matches()) {
-//            indicator += "1";
-//        } else {
-//            indicator += "0";
-//        }
-//
-//        if (Pattern.compile(EMAIL_REGEX).matcher(email).matches()) {
-//            indicator += "1";
-//        } else {
-//            indicator += "0";
-//        }
-//
-//        if (emailChecker(email, filename)) {
-//            indicator += "O";
-//        } else {
-//            indicator += "X";
-//        }
-//        // 5. Address (at least 5 characters)
-//        if (address != null && address.trim().length() >= 5) {
-//            indicator += "1";
-//        } else {
-//            indicator += "0";
-//        }
-//
-//        // 6. Name uniqueness (assuming no duplicate supplier name)
-//        if (nameChecker(supplierName, filename)) {
-//            indicator += "1";
-//        } else {
-//            indicator += "0";
-//        }
-//
-//        return indicator;
-//    }
+    public static boolean phoneChecker(String Phone, String filename) {
+        List<Supplier> allSupplier = listAllSupplier(filename);
+        boolean repeated = false;
+        for (Supplier supplier : allSupplier) {
+            if (Objects.equals(supplier.Phone, Phone)) {
+                repeated = true;
+                break;
+            }
+        }
+        return !repeated;
+    }
+
+    public static String validitychecker(String supplierName, String contactPerson,
+                                         String phone, String email, String address, String filename) {
+
+        String indicator = "";
+
+        // 1. Supplier Name (min 3 characters)
+        if (supplierName.length() >= 8 && supplierName.length() <= 48) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        // 2. Contact Person (non-empty)
+        if (contactPerson.length() >= 8 && contactPerson.length() <= 30) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+
+        if (Pattern.compile(PHONE_REGEX).matcher(phone).matches()) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        if (Pattern.compile(PHONE_REGEX).matcher(phone).matches()) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        if (Pattern.compile(EMAIL_REGEX).matcher(email).matches()) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+
+        if (emailChecker(email, filename)) {
+            indicator += "O";
+        } else {
+            indicator += "X";
+        }
+        // 5. Address (at least 5 characters)
+        if (address != null && address.trim().length() >= 5) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+
+        // 6. Name uniqueness (assuming no duplicate supplier name)
+        if (nameChecker(supplierName, filename)) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+
+        return indicator;
+    }
 
 }
