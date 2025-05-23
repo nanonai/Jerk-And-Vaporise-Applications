@@ -2,27 +2,31 @@ package SalesMgr;
 
 import Admin.*;
 import InventoryMgr.Item;
+import PurchaseMgr.Item_Supplier;
 
 import static PurchaseMgr.Item_Supplier.getSupplierIDFromItemID;
 import static PurchaseMgr.Item_Supplier.getSupplierName;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.List;
 
 public class ItemMng {
     private static JFrame parent;
     private static Font merriweather, boldonse;
-    private static JPanel content, page_panel, buttonPanel1, buttonPanel2;
+    private static JPanel content, page_panel, buttonPanel;
     private static User current_user;
+    private static Item current_item;
     private static int indicator, base_size;
     private static List<Item> AllItems;
     private static JButton s_btn,clearbtn,p_first,p_left,p_right,p_last;
     private static JDialog dialogAdd, dialogDelete, dialogEdit;
-    private static CustomComponents.CustomButton btnRestock, btnAdd,btnDelete,btnEdit, btnView ;
+    private static CustomComponents.CustomButton btnRestock, btnAdd,btnEdit, btnView, cancel_delete, btnDelete1, btnDelete2;
     private static CustomComponents.CustomScrollPane scrollPane1;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
     private static CustomComponents.CustomXIcon icon_clear1, icon_clear2;
@@ -32,10 +36,18 @@ public class ItemMng {
     private static JLabel lbl_show, lbl_entries,lbl_indicate;
     private static JComboBox entries,pages;
     private static int list_length = 10, page_counter = 0, filter = 0, mode = 1;
+    private static boolean deleting;
+    private static Set<String> deleting_id = new LinkedHashSet<>();
+    private static final Set<Integer> previousSelection = new HashSet<>();
 
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
                               JPanel content, User current_user) {
+        if (parent == null) {
+            System.out.println("Parent JFrame is still null!");
+        } else {
+            System.out.println("Parent JFrame initialized successfully.");
+        }
         SalesMgr.ItemMng.parent = parent;
         SalesMgr.ItemMng.merriweather = merriweather;
         SalesMgr.ItemMng.boldonse = boldonse;
@@ -45,30 +57,20 @@ public class ItemMng {
 
     public static void ShowPage() {
         GridBagConstraints gbc = new GridBagConstraints();
-
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 1;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(10, 10, 0, 10);
-        JPanel entriesPanel = new JPanel(new GridBagLayout());
-        entriesPanel.setOpaque(false);
-        
-        GridBagConstraints epgbc = new GridBagConstraints();
-        epgbc.gridx = 0;
-        epgbc.gridy = 0;
-        epgbc.weightx = 1;
-        epgbc.weighty = 1;
-        epgbc.fill = GridBagConstraints.BOTH;
-        epgbc.insets = new Insets(10, 10, 0, 10);
         lbl_show = new JLabel("Show");
         lbl_show.setFont(merriweather.deriveFont(Font.BOLD, 16));
         lbl_show.setForeground(new Color(122, 122, 122));
-        entriesPanel.add(lbl_show, epgbc);
+        content.add(lbl_show, gbc);
 
-        epgbc.gridx = 1;
-        epgbc.weightx = 1;
-        epgbc.insets = new Insets(10, 5, 0, 5);
+        gbc.gridx = 1;
+        gbc.weightx = 0;
+        gbc.insets = new Insets(10, 5, 0, 5);
         String[] entry_item = {"5", "10", "15", "20"};
         entries = new JComboBox<>(entry_item);
         entries.setFont(merriweather.deriveFont(Font.BOLD, 14));
@@ -81,15 +83,14 @@ public class ItemMng {
             page_counter = 0;
             UpdateTable(AllItems, list_length, page_counter);
         });
-        entriesPanel.add(entries, epgbc);
+        content.add(entries, gbc);
 
-        epgbc.gridx = 2;
-        epgbc.weightx = 1;
+        gbc.gridx = 2;
+        gbc.weightx = 0;
         lbl_entries = new JLabel("entries");
         lbl_entries.setFont(merriweather.deriveFont(Font.BOLD, 16));
         lbl_entries.setForeground(new Color(122, 122, 122));
-        entriesPanel.add(lbl_entries, epgbc);
-        content.add(entriesPanel, gbc);
+        content.add(lbl_entries, gbc);
 
         gbc.gridx = 3;
         gbc.weightx = 25;
@@ -198,6 +199,37 @@ public class ItemMng {
         table_item = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
                 merriweather.deriveFont(Font.PLAIN, 16), Color.BLACK, Color.BLACK,
                 Color.WHITE, new Color(212, 212, 212), 1, 30);
+        table_item.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting() && deleting) {
+                    SwingUtilities.invokeLater(() -> {
+                        int[] selectedRows = table_item.getSelectedRows();
+                        Set<Integer> currentSelection = new HashSet<>();
+                        for (int row : selectedRows) {
+                            currentSelection.add(row);
+                        }
+                        Set<Integer> newlySelected = new HashSet<>(currentSelection);
+                        newlySelected.removeAll(previousSelection);
+                        Set<Integer> deselected = new HashSet<>(previousSelection);
+                        deselected.removeAll(currentSelection);
+                        for (int row : newlySelected) {
+                            deleting_id.add(table_item.getValueAt(row,
+                                    table_item.getColumnModel().getColumnIndex("ItemID")).toString());
+                            System.out.println("Selected ItemID: " + deleting_id);
+                        }
+                        for (int row : deselected) {
+                            deleting_id.remove(table_item.getValueAt(row,
+                                    table_item.getColumnModel().getColumnIndex("ItemID")).toString());
+                            System.out.println("Deselected ItemID: " + deleting_id);
+                        }
+                        btnDelete2.setText(String.format("Delete Item (%s)", deleting_id.size()));
+                        previousSelection.clear();
+                        previousSelection.addAll(currentSelection);
+                    });
+                }
+            }
+        });
 
         lbl_indicate = new JLabel("");
         lbl_indicate.setFont(merriweather.deriveFont(Font.BOLD, 16));
@@ -228,7 +260,6 @@ public class ItemMng {
         content.add(lbl_indicate, gbc);
 
         gbc.gridx = 4;
-        gbc.gridy = 2;
         gbc.weightx = 1;
         gbc.gridwidth = 1;
         gbc.insets = new Insets(0,0,0,11);
@@ -242,8 +273,8 @@ public class ItemMng {
         ii_gbc.gridx = 0;
         ii_gbc.gridy = 0;
         ii_gbc.fill = GridBagConstraints.BOTH;
-        ii_gbc.weightx = 1;
-        ii_gbc.weighty = 1;
+        ii_gbc.weightx = 0.5;
+        ii_gbc.weighty = 0.5;
         p_first = new JButton("First");
         p_first.setFont(merriweather.deriveFont(Font.BOLD, 16));
         p_first.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
@@ -315,32 +346,21 @@ public class ItemMng {
         });
         page_panel.add(p_last, ii_gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.weightx = 1;
-        gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.BOTH;
-        buttonPanel1 = new JPanel(new GridBagLayout());
-        buttonPanel1.setOpaque(false);
-        content.add(buttonPanel1, gbc);
-
         gbc.gridx = 2;
-        gbc.weightx = 10;
-        JLabel placeholder3 = new JLabel("");
-        content.add(placeholder3, gbc);
-
-        gbc.gridx = 4;
+        gbc.gridy = 3;
         gbc.weightx = 1;
-        gbc.gridwidth = 1;
+        gbc.gridwidth = 3;
         gbc.fill = GridBagConstraints.BOTH;
-        buttonPanel2 = new JPanel(new GridBagLayout());
-        buttonPanel2.setOpaque(false); // Set the panel background to transparent
-        content.add(buttonPanel2, gbc);
+        gbc.insets = new Insets(0,0,0,70);
+        buttonPanel = new JPanel(new GridBagLayout());
+        buttonPanel.setOpaque(false);
+        content.add(buttonPanel, gbc);
 
         GridBagConstraints buttongbc = new GridBagConstraints();
         buttongbc.gridx = 0;
-        buttongbc.gridy = 0;
-        buttongbc.insets = new Insets(0, 7, 5, 7);  // Reduced horizontal space (left and right padding)
+        buttongbc.weightx = 1;
+        buttongbc.fill = GridBagConstraints.BOTH;
+        buttongbc.insets = new Insets(3, 7, 5, 20);
         btnAdd = new CustomComponents.CustomButton("Add Item", merriweather, Color.WHITE, Color.WHITE,
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
@@ -349,8 +369,12 @@ public class ItemMng {
         btnAdd.addActionListener(_ -> {
             AddNewItem.Loader(parent, merriweather, boldonse, content, current_user);
             AddNewItem.ShowPage();
+
+            AllItems = Item.listAllItem("datafile/item.txt");
+            UpdatePages(AllItems.size());
+            UpdateTable(AllItems, list_length, page_counter);
         });
-        buttonPanel1.add(btnAdd, buttongbc);
+        buttonPanel.add(btnAdd, buttongbc);
 
         buttongbc.gridx = 1;
         btnEdit = new CustomComponents.CustomButton("Edit Item", merriweather, Color.WHITE, Color.WHITE,
@@ -361,32 +385,241 @@ public class ItemMng {
         btnEdit.addActionListener(_ -> {
             // Add Edit Item functionality here
         });
-        buttonPanel1.add(btnEdit, buttongbc);
+        buttonPanel.add(btnEdit, buttongbc);
 
         buttongbc.gridx = 2;
-        buttongbc.insets = new Insets(0, 7, 5, 7);
         btnView = new CustomComponents.CustomButton("View Item", merriweather, Color.WHITE, Color.WHITE,
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
         btnView.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
         btnView.addActionListener(_ -> {
-            // Add View Item functionality here
+            if (table_item.getSelectedRowCount() == 0) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select an item to view!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else {
+                String selected_id = table_item.getValueAt(
+                        table_item.getSelectedRow(),
+                        table_item.getColumnModel().getColumnIndex("ItemID")
+                ).toString();
+
+                Item selected_item = null;
+                for (Item item : AllItems) {
+                    if (item.ItemID.equals(selected_id)) {
+                        selected_item = item;
+                        break;
+                    }
+                }
+
+                if (selected_item != null) {
+                    ViewItem.Loader(parent, merriweather, boldonse, content, selected_item);
+                    boolean see = ViewItem.ShowPage();
+                    if (see) {
+                        System.out.println("Item viewed.");
+                    }
+                } else {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Selected item not found in the list!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                }
+            }
         });
-        buttonPanel2.add(btnView, buttongbc);
+        buttonPanel.add(btnView, buttongbc);
+
+        cancel_delete = new CustomComponents.CustomButton("Cancel", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 16,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        cancel_delete.setPreferredSize(new Dimension(185, 40));
+        cancel_delete.setVisible(false);
+        cancel_delete.addActionListener(_ -> {
+            deleting = false;
+            deleting_id.clear();
+            btnView.setEnabled(true);
+            btnAdd.setEnabled(true);
+            btnEdit.setEnabled(true);
+            cancel_delete.setVisible(false);
+
+            btnView.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                    new Color(225, 108, 150), new Color(237, 136, 172),
+                    Main.transparent);
+            btnAdd.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                    new Color(209, 88, 128), new Color(237, 136, 172),
+                    Main.transparent);
+            btnEdit.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                    new Color(225, 108, 150), new Color(237, 136, 172),
+                    Main.transparent);
+
+            table_item.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(212, 212, 212));
+            mode = 1;
+            table_item.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
+                    merriweather.deriveFont(Font.PLAIN, 16), mode);
+            scrollPane1.UpdateBorder(1, new Color(202, 202, 202), Main.transparent,
+                    Main.transparent, Main.transparent, Main.transparent);
+
+            btnDelete2.setVisible(false);
+            btnDelete1.setVisible(true);
+        });
+        cancel_delete.setVisible(false);
+        buttonPanel.add(cancel_delete, buttongbc);
 
 
-        buttongbc.gridx =3 ;
-        btnDelete = new CustomComponents.CustomButton("Delete Item", merriweather, Color.WHITE, Color.WHITE,
-                new Color(155, 86, 122), new Color(174, 122, 140),
+        buttongbc.gridx = 3;
+        btnDelete1 = new CustomComponents.CustomButton("Delete Item", merriweather, Color.WHITE, Color.WHITE,
+                new Color(50, 8, 32), new Color(174, 122, 140),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnDelete.setPreferredSize(new Dimension(185, 40)); // Adjusted width and height
-        btnDelete.addActionListener(_ -> {
-            // Add Delete Item functionality here
+        btnDelete1.setPreferredSize(new Dimension(185, 40)); // Adjusted width and height
+        btnDelete1.addActionListener(_ -> {
+            deleting = CustomComponents.CustomOptionPane.showConfirmDialog(
+                    parent,
+                    "Enter delete selection mode?",
+                    "Confirmation",
+                    new Color(159, 4, 4),
+                    new Color(255, 255, 255),
+                    new Color(161, 40, 40),
+                    new Color(255, 255, 255),
+                    new Color(56, 53, 70),
+                    new Color(255, 255, 255),
+                    new Color(73, 69, 87),
+                    new Color(255, 255, 255),
+                    false
+            );
+
+            if (deleting) {
+                btnView.setEnabled(false);
+                btnAdd.setEnabled(false);
+                btnEdit.setEnabled(false);
+                cancel_delete.setVisible(true);
+                btnView.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
+                        new Color(242, 242, 242), new Color(241, 241, 242),
+                        new Color(241, 241, 242));
+                btnAdd.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
+                        new Color(241, 241, 242), new Color(241, 241, 242),
+                        new Color(241, 241, 242));
+                btnEdit.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
+                        new Color(241, 241, 242), new Color(241, 241, 242),
+                        new Color(241, 241, 242));
+                table_item.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(255, 203, 205));
+                mode = 0;
+                table_item.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
+                        merriweather.deriveFont(Font.PLAIN, 16), mode);
+                scrollPane1.UpdateBorder(3, new Color(159, 4, 4), Main.transparent,
+                        Main.transparent, Main.transparent, Main.transparent);
+
+                btnDelete1.setVisible(false);
+                btnDelete2.setVisible(true);
+            }
         });
-        buttonPanel2.add(btnDelete, buttongbc);
+        buttonPanel.add(btnDelete1, buttongbc);
+
+        btnDelete2 = new CustomComponents.CustomButton("Delete User (0)", merriweather, Color.WHITE, Color.WHITE,
+                new Color(159, 4, 4), new Color(161, 40, 40), null, 0, 16,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        btnDelete2.addActionListener(_ -> {
+            if (deleting_id.isEmpty()) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select at least one item to delete!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else {
+
+                List<String> ids = new ArrayList<>(deleting_id);
+
+                List<Item> itemsToDelete = new ArrayList<>();
+                for (String itemId : ids) {
+                    Item item = Item.getItemByID(itemId, "datafile/item.txt");
+                    if (item != null) {
+                        itemsToDelete.add(item);
+                    }
+                }
+
+                List<Item_Supplier> d_itemSuppliers = Item_Supplier.GetItemSupplierByItemIds(ids, "datafile/item_supplier.txt");
+                DeleteItem.UpdateItemSupplier(d_itemSuppliers);
+
+                if (parent == null) {
+                    System.err.println("Parent JFrame is null. This shouldn't happen.");
+                    return;
+                }
+
+                DeleteItem.Loader(parent, merriweather, boldonse, content, itemsToDelete);
+
+                boolean delete = DeleteItem.ShowPage();
+                if (delete) {
+                    deleting = false;
+
+                    for (String itemId : ids) {
+                        Item.removeItem(itemId, "datafile/item.txt");
+                    }
+
+                    for (Item_Supplier itemSupplier : d_itemSuppliers) {
+                        Item_Supplier.removeItemSupplier(itemSupplier.ItemID, itemSupplier.SupplierID, "datafile/item_supplier.txt");
+                    }
+
+                    AllItems = Item.listAllItem("datafile/item.txt");
+                    deleting_id.clear(); // Clear the deleting ID set
+
+                    btnView.setEnabled(true);
+                    btnAdd.setEnabled(true);
+                    btnEdit.setEnabled(true);
+                    cancel_delete.setVisible(false);
+
+                    // Update button colors to reflect the state change
+                    btnView.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                            new Color(225, 108, 150), new Color(237, 136, 172),
+                            Main.transparent);
+                    btnAdd.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                            new Color(209, 88, 128), new Color(237, 136, 172),
+                            Main.transparent);
+                    btnEdit.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                            new Color(225, 108, 150), new Color(237, 136, 172),
+                            Main.transparent);
+
+                    // Reset table colors and mode
+                    table_item.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(212, 212, 212));
+                    mode = 1;
+                    table_item.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
+                            merriweather.deriveFont(Font.PLAIN, 16), mode);
+
+                    // Reset scroll pane borders and update pagination
+                    scrollPane1.UpdateBorder(1, new Color(202, 202, 202), Main.transparent,
+                            Main.transparent, Main.transparent, Main.transparent);
+                    filter = 0;
+                    page_counter = 0;
+                    UpdatePages(list_length);
+                    pages.setSelectedIndex(0);
+                    UpdatePages(AllItems.size());
+                    UpdateTable(AllItems, list_length, page_counter);
+
+                    // Hide delete button and show delete confirmation button
+                    btnDelete2.setVisible(false);
+                    btnDelete1.setVisible(true);
+                }
+            }
+        });
+        btnDelete2.setVisible(false);
+        buttonPanel.add(btnDelete2, ii_gbc);
     }
+
 
     public static void UpdateTable(List<Item> filteredItems, int length, int page) {
         String[] titles = new String[]{"ItemID", "ItemName", "Unit Price", "Unit Cost", "StockCount", "Threshold",
@@ -533,8 +766,10 @@ public class ItemMng {
         // Update other buttons with base_size
         btnAdd.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnEdit.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
-        btnDelete.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        btnDelete1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        btnDelete2.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnView.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        cancel_delete.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
 
 
         // Ensure components revalidate and repaint to reflect size changes
@@ -552,7 +787,10 @@ public class ItemMng {
         table_item.revalidate();
         btnAdd.revalidate();
         btnEdit.revalidate();
-        btnDelete.revalidate();
+        btnView.revalidate();
+        btnDelete1.revalidate();
+        btnDelete2.revalidate();
+        cancel_delete.revalidate();
 
         s_btn.repaint();
         p_left.repaint();
@@ -568,6 +806,9 @@ public class ItemMng {
         table_item.repaint();
         btnAdd.repaint();
         btnEdit.repaint();
-        btnDelete.repaint();
+        btnView.repaint();
+        btnDelete1.repaint();
+        btnDelete2.repaint();
+        cancel_delete.repaint();
     }
 }
