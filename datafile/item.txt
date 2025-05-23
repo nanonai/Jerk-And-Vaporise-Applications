@@ -43,6 +43,15 @@ Threshold:      15
 Category:       Fruits
 LastUpdate:     2025-05-19
 ~~~~~
+ItemID:         I5262
+ItemName:       Green Apple
+UnitPrice:      12.0
+UnitCost:       11.0
+StockCount:     12
+Threshold:      1
+Category:       Fruits
+LastUpdate:     2025-05-21
+=======
 ItemID:         I7962
 ItemName:       Nedzura Pretzels
 UnitPrice:      22.0
