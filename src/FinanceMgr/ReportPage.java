@@ -384,7 +384,7 @@ public class ReportPage {
                 }
 
                 // Step 2: Match SalesID in item file and accumulate Amount
-                File itemFile = new File(Main.item_Sales_file);
+                File itemFile = new File(Main.item_sales_file);
                 BufferedReader itemReader = new BufferedReader(new FileReader(itemFile));
                 StringBuilder itemContent = new StringBuilder();
 

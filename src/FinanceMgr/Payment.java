@@ -128,7 +128,7 @@ public class Payment {
                 writer.write("PurchaseOrderID :    " + py.PurchaseOrderID + "\n");
                 writer.write("Amount:              " + py.Amount + "\n");
                 writer.write("PaymentDate:         " + py.PaymentDate + "\n");
-                writer.write("FinanceMrgID:        " + py.FinanceMgrID + "\n");
+                writer.write("FinanceMgrID:        " + py.FinanceMgrID + "\n");
                 writer.write("~~~~~\n");
             }
         } catch (IOException e) {
