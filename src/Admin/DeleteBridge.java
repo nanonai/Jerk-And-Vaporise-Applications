@@ -124,12 +124,12 @@ public class DeleteBridge {
         button_panel.add(placeholder2, gbc);
 
         gbc.gridx = 1;
-        CustomComponents.CustomButton view = new CustomComponents.CustomButton("View Related Records",
+        CustomComponents.CustomButton trans = new CustomComponents.CustomButton("Transfer user Data",
                 merriweather.deriveFont(Font.PLAIN), new Color(255, 255, 255), new Color(255, 255, 255),
                 new Color(209, 88, 128), new Color(237, 136, 172),
                 Main.transparent, 0, base_size, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
-        button_panel.add(view, gbc);
+        button_panel.add(trans, gbc);
 
         gbc.gridy = 1;
         gbc.weightx = 2;
@@ -297,7 +297,7 @@ public class DeleteBridge {
             dialog.dispose();
         });
 
-        view.addActionListener(_ -> {
+        trans.addActionListener(_ -> {
             result[0] = 1;
             result[1] = user_combo.getSelectedIndex();
             dialog.dispose();
