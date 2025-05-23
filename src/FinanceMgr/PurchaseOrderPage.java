@@ -116,6 +116,7 @@ public class PurchaseOrderPage {
         igbc.weightx = 1;
         search_panel = new CustomComponents.RoundedPanel(8, 0, 1, Color.WHITE,
                 new Color(209, 209, 209));
+        search_panel.setVisible(false);
         search_panel.setLayout(new GridBagLayout());
         inner.add(search_panel, igbc);
 
@@ -127,51 +128,21 @@ public class PurchaseOrderPage {
         ii_gbc.fill = GridBagConstraints.BOTH;
         ii_gbc.insets = new Insets(6, 6, 10, 5);
 
-        search_icon1 = new CustomComponents.CustomSearchIcon(16, 3,
-                new Color(122, 122, 122), Color.WHITE);
-        search_icon2 = new CustomComponents.CustomSearchIcon(16, 3,
-                new Color(81, 81, 81), Color.WHITE);
-        s_btn = new JButton(search_icon1);
-        s_btn.setRolloverIcon(search_icon2);
-        s_btn.setBorderPainted(false);
-        s_btn.setContentAreaFilled(false);
-        s_btn.setFocusPainted(false);
-        search_panel.add(s_btn, ii_gbc);
+//        search_icon1 = new CustomComponents.CustomSearchIcon(16, 3,
+//                new Color(122, 122, 122), Color.WHITE);
+//        search_icon2 = new CustomComponents.CustomSearchIcon(16, 3,
+//                new Color(81, 81, 81), Color.WHITE);
+//        s_btn = new JButton(search_icon1);
+//        s_btn.setRolloverIcon(search_icon2);
+//        s_btn.setBorderPainted(false);
+//        s_btn.setContentAreaFilled(false);
+//        s_btn.setFocusPainted(false);
+//        search_panel.add(s_btn, ii_gbc);
 
         ii_gbc.gridx = 1;
         ii_gbc.insets = new Insets(6, 0, 8, 0);
-        search = new CustomComponents.EmptyTextField(19, "Search...\r\r", new Color(122, 122, 122));
+        search = new CustomComponents.EmptyTextField(19, "", new Color(240, 240, 240));
         search.setFont(merriweather.deriveFont(Font.BOLD, 14));
-//        search.addActionListener(_ -> SearchStuff());
-//        search.getDocument().addDocumentListener(new DocumentListener() {
-//            private void update() {
-//                String text = search.getText();
-//                boolean isPlaceholder = text.equals(search.GetPlaceHolder());
-//                x_btn.setVisible(!text.isEmpty() && !isPlaceholder);
-//                search.UpdateColumns((!text.isEmpty() && !isPlaceholder) ? 17 : 19);
-//            }
-//
-//            @Override
-//            public void insertUpdate(DocumentEvent e) { update(); }
-//
-//            @Override
-//            public void removeUpdate(DocumentEvent e) { update(); }
-//
-//            @Override
-//            public void changedUpdate(DocumentEvent e) { update(); }
-//        });
-//        search.addFocusListener(new FocusListener() {
-//            @Override
-//            public void focusGained(FocusEvent e) {}
-//
-//            @Override
-//            public void focusLost(FocusEvent e) {
-//                String text = search.getText();
-//                boolean isPlaceholder = text.equals(search.GetPlaceHolder());
-//                x_btn.setVisible(!text.isEmpty() && !isPlaceholder);
-//                search.UpdateColumns((!text.isEmpty() && !isPlaceholder) ? 17 : 19);
-//            }
-//        });
         search_panel.add(search, ii_gbc);
 
         ii_gbc.gridx = 2;
