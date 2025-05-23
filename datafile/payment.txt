@@ -1,78 +1,66 @@
-PaymentID:           PY0001
-PurchaseOrderID :    PR0001
-Amount:              98.8
-PaymentDate:         2025-05-02
-FinanceMrgID:        FM0971204357
-~~~~~
-PaymentID:           PY0002
-PurchaseOrderID :    PR0002
-Amount:              120.5
-PaymentDate:         2025-05-03
-FinanceMrgID:        FM0971204357
-~~~~~
-PaymentID:           PY0003
-PurchaseOrderID :    PR0003
-Amount:              340.0
-PaymentDate:         2025-05-03
-FinanceMrgID:        FM0971204357
-~~~~~
-PaymentID:           PY0004
-PurchaseOrderID :    PR0004
-Amount:              75.25
-PaymentDate:         2025-05-04
-FinanceMrgID:        FM0971204357
-~~~~~
-PaymentID:           PY0005
-PurchaseOrderID :    PR0005
-Amount:              190.7
-PaymentDate:         2025-05-04
-FinanceMrgID:        FM0971204357
-~~~~~
-PaymentID:           PY0006
-PurchaseOrderID :    PR0006
-Amount:              260.9
-PaymentDate:         2025-05-05
-FinanceMrgID:        FM0971204357
-~~~~~
-PaymentID:           PY0007
-PurchaseOrderID :    PR0007
-Amount:              89.3
-PaymentDate:         2025-05-06
-FinanceMrgID:        FM0971204357
-~~~~~
-PaymentID:           PY0008
-PurchaseOrderID :    PR0008
-Amount:              145.6
-PaymentDate:         2025-05-06
-FinanceMrgID:        FM0971204357
-~~~~~
-PaymentID:           PY0009
-PurchaseOrderID :    PR0009
+PaymentID:           PY2841
+PurchaseOrderID :    PO0001
 Amount:              310.45
-PaymentDate:         2025-05-07
-FinanceMrgID:        FM0971204357
-~~~~~
-PaymentID:           PY0010
-PurchaseOrderID :    PR0010
-Amount:              220.0
-PaymentDate:         2025-05-08
-FinanceMrgID:        FM0971204357
-~~~~~
-PaymentID:           PY0011
-PurchaseOrderID :    PR0011
-Amount:              98.75
-PaymentDate:         2025-05-09
-FinanceMrgID:        FM0971204357
-~~~~~
-PaymentID:           PY2756
-PurchaseOrderID:     PO0004
-Amount:              32.0
-PaymentDate:         2025-05-16
+PaymentDate:         2023-02-05
 FinanceMgrID:        FM0971204357
 ~~~~~
-PaymentID:           PY7582
-PurchaseOrderID:     PO0008
+PaymentID:           PY4972
+PurchaseOrderID :    PO0002
+Amount:              98.8
+PaymentDate:         2023-06-18
+FinanceMgrID:        FM0971204357
+~~~~~
+PaymentID:           PY8039
+PurchaseOrderID :    PO0003
+Amount:              145.6
+PaymentDate:         2023-11-09
+FinanceMgrID:        FM0971204357
+~~~~~
+PaymentID:           PY1284
+PurchaseOrderID :    PO0004
 Amount:              72.0
-PaymentDate:         2025-05-16
+PaymentDate:         2024-01-13
+FinanceMgrID:        FM0971204357
+~~~~~
+PaymentID:           PY9650
+PurchaseOrderID :    PO0005
+Amount:              120.5
+PaymentDate:         2024-03-22
+FinanceMgrID:        FM0971204357
+~~~~~
+PaymentID:           PY7120
+PurchaseOrderID :    PO0006
+Amount:              75.25
+PaymentDate:         2024-07-06
+FinanceMgrID:        FM0971204357
+~~~~~
+PaymentID:           PY0416
+PurchaseOrderID :    PO0007
+Amount:              220.0
+PaymentDate:         2024-10-19
+FinanceMgrID:        FM0971204357
+~~~~~
+PaymentID:           PY3827
+PurchaseOrderID :    PO0008
+Amount:              260.9
+PaymentDate:         2025-01-03
+FinanceMgrID:        FM0971204357
+~~~~~
+PaymentID:           PY6345
+PurchaseOrderID :    PO0009
+Amount:              32.0
+PaymentDate:         2025-02-14
+FinanceMgrID:        FM0971204357
+~~~~~
+PaymentID:           PY5073
+PurchaseOrderID :    PO0010
+Amount:              89.3
+PaymentDate:         2025-03-28
+FinanceMgrID:        FM0971204357
+~~~~~
+PaymentID:           PY1793
+PurchaseOrderID :    PO0011
+Amount:              98.75
+PaymentDate:         2025-05-05
 FinanceMgrID:        FM0971204357
 ~~~~~

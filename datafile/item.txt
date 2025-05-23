@@ -1,11 +1,47 @@
-ItemID:         I7390
-ItemName:       Diddy Carrot
-UnitPrice:      1.0
-UnitCost:       1.0
-StockCount:     1
-Threshold:      1
-Category:       Vegetables
-LastUpdate:     2025-05-21
+ItemID:         I6215
+ItemName:       Morzani Bread
+UnitPrice:      49.0
+UnitCost:       36.75
+StockCount:     106
+Threshold:      20
+Category:       Bakery
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I3580
+ItemName:       Harukei Frozen pizza
+UnitPrice:      16.0
+UnitCost:       12.0
+StockCount:     231
+Threshold:      23
+Category:       Frozen Foods
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I4493
+ItemName:       Kyodami Bananas
+UnitPrice:      46.0
+UnitCost:       34.5
+StockCount:     165
+Threshold:      16
+Category:       Fruits
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I2997
+ItemName:       Vontere Dish soap
+UnitPrice:      19.0
+UnitCost:       14.25
+StockCount:     14
+Threshold:      13
+Category:       Household Items
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I1007
+ItemName:       Yuzaki Laundry detergent
+UnitPrice:      47.0
+UnitCost:       36.0
+StockCount:     106
+Threshold:      15
+Category:       Fruits
+LastUpdate:     2025-05-19
 ~~~~~
 ItemID:         I5262
 ItemName:       Green Apple
@@ -15,13 +51,139 @@ StockCount:     12
 Threshold:      1
 Category:       Fruits
 LastUpdate:     2025-05-21
+=======
+ItemID:         I7962
+ItemName:       Nedzura Pretzels
+UnitPrice:      22.0
+UnitCost:       15.0
+StockCount:     107
+Threshold:      11
+Category:       Fruits
+LastUpdate:     2025-05-19
 ~~~~~
-ItemID:         I8532
-ItemName:       asdasfasfsdfsd
-UnitPrice:      23.0
-UnitCost:       20.0
-StockCount:     32
-Threshold:      20
-Category:       Skibidi
+ItemID:         I8494
+ItemName:       Nayanti Frozen pizza
+UnitPrice:      48.0
+UnitCost:       36.0
+StockCount:     5
+Threshold:      10
+Category:       Fruits
+LastUpdate:     2025-05-20
+~~~~~
+ItemID:         I2022
+ItemName:       Vergrün Juice
+UnitPrice:      35.0
+UnitCost:       26.25
+StockCount:     95
+Threshold:      6
+Category:       Beverages
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I1000
+ItemName:       Eisvorn Ground beef
+UnitPrice:      26.0
+UnitCost:       19.5
+StockCount:     136
+Threshold:      23
+Category:       Meat & Seafood
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I5301
+ItemName:       Kyodami Frozen dinners
+UnitPrice:      36.0
+UnitCost:       27.0
+StockCount:     130
+Threshold:      23
+Category:       Frozen Foods
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I9994
+ItemName:       Selvani Frozen vegetables
+UnitPrice:      15.0
+UnitCost:       11.25
+StockCount:     91
+Threshold:      17
+Category:       Frozen Foods
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I3713
+ItemName:       Kampivo Tortillas
+UnitPrice:      5.0
+UnitCost:       3.75
+StockCount:     72
+Threshold:      7
+Category:       Bakery
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I7737
+ItemName:       Boncharé Milk
+UnitPrice:      38.0
+UnitCost:       28.5
+StockCount:     188
+Threshold:      24
+Category:       Dairy & Eggs
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I7142
+ItemName:       Mendora Tortillas
+UnitPrice:      50.0
+UnitCost:       37.5
+StockCount:     103
+Threshold:      24
+Category:       Bakery
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I3718
+ItemName:       Akeno Carrots
+UnitPrice:      49.0
+UnitCost:       36.75
+StockCount:     194
+Threshold:      16
+Category:       Vegetables
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I7467
+ItemName:       Tronquet Ham
+UnitPrice:      30.0
+UnitCost:       22.5
+StockCount:     15
+Threshold:      14
+Category:       Meat & Seafood
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I4734
+ItemName:       Fujikoen Coffee
+UnitPrice:      5.0
+UnitCost:       3.75
+StockCount:     45
+Threshold:      6
+Category:       Beverages
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I6970
+ItemName:       Pellanzi Lettuce
+UnitPrice:      41.0
+UnitCost:       30.75
+StockCount:     138
+Threshold:      11
+Category:       Vegetables
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I8780
+ItemName:       Yamunae Cucumbers
+UnitPrice:      32.0
+UnitCost:       24.0
+StockCount:     154
+Threshold:      10
+Category:       Vegetables
+LastUpdate:     2025-04-01
+~~~~~
+ItemID:         I1754
+ItemName:       Tarnoux Chicken breast
+UnitPrice:      34.0
+UnitCost:       25.5
+StockCount:     45
+Threshold:      14
+Category:       Meat & Seafood
 LastUpdate:     2025-04-01
 ~~~~~
