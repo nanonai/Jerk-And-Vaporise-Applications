@@ -201,8 +201,7 @@ public class ViewPurchaseOrder {
             counter += 1;
         }
 
-        table_po
-                = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
+        table_po = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
                 merriweather.deriveFont(Font.PLAIN, 16), Color.BLACK, Color.BLACK,
                 Color.WHITE, new Color(212, 212, 212), 1, 30);
 
@@ -210,15 +209,11 @@ public class ViewPurchaseOrder {
         pages = new JComboBox<>();
         UpdateTable(list_length, page_counter);
         UpdatePages(list_length);
-        table_po
-                .setShowHorizontalLines(true);
-        table_po
-                .setShowVerticalLines(true);
-        table_po
-                .setGridColor(new Color(230, 230, 230));
+        table_po.setShowHorizontalLines(true);
+        table_po.setShowVerticalLines(true);
+        table_po.setGridColor(new Color(230, 230, 230));
 
-        CustomComponents.CustomScrollPane scrollPane1 = new CustomComponents.CustomScrollPane(false, 1, table_po
-                ,
+        CustomComponents.CustomScrollPane scrollPane1 = new CustomComponents.CustomScrollPane(false, 1, table_po,
                 6, new Color(202, 202, 202), Main.transparent,
                 Main.transparent, Main.transparent, Main.transparent,
                 new Color(170, 170, 170), Color.WHITE,
