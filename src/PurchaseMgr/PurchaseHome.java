@@ -252,7 +252,8 @@ public class PurchaseHome {
         ViewSuppliers.Loader(parent, merriweather, boldonse, content, current_user);
         ViewRequi.Loader(parent, merriweather, boldonse, content, current_user);
         GenPurchaseOrder.Loader(parent, merriweather, boldonse, content, current_user);
-        GeneratePO.Loader(parent, merriweather, boldonse, content, current_user);
+        ViewPurchaseOrder.Loader(parent, merriweather, boldonse, content, current_user);
+        PurchaseOrderDetails.Loader(parent, merriweather, boldonse, content, null);
         PageChanger();
     }
 
@@ -283,7 +284,7 @@ public class PurchaseHome {
                 GenPurchaseOrder.ShowPage();
                 break;
             case 6:
-                GeneratePO.ShowPage();
+                ViewPurchaseOrder.ShowPage();
                 break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());
