@@ -50,7 +50,7 @@ PurchaseQuantity:    5
 TotalAmt:            25.0
 OrderDate:           2025-05-05
 PurchaseMgrID:       PM0971204357
-Status:              Cancelled
+Status:              Denied
 ~~~~~
 PurchaseOrderID:     PO0007
 ItemID:              I0007

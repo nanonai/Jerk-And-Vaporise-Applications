@@ -1,6 +1,7 @@
 package SalesMgr;
 
 import Admin.*;
+import InventoryMgr.EditItem;
 import InventoryMgr.Item;
 import PurchaseMgr.Item_Supplier;
 
@@ -382,10 +383,58 @@ public class ItemMng {
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
         btnEdit.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
+
         btnEdit.addActionListener(_ -> {
-            // Add Edit Item functionality here
+            // Check if any row is selected
+            if (table_item.getSelectedRowCount() == 0) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select an item to edit!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else {
+                String selected_id = table_item.getValueAt(
+                        table_item.getSelectedRow(),
+                        table_item.getColumnModel().getColumnIndex("ItemID")
+                ).toString();
+
+                System.out.println("Edit button clicked. Selected ItemID: " + selected_id);
+
+                Item selected_item = null;
+                for (Item item : AllItems) {
+                    if (item.ItemID.equals(selected_id)) {
+                        selected_item = item;
+                        break;
+                    }
+                }
+
+                if (selected_item != null) {
+                    EditNewItem.Loader(parent, merriweather, boldonse, content, current_user, selected_item);
+                    EditNewItem.ShowPage();  // Pass the selected item to EditNewItem form for editing
+
+                    AllItems = Item.listAllItem("datafile/item.txt");
+                    UpdatePages(AllItems.size());
+                    UpdateTable(AllItems, list_length, page_counter);
+
+                } else {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Selected item not found in the list!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                }
+            }
         });
         buttonPanel.add(btnEdit, buttongbc);
+
 
         buttongbc.gridx = 2;
         btnView = new CustomComponents.CustomButton("View Item", merriweather, Color.WHITE, Color.WHITE,
@@ -451,6 +500,7 @@ public class ItemMng {
             btnView.setEnabled(true);
             btnAdd.setEnabled(true);
             btnEdit.setEnabled(true);
+            btnView.setVisible(true);
             cancel_delete.setVisible(false);
 
             btnView.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
@@ -503,6 +553,7 @@ public class ItemMng {
                 btnView.setEnabled(false);
                 btnAdd.setEnabled(false);
                 btnEdit.setEnabled(false);
+                btnView.setVisible(false);
                 cancel_delete.setVisible(true);
                 btnView.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
                         new Color(242, 242, 242), new Color(241, 241, 242),
@@ -530,6 +581,7 @@ public class ItemMng {
                 new Color(159, 4, 4), new Color(161, 40, 40), null, 0, 16,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
+        btnDelete2.setPreferredSize(new Dimension(160, 40)); // Adjusted width and height
         btnDelete2.addActionListener(_ -> {
             if (deleting_id.isEmpty()) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
@@ -581,6 +633,7 @@ public class ItemMng {
                     btnView.setEnabled(true);
                     btnAdd.setEnabled(true);
                     btnEdit.setEnabled(true);
+                    btnView.setVisible(true);
                     cancel_delete.setVisible(false);
 
                     // Update button colors to reflect the state change
