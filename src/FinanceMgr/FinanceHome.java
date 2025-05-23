@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
 import Admin.*;
 
 public class FinanceHome {
@@ -245,6 +244,7 @@ public class FinanceHome {
 //    5 -> Process payment
 //    6 -> Generate financial report
             case 0:
+                PurchaseOrderPage.ShowPage();
                 break;
             case 1:
                 Profile.ShowPage();

@@ -20,7 +20,6 @@ public class Main {
     public static final String item_Supplier_file = "datafile/Item_Supplier.txt";
     public static final String payment_file = "datafile/payment.txt";
     public static final String supplier_file = "datafile/supplier.txt";
-    public static final String item_supplier_file = "datafile/Item_Supplier.txt";
     public static final String sales_file = "datafile/sales.txt";
     public static final String item_Sales_file = "datafile/item_Sales.txt";
 
