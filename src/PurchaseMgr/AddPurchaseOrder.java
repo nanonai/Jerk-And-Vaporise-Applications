@@ -6,17 +6,20 @@ import Admin.Main;
 import InventoryMgr.Item;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
+        import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
+        import java.awt.*;
+        import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 public class AddPurchaseOrder {
     private static JFrame parent;
@@ -25,8 +28,8 @@ public class AddPurchaseOrder {
     private static User current_user;
     private static String itemNames;
     private static JComboBox<Object> itemComboBox, supplierComboBox;
-    private static CustomComponents.EmptyTextField quantity, price;
-    private static JLabel total;
+    private static CustomComponents.EmptyTextField quantity;
+    private static JLabel price, total;
     private static JDialog dialog;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
@@ -44,7 +47,7 @@ public class AddPurchaseOrder {
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(parent);
 
-       int size_factor = 0;
+        int size_factor = 0;
         if (parent.getWidth() >= parent.getHeight()) {
             size_factor = parent.getHeight() / 40;
         } else {
@@ -164,10 +167,9 @@ public class AddPurchaseOrder {
             String supplierID = supplier.SupplierID;
 
             String qtyText = quantity.getText().trim();
-            String priceText = price.getText().replace("RM", "").trim();
 
-            if (qtyText.isEmpty() || priceText.isEmpty()) {
-                JOptionPane.showMessageDialog(dialog, "Please enter both quantity and price.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            if (qtyText.isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "Please enter both quantity.", "Input Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -185,10 +187,10 @@ public class AddPurchaseOrder {
                 PurchaseOrder.savePurchaseOrder(PO, Main.purchaseOrder_file, parent);
                 dialog.dispose();
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(dialog, "Please enter valid numbers for quantity and price.", "Format Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(dialog, "Please enter valid numbers for quantity and price.",
+                        "Format Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-
 
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -207,9 +209,18 @@ public class AddPurchaseOrder {
             @Override
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(() -> {
+                    String selectedItemName = Objects.requireNonNull(itemComboBox.getSelectedItem()).toString();
+
+                    // Get the item object
+                    Item selectedItem = Item.getItemByName(selectedItemName, Main.item_file);
+                    if (selectedItem == null) return;
+
+                    // Get item ID
+                    String selectedItemID = selectedItem.ItemID;
+
+                    // 1. Update Supplier ComboBox
                     List<Supplier> suppliersForPO = Item_Supplier.getSuppliersByItemID(
-                            Objects.requireNonNull(Item.getItemByName(Objects.requireNonNull(
-                                    itemComboBox.getSelectedItem()).toString(), Main.item_file)).ItemID,
+                            selectedItemID,
                             Main.item_supplier_file
                     );
                     supplierComboBox.removeAllItems();
@@ -218,9 +229,24 @@ public class AddPurchaseOrder {
                     }
                     supplierComboBox.repaint();
                     supplierComboBox.revalidate();
+
+                    // 2. Update UnitCost Label (your 'price' label)
+                    double unitCost = getUnitCostByItemID(selectedItemID, new File(Main.item_file));
+                    if (unitCost >= 0) {
+                        price.setText(String.format("RM %.2f", unitCost));
+                    } else {
+                        price.setText("Price not found");
+                    }
+                    quantity.setText("");
+
+                    double totalAmt = calculateTotal(quantity, price);
+                    total.setText("RM " + String.format("%.2f", totalAmt));
                 });
             }
         });
+        itemComboBox.setSelectedIndex(0);
+        itemComboBox.getActionListeners()[0].actionPerformed(new ActionEvent(itemComboBox, ActionEvent.ACTION_PERFORMED, ""));
+
         panel.add(itemComboBox, gbc);
 
         gbc.gridy = 2;
@@ -267,23 +293,8 @@ public class AddPurchaseOrder {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        price = new CustomComponents.EmptyTextField(20, "", new Color(0, 0, 0));
+        price = new JLabel("RM 0.00");
         price.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-        allowOnlyPriceFormat(price);
-
-// Apply your custom price filter that respects "RM" prefix
-        allowOnlyPriceFormat(price);
-
-// Add caret listener to prevent caret moving before prefix
-//        price.addCaretListener(e -> {
-//            int prefixLength = 2; // length of "RM"
-//            int pos = price.getCaretPosition();
-//            if (pos < prefixLength) {
-//                price.setCaretPosition(prefixLength);
-//            }
-//        });
-
-// Add price field to panel
         inner2.add(price, gbc);
 
         // my total panel
@@ -298,7 +309,7 @@ public class AddPurchaseOrder {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        JLabel total = new JLabel("");
+        total = new JLabel("");
         total.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         inner3.add(total, gbc);
 
@@ -307,7 +318,6 @@ public class AddPurchaseOrder {
             total.setText("RM " + String.format("%.2f", totalAmt));
         };
 
-// === Document Listener ===
         DocumentListener listener = new DocumentListener() {
             public void insertUpdate(DocumentEvent e) {
                 updateTotal.run();
@@ -322,9 +332,7 @@ public class AddPurchaseOrder {
             }
         };
 
-// Attach listener to quantity and price fields
         quantity.getDocument().addDocumentListener(listener);
-        price.getDocument().addDocumentListener(listener);
         dialog.setContentPane(panel);
         dialog.setVisible(true);
     }
@@ -371,88 +379,7 @@ public class AddPurchaseOrder {
         });
     }
 
-    public static void allowOnlyPriceFormat(JTextField textField) {
-        PlainDocument doc = (PlainDocument) textField.getDocument();
-
-        final String prefix = "RM ";
-        final int prefixLength = prefix.length();
-
-        Pattern pattern = Pattern.compile("^([1-9]\\d*)(\\.\\d{0,2})?$"); // no leading zero, max 2 decimals
-
-        doc.setDocumentFilter(new DocumentFilter() {
-
-            @Override
-            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-                String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
-                StringBuilder sb = new StringBuilder(currentText);
-                sb.insert(offset, string);
-
-                if (isValidWithPrefix(sb.toString())) {
-                    super.insertString(fb, offset, string, attr);
-                }
-            }
-
-            @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-                String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
-                StringBuilder sb = new StringBuilder(currentText);
-                sb.replace(offset, offset + length, text);
-
-                if (isValidWithPrefix(sb.toString())) {
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-
-            @Override
-            public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
-                // Disallow removing part of the prefix
-                if (offset < prefixLength) {
-                    // If trying to remove prefix, do nothing (reject)
-                    return;
-                }
-                String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
-                StringBuilder sb = new StringBuilder(currentText);
-                sb.delete(offset, offset + length);
-
-                if (isValidWithPrefix(sb.toString())) {
-                    super.remove(fb, offset, length);
-                }
-            }
-
-            private boolean isValidWithPrefix(String text) {
-                if (!text.startsWith(prefix)) {
-                    return false; // prefix must be present
-                }
-
-                String numberPart = text.substring(prefixLength);
-
-                if (numberPart.isEmpty()) {
-                    return true; // allow empty after prefix (user deleting all digits)
-                }
-
-                if (numberPart.startsWith("0")) {
-                    return false; // disallow leading zero
-                }
-
-                return pattern.matcher(numberPart).matches();
-            }
-        });
-
-        // Initialize text with prefix if missing
-        if (!textField.getText().startsWith(prefix)) {
-            textField.setText(prefix);
-        }
-
-        // Caret listener to prevent caret before prefix
-        textField.addCaretListener(e -> {
-            int pos = textField.getCaretPosition();
-            if (pos < prefixLength) {
-                textField.setCaretPosition(prefixLength);
-            }
-        });
-    }
-
-    public static double calculateTotal(JTextField quantityField, JTextField priceField) {
+    public static double calculateTotal(JTextField quantityField, JLabel priceField) {
         String quantityText = quantityField.getText().trim();
         String priceText = priceField.getText().trim();
 
@@ -475,5 +402,35 @@ public class AddPurchaseOrder {
         }
     }
 
+    public static double getUnitCostByItemID(String itemID, File itemFile) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(itemFile))) {
+            String line;
+            boolean found = false;
+
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.startsWith("ItemID:") && line.contains(itemID)) {
+                    found = true;
+                }
+
+                if (found && line.startsWith("UnitCost:")) {
+                    String costStr = line.replace("UnitCost:", "").trim();
+                    return Double.parseDouble(costStr);
+                }
+
+                // Skip to next item if separator is found
+                if (line.equals("~~~~~")) {
+                    found = false;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            System.out.println("Failed to parse UnitCost for itemID: " + itemID);
+        }
+
+        // If not found or error occurred
+        return -1;
+    }
 
 }

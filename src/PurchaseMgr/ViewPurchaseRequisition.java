@@ -3,17 +3,21 @@ package PurchaseMgr;
 import Admin.CustomComponents;
 import Admin.Main;
 import Admin.User;
-import InventoryMgr.Item;
+import FinanceMgr.PurchaseRequisition;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
 
-public class ViewSuppliers {
+public class ViewPurchaseRequisition {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
@@ -26,21 +30,21 @@ public class ViewSuppliers {
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
     private static CustomComponents.CustomArrowIcon left_icon1, left_icon2, right_icon1, right_icon2;
     private static CustomComponents.CustomXIcon icon_clear1, icon_clear2;
-    static CustomComponents.CustomTable table_sup;
+    static CustomComponents.CustomTable table_pr;
     public static int list_length = 10, page_counter = 0, filter = 0, mode = 1;
     private static boolean deleting = false;
-    private static List<Supplier> sup_list;
+    private static List<PurchaseRequisition> pr_list;
     private static Set<String> deleting_id = new LinkedHashSet<>();
     private static final Set<Integer> previousSelection = new HashSet<>();
     private static JLabel emp1, emp2, emp3;
     private static JDialog dialog;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
-        ViewSuppliers.parent = parent;
-        ViewSuppliers.merriweather = merriweather;
-        ViewSuppliers.boldonse = boldonse;
-        ViewSuppliers.content = content;
-        ViewSuppliers.current_user = current_user;
+        ViewPurchaseRequisition.parent = parent;
+        ViewPurchaseRequisition.merriweather = merriweather;
+        ViewPurchaseRequisition.boldonse = boldonse;
+        ViewPurchaseRequisition.content = content;
+        ViewPurchaseRequisition.current_user = current_user;
     }
 
     public static void ShowPage() {
@@ -188,17 +192,17 @@ public class ViewSuppliers {
         igbc.weightx = 1;
         igbc.weighty = 4;
         igbc.insets = new Insets(0, 3, 0, 3);
-        String[] titles = new String[]{"Id", "Name", "Contact Person", "Phone", "Email"};
-        sup_list = Supplier.listAllSupplier(Main.supplier_file);
-        Object[][] data = new Object[sup_list.size()][titles.length];
+        String[] titles = new String[]{"Id", "ItemID", "SupplierID", "Quantity", "Req Date", "Manager", "Status"};
+        pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
+        Object[][] data = new Object[pr_list.size()][titles.length];
         int counter = 0;
-        for (Supplier supplier : sup_list) {
-            data[counter] = new Object[]{supplier.SupplierID, supplier.SupplierName, supplier.ContactPerson,
-                    supplier.Phone, supplier.Email};
+        for (PurchaseRequisition purchaseRequisition : pr_list) {
+            data[counter] = new Object[]{purchaseRequisition.PurchaseReqID, purchaseRequisition.ItemID, purchaseRequisition.SupplierID,
+                    purchaseRequisition.Quantity, purchaseRequisition.ReqDate, purchaseRequisition.SalesMgrID, purchaseRequisition.Status};
             counter += 1;
         }
 
-        table_sup = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
+        table_pr = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
                 merriweather.deriveFont(Font.PLAIN, 16), Color.BLACK, Color.BLACK,
                 Color.WHITE, new Color(212, 212, 212), 1, 30);
 
@@ -206,11 +210,11 @@ public class ViewSuppliers {
         pages = new JComboBox<>();
         UpdateTable(list_length, page_counter);
         UpdatePages(list_length);
-        table_sup.setShowHorizontalLines(true);
-        table_sup.setShowVerticalLines(true);
-        table_sup.setGridColor(new Color(230, 230, 230));
+        table_pr.setShowHorizontalLines(true);
+        table_pr.setShowVerticalLines(true);
+        table_pr.setGridColor(new Color(230, 230, 230));
 
-        CustomComponents.CustomScrollPane scrollPane1 = new CustomComponents.CustomScrollPane(false, 1, table_sup
+        CustomComponents.CustomScrollPane scrollPane1 = new CustomComponents.CustomScrollPane(false, 1, table_pr
                 ,
                 6, new Color(202, 202, 202), Main.transparent,
                 Main.transparent, Main.transparent, Main.transparent,
@@ -389,10 +393,10 @@ public class ViewSuppliers {
                 Main.transparent, 0, 16, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         add.addActionListener(_ -> {
-            if (table_sup.getSelectedRowCount() == 0) {
+            if (table_pr.getSelectedRowCount() == 0) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,
-                        "Please select a Supplier to View!",
+                        "Please select a PR to View!",
                         "Error",
                         new Color(209, 88, 128),
                         new Color(255, 255, 255),
@@ -400,10 +404,10 @@ public class ViewSuppliers {
                         new Color(255, 255, 255)
                 );
             } else {
-                String selected_id = table_sup.getValueAt(table_sup.getSelectedRow(),
-                        table_sup.getColumnModel().getColumnIndex("Id")).toString();
-                SupplierDetails.UpdateSupplier(Supplier.getSupplierByID(selected_id, Main.supplier_file));
-                boolean see = SupplierDetails.ShowPage();
+                String selected_id = table_pr.getValueAt(table_pr.getSelectedRow(),
+                        table_pr.getColumnModel().getColumnIndex("Id")).toString();
+                PurchaseRequisitionDetails.UpdatePurchaseRequisition(PurchaseRequisition.getPurchaseReqByID(selected_id, Main.purchaseReq_file));
+                boolean see = PurchaseRequisitionDetails.ShowPage();
                 if (see) {
                     System.out.println(" ");
                 }
@@ -414,56 +418,160 @@ public class ViewSuppliers {
         ii_gbc.gridx = 1;
         ii_gbc.insets = new Insets(0, 0, 0, 4);
         JLabel emp1 = new JLabel();
+        /*view = new CustomComponents.CustomButton("View Details", merriweather, new Color(255, 255, 255),
+                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
+                Main.transparent, 0, 16, Main.transparent, false, 5, false,
+                null, 0, 0, 0);
+        view.addActionListener(_ -> {
+
+        });*/
         button_panel1.add(emp1, ii_gbc);
 
         ii_gbc.gridx = 2;
         JLabel emp2 = new JLabel();
+        /*modify = new CustomComponents.CustomButton("Modify User", merriweather, new Color(255, 255, 255),
+                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
+                Main.transparent, 0, 16, Main.transparent, false, 5, false,
+                null, 0, 0, 0);
+        modify.addActionListener(_ -> {
+
+        });*/
         button_panel1.add(emp2, ii_gbc);
 
         ii_gbc.gridx = 3;
         JLabel placeholder3 = new JLabel("");
         button_panel1.add(placeholder3, ii_gbc);
 
-        ii_gbc.gridx = 4;
-        JLabel placeholder4 = new JLabel("");
-        button_panel1.add(placeholder4, ii_gbc);
+        /*ii_gbc.gridx = 4;
+        data_transfer = new CustomComponents.CustomButton("Transfer User Data", merriweather, new Color(255, 255, 255),
+                new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
+                Main.transparent, 0, 16, Main.transparent, false, 5, false,
+                null, 0, 0, 0);
+        data_transfer.addActionListener(_ -> {
+
+        });
+        button_panel2.add(data_transfer, ii_gbc);*/
+
+        ii_gbc.gridx = 5;
+        ii_gbc.insets = new Insets(0, 0, 0, 0);
+        delete1 = new CustomComponents.CustomButton("Add to Purchase Order", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 16,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        delete1.addActionListener(_ -> {
+            int selectedRow = table_pr.getSelectedRow();
+
+            if (selectedRow != -1) {
+                String selectedPRID = table_pr.getValueAt(selectedRow, 0).toString();
+                String status = getStatusFromFile(selectedPRID); // get PR status
+
+                if ("1".equalsIgnoreCase(status)) {
+                    JOptionPane.showMessageDialog(parent,
+                            "This PR has been generated.",
+                            "Cannot Add",
+                            JOptionPane.WARNING_MESSAGE);
+                } else {
+                    try {
+                        // Generate new Purchase Order ID
+                        String newPurchaseOrderID = PurchaseOrder.idMaker(Main.purchaseOrder_file);
+
+                        // Extract PR data from table row
+                        String itemID = table_pr.getValueAt(selectedRow, 1).toString();
+                        String supplierID = table_pr.getValueAt(selectedRow, 2).toString();
+                        int purchaseQuantity = Integer.parseInt(table_pr.getValueAt(selectedRow, 3).toString());
+                        double totalAmt = 0;
+                        LocalDate orderDate = LocalDate.parse(table_pr.getValueAt(selectedRow, 4).toString());
+                        String purchaseMgrID = table_pr.getValueAt(selectedRow, 5).toString();
+                        String poStatus = "Pending";
+
+                        // Create new PurchaseOrder object
+                        PurchaseOrder newPO = new PurchaseOrder(
+                                newPurchaseOrderID,
+                                itemID,
+                                supplierID,
+                                purchaseQuantity,
+                                totalAmt,
+                                orderDate,
+                                purchaseMgrID,
+                                poStatus
+                        );
+                        // Save PO to file
+                        PurchaseOrder.savePurchaseOrder(newPO, Main.purchaseOrder_file, parent);
+
+                        // Update PR status to "1"
+                        updatePRStatus(selectedPRID, "1", Main.purchaseReq_file);
+
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(parent,
+                                "Invalid number format in the selected row.",
+                                "Input Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(parent,
+                                "An error occurred:\n" + ex.getMessage(),
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            } else {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select a PR to generate a PO.",
+                        "Error!",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            }
+        });
+        button_panel2.add(delete1, ii_gbc);
+
+
+
+//        PurchaseOrderDetails.Loader(parent, merriweather, boldonse, content, current_user);
+//        ViewUser.Loader(parent, merriweather, boldonse, content, null);
+//        ModifyUser.Loader(parent, merriweather, boldonse, content, null);
+//        DeleteUser.Loader(parent, merriweather, boldonse, content, current_user);
+//        DeleteBridge.Loader(parent, merriweather, boldonse, content, current_user, null);
+//        TransferData.Loader(parent, merriweather, boldonse, content, null);
     }
 
     public static void UpdateTable(int length, int page) {
-        String[] titles = new String[]{"Id", "Name", "Contact Person", "Phone", "Email"};
+        String[] titles = new String[]{"Id", "ItemID", "SupplierID", "Quantity", "Req Date", "Manager", "Status"};
         Object[][] data;
         int counter = 0;
         int anti_counter = page * length;
-        if (length >= sup_list.size() - page * length) {
-            data = new Object[sup_list.size() - page * length][titles.length];
+        if (length >= pr_list.size() - page * length) {
+            data = new Object[pr_list.size() - page * length][titles.length];
         } else {
             data = new Object[length][titles.length];
         }
-        for (Supplier supplier : sup_list) {
+        for (PurchaseRequisition purchaseRequisition : pr_list) {
             if (anti_counter != 0) {
                 anti_counter -= 1;
             } else {
-                data[counter] = new Object[]{supplier.SupplierID, supplier.SupplierName, supplier.ContactPerson,
-                        supplier.Phone, supplier.Email};
+                data[counter] = new Object[]{purchaseRequisition.PurchaseReqID, purchaseRequisition.ItemID, purchaseRequisition.SupplierID,
+                        purchaseRequisition.Quantity, purchaseRequisition.ReqDate, purchaseRequisition.SalesMgrID, purchaseRequisition.Status};
                 counter += 1;
-                if (counter == length || counter == sup_list.size()) { break; }
+                if (counter == length || counter == pr_list.size()) { break; }
             }
         }
-        table_sup.UpdateTableContent(titles, data);
+        table_pr.UpdateTableContent(titles, data);
         String temp2 = "<html>Displaying <b>%s</b> to <b>%s</b> of <b>%s</b> records</html>";
-        if (length >= sup_list.size()) {
-            lbl_indicate.setText(String.format(temp2, (!sup_list.isEmpty()) ? 1 : 0, sup_list.size(),
-                    sup_list.size()));
+        if (length >= pr_list.size()) {
+            lbl_indicate.setText(String.format(temp2, (!pr_list.isEmpty()) ? 1 : 0, pr_list.size(),
+                    pr_list.size()));
         } else {
             lbl_indicate.setText(String.format(temp2, page * length + 1,
-                    Math.min((page + 1) * length, sup_list.size()),
-                    sup_list.size()));
+                    Math.min((page + 1) * length, pr_list.size()),
+                    pr_list.size()));
         }
     }
 
     public static void UpdatePages(int length) {
-        int pageCount = (int) Math.ceil(sup_list.size() / (double) length);
-        if (sup_list.size() <= length) {
+        int pageCount = (int) Math.ceil(pr_list.size() / (double) length);
+        if (pr_list.size() <= length) {
             pageCount = 1;
         }
         pages.removeAllItems();
@@ -484,7 +592,7 @@ public class ViewSuppliers {
             case 4 -> "Sales Manager";
             default -> "";
         };
-        List<Supplier> temp_user_list = Supplier.listAllSupplier(Main.supplier_file);
+        List<PurchaseRequisition> temp_user_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
         if (temp_user_list.isEmpty()) {
             CustomComponents.CustomOptionPane.showInfoDialog(
                     parent,
@@ -496,11 +604,11 @@ public class ViewSuppliers {
                     new Color(255, 255, 255)
             );
         } else {
-            sup_list = temp_user_list;
+            pr_list = temp_user_list;
             page_counter = 0;
             UpdatePages(list_length);
             UpdateTable(list_length, page_counter);
-            SwingUtilities.invokeLater(table_sup::requestFocusInWindow);
+            SwingUtilities.invokeLater(table_pr::requestFocusInWindow);
         }
     }
 
@@ -535,12 +643,79 @@ public class ViewSuppliers {
         entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         search.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
-        table_sup.SetChanges(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
-                merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)), mode);
+        table_pr.SetChanges(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
+                        merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)), mode);
         view.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         add.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         modify.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         data_transfer.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         delete1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+    }
+
+    static String getStatusFromFile(String poID) {
+        File file = new File(Main.purchaseReq_file);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            boolean isTargetBlock = false;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("PurchaseReqID :")) {
+                    String currentPOID = line.split(":", 2)[1].trim();
+                    isTargetBlock = currentPOID.equals(poID);
+                }
+
+                if (isTargetBlock && line.startsWith("Status:")) {
+                    return line.split(":", 2)[1].trim();
+                }
+
+                if (line.trim().equals("~~~~~")) {
+                    isTargetBlock = false;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null; // Not found
+    }
+
+    public static void updatePRStatus(String prId, String newStatus, String filename) {
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(filename));
+            List<String> updatedLines = new ArrayList<>();
+            boolean prFound = false;
+
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i);
+
+                // Normalize the line to remove extra spaces before and after colon
+                if (line.trim().startsWith("PurchaseReqID")) {
+                    String[] parts = line.split(":");
+                    if (parts.length > 1 && parts[1].trim().equals(prId)) {
+                        prFound = true;
+                        updatedLines.add(line); // keep the original line
+
+                        // Look for the "Status:" line in the following lines
+                        while (++i < lines.size()) {
+                            String nextLine = lines.get(i);
+                            if (nextLine.trim().startsWith("Status")) {
+                                updatedLines.add("Status:              " + newStatus);
+                                System.out.println("Status updated to: " + newStatus);
+                                break;
+                            } else {
+                                updatedLines.add(nextLine);
+                            }
+                        }
+                        continue; // skip the outer else block
+                    }
+                }
+                updatedLines.add(line); // default behavior
+            }
+            if (prFound) {
+                Files.write(Paths.get(filename), updatedLines);
+            } else {
+                System.out.println("PR ID not found in file: " + prId);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
