@@ -8,6 +8,46 @@ AccType:        Administrator
 DateOfRegis:    2025-03-31
 RememberMe:     0
 ~~~~~
+UserID:         FM0000000000
+Username:       adminFMAcc
+Password:       adminFMAcc
+FullName:       Wong
+Email:          ad123@gmail.com
+Phone:          0151240129
+AccType:        Finance Manager
+DateOfRegis:    2025-03-31
+RememberMe:     0
+~~~~~
+UserID:         PM0000000000
+Username:       adminPMAcc
+Password:       adminPMAcc
+FullName:       Wong
+Email:          ad123@gmail.com
+Phone:          0151240129
+AccType:        Purchase Manager
+DateOfRegis:    2025-03-31
+RememberMe:     0
+~~~~~
+UserID:         IM0000000000
+Username:       adminIMAcc
+Password:       adminIMAcc
+FullName:       Wong
+Email:          ad123@gmail.com
+Phone:          0151240129
+AccType:        Inventory Manager
+DateOfRegis:    2025-03-31
+RememberMe:     0
+~~~~~
+UserID:         SM0000000000
+Username:       adminSMAcc
+Password:       adminSMAcc
+FullName:       Wong
+Email:          ad123@gmail.com
+Phone:          0151240129
+AccType:        Sales Manager
+DateOfRegis:    2025-03-31
+RememberMe:     0
+~~~~~
 UserID:         SM1253724128
 Username:       sm123
 Password:       sm123
@@ -26,7 +66,7 @@ Email:          pm123@gmail.com
 Phone:          0128467057
 AccType:        Purchase Manager
 DateOfRegis:    2025-03-31
-RememberMe:     0
+RememberMe:     1
 ~~~~~
 UserID:         IM0971204357
 Username:       im123
@@ -36,7 +76,7 @@ Email:          im123@gmail.com
 Phone:          0123574252
 AccType:        Inventory Manager
 DateOfRegis:    2025-03-31
-RememberMe:     0
+RememberMe:     1
 ~~~~~
 UserID:         FM0971204357
 Username:       fm123
@@ -46,7 +86,7 @@ Email:          fm123@gmail.com
 Phone:          0145323423
 AccType:        Finance Manager
 DateOfRegis:    2025-03-31
-RememberMe:     1
+RememberMe:     0
 ~~~~~
 UserID:         SM6352871092
 Username:       salesY

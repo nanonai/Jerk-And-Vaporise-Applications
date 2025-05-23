@@ -75,6 +75,10 @@ public class AdmHome {
                 0, 0);
         user_management.addActionListener(_ -> {
             AdmHome.indicator = 2;
+            UserMng.list_length = 10;
+            UserMng.page_counter = 0;
+            UserMng.filter = 0;
+            UserMng.mode = 1;
             PageChanger();
         });
         side_bar.add(user_management, gbc_side);
@@ -201,21 +205,22 @@ public class AdmHome {
 //        2  -> User Management Page
             case 0:
                 Dashboard.ShowPage();
+                home_page.UpdateText("          Home Page          ");
+                user_management.UpdateText( "          Manage User          ");
                 title.setText(String.format("<html>Welcome, Administrator <i>- %s</i></html>",
                         Home.current_user.FullName));
                 break;
             case 1:
                 Profile.ShowPage();
                 title.setText("Profile");
-                home_page.UpdateText("      Home Page      ");
-                user_management.UpdateText("      Manage User      ");
+                home_page.UpdateText("     Home Page     ");
+                user_management.UpdateText("     Manage User     ");
                 break;
             case 2:
                 UserMng.ShowPage();
                 title.setText("User Management Page");
                 break;
         }
-        UpdateComponentSize(parent.getWidth(), parent.getHeight());
     }
 
     public static void UpdateComponentSize(int parent_width, int parent_height) {

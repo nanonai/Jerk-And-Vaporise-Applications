@@ -384,8 +384,11 @@ public class ItemList {
                 5, false, null, 0, 0,0);
         btnStockReport.setPreferredSize(new Dimension(165, 45));
         btnStockReport.addActionListener(_ -> {
-            InventoryMgr.ItemList.indicator = 4;
-            PageChanger();
+            int selectedRowIndex = table_item.getSelectedRow();
+            int columnIndex = table_item.getColumnModel().getColumnIndex("ItemID");
+            Object value = table_item.getValueAt(selectedRowIndex, columnIndex);
+            Item itm = Item.getItemByID(value.toString(), "datafile/item.txt");
+            StockReport.ShowPage(itm);
         });
         buttonPanel.add(btnStockReport, buttonGbc);
     }

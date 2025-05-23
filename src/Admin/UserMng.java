@@ -10,7 +10,6 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-
 public class UserMng {
     private static JFrame parent;
     private static Font merriweather, boldonse;
@@ -26,7 +25,7 @@ public class UserMng {
     private static CustomComponents.CustomArrowIcon left_icon1, left_icon2, right_icon1, right_icon2;
     private static CustomComponents.CustomXIcon icon_clear1, icon_clear2;
     private static CustomComponents.CustomTable table_user;
-    private static int list_length = 10, page_counter = 0, filter = 0, mode = 1;
+    public static int list_length = 10, page_counter = 0, filter = 0, mode = 1;
     private static boolean deleting = false;
     private static List<User> user_list;
     private static Set<String> deleting_id = new LinkedHashSet<>();
@@ -581,7 +580,24 @@ public class UserMng {
                 ViewUser.UpdateUser(User.GetUserById(selected_id, Main.userdata_file));
                 boolean see = ViewUser.ShowPage();
                 if (see) {
-                    System.out.println("Skibidi");
+                    if (User.checkSalesRecordByID(selected_id, Main.sales_file).isEmpty() &&
+                            User.checkPRRecordByID(selected_id, Main.purchaseReq_file).isEmpty() &&
+                            User.checkPORecordByID(selected_id, Main.purchaseOrder_file).isEmpty() &&
+                            User.checkPYRecordByID(selected_id, Main.payment_file).isEmpty()) {
+                        CustomComponents.CustomOptionPane.showErrorDialog(
+                                parent,
+                                "This account has no data/records to view!",
+                                "Error",
+                                new Color(209, 88, 128),
+                                new Color(255, 255, 255),
+                                new Color(237, 136, 172),
+                                new Color(255, 255, 255)
+                        );
+                    } else {
+                        User selected = User.GetUserById(selected_id, Main.userdata_file);
+                        ViewData.UpdateUser(selected);
+                        ViewData.ShowPage();
+                    }
                 }
             }
         });
@@ -883,7 +899,42 @@ public class UserMng {
                     DeleteBridge.UpdateList(related_user);
                     int[] resolve = DeleteBridge.ShowPage();
                     if (resolve[0] != 0) {
-                        System.out.println("Skibidi " + resolve[1]);
+                        cancel_delete.doClick();
+                        String selected_id = related_user.get(resolve[1]).UserID;
+                        User selected = User.GetUserById(selected_id, Main.userdata_file);
+                        if (User.checkSalesRecordByID(selected_id, Main.sales_file).isEmpty() &&
+                                User.checkPRRecordByID(selected_id, Main.purchaseReq_file).isEmpty() &&
+                                User.checkPORecordByID(selected_id, Main.purchaseOrder_file).isEmpty() &&
+                                User.checkPYRecordByID(selected_id, Main.payment_file).isEmpty()) {
+                            CustomComponents.CustomOptionPane.showErrorDialog(
+                                    parent,
+                                    "This account has no data/records to transfer!",
+                                    "Error",
+                                    new Color(209, 88, 128),
+                                    new Color(255, 255, 255),
+                                    new Color(237, 136, 172),
+                                    new Color(255, 255, 255)
+                            );
+                        } else if (User.listAllUserFromFilter(
+                                Main.userdata_file,
+                                selected.AccType,
+                                "",
+                                selected
+                        ).isEmpty()) {
+                            CustomComponents.CustomOptionPane.showErrorDialog(
+                                    parent,
+                                    "<html>There is no other account of the same role<br>" +
+                                            "to transfer data/records to!</html>",
+                                    "Error",
+                                    new Color(209, 88, 128),
+                                    new Color(255, 255, 255),
+                                    new Color(237, 136, 172),
+                                    new Color(255, 255, 255)
+                            );
+                        } else {
+                            TransferData.UpdateUser(selected);
+                            TransferData.ShowPage();
+                        }
                     }
                 } else {
                     List<User> d_users = User.GetUsersByIds(ids, Main.userdata_file);
@@ -939,6 +990,28 @@ public class UserMng {
         DeleteUser.Loader(parent, merriweather, boldonse, content, current_user);
         DeleteBridge.Loader(parent, merriweather, boldonse, content, current_user, null);
         TransferData.Loader(parent, merriweather, boldonse, content, null);
+        ViewData.Loader(parent, merriweather, boldonse, content, null);
+
+        if (filter != 0) {
+            switch (filter) {
+                case 1:
+                    filter = 0;
+                    fin.doClick();
+                    break;
+                case 2:
+                    filter = 0;
+                    pur.doClick();
+                    break;
+                case 3:
+                    filter = 0;
+                    inv.doClick();
+                    break;
+                case 4:
+                    filter = 0;
+                    sls.doClick();
+                    break;
+            }
+        }
     }
 
     public static void UpdateTable(int length, int page) {

@@ -1,7 +1,5 @@
 package FinanceMgr;
 
-import PurchaseMgr.PurchaseOrder;
-
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,25 +9,26 @@ import java.util.Objects;
 
 public class PurchaseRequisition {
     public String PurchaseReqID, ItemID, SupplierID, SalesMgrID;
-    public int Quantity;
+    public int Quantity, Status;
     public LocalDate ReqDate;
     private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public PurchaseRequisition(String PurchaseReqID, String ItemID,String SupplierID,int Quantity,
-                               LocalDate ReqDate, String SalesMgrID){
+    public PurchaseRequisition(String PurchaseReqID, String ItemID, String SupplierID, int Quantity,
+                               LocalDate ReqDate, String SalesMgrID, int Status){
         this.PurchaseReqID = PurchaseReqID;
         this.ItemID = ItemID;
         this.SupplierID = SupplierID;
         this.Quantity = Quantity;
         this.ReqDate = ReqDate;
         this.SalesMgrID = SalesMgrID;
+        this.Status = Status;
     }
 
     public static List<PurchaseRequisition> listAllPurchaseRequisitions(String filename) {
         List<PurchaseRequisition> allPurchaseRequisitions = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String PurchaseReqID = "", ItemID = "", SupplierID = "",SalesMgrID = "";
-            int Quantity = 0;
+            int Quantity = 0, Status = 0;
             LocalDate ReqDate = null;
             int counter = 1;
             String line;
@@ -54,10 +53,13 @@ public class PurchaseRequisition {
                     case 6:
                         SalesMgrID = line.substring(21);
                         break;
+                    case 7:
+                        Status = Integer.parseInt(line.substring(21));
+                        break;
                     default:
                         counter = 0;
                         allPurchaseRequisitions.add(new PurchaseRequisition(
-                                PurchaseReqID, ItemID, SupplierID,Quantity, ReqDate,SalesMgrID
+                                PurchaseReqID, ItemID, SupplierID, Quantity, ReqDate, SalesMgrID, Status
                         ));
                 }
                 counter += 1;
@@ -92,7 +94,7 @@ public class PurchaseRequisition {
         return newId;
     }
 
-    public static PurchaseRequisition getPurchaseReqID(String purchaseReqID, String filename){
+    public static PurchaseRequisition getPurchaseReqByID(String purchaseReqID, String filename){
         List<PurchaseRequisition> purchaseReqList = listAllPurchaseRequisitions(filename);
         PurchaseRequisition purchaseReq_temp = null;
         for (PurchaseRequisition purchaseRequisition: purchaseReqList) {
@@ -114,6 +116,7 @@ public class PurchaseRequisition {
                 pr.Quantity = purchaseRequisition.Quantity;
                 pr.ReqDate = purchaseRequisition.ReqDate;
                 pr.SalesMgrID = purchaseRequisition.SalesMgrID;
+                pr.Status = purchaseRequisition.Status;
             }
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
@@ -124,6 +127,7 @@ public class PurchaseRequisition {
                 writer.write("Quantity:            " + pr.Quantity + "\n");
                 writer.write("ReqDate:             " + pr.ReqDate + "\n");
                 writer.write("SalesMgrID:          " + pr.SalesMgrID + "\n");
+                writer.write("Status:              " + pr.Status + "\n");
                 writer.write("~~~~~\n");
             }
         } catch (IOException e) {

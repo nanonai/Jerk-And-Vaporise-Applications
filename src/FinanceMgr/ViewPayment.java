@@ -190,7 +190,7 @@ public class ViewPayment {
 //            } else {
 //                String selected_id = table_item.getValueAt(table_item.getSelectedRow(),
 //                        table_item.getColumnModel().getColumnIndex("ItemID")).toString();
-//                ViewInventory.UpdateInventory(Item.getItemID(selected_id, Main.item_file));
+//                ViewInventory.UpdateInventory(Item.getItemByID(selected_id, Main.item_file));
 //                boolean see = ViewInventory.ShowPage();
 //                if (see) {
 //                    System.out.println(" ");

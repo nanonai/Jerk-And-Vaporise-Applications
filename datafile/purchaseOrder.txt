@@ -50,7 +50,7 @@ PurchaseQuantity:    5
 TotalAmt:            25.0
 OrderDate:           2025-05-05
 PurchaseMgrID:       PM0971204357
-Status:              Cancelled
+Status:              Denied
 ~~~~~
 PurchaseOrderID:     PO0007
 ItemID:              I0007
@@ -88,35 +88,8 @@ OrderDate:           2025-05-07
 PurchaseMgrID:       PM0971204357
 Status:              Approved
 ~~~~~
-PurchaseOrderID:     PO0011
-ItemID:              Harukei Frozen pizza
-SupplierID:          Rapid Logistics
-PurchaseQuantity:    5
-TotalAmt:            50.0
-OrderDate:           2025-05-20
-PurchaseMgrID:       PM0971204357
-Status:              Pending
-~~~~~
-PurchaseOrderID:     PO5668
-ItemID:              Akeno Carrots
-SupplierID:          Omega Resources
-PurchaseQuantity:    99
-TotalAmt:            217.8
-OrderDate:           2025-05-20
-PurchaseMgrID:       PM0971204357
-Status:              Pending
-~~~~~
-PurchaseOrderID:     PO0989
-ItemID:              Nayanti Frozen pizza
-SupplierID:          Rapid Logistics
-PurchaseQuantity:    55
-TotalAmt:            275.0
-OrderDate:           2025-05-20
-PurchaseMgrID:       PM0971204357
-Status:              Pending
-~~~~~
 PurchaseOrderID:     PO4352
-ItemID:              I6215
+ItemID:              I62158
 SupplierID:          S0010
 PurchaseQuantity:    3
 TotalAmt:            9.0
@@ -140,32 +113,5 @@ PurchaseQuantity:    33
 TotalAmt:            726.0
 OrderDate:           2025-05-20
 PurchaseMgrID:       PM0971204357
-Status:              Pending
-~~~~~
-PurchaseOrderID:     PO9092
-ItemID:              I6215
-SupplierID:          S0010
-PurchaseQuantity:    4
-TotalAmt:            12.0
-OrderDate:           2025-05-20
-PurchaseMgrID:       PM0971204357
-Status:              Pending
-~~~~~
-PurchaseOrderID:     PO6878
-ItemID:              I2997
-SupplierID:          S0006
-PurchaseQuantity:    7
-TotalAmt:            21.0
-OrderDate:           2025-05-20
-PurchaseMgrID:       PM0971204357
-Status:              Pending
-~~~~~
-PurchaseOrderID:     PO8359
-ItemID:              I4493
-SupplierID:          S0009
-PurchaseQuantity:    11
-TotalAmt:            11.0
-OrderDate:           2025-05-20
-PurchaseMgrID:       PM9274618301
 Status:              Pending
 ~~~~~

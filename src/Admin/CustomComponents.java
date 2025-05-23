@@ -12,8 +12,9 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 public class CustomComponents {
     public static class ImagePanel extends JPanel {
@@ -269,7 +270,8 @@ public class CustomComponents {
     }
 
     public static class RoundedPanel extends JPanel {
-        private final int shadow_factor, border_factor;
+        private int shadow_factor;
+        private final int border_factor;
         private int corner_radius;
         private final Color fill_color, border_color;
 
@@ -287,6 +289,15 @@ public class CustomComponents {
             repaint();
         }
 
+        public int GetShadowSize() {
+            return shadow_factor;
+        }
+
+        public void UpdateShadowSize(int shadow_factor) {
+            this.shadow_factor = shadow_factor;
+            repaint();
+        }
+
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -300,28 +311,27 @@ public class CustomComponents {
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
             if (shadow_factor != 0) {
-                int shadowSize = getHeight() / 80;
-                int shadowOffset = 0;
-                int maxAlpha = 233;
+                int shadowSize = shadow_factor;
+                int maxAlpha = 20;
 
                 for (int i = shadowSize; i > 0; i--) {
                     int alpha = (int) ((double) maxAlpha * (i / (double) shadowSize));
                     g2.setColor(new Color(0, 0, 0, alpha));
-                    g2.fillRoundRect(shadowOffset + i, shadowOffset + i,
-                            getWidth() - (shadowOffset + i * 2),
-                            getHeight() - (shadowOffset + i * 2),
+                    g2.fillRoundRect(i, i,
+                            getWidth() - (i * 2),
+                            getHeight() - (i * 2),
                             corner_radius, corner_radius);
-                    g2.setColor(fill_color);
-                    g2.fillRoundRect(0, 0, getWidth() - 5, getHeight() - 5, corner_radius, corner_radius);
-                    if (border_factor != 0) {
-                        g2.setColor(border_color);
-                        g2.setStroke(new BasicStroke(border_factor, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-                        g2.drawRoundRect(border_factor, border_factor, getWidth() - 5 - 2 * border_factor,
-                                getHeight() - 5 - 2 * border_factor,
-                                corner_radius - border_factor, corner_radius - border_factor);
-                    }
-                    g2.dispose();
                 }
+                g2.setColor(fill_color);
+                g2.fillRoundRect(shadowSize, shadowSize, getWidth() - 2 * shadowSize, getHeight() - 2 * shadowSize, corner_radius, corner_radius);
+                if (border_factor != 0) {
+                    g2.setColor(border_color);
+                    g2.setStroke(new BasicStroke(border_factor, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                    g2.drawRoundRect(shadowSize, shadowSize, getWidth() - 2 * shadowSize - 2 * border_factor,
+                            getHeight() - 2 * shadowSize - 2 * border_factor,
+                            corner_radius - border_factor, corner_radius - border_factor);
+                }
+                g2.dispose();
             } else {
                 g2.setColor(fill_color);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), corner_radius, corner_radius);
@@ -448,7 +458,8 @@ public class CustomComponents {
     }
 
     public static class CustomCheckBoxIcon implements Icon {
-        private final int size, radius, border_width;
+        private int size;
+        private final int radius, border_width;
         private final boolean isSelected;
         private final Color stroke_color, fill_color, tick_color;
 
@@ -462,6 +473,8 @@ public class CustomComponents {
             this.fill_color = fill_color;
             this.tick_color = tick_color;
         }
+
+        public void UpdateSize(int size) { this.size = size; }
 
         @Override
         public int getIconWidth() {
@@ -482,7 +495,7 @@ public class CustomComponents {
             g2d.fillRoundRect(x, y, size, size, radius, radius);
 
             g2d.setColor(fill_color);
-            g2d.fillRoundRect(x + radius - border_width, y + radius - border_width,
+            g2d.fillRoundRect(x + border_width, y + border_width,
                     size - 2 * border_width, size - 2 * border_width,
                     radius - border_width, radius - border_width);
 
@@ -491,7 +504,7 @@ public class CustomComponents {
 
                 int[] xPoints = {x + size * 2 / 9, x + size * 2 / 5, x + size * 3 / 4};
                 int[] yPoints = {y + size / 2, y + size * 2 / 3, y + size / 4};
-                g2d.setStroke(new BasicStroke(border_width * 4));
+                g2d.setStroke(new BasicStroke(border_width * 2));
                 g2d.drawPolyline(xPoints, yPoints, 3);
             }
         }
@@ -1754,6 +1767,432 @@ public class CustomComponents {
             g2d.drawLine(x1, y1, x2, y2);
             g2d.drawLine(x3, y3, x4, y4);
 
+            g2d.dispose();
+        }
+    }
+
+    public static class CustomRoundChart extends JPanel {
+        private final List<Double> data;
+        private final Color[] colors;
+        private final Color bg, txt1;
+        private final Font font;
+        private final int mode;
+        private final int thickness;
+        private final double center_factor, size_factor;
+        private Shape[] arcShapes;
+
+        public CustomRoundChart(List<Double> data, Color[] colors,
+                                Color bg, Color txt1, Font font, int mode, int thickness,
+                                double center_factor, double size_factor, List<String> tool_tip) {
+            this.data = data;
+            this.colors = colors;
+            this.bg = bg;
+            this.txt1 = txt1;
+            this.font = font;
+            this.mode = mode;
+            this.thickness = thickness;
+            this.center_factor = center_factor;
+            this.size_factor = size_factor;
+            setLayout(null);
+            ToolTipManager.sharedInstance().registerComponent(this);
+
+            addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    if (arcShapes == null) return;
+                    for (int i = 0; i < arcShapes.length; i++) {
+                        if (arcShapes[i] != null && arcShapes[i].contains(e.getPoint())) {
+                            if (data.get(i) % 1 == 0) {
+                                setToolTipText(tool_tip.get(i) + String.valueOf(data.get(i).intValue()));
+                            } else {
+                                setToolTipText(tool_tip.get(i) + String.valueOf(data.get(i)));
+                            }
+                            return;
+                        }
+                    }
+                    setToolTipText(null);
+                }
+            });
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (data == null || data.isEmpty()) return;
+
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+            int width = getWidth();
+            int height = getHeight();
+            g2d.setColor(bg);
+            g2d.fillRect(0, 0, width, height);
+
+            int diameter = (int) (Math.min(width, height) * size_factor);
+            int x = (width - diameter) / 2;
+            int y = (height - diameter) / 2;
+
+            double total = 0;
+            for (Double i : data) total += i;
+
+            int startAngle = 90;
+            int colorIndex = 0;
+            arcShapes = new Shape[data.size()];
+
+            int i = 0;
+            for (Double entry: data) {
+                int arcAngle = - (int) Math.round((entry / total) * 360);
+
+                g2d.setColor(colors[colorIndex % colors.length]);
+                g2d.fillArc(x, y, diameter, diameter, startAngle, arcAngle);
+
+                Arc2D.Double arc = new Arc2D.Double(x, y, diameter, diameter, startAngle, arcAngle, Arc2D.PIE);
+                if (mode == 1) {
+                    Area outer = new Area(arc);
+                    int inner = diameter - 2 * thickness;
+                    Area innerCircle = new Area(new Ellipse2D.Double((width - inner) / 2.0, (height - inner) / 2.0, inner, inner));
+                    outer.subtract(innerCircle);
+                    arcShapes[i] = outer;
+                } else {
+                    arcShapes[i] = arc;
+                }
+                i += 1;
+
+                startAngle += arcAngle;
+                colorIndex++;
+            }
+            if (mode == 1) {
+                g2d.setColor(bg);
+                g2d.fillOval((width - (diameter - 2 * thickness)) / 2, (height - (diameter - 2 * thickness)) / 2,
+                        diameter - 2 * thickness, diameter - 2 * thickness);
+            }
+            startAngle = 90;
+            colorIndex = 0;
+            for (Double entry : data) {
+                int arcAngle = - (int) Math.round((entry / total) * 360);
+                double midAngle = - (arcAngle + 2 * startAngle) / 2.0;
+
+                int r = (int) (diameter / 2f * center_factor);
+                int centerX = width / 2;
+                int centerY = height / 2;
+
+                double midAngleRad = Math.toRadians(midAngle);
+                centerX += (int) (r * Math.cos(midAngleRad));
+                centerY += (int) (r * Math.sin(midAngleRad));
+
+                g2d.setFont(font.deriveFont(Font.BOLD, (float) diameter / 13));
+                g2d.setColor(txt1);
+                String percent = String.format("%.1f%%", (entry / total) * 100f);
+                FontMetrics fm = g2d.getFontMetrics();
+                int txtWidth = fm.stringWidth(percent);
+                int txtHeight = fm.getHeight() - fm.getAscent();
+                g2d.drawString(percent, centerX - txtWidth / 2, centerY - txtHeight / 2);
+
+                startAngle += arcAngle;
+                colorIndex++;
+            }
+
+            g2d.dispose();
+        }
+    }
+
+    public static class CustomLineChart extends JPanel {
+        private List<List<Double>> seriesList;
+        private List<String> labels;
+        private final List<List<Point>> nodePositions = new ArrayList<>();
+        private final List<List<Double>> nodeValues = new ArrayList<>();
+        private final Color[] seriesColors;
+        private Color bg;
+        private final Color text;
+        private final Font font;
+        private double maxY;
+
+        public CustomLineChart(List<List<Double>> seriesList, List<String> labels, Color[] seriesColors, double maxY,
+                               Color bg, Color text, Font font) {
+            this.seriesList = seriesList;
+            this.labels = labels;
+            this.seriesColors = seriesColors;
+            this.maxY = maxY;
+            this.bg = bg;
+            this.text = text;
+            this.font = font;
+            addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    boolean found = false;
+                    for (int s = 0; s < nodePositions.size(); s++) {
+                        List<Point> series = nodePositions.get(s);
+                        for (int i = 0; i < series.size(); i++) {
+                            Point p = series.get(i);
+                            double distance = p.distance(e.getPoint());
+                            if (distance <= 6) {
+                                setToolTipText(String.valueOf(nodeValues.get(s).get(i)));
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!found) {
+                        setToolTipText(null);
+                    }
+                }
+            });
+        }
+
+        public void UpdateData(List<List<Double>> seriesList, List<String> labels, double maxY) {
+            this.seriesList = seriesList;
+            this.labels = labels;
+            this.maxY = maxY;
+            repaint();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (seriesList == null || seriesList.isEmpty() || labels == null || labels.isEmpty()) return;
+
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+            g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+            g2.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+            int width = getWidth();
+            int height = getHeight();
+            int padding = g2.getFontMetrics().stringWidth("000000" + maxY);
+            int graphHeight = height - 80;
+            int graphWidth = (int) (width - padding / 1.5 - padding);
+
+            g2.setColor(bg);
+            g2.fillRect(0, 0, width, height);
+
+            g2.setColor(new Color(158, 158, 158));
+            int basicUnit = (int) Math.pow(10, String.valueOf(maxY).length() - 3);
+            int divisions = (int) (maxY / basicUnit + 1);
+            for (int i = 0; i <= divisions; i++) {
+                int y = height - 40 - (i * graphHeight / divisions);
+                g2.drawLine(padding, y, (int) (width - padding / 1.5), y);
+            }
+
+            g2.setFont(font);
+            g2.setColor(text);
+            for (int i = 0; i <= divisions; i++) {
+                String label = Integer.toString(i * basicUnit);
+                int labelWidth = g2.getFontMetrics().stringWidth(label);
+                int labelHeight = g2.getFontMetrics().getHeight() - g2.getFontMetrics().getAscent();
+                g2.drawString(label, padding * 4 / 5 - labelWidth, height - 40 - (i * graphHeight / divisions) + labelHeight);
+            }
+
+            g2.setColor(new Color(158, 158, 158));
+            int pointCount = labels.size();
+            int pointSpacing = graphWidth / (pointCount - 1);
+            for (int i = 0; i < pointCount; i++) {
+                int x = (int) (width - padding / 1.5) - (i * graphWidth / (pointCount - 1));
+                g2.drawLine(x, 40, x, height - 40);
+            }
+
+            g2.setColor(text);
+            for (int i = 0; i < pointCount; i++) {
+                String label = labels.get(i);
+                int labelWidth = g2.getFontMetrics().stringWidth(label);
+                int x = padding + i * pointSpacing;
+                g2.drawString(label, x - labelWidth / 2, height - 15);
+            }
+
+            nodePositions.clear();
+            nodeValues.clear();
+
+            for (int s = 0; s < seriesList.size(); s++) {
+                List<Double> data = seriesList.get(s);
+                Color color = seriesColors[s % seriesColors.length];
+                List<Point> currentSeriesPoints = new ArrayList<>();
+                List<Double> currentSeriesValues = new ArrayList<>();
+
+                int[] xPoints = new int[pointCount];
+                int[] yPoints = new int[pointCount];
+
+                for (int i = 0; i < pointCount; i++) {
+                    xPoints[i] = padding + (i * graphWidth / (pointCount - 1));
+                    yPoints[i] = (int) (height - 40 - (data.get(i) * graphHeight / (basicUnit * divisions)));
+                    currentSeriesPoints.add(new Point(xPoints[i], yPoints[i]));
+                    currentSeriesValues.add(data.get(i));
+                }
+
+                nodePositions.add(currentSeriesPoints);
+                nodeValues.add(currentSeriesValues);
+
+                g2.setColor(color);
+                g2.setStroke(new BasicStroke(2f));
+                for (int i = 0; i < pointCount - 1; i++) {
+                    g2.drawLine(xPoints[i], yPoints[i], xPoints[i + 1], yPoints[i + 1]);
+                }
+
+                for (int i = 0; i < pointCount; i++) {
+                    g2.fillOval(xPoints[i] - 6, yPoints[i] - 6, 12, 12);
+                }
+
+                g2.setColor(bg);
+                for (int i = 0; i < pointCount; i++) {
+                    g2.fillOval(xPoints[i] - 2, yPoints[i] - 2, 4, 4);
+                }
+            }
+
+            g2.dispose();
+        }
+    }
+
+    public static class CustomDataSeriesIcon implements Icon {
+        private int size, width;
+        private final Color color, bg;
+        private final Font font;
+        private final String text;
+
+        public CustomDataSeriesIcon(int size, Color color, Color bg, Font font, String text) {
+            this.size = size;
+            this.color = color;
+            this.bg = bg;
+            this.font = font;
+            this.text = text;
+            updateWidth();
+        }
+
+        public void UpdateSize(int size) {
+            this.size = size;
+        }
+
+        private void updateWidth() {
+            BufferedImage tmp = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = tmp.createGraphics();
+            g2d.setFont(font.deriveFont(Font.BOLD, size));
+            FontMetrics fm = g2d.getFontMetrics();
+            this.width = (int) (size * 1.7 + fm.stringWidth(text));
+            g2d.dispose();
+        }
+
+        @Override
+        public int getIconWidth() {
+            return width;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return size;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+            int centerX = size / 2;
+            int centerY = size / 2;
+
+            int middleRadius = (int)(size * 3.15 / 8);
+            int innerRadius = (int)(size * 2.45 / 8);
+
+            g2d.setColor(color);
+            g2d.fillOval(0, 0, size, size);
+
+            g2d.setColor(bg);
+            g2d.fillOval(centerX - middleRadius, centerY - middleRadius,
+                    middleRadius * 2, middleRadius * 2);
+
+            g2d.setColor(color);
+            g2d.fillOval(centerX - innerRadius, centerY - innerRadius,
+                    innerRadius * 2, innerRadius * 2);
+
+            g2d.setColor(Color.BLACK);
+            g2d.setFont(font.deriveFont(Font.BOLD, (float) (size * 0.8)));
+            g2d.drawString(text, (int) (size * 1.7), (int) (size * 0.8));
+
+            g2d.dispose();
+        }
+    }
+
+    public static class CustomVaryingTextIcon implements Icon {
+        private float[] sizeList;
+        private String[] texts;
+        private final Color color;
+        private final Font font;
+        private int width, height;
+
+        public CustomVaryingTextIcon(float[] sizeList, String[] texts, Color color, Font font) {
+            this.sizeList = sizeList;
+            this.texts = texts;
+            this.color = color;
+            this.font = font;
+            recalculateSize();
+        }
+
+        public void UpdateSize(float[] sizeList) {
+            this.sizeList = sizeList;
+            recalculateSize();
+        }
+
+        public void UpdateText(String[] texts) {
+            this.texts = texts;
+            recalculateSize();
+        }
+
+        private void recalculateSize() {
+            BufferedImage dummy = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = dummy.createGraphics();
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+            int maxWidth = 0;
+            int totalHeight = 0;
+            for (int i = 0; i < texts.length; i++) {
+                Font derived = font.deriveFont(Font.BOLD, sizeList[i]);
+                g2d.setFont(derived);
+                FontMetrics fm = g2d.getFontMetrics();
+                int lineWidth = fm.stringWidth(texts[i]);
+                maxWidth = Math.max(maxWidth, lineWidth);
+                totalHeight += (int) (fm.getHeight() * 1.1f);
+            }
+            g2d.dispose();
+            width = maxWidth;
+            height = (int) totalHeight;
+        }
+
+        @Override
+        public int getIconWidth() {
+            return width;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return height;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g2d.setColor(color);
+
+            float heightOffset = y;
+            for (int i = 0; i < texts.length; i++) {
+                g2d.setFont(font.deriveFont(Font.BOLD, sizeList[i]));
+                FontMetrics fm = g2d.getFontMetrics();
+                heightOffset += fm.getAscent();
+                g2d.drawString(texts[i], x, heightOffset);
+                heightOffset += fm.getDescent() * 1.1f;
+            }
             g2d.dispose();
         }
     }

@@ -83,7 +83,7 @@ public class SignIn {
         gbc_outer.weightx = 5;
         gbc_outer.fill = GridBagConstraints.BOTH;
         CustomComponents.RoundedPanel right_panel = new CustomComponents.RoundedPanel(30,
-                1, 0, Color.WHITE, Color.BLACK);
+                10, 0, Color.WHITE, Color.BLACK);
         right_panel.setBackground(Color.WHITE);
 
         right_panel.setLayout(new GridBagLayout());
@@ -143,14 +143,14 @@ public class SignIn {
 
         gbc_inner.gridx = 0;
         gbc_inner.gridy = 0;
-        gbc_inner.weightx = 5.8;
+        gbc_inner.weightx = 4;
         gbc_inner.insets = new Insets(0, 0, 0, 0);
         txt_icon2 = new CustomComponents.ImageCell(
                 lock_icon, 0.5, 5);
         txt_grid2.add(txt_icon2, gbc_inner);
 
         gbc_inner.gridx = 1;
-        gbc_inner.weightx = 9.1;
+        gbc_inner.weightx = 5.9;
         txt2 = new CustomComponents.EmptyPasswordField(
                 7, "Password \r\r", new Color(178, 181, 180));
         txt2.setEchoChar((char) 0);
@@ -158,7 +158,7 @@ public class SignIn {
         txt_grid2.add(txt2, gbc_inner);
 
         gbc_inner.gridx = 2;
-        gbc_inner.weightx = 0.5;
+        gbc_inner.weightx = 0.1;
         hidden = new CustomComponents.CustomButton("", merriweather,
                 Main.transparent, Main.transparent, Main.transparent, Main.transparent, Main.transparent,
                 0, 0, Main.transparent, false, 4,
@@ -333,9 +333,9 @@ public class SignIn {
         txt1.setFont(merriweather.deriveFont((float) parent_height / 30));
         txt2.setFont(merriweather.deriveFont((float) parent_height / 30));
         check.setFont(merriweather.deriveFont((float) parent_height / 40));
-        check.setIcon(new CustomComponents.CustomCheckBoxIcon(30, 3,2,false,
+        check.setIcon(new CustomComponents.CustomCheckBoxIcon(parent_height / 22, parent_height / 70,parent_height / 350,false,
                 new Color(145, 145, 145), Color.WHITE, new Color(97, 97, 97)));
-        check.setSelectedIcon(new CustomComponents.CustomCheckBoxIcon(30, 3,1,true,
+        check.setSelectedIcon(new CustomComponents.CustomCheckBoxIcon(parent_height / 22, parent_height / 70,parent_height / 350,true,
                new Color(145, 145, 145), Color.WHITE, new Color(97, 97, 97)));
         button.UpdateCustomButton(parent_height / 10, parent_height / 30, null, 0);
         txt_icon1.repaint();

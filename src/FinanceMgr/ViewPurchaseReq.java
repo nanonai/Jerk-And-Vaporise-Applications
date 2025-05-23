@@ -96,6 +96,12 @@ public class ViewPurchaseReq {
         panel.add(category_label, gbc);
 
         gbc.gridy = 7;
+        JLabel status_label = new JLabel("Status :");
+        status_label.setOpaque(false);
+        status_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(status_label, gbc);
+
+        gbc.gridy = 8;
         gbc.insets = new Insets(0, 10, 10, 0);
         CustomComponents.CustomButton close = new CustomComponents.CustomButton("Close",
                 merriweather.deriveFont(Font.PLAIN), Color.WHITE, Color.WHITE,
@@ -175,14 +181,13 @@ public class ViewPurchaseReq {
         panel.add(category, gbc);
 
         gbc.gridy = 7;
-        JPanel inner = new JPanel(new GridBagLayout());
-        inner.setOpaque(false);
-        panel.add(inner, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1;
-
+        String status_text = (current_pr.Status == 0) ? "Pending" : "Processed";
+        JLabel status = new JLabel("    " + status_text);
+        status.setOpaque(true);
+        status.setBackground(Color.WHITE);
+        status.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        status.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(status, gbc);
 
         close.addActionListener(_ -> {
             dialog.dispose();
