@@ -1,36 +1,42 @@
 package PurchaseMgr;
 
 import Admin.*;
-import FinanceMgr.*;
-
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 
-public class GeneratePO {
+
+import static PurchaseMgr.PurchaseOrder.deletePurchaseOrder;
+
+public class owncodeforfun {
     private static JFrame parent;
     private static Font merriweather;
     private static Font boldonse;
     private static JPanel content, inner, btnPanel;
-    private static JLabel lbl_show, lbl_entries, lbl_space;
+    private static JLabel lbl_show, lbl_entries, lbl_space, lbl_indicate;
     private static JComboBox entries;
     public static User current_user;
     private static CustomComponents.RoundedPanel search_panel;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
     private static CustomComponents.EmptyTextField search;
-    private static CustomComponents.CustomTable table_po;
+    static CustomComponents.CustomTable table_po;
     private static CustomComponents.CustomScrollPane scrollPane1;
-    private static CustomComponents.CustomButton AddBtn, DelBtn;
+    private static CustomComponents.CustomButton AddBtn;
+    static CustomComponents.CustomButton DelBtn;
     private static JButton s_btn;
-    // private static Buffer current_user;
+    private static int list_length = 10, page_counter = 0, filter = 0, mode = 1;
+    private static List<PurchaseOrder> purchaseOrder_List;
+    private static JComboBox<String>  pages;
+    private static CustomComponents.CustomTable table_purOrder;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user){
-        GeneratePO.parent = parent;
-        GeneratePO.merriweather = merriweather;
-        GeneratePO.boldonse = boldonse;
-        GeneratePO.content = content;
-        GeneratePO.current_user = current_user;
+        owncodeforfun.parent = parent;
+        owncodeforfun.merriweather = merriweather;
+        owncodeforfun.boldonse = boldonse;
+        owncodeforfun.content = content;
+        owncodeforfun.current_user = current_user;
     }
 
     public static void ShowPage(){
@@ -63,7 +69,7 @@ public class GeneratePO {
         gbc1.weighty = 1;
         gbc1.fill = GridBagConstraints.BOTH;
         gbc1.insets = new Insets(10, 10, 10, 10);
-        lbl_show = new JLabel("Snow");
+        lbl_show = new JLabel("Show");
         lbl_show.setFont(merriweather.deriveFont(Font.BOLD, 16));
         lbl_show.setForeground(new Color(122, 122, 122));
         inner.add(lbl_show, gbc1);
@@ -75,6 +81,13 @@ public class GeneratePO {
         entries.setFont(merriweather.deriveFont(Font.BOLD, 14));
         entries.setForeground(new Color(122, 122, 122));
         entries.setFocusable(false);
+        entries.setSelectedItem("10");
+        entries.addActionListener(e -> {
+            list_length = Integer.parseInt((String) Objects.requireNonNull(entries.getSelectedItem()));
+            UpdatePOPages(list_length);
+            page_counter = 0;
+            UpdatePOTable(list_length, page_counter);
+        });
         inner.add(entries, gbc1);
 
         gbc1.gridx = 2;
@@ -126,11 +139,11 @@ public class GeneratePO {
         gbc1.weightx = 1;
         gbc1.weighty = 10;
         gbc1.insets = new Insets(0, 0, 10, 0);
-        List<PurchaseOrder> purchaseOrder_list = PurchaseOrder.listAllPurchaseOrders("datafile/purchaseOrder.txt");
+        purchaseOrder_List = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
         String[] titles = new String[]{"PurchaseOrderID", "ItemID", "PurchaseQuantity", "SupplierID","OrderDate","PurchaseMgrID","Status"};
-        Object[][] data = new Object[purchaseOrder_list.size()][titles.length];
+        Object[][] data = new Object[purchaseOrder_List.size()][titles.length];
         int counter = 0;
-        for (PurchaseOrder purchaseOrder : purchaseOrder_list) {
+        for (PurchaseOrder purchaseOrder : purchaseOrder_List) {
             data[counter] = new Object[]{purchaseOrder.PurchaseOrderID, purchaseOrder.ItemID,purchaseOrder.PurchaseQuantity,
                     purchaseOrder.SupplierID,purchaseOrder.OrderDate, purchaseOrder.PurchaseMgrID,purchaseOrder.Status};
             counter += 1;
@@ -160,19 +173,8 @@ public class GeneratePO {
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0,0);
         AddBtn.addActionListener(_ -> {
-            if (table_po.getSelectedRowCount() > 0){
-                CustomComponents.CustomOptionPane.showErrorDialog(parent, "Ei dog u think u can " +
-                                "add something into the selected item? dumb...", "Error lah",
-                        new Color(209, 88, 128),
-                        new Color(255, 255, 255),
-                        new Color(237, 136, 172),
-                        new Color(255, 255, 255));
-            }
-            else {
-                AddPO.Loader(parent, merriweather, boldonse, content, current_user);
-                AddPO.ShowPage();
-            }
-
+            AddPurchaseOrder.Loader(parent, merriweather, boldonse, content, current_user);
+            AddPurchaseOrder.ShowPage();
         });
         AddBtn.setPreferredSize(new Dimension(100, 1));
         btnPanel.add(AddBtn, gbc3);
@@ -186,12 +188,34 @@ public class GeneratePO {
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0,0);
+        DelBtn.addActionListener(_ -> {
+            if (table_po.getSelectedRowCount() > 0){
+                int selectedRow = table_po.getSelectedRow();
+                String selectedPOID = table_po.getValueAt(selectedRow, 0).toString(); // assume column 0 is PurchaseOrderID
+                int confirm = JOptionPane.showConfirmDialog(parent, "Are you sure you want to delete PurchaseOrderID: " + selectedPOID + "?",
+                        "Confirm Delete", JOptionPane.YES_NO_OPTION);
+
+                if (confirm == JOptionPane.YES_OPTION) {
+                    deletePurchaseOrder(selectedPOID, Main.purchaseOrder_file, parent);
+                    // Optionally: remove row from table model (if I turn it on, the resize will become terrible)
+                    // DefaultTableModel model = (DefaultTableModel) table_po.getModel();
+                    // model.removeRow(selectedRow);
+                }
+            }
+            else {
+                CustomComponents.CustomOptionPane.showErrorDialog(parent, "Please select an ID to delete", "Error!",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255));
+            }
+        });
         DelBtn.setPreferredSize(new Dimension(100, 1));
         btnPanel.add(DelBtn, gbc3);
 
         gbc3.gridx = 3;
         gbc3.weightx = 14;
-        JLabel placeholder2 = new JLabel("booon");
+        JLabel placeholder2 = new JLabel();
         btnPanel.add(placeholder2, gbc3);
 
         gbc1.gridx = 0;
@@ -210,6 +234,54 @@ public class GeneratePO {
                 new Color(140, 140, 140), new Color(110, 110, 110),
                 Color.WHITE, Color.WHITE, 6);
         inner.add(scrollPane1, gbc1);
+    }
 
+    public static void UpdatePOPages(int length) {
+        int pageCount = (int) Math.ceil(purchaseOrder_List.size() / (double) length);
+        if (purchaseOrder_List.size() <= length) {
+            pageCount = 1;
+        }
+        pages.removeAllItems();
+        for (int i = 1; i <= pageCount; i++) {
+            pages.addItem(String.format("Page %s of %s", i, pageCount));
+        }
+        pages.repaint();
+        pages.revalidate();
+    }
+
+    public static void UpdatePOTable(int length, int page) {
+        String[] titles = new String[]{"PurchaseOrderID", "ItemID", "SupplierID", "PurchaseQuantity", "TotalAmt", "OrderDate", "PurchaseMgrID", "Status"};
+        Object[][] data;
+        int counter = 0;
+        int anti_counter = page * length;
+        if (length >= purchaseOrder_List.size() - page * length) {
+            data = new Object[purchaseOrder_List.size() - page * length][titles.length];
+        } else {
+            data = new Object[length][titles.length];
+        }
+        for (PurchaseOrder purchaseOrder : purchaseOrder_List) {
+            if (anti_counter != 0) {
+                anti_counter -= 1;
+                continue;
+            } else {
+                data[counter] = new Object[]{purchaseOrder.PurchaseOrderID, purchaseOrder.ItemID,
+                        purchaseOrder.SupplierID, purchaseOrder.PurchaseQuantity, purchaseOrder.TotalAmt,
+                        purchaseOrder.OrderDate, purchaseOrder.PurchaseMgrID, purchaseOrder.Status};
+                counter += 1;
+                if (counter == length || counter == purchaseOrder_List.size()) {
+                    break;
+                }
+            }
+        }
+        table_purOrder.UpdateTableContent(titles, data);
+        String temp2 = "<html>Displaying <b>%s</b> to <b>%s</b> of <b>%s</b> records</html>";
+        if (length >= purchaseOrder_List.size()) {
+            lbl_indicate.setText(String.format(temp2, (!purchaseOrder_List.isEmpty()) ? 1 : 0, purchaseOrder_List.size(),
+                    purchaseOrder_List.size()));
+        } else {
+            lbl_indicate.setText(String.format(temp2, page * length + 1,
+                    Math.min((page + 1) * length, purchaseOrder_List.size()),
+                    purchaseOrder_List.size()));
+        }
     }
 }

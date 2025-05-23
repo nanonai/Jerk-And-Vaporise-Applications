@@ -3,6 +3,7 @@ package PurchaseMgr;
 import Admin.CustomComponents;
 import Admin.Main;
 import Admin.User;
+import Admin.ViewUser;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -16,9 +17,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-import static PurchaseMgr.PurchaseOrder.deletePurchaseOrder;
-
-public class GenPurchaseOrder {
+public class ViewPurchaseOrder {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
@@ -40,11 +39,11 @@ public class GenPurchaseOrder {
     private static JLabel emp1, emp2, emp3;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
-        GenPurchaseOrder.parent = parent;
-        GenPurchaseOrder.merriweather = merriweather;
-        GenPurchaseOrder.boldonse = boldonse;
-        GenPurchaseOrder.content = content;
-        GenPurchaseOrder.current_user = current_user;
+        ViewPurchaseOrder.parent = parent;
+        ViewPurchaseOrder.merriweather = merriweather;
+        ViewPurchaseOrder.boldonse = boldonse;
+        ViewPurchaseOrder.content = content;
+        ViewPurchaseOrder.current_user = current_user;
     }
 
     public static void ShowPage() {
@@ -203,7 +202,7 @@ public class GenPurchaseOrder {
         }
 
         table_po
- = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
+                = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
                 merriweather.deriveFont(Font.PLAIN, 16), Color.BLACK, Color.BLACK,
                 Color.WHITE, new Color(212, 212, 212), 1, 30);
 
@@ -212,14 +211,14 @@ public class GenPurchaseOrder {
         UpdateTable(list_length, page_counter);
         UpdatePages(list_length);
         table_po
-.setShowHorizontalLines(true);
+                .setShowHorizontalLines(true);
         table_po
-.setShowVerticalLines(true);
+                .setShowVerticalLines(true);
         table_po
-.setGridColor(new Color(230, 230, 230));
+                .setGridColor(new Color(230, 230, 230));
 
         CustomComponents.CustomScrollPane scrollPane1 = new CustomComponents.CustomScrollPane(false, 1, table_po
-,
+                ,
                 6, new Color(202, 202, 202), Main.transparent,
                 Main.transparent, Main.transparent, Main.transparent,
                 new Color(170, 170, 170), Color.WHITE,
@@ -392,13 +391,30 @@ public class GenPurchaseOrder {
         inner.add(button_panel2, igbc);
 
         ii_gbc.gridx = 0;
-        add = new CustomComponents.CustomButton("Add Purchase Order", merriweather, new Color(255, 255, 255),
+        add = new CustomComponents.CustomButton("View Details", merriweather, new Color(255, 255, 255),
                 new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
                 Main.transparent, 0, 16, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         add.addActionListener(_ -> {
-            AddPurchaseOrder.Loader(parent, merriweather, boldonse, content, current_user);
-            AddPurchaseOrder.ShowPage();
+            if (table_po.getSelectedRowCount() == 0) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select a PO to View!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else {
+                String selected_id = table_po.getValueAt(table_po.getSelectedRow(),
+                        table_po.getColumnModel().getColumnIndex("Id")).toString();
+                PurchaseOrderDetails.UpdatePurchaseOrder(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));
+                boolean see = PurchaseOrderDetails.ShowPage();
+                if (see) {
+                    System.out.println(" ");
+                }
+            }
         });
         button_panel1.add(add, ii_gbc);
 
@@ -441,45 +457,45 @@ public class GenPurchaseOrder {
 
         ii_gbc.gridx = 5;
         ii_gbc.insets = new Insets(0, 0, 0, 0);
-        delete1 = new CustomComponents.CustomButton("Delete Purchase Order", merriweather, Color.WHITE, Color.WHITE,
+        delete1 = new CustomComponents.CustomButton("Print", merriweather, Color.WHITE, Color.WHITE,
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 16,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
         delete1.addActionListener(_ -> {
-            if (table_po.getSelectedRowCount() > 0){
-                int selectedRow = table_po.getSelectedRow();
-                String selectedPOID = table_po.getValueAt(selectedRow, 0).toString(); // assume column 0 is PurchaseOrderID
-                String status = getStatusFromFile(selectedPOID); // Read from the text file
-
-                if ("Approved".equalsIgnoreCase(status)) {
-                    JOptionPane.showMessageDialog(parent,
-                            "This Purchase Order has been approved and cannot be deleted.",
-                            "Cannot Delete",
-                            JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-
-                int confirm = JOptionPane.showConfirmDialog(parent, "Are you sure you want to delete PurchaseOrderID: " + selectedPOID + "?",
-                        "Confirm Delete", JOptionPane.YES_NO_OPTION);
-
-                if (confirm == JOptionPane.YES_OPTION) {
-                    deletePurchaseOrder(selectedPOID, Main.purchaseOrder_file, parent);
-                    // Optionally: remove row from table model (if I turn it on, the resize will become terrible)
-                    // DefaultTableModel model = (DefaultTableModel) table_po.getModel();
-                    // model.removeRow(selectedRow);
-                }
-            }
-            else {
-                CustomComponents.CustomOptionPane.showErrorDialog(parent, "Please select an ID to delete", "Error!",
-                        new Color(209, 88, 128),
-                        new Color(255, 255, 255),
-                        new Color(237, 136, 172),
-                        new Color(255, 255, 255));
-            }
+//            if (table_po.getSelectedRowCount() > 0){
+//                int selectedRow = table_po.getSelectedRow();
+//                String selectedPOID = table_po.getValueAt(selectedRow, 0).toString(); // assume column 0 is PurchaseOrderID
+//                String status = getStatusFromFile(selectedPOID); // Read from the text file
+//
+//                if ("Approved".equalsIgnoreCase(status)) {
+//                    JOptionPane.showMessageDialog(parent,
+//                            "This Purchase Order has been approved and cannot be deleted.",
+//                            "Cannot Delete",
+//                            JOptionPane.WARNING_MESSAGE);
+//                    return;
+//                }
+//
+//                int confirm = JOptionPane.showConfirmDialog(parent, "Are you sure you want to delete PurchaseOrderID: " + selectedPOID + "?",
+//                        "Confirm Delete", JOptionPane.YES_NO_OPTION);
+//
+//                if (confirm == JOptionPane.YES_OPTION) {
+//                    deletePurchaseOrder(selectedPOID, Main.purchaseOrder_file, parent);
+//                    // Optionally: remove row from table model (if I turn it on, the resize will become terrible)
+//                    // DefaultTableModel model = (DefaultTableModel) table_po.getModel();
+//                    // model.removeRow(selectedRow);
+//                }
+//            }
+//            else {
+//                CustomComponents.CustomOptionPane.showErrorDialog(parent, "Please select an ID to delete", "Error!",
+//                        new Color(209, 88, 128),
+//                        new Color(255, 255, 255),
+//                        new Color(237, 136, 172),
+//                        new Color(255, 255, 255));
+//            }
         });
         button_panel2.add(delete1, ii_gbc);
 
-//        AddUser.Loader(parent, merriweather, boldonse, content, current_user);
+//        PurchaseOrderDetails.Loader(parent, merriweather, boldonse, content, current_user);
 //        ViewUser.Loader(parent, merriweather, boldonse, content, null);
 //        ModifyUser.Loader(parent, merriweather, boldonse, content, null);
 //        DeleteUser.Loader(parent, merriweather, boldonse, content, current_user);
@@ -508,7 +524,7 @@ public class GenPurchaseOrder {
             }
         }
         table_po
-.UpdateTableContent(titles, data);
+                .UpdateTableContent(titles, data);
         String temp2 = "<html>Displaying <b>%s</b> to <b>%s</b> of <b>%s</b> records</html>";
         if (length >= po_list.size()) {
             lbl_indicate.setText(String.format(temp2, (!po_list.isEmpty()) ? 1 : 0, po_list.size(),
@@ -560,7 +576,7 @@ public class GenPurchaseOrder {
             UpdatePages(list_length);
             UpdateTable(list_length, page_counter);
             SwingUtilities.invokeLater(table_po
-::requestFocusInWindow);
+                    ::requestFocusInWindow);
         }
     }
 
@@ -596,8 +612,8 @@ public class GenPurchaseOrder {
         pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         search.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         table_po
-.SetChanges(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
-                merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)), mode);
+                .SetChanges(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
+                        merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)), mode);
         view.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         add.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         modify.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);

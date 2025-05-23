@@ -1,6 +1,6 @@
 package InventoryMgr;
 
-import Admin.User;
+import PurchaseMgr.Supplier;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -173,7 +173,7 @@ public class Item {
             String currentId = null;
 
             while ((line = reader.readLine()) != null) {
-                if (line.trim().equals("~~~~~")) {
+                if (line.trim().equals("~")) {
                     inItemBlock = false;
                     updatedLines.add(line);
                     continue;
@@ -213,46 +213,66 @@ public class Item {
         }
     }
 
-    public static String validitychecker(String ItemName, String UnitPrice, String UnitCost, String StockCount, String Threshold,
-                                         String SupplierName) {
+    public static String validitychecker(String ItemName, String UnitPrice, String UnitCost, String StockCount,
+                                         String Threshold,
+                                         String SupplierName, String filename) {
         // Sample output: 0X0X00X0X
         String indicator = "";
-        // Validate ItemName: Length between 8 to 36 characters
-        if (ItemName.length() >= 8 && ItemName.length() <= 36) {
+
+        // Check item name length (8 to 48 characters)
+        if (ItemName.length() >= 8 && ItemName.length() <= 48) {
             indicator += "1";
         } else {
             indicator += "0";
         }
-        // Validate UnitPrice: Should be a positive number
+        System.out.println("ItemName validity: " + indicator);
+
+        if (nameChecker(ItemName, filename)) {
+            indicator += "O";
+        } else {
+            indicator += "X";
+        }
+
         if (UnitPrice.matches("\\d+(\\.\\d{1,2})?") && Double.parseDouble(UnitPrice) > 0) {
             indicator += "1";
         } else {
             indicator += "0";
         }
-        // Validate UnitCost: Should be a positive number
+        System.out.println("UnitPrice validity string: " + indicator);
+
         if (UnitCost.matches("\\d+(\\.\\d{1,2})?") && Double.parseDouble(UnitCost) > 0) {
             indicator += "1";
         } else {
             indicator += "0";
         }
-        // Validate StockCount: Should be a non-negative integer
+        System.out.println("UnitCost validity string: " + indicator);
+
         if (StockCount.matches("\\d+") && Integer.parseInt(StockCount) >= 0) {
             indicator += "1";
         } else {
             indicator += "0";
         }
-        // Validate Threshold: Should be a non-negative integer
+        System.out.println("StockCount validity string: " + indicator);
+        // Validate threshold (non-negative integer)
         if (Threshold.matches("\\d+") && Integer.parseInt(Threshold) >= 0) {
             indicator += "1";
         } else {
             indicator += "0";
         }
+        System.out.println("Threshold validity string: " + indicator);
 
-        // Validate SupplierName: Should not be empty
+        System.out.println("Checking Supplier: " + SupplierName);  // Debug log
         if (!SupplierName.trim().isEmpty()) {
-            indicator += "1";
+            String supplierID = Supplier.getSupplierID(SupplierName);  // Validate supplier ID
+            System.out.println("Supplier ID: " + supplierID);  // Debug log
+
+            if ("Unknown".equals(supplierID)) {
+                indicator += "0";  // Supplier not found
+            } else {
+                indicator += "1";  // Supplier exists
+            }
         } else {
-            indicator += "0";
+            indicator += "0";  // Supplier name is empty
         }
 
         return indicator;
@@ -283,7 +303,25 @@ public class Item {
         return null;
     }
 
-    /*public String getItemID() {
-        return ItemID;
-    }*/
+    public static void removeItem(String ItemID, String filename) {
+        List<Item> allItems = Item.listAllItem(filename);  // Assuming `listAllItem` fetches all items
+        allItems.removeIf(item -> Objects.equals(item.ItemID, ItemID));  // Remove item with matching ItemID
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Item item : allItems) {
+                writer.write("ItemID:         " + item.ItemID + "\n");
+                writer.write("ItemName:       " + item.ItemName + "\n");
+                writer.write("UnitPrice:      " + item.UnitPrice + "\n");
+                writer.write("UnitCost:       " + item.UnitCost + "\n");
+                writer.write("StockCount:     " + item.StockCount + "\n");
+                writer.write("Threshold:      " + item.Threshold + "\n");
+                writer.write("Category:       " + item.Category + "\n");
+                writer.write("LastUpdate:     " + item.LastUpdate + "\n");
+                writer.write("~~~~~\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
