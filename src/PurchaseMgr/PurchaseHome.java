@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerAdapter;
@@ -14,9 +15,11 @@ import java.io.IOException;
 import java.util.List;
 
 import Admin.*;
+import FinanceMgr.FinanceHome;
+import InventoryMgr.Item;
 
 public class PurchaseHome {
-    public static int indicator = 0;
+    public static int indicator = 2;
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel side_bar, top_bar, content;
@@ -57,17 +60,17 @@ public class PurchaseHome {
         logo_cell = new CustomComponents.ImageCell(logo, 0.8, 5);
         side_bar.add(logo_cell, gbc_side);
 
-        gbc_side.gridy = 1;
-        gbc_side.weighty = 0.8;
-        home_page = new CustomComponents.CustomButton("Home", merriweather, Color.WHITE, Color.WHITE,
-                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
-                Main.transparent, false, 5, false, null, 0,
-                0, 0);
-        home_page.addActionListener(_ -> {
-            PurchaseHome.indicator = 0;
-            PageChanger();
-        });
-        side_bar.add(home_page, gbc_side);
+//        gbc_side.gridy = 1;
+//        gbc_side.weighty = 0.8;
+//        home_page = new CustomComponents.CustomButton("Home", merriweather, Color.WHITE, Color.WHITE,
+//                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
+//                Main.transparent, false, 5, false, null, 0,
+//                0, 0);
+//        home_page.addActionListener(_ -> {
+//            PurchaseHome.indicator = 0;
+//            PageChanger();
+//        });
+//        side_bar.add(home_page, gbc_side);
 
         gbc_side.gridy = 2;
         gbc_side.weighty = 0.8;
@@ -130,7 +133,7 @@ public class PurchaseHome {
         side_bar.add(view_po, gbc_side);
 
         gbc_side.gridy = 7;
-        gbc_side.weighty = 4.2;
+        gbc_side.weighty = 5;
         JLabel placeholder = new JLabel("");
         side_bar.add(placeholder, gbc_side);
 
@@ -180,8 +183,8 @@ public class PurchaseHome {
         });
         top_bar.add(profile_drop, gbc_top);
 
-        List<String> options = List.of("Check Profile", "Sign Out");
-        List<ActionListener> actions = List.of(
+        List<String> options = new java.util.ArrayList<>(List.of("Check Profile", "Sign Out"));
+        List<ActionListener> actions = new java.util.ArrayList<>(List.of(
                 e -> {
                     PurchaseHome.indicator = 1;
                     PageChanger();
@@ -192,8 +195,21 @@ public class PurchaseHome {
                     PurchaseHome.indicator = 0;
                     Main.PageChanger(parent, merriweather, boldonse);
                 }
-        );
+        ));
 
+        if (current_user.UserID.substring(2).equals("0000000000")) {
+            options.add(1, "Log back to Admin Mode");
+            actions.add(1, e -> {
+                User admin = User.GetUserById("AD0000000000", Main.userdata_file);
+                admin.RememberMe = 1;
+                AdmHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content, admin);
+                Home.indicator = 1;
+                Home.PageChanger();
+                AdmHome.PageChanger();
+                User.UnrememberAllUser(Main.userdata_file);
+                User.modifyUser(admin.UserID, admin, Main.userdata_file);
+            });
+        }
         SwingUtilities.invokeLater(() -> {
             profile_drop_menu = new CustomComponents.CustomPopupMenu(
                     profile_drop,
@@ -236,10 +252,13 @@ public class PurchaseHome {
         Welcome.Loader(parent, merriweather, boldonse, content, current_user);
         ViewItems.Loader(parent, merriweather, boldonse, content, current_user);
         ViewSuppliers.Loader(parent, merriweather, boldonse, content, current_user);
-        ViewRequi.Loader(parent, merriweather, boldonse, content, current_user);
+        ViewPurchaseRequisition.Loader(parent, merriweather, boldonse, content, current_user);
         GenPurchaseOrder.Loader(parent, merriweather, boldonse, content, current_user);
         ViewPurchaseOrder.Loader(parent, merriweather, boldonse, content, current_user);
         PurchaseOrderDetails.Loader(parent, merriweather, boldonse, content, null);
+        PurchaseRequisitionDetails.Loader(parent, merriweather, boldonse, content, null);
+        ItemDetails.Loader(parent, merriweather, boldonse, content, null);
+        SupplierDetails.Loader(parent, merriweather, boldonse, content, null);
         PageChanger();
     }
 
@@ -247,13 +266,14 @@ public class PurchaseHome {
         content.removeAll();
         content.revalidate();
         content.repaint();
+        ViewPurchaseRequisition.list_length = 10;
+        ViewPurchaseRequisition.page_counter = 0;
+        ViewPurchaseRequisition.filter = 0;
+        ViewPurchaseRequisition.mode = 1;
         switch (indicator) {
 //    Please indicate the relation of the indicator value and specific java class:
 //    0 -> Purchase Manager Welcome Page
 //    1 -> Profile page
-            case 0:
-                Welcome.ShowPage();
-                break;
             case 1:
                 Profile.ShowPage();
                 break;
@@ -264,7 +284,7 @@ public class PurchaseHome {
                 ViewSuppliers.ShowPage();
                 break;
             case 4:
-                ViewRequi.ShowPage();
+                ViewPurchaseRequisition.ShowPage();
                 break;
             case 5:
                 GenPurchaseOrder.ShowPage();
@@ -286,7 +306,7 @@ public class PurchaseHome {
         int finalBase_size = base_size;
         SwingUtilities.invokeLater(() -> {
             logo_cell.repaint();
-            home_page.UpdateCustomButton(0, finalBase_size, null, 0);
+//            home_page.UpdateCustomButton(0, finalBase_size, null, 0);
             view_item.UpdateCustomButton(0, finalBase_size, null, 0);
             view_supplier.UpdateCustomButton(0, finalBase_size, null, 0);
             view_requisition.UpdateCustomButton(0, finalBase_size, null, 0);

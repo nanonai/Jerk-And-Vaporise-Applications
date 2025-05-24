@@ -83,7 +83,7 @@ public class SignIn {
         gbc_outer.weightx = 5;
         gbc_outer.fill = GridBagConstraints.BOTH;
         CustomComponents.RoundedPanel right_panel = new CustomComponents.RoundedPanel(30,
-                1, 0, Color.WHITE, Color.BLACK);
+                10, 0, Color.WHITE, Color.BLACK);
         right_panel.setBackground(Color.WHITE);
 
         right_panel.setLayout(new GridBagLayout());
@@ -333,9 +333,9 @@ public class SignIn {
         txt1.setFont(merriweather.deriveFont((float) parent_height / 30));
         txt2.setFont(merriweather.deriveFont((float) parent_height / 30));
         check.setFont(merriweather.deriveFont((float) parent_height / 40));
-        check.setIcon(new CustomComponents.CustomCheckBoxIcon(30, 3,2,false,
+        check.setIcon(new CustomComponents.CustomCheckBoxIcon(parent_height / 22, parent_height / 70,parent_height / 350,false,
                 new Color(145, 145, 145), Color.WHITE, new Color(97, 97, 97)));
-        check.setSelectedIcon(new CustomComponents.CustomCheckBoxIcon(30, 3,1,true,
+        check.setSelectedIcon(new CustomComponents.CustomCheckBoxIcon(parent_height / 22, parent_height / 70,parent_height / 350,true,
                new Color(145, 145, 145), Color.WHITE, new Color(97, 97, 97)));
         button.UpdateCustomButton(parent_height / 10, parent_height / 30, null, 0);
         txt_icon1.repaint();

@@ -111,6 +111,7 @@ public class PurchaseReqPage {
         igbc.weightx = 1;
         search_panel = new CustomComponents.RoundedPanel(8, 0, 1, Color.WHITE,
                 new Color(209, 209, 209));
+        search_panel.setVisible(false);
         search_panel.setLayout(new GridBagLayout());
         inner.add(search_panel, igbc);
 
@@ -121,22 +122,23 @@ public class PurchaseReqPage {
         ii_gbc.weighty = 1;
         ii_gbc.fill = GridBagConstraints.BOTH;
         ii_gbc.insets = new Insets(6, 6, 10, 5);
-        search_icon1 = new CustomComponents.CustomSearchIcon(16, 3,
-                new Color(122, 122, 122), Color.WHITE);
-        search_icon2 = new CustomComponents.CustomSearchIcon(16, 3,
-                new Color(81, 81, 81), Color.WHITE);
-        s_btn = new JButton(search_icon1);
-        s_btn.setRolloverIcon(search_icon2);
-        s_btn.setBorderPainted(false);
-        s_btn.setContentAreaFilled(false);
-        s_btn.setFocusPainted(false);
-        search_panel.add(s_btn, ii_gbc);
 
-        ii_gbc.gridx = 1;
-        ii_gbc.insets = new Insets(6, 0, 10, 0);
-        search = new CustomComponents.EmptyTextField(20, "Search...", new Color(122, 122, 122));
-        search.setFont(merriweather.deriveFont(Font.BOLD, 14));
-        search_panel.add(search, ii_gbc);
+//        search_icon1 = new CustomComponents.CustomSearchIcon(16, 3,
+//                new Color(122, 122, 122), Color.WHITE);
+//        search_icon2 = new CustomComponents.CustomSearchIcon(16, 3,
+//                new Color(81, 81, 81), Color.WHITE);
+//        s_btn = new JButton(search_icon1);
+//        s_btn.setRolloverIcon(search_icon2);
+//        s_btn.setBorderPainted(false);
+//        s_btn.setContentAreaFilled(false);
+//        s_btn.setFocusPainted(false);
+//        search_panel.add(s_btn, ii_gbc);
+//
+//        ii_gbc.gridx = 1;
+//        ii_gbc.insets = new Insets(6, 0, 10, 0);
+//        search = new CustomComponents.EmptyTextField(20, "Search...", new Color(122, 122, 122));
+//        search.setFont(merriweather.deriveFont(Font.BOLD, 14));
+//        search_panel.add(search, ii_gbc);
 
         igbc.gridwidth = 5;
         igbc.gridx = 0;

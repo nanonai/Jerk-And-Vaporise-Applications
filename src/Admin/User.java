@@ -112,18 +112,14 @@ public class User {
         List<User> filtered_user_list = new ArrayList<>();
         if (type.isEmpty() && filter.isEmpty()) {
             if (current_user != null) {
-                int length = user_list.size();
-                for (int i = 0; i < length; i++) {
-                    if (Objects.equals(user_list.get(i).UserID, current_user.UserID)) {
-                        user_list.remove(i);
-                        break;
-                    }
-                }
+                user_list.removeIf(user -> Objects.equals(user.UserID, current_user.UserID));
             }
+            user_list.removeIf(user -> Objects.equals(user.UserID.substring(2), "0000000000"));
             return user_list;
         }
         for (User user: user_list) {
-            if (!Objects.equals(user.UserID, current_user.UserID)) {
+            if (!Objects.equals(user.UserID, current_user.UserID) &&
+                    !Objects.equals(user.UserID.substring(2), "0000000000")) {
                 if (Objects.equals(user.AccType, type)) {
                     type_user_list.add(user);
                 } else if (type.isEmpty()) {
@@ -221,6 +217,9 @@ public class User {
         String newId = "";
         while (!success) {
             long newNum = (long) (Math.random() * 1E10);
+            while (newNum == 0) {
+                newNum = (long) (Math.random() * 1E10);
+            }
             StringBuilder number = new StringBuilder(String.valueOf(newNum));
             while (number.length() < 10) {
                 number.insert(0, "0");
