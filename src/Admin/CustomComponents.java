@@ -1865,7 +1865,6 @@ public class CustomComponents {
                 i += 1;
 
                 startAngle += arcAngle;
-                System.out.println(startAngle);
                 colorIndex++;
             }
             if (mode == 1) {
