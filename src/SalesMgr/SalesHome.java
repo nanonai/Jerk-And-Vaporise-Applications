@@ -264,14 +264,7 @@ public class SalesHome {
         content.revalidate();
         content.repaint();
         switch (indicator) {
-//    Please indicate the relation of the indicator value and specific java class:
-//    0 -> Sales Manager Home Page
-//    1 -> Profile page
-//    2 -> Item page
-//    3 -> Suppliers page
-//    4 -> Daily sales page
-//    5 -> Purchase requisitions page
-//    6 -> Purchase orders page
+
             case 0:
                 SalesDashboard.ShowPage();
                 title.setText(String.format("<html>Welcome, Sales Manager <i>- %s</i></html>",

@@ -181,6 +181,7 @@ public class PurchaseRequisitionMng {
             search.UpdateColumns(19);
             SwingUtilities.invokeLater(lbl_show::requestFocusInWindow);
             SearchStuff();
+
         });
         search_panel.add(x_btn, ii_gbc);
 
@@ -381,11 +382,14 @@ public class PurchaseRequisitionMng {
         ii_gbc.gridx = 0;
         add = new CustomComponents.CustomButton("Add Purchase Requisition", merriweather, new Color(255, 255, 255),
                 new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
-                Main.transparent, 0, 16, Main.transparent, false, 5, false,
+                Main.transparent, 0, 20, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         add.addActionListener(_ -> {
             AddPurchaseRequisition.Loader(parent, merriweather, boldonse, content, current_user);
             AddPurchaseRequisition.ShowPage();
+            pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
+            UpdatePages(list_length);
+            UpdateTable(list_length, page_counter);
         });
         button_panel1.add(add, ii_gbc);
 
@@ -393,7 +397,7 @@ public class PurchaseRequisitionMng {
         ii_gbc.insets = new Insets(0,20, 0, 0);
         add1 = new CustomComponents.CustomButton("View Details", merriweather, new Color(255, 255, 255),
                 new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
-                Main.transparent, 0, 16, Main.transparent, false, 5, false,
+                Main.transparent, 0, 20, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         add1.addActionListener(_ -> {
             if (table_pr.getSelectedRowCount() == 0) {
@@ -422,7 +426,7 @@ public class PurchaseRequisitionMng {
         ii_gbc.insets = new Insets(0,20, 0, 0);
         add2 = new CustomComponents.CustomButton("Edit Purchase Requisition", merriweather, new Color(255, 255, 255),
                 new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
-                Main.transparent, 0, 16, Main.transparent, false, 5, false,
+                Main.transparent, 0, 20, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         add2.addActionListener(_ -> {
             if (table_pr.getSelectedRowCount() == 0) {
@@ -439,8 +443,8 @@ public class PurchaseRequisitionMng {
                 int selectedRow = table_pr.getSelectedRow();
                 String selected_id = table_pr.getValueAt(selectedRow,
                         table_pr.getColumnModel().getColumnIndex("Id")).toString();
-                String selectedPRID = table_pr.getValueAt(selectedRow, 0).toString(); // assume column 0 is PurchaseOrderID
-                String status = getStatusFromFile(selectedPRID); // Read from the text file
+                String selectedPRID = table_pr.getValueAt(selectedRow, 0).toString();
+                String status = getStatusFromFile(selectedPRID);
 
                 if ("0".equalsIgnoreCase(status)) {
                     EditPurchaseRequisition.UpdatePurchaseRequisition(
@@ -459,21 +463,23 @@ public class PurchaseRequisitionMng {
                     );
                 }
             }
-
+            pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
+            UpdatePages(list_length);
+            UpdateTable(list_length, page_counter);
         });
         button_panel1.add(add2, ii_gbc);
 
         ii_gbc.gridx = 4;
         ii_gbc.insets = new Insets(0, 20, 0, 4);
         delete1 = new CustomComponents.CustomButton("Delete Purchase Requisition", merriweather, Color.WHITE, Color.WHITE,
-                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 16,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 18,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
         delete1.addActionListener(_ -> {
             if (table_pr.getSelectedRowCount() > 0){
                 int selectedRow = table_pr.getSelectedRow();
-                String selectedPRID = table_pr.getValueAt(selectedRow, 0).toString(); // assume column 0 is PurchaseOrderID
-                String status = getStatusFromFile(selectedPRID); // Read from the text file
+                String selectedPRID = table_pr.getValueAt(selectedRow, 0).toString();
+                String status = getStatusFromFile(selectedPRID);
 
                 System.out.println(status);
                 if ("1".equalsIgnoreCase(status)) {
@@ -503,9 +509,15 @@ public class PurchaseRequisitionMng {
                         new Color(237, 136, 172),
                         new Color(255, 255, 255));
             }
+            pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
+            UpdatePages(list_length);
+            page_counter = 0;
+            UpdateTable(list_length, page_counter);
+
         });
         button_panel1.add(delete1, ii_gbc);
     }
+
 
     public static void UpdateTable(int length, int page) {
         String[] titles = new String[]{"Id", "ItemID", "SupplierID", "Quantity", "Req Date", "Manager", "Status"};
@@ -554,32 +566,40 @@ public class PurchaseRequisitionMng {
     }
 
     public static void SearchStuff() {
-        String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search...\r\r")) ?
-                search.getText() : "";
-        String temp = switch (filter) {
-            case 1 -> "Finance Manager";
-            case 2 -> "Purchase Manager";
-            case 3 -> "Inventory Manager";
-            case 4 -> "Sales Manager";
-            default -> "";
-        };
-        List<PurchaseRequisition> temp_user_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
-        if (temp_user_list.isEmpty()) {
+        String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), search.GetPlaceHolder()))
+                ? search.getText().trim().toLowerCase() : "";
+
+        if (searcher.isEmpty()) {
+            page_counter = 0;
+            UpdatePages(pr_list.size());
+            UpdateTable(list_length, page_counter);
+            return;
+        }
+
+        List<PurchaseRequisition> filtered = new ArrayList<>();
+        for (PurchaseRequisition pr : PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file)) {
+            String id = pr.PurchaseReqID.toLowerCase();
+            String item = pr.ItemID.toLowerCase();
+            String supp = pr.SupplierID.toLowerCase();
+            String date = pr.ReqDate.toString().toLowerCase();
+            String mgr = pr.SalesMgrID.toLowerCase();
+            String status = getDisplayStatus(pr.ReqDate, pr.Status).toLowerCase();
+
+            if (id.contains(searcher) || item.contains(searcher) || supp.contains(searcher) ||
+                    date.contains(searcher) || mgr.contains(searcher) || status.contains(searcher)) {
+                filtered.add(pr);
+            }
+        }
+
+        if (filtered.isEmpty()) {
             CustomComponents.CustomOptionPane.showInfoDialog(
-                    parent,
-                    "No results found.",
-                    "Notification",
-                    new Color(88, 149, 209),
-                    new Color(255, 255, 255),
-                    new Color(125, 178, 228),
-                    new Color(255, 255, 255)
-            );
+                    parent, "No results found.", "Notification",
+                    Color.GRAY, Color.WHITE, Color.GRAY, Color.WHITE);
         } else {
-            pr_list = temp_user_list;
+            pr_list = filtered;
             page_counter = 0;
             UpdatePages(list_length);
             UpdateTable(list_length, page_counter);
-            SwingUtilities.invokeLater(table_pr::requestFocusInWindow);
         }
     }
 
@@ -588,39 +608,38 @@ public class PurchaseRequisitionMng {
         search_icon2.UpdateSize((int) (base_size * 0.8));
         s_btn.setSize(search_icon1.getIconWidth(), search_icon1.getIconHeight());
         s_btn.repaint();
-        icon_clear1.UpdateSize(base_size);
-        icon_clear2.UpdateSize(base_size);
+        icon_clear1.UpdateSize((int) (base_size * 0.8));
+        icon_clear2.UpdateSize((int) (base_size * 0.8));
         x_btn.setSize(icon_clear1.getIconWidth(), icon_clear1.getIconHeight());
+        x_btn.setPreferredSize(new Dimension(icon_clear1.getIconWidth(), icon_clear1.getIconHeight()));
         x_btn.repaint();
+
         left_icon1.UpdateSize(base_size);
         left_icon2.UpdateSize(base_size);
-        p_left.setSize(left_icon1.getIconWidth(), left_icon1.getIconHeight());
-        p_left.repaint();
         right_icon1.UpdateSize(base_size);
         right_icon2.UpdateSize(base_size);
+        p_left.setSize(left_icon1.getIconWidth(), left_icon1.getIconHeight());
         p_right.setSize(right_icon1.getIconWidth(), right_icon1.getIconHeight());
-        p_right.repaint();
         p_first.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
         p_last.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
-        pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
-        all.UpdateCustomButton(0, (int) (base_size), null, 0);
-        fin.UpdateCustomButton(0, (int) (base_size), null, 0);
-        pur.UpdateCustomButton(0, (int) (base_size), null, 0);
-        inv.UpdateCustomButton(0, (int) (base_size), null, 0);
-        sls.UpdateCustomButton(0, (int) (base_size), null, 0);
+        pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
+
         lbl_show.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_indicate.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
-        pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         search.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
+
         table_pr.SetChanges(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
-                        merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)), mode);
-        add2.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+                merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)), mode);
+
         add.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         add1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
-        data_transfer.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        add2.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         delete1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        if (data_transfer != null) {
+            data_transfer.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        }
     }
 
     private static String getStatusFromFile(String prID) {
@@ -635,13 +654,13 @@ public class PurchaseRequisitionMng {
                 } else if (poFound && line.startsWith("Status")) {
                     return line.split(":")[1].trim();
                 } else if (line.startsWith("~~~~~")) {
-                    poFound = false; // Reset on block boundary
+                    poFound = false;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null; // Not found
+        return null;
     }
 
 
@@ -675,7 +694,6 @@ public class PurchaseRequisitionMng {
             }
             scanner.close();
 
-            // Write back to file
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
                 for (String l : lines) {
                     writer.write(l);

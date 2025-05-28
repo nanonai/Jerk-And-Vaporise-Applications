@@ -109,15 +109,15 @@ public class EditSupplier {
         panel.add(address_label, gbc);
 
         gbc.gridy = 6;
-        gbc.weightx = 0.4;          // allow horizontal expansion
-        gbc.weighty = 0.3;          // usually 0 for buttons (unless you want vertical growth)
+        gbc.weightx = 0.4;
+        gbc.weighty = 0.3;
         gbc.insets = new Insets(15, 10, 15, 10);
         gbc.fill = GridBagConstraints.NONE;
         btnCancel = new CustomComponents.CustomButton("Cancel", merriweather, Color.WHITE, Color.WHITE,
                 new Color(56, 53, 70), new Color(73, 69, 87),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnCancel.setPreferredSize(new Dimension(280, 50));  // Adjusted width and height
+        btnCancel.setPreferredSize(new Dimension(280, 50));
         panel.add(btnCancel, gbc);
 
         gbc.gridx = 2;
@@ -126,7 +126,7 @@ public class EditSupplier {
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnConfirm.setPreferredSize(new Dimension(220, 50));  // Adjusted width and height
+        btnConfirm.setPreferredSize(new Dimension(220, 50));
         panel.add(btnConfirm, gbc);
 
         gbc.gridx = 1;
@@ -242,7 +242,6 @@ public class EditSupplier {
         });
         inner1.add(supplierName, igbc);
 
-// Contact Person
         contactPerson = new CustomComponents.EmptyTextField(20, "", new Color(122, 122, 122));
         contactPerson.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         contactPerson.setPreferredSize(new Dimension(150, 25));
@@ -323,7 +322,6 @@ public class EditSupplier {
         phone.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         inner3.add(phone, igbc);
 
-// Email
         email = new CustomComponents.EmptyTextField(20, "", new Color(122, 122, 122));
         email.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         email.setPreferredSize(new Dimension(150, 25));
@@ -360,7 +358,6 @@ public class EditSupplier {
         ((AbstractDocument) email.getDocument()).setDocumentFilter(new AddSupplier.NoSpaceFilter());
         inner4.add(email, igbc);
 
-// Address
         address = new CustomComponents.EmptyTextField(20, "", new Color(122, 122, 122));
         address.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         address.setPreferredSize(new Dimension(150, 25));
@@ -568,14 +565,12 @@ public class EditSupplier {
                     return;
                 }
 
-                // All validations passed, proceed with item creation
                 try {
                     String supplierID = selected_supplier.SupplierID;
 
-                    // Update the selected supplier fields
                     selected_supplier.SupplierName = supplierName.getText();
                     selected_supplier.ContactPerson = contactPerson.getText();
-                    selected_supplier.Phone = "0" + phone.getText();// assuming phone prefixed with '0'
+                    selected_supplier.Phone = "0" + phone.getText();
                     selected_supplier.Email = email.getText();
                     selected_supplier.Address = address.getText();
 
@@ -599,7 +594,6 @@ public class EditSupplier {
                     if (!keep_adding) {
                         dialog.dispose();
                     } else {
-                        // Reset fields for the next item entry
                         supplierName.Reset();
                         contactPerson.Reset();
                         phone.Reset();

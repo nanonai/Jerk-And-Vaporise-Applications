@@ -60,8 +60,8 @@ public class SalesDashboard {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 1;    // Equal width
-        gbc.weighty = 1;    // Equal height
+        gbc.weightx = 1;
+        gbc.weighty = 1;
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -103,10 +103,9 @@ public class SalesDashboard {
         bottom_panel.setOpaque(false);
         content.add(bottom_panel, gbc);
 
-        // Daily Sales Table Integration
-         allSales = Sales.listAllSales("datafile/sales.txt");
-         allItemSales = Item_Sales.listAllItemSales("datafile/item_sales.txt");
-         allItems = Item.listAllItem("datafile/item.txt");
+         allSales = Sales.listAllSales(Main.sales_file);
+         allItemSales = Item_Sales.listAllItemSales(Main.item_sales_file);
+         allItems = Item.listAllItem(Main.item_file);
 
         String[] titles = new String[]{"SalesID", "SalesDate", "SalesMgrID", "ItemName", "SoldQuantity", "Revenue"};
         Object[][] data = new Object[allItemSales.size()][titles.length];
@@ -114,7 +113,7 @@ public class SalesDashboard {
 
         for (Sales sales : allSales) {
             java.util.List<Item_Sales> itemSalesList = Item_Sales.listAllItemSalesFromSalesID(
-                    sales.SalesID, "datafile/item_sales.txt");
+                    sales.SalesID, Main.item_sales_file);
 
             for (Item_Sales itemSale : itemSalesList) {
                 String itemName = "";
@@ -153,7 +152,7 @@ public class SalesDashboard {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 if (e.getClickCount() == 1) {
-                    SalesHome.indicator = 4; // 4 = Daily Sales Page
+                    SalesHome.indicator = 4;
                     SalesHome.PageChanger();
                 }
             }
@@ -177,7 +176,6 @@ public class SalesDashboard {
         gbc.insets = new Insets(0, 10, 5, 5);
         bottom_panel.add(scrollPane1, gbc);
 
-        // Pie Chart Panel Setup
         gbc.gridx = 4;
         gbc.gridwidth = 2;
         gbc.weightx = 1.3;
@@ -336,7 +334,7 @@ public class SalesDashboard {
         sgbc.weighty = 0;
         sgbc.insets = new Insets(10, 10, 10, 10);
         CustomComponents.CustomButton btnSupplier = new CustomComponents.CustomButton(
-                "Supplier", merriweather, Color.WHITE, Color.WHITE,
+                "Suppliers", merriweather, Color.WHITE, Color.WHITE,
                 new Color(255, 49, 134), new Color(248, 105, 163), null, 0, 16,
                 Main.transparent, false, 5, false, null, 0, 0, 0);
         btnSupplier.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -392,7 +390,6 @@ public class SalesDashboard {
         });
         po_panel.add(btnPO, pgbc);
 
-// === Purchase Request Panel Setup ===
         GridBagConstraints prgbc = new GridBagConstraints();
         prgbc.gridx = 0;
         prgbc.gridy = 0;
@@ -419,11 +416,11 @@ public class SalesDashboard {
     }
 
     public static void UpdateBestSellerChart() {
-        best_seller_summary.removeAll();  // Clear previous content
+        best_seller_summary.removeAll();
 
-        // Reload data
-        allItems = Item.listAllItem("datafile/item.txt");
-        allItemSales = Item_Sales.listAllItemSales("datafile/item_sales.txt");
+
+        allItems = Item.listAllItem(Main.item_file);
+        allItemSales = Item_Sales.listAllItemSales(Main.item_sales_file);
 
         class Pair {
             final double value;
@@ -436,7 +433,7 @@ public class SalesDashboard {
 
         Map<String, Double> categorySalesMap = new HashMap<>();
         for (Item item : allItems) {
-            List<Item_Sales> sales = Item_Sales.listAllItemSalesFromItemID(item.ItemID, "datafile/item_sales.txt");
+            List<Item_Sales> sales = Item_Sales.listAllItemSalesFromItemID(item.ItemID, Main.item_sales_file);
             double totalQty = sales.stream().mapToDouble(s -> s.Quantity).sum();
             categorySalesMap.put(item.Category, categorySalesMap.getOrDefault(item.Category, 0.0) + totalQty);
         }
@@ -550,21 +547,17 @@ public class SalesDashboard {
         pr_panel.repaint();
         best_seller_summary.repaint();
 
-        // Resize image icons
         item_img.setPreferredSize(new Dimension(base_size * 5, base_size * 5));
         supplier_img.setPreferredSize(new Dimension(base_size * 5, base_size * 5));
         dailysales_img.setPreferredSize(new Dimension(base_size * 5, base_size * 5));
         po_img.setPreferredSize(new Dimension(base_size * 5, base_size * 5));
         pr_img.setPreferredSize(new Dimension(base_size * 5, base_size * 5));
 
-        // Resize pie chart
         best_sold_quantity.setPreferredSize(new Dimension(base_size * 5, base_size * 5));
 
-        // Resize pie chart title icon
         bs_icon.UpdateSize(new float[]{base_size * 1.5f, base_size * 1.2f});
         bsTitle.setIcon(bs_icon);
 
-        // Resize chart legend icons
         for (Component comp : data_panel.getComponents()) {
             if (comp instanceof JLabel label && label.getIcon() instanceof CustomComponents.CustomDataSeriesIcon icon) {
                 icon.UpdateSize(base_size);
@@ -572,7 +565,6 @@ public class SalesDashboard {
             }
         }
 
-        // Resize button fonts
         for (JPanel panel : new JPanel[]{item_panel, sup_panel, ds_panel, po_panel, pr_panel}) {
             for (Component comp : panel.getComponents()) {
                 if (comp instanceof CustomComponents.CustomButton btn) {

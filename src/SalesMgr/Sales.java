@@ -112,7 +112,6 @@ public class Sales {
         }
     }
     public static String ValidityChecker(String itemName, String soldQuantity, String revenue) {
-        // Sample output: 0X0X
         String indicator = "";
 
         System.out.println("Checking Item: " + itemName);
@@ -132,15 +131,14 @@ public class Sales {
             }
 
             if (itemExists) {
-                indicator += "1";  // Item found
+                indicator += "1";
             } else {
-                indicator += "0";  // Item not found
+                indicator += "0";
             }
         } else {
-            indicator += "0";  // Item name is empty or null
+            indicator += "0";
         }
 
-        // Validate sold quantity (positive integer)
         boolean quantityValid = false;
         int quantityInt = 0;
         if (soldQuantity.matches("\\d+")) {
@@ -157,7 +155,6 @@ public class Sales {
         }
         System.out.println("Sold Quantity validity: " + indicator);
 
-        // Validate revenue
         if (revenue.matches("\\d+(\\.\\d{1,2})?") && Double.parseDouble(revenue) > 0) {
             indicator += "1";
         } else {
@@ -165,7 +162,6 @@ public class Sales {
         }
         System.out.println("Revenue validity: " + indicator);
 
-        // Validate against total sold + current sale > stock count
         if (itemExists && quantityValid && matchedItem != null) {
             List<Item_Sales> itemSalesList = Item_Sales.listAllItemSales(Main.item_sales_file);
             int totalSold = 0;
@@ -177,12 +173,12 @@ public class Sales {
             }
 
             if ((totalSold + quantityInt) > matchedItem.StockCount) {
-                indicator += "0"; // Insufficient stock after accounting total sold
+                indicator += "0";
             } else {
                 indicator += "1";
             }
         } else {
-            indicator += "1"; // Skip if not applicable
+            indicator += "1";
         }
 
         System.out.println("Stock count validity: " + indicator);

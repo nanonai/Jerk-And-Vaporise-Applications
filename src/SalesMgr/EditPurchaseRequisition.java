@@ -49,7 +49,7 @@ public class EditPurchaseRequisition {
     public static boolean ShowPage(){
         JDialog dialog = new JDialog(parent, "Modify Purchase Requisition", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize(parent.getWidth() / 2, parent.getHeight() / 2);
+        dialog.setSize(650, 400);
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(parent);
 
@@ -150,7 +150,7 @@ public class EditPurchaseRequisition {
         gbc.insets = new Insets(0, 0, 0, 0);
         CustomComponents.CustomButton confirm = new CustomComponents.CustomButton("Confirm",
                 merriweather.deriveFont(Font.PLAIN), Color.WHITE, Color.WHITE,
-                new Color(56, 53, 70), new Color(73, 69, 87),
+                new Color(209, 88, 128), new Color(237, 136, 172),
                 Main.transparent, 0, base_size, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         button_panel2.add(confirm, gbc);
@@ -203,11 +203,8 @@ public class EditPurchaseRequisition {
 
         gbc.gridx = 1;
         gbc.gridy = 1;
-        // ArrayList
         List<String> itemComboBoxData = new ArrayList<>();
-        // Save data to an Arraylist
         List<Item> itemsForPO = Item.listAllItem(Main.item_file);
-        // loop item into array(itemComboBoxData) so we use itemsForPO other than itemComboBox.
         for (Item item : itemsForPO){
             itemComboBoxData.add(item.ItemName);
         }
@@ -220,14 +217,11 @@ public class EditPurchaseRequisition {
                 SwingUtilities.invokeLater(() -> {
                     String selectedItemName = Objects.requireNonNull(itemComboBox.getSelectedItem()).toString();
 
-                    // Get the item object
                     Item selectedItem = Item.getItemByName(selectedItemName, Main.item_file);
                     if (selectedItem == null) return;
 
-                    // Get item ID
                     String selectedItemID = selectedItem.ItemID;
 
-                    // 1. Update Supplier ComboBox
                     List<Supplier> suppliersForPO = Item_Supplier.getSuppliersByItemID(
                             selectedItemID,
                             Main.item_supplier_file
@@ -262,7 +256,6 @@ public class EditPurchaseRequisition {
         supplierComboBox.setFont(merriweather.deriveFont(Font.PLAIN));
         panel.add(supplierComboBox, gbc);
 
-        // my quantity panel
         gbc.gridy = 3;
         gbc.insets = new Insets(3, 2, 3, 2);
         JPanel inner1 = new JPanel(new GridBagLayout());
@@ -312,13 +305,10 @@ public class EditPurchaseRequisition {
             }
 
             private boolean isValidQuantity(String text) {
-                // Empty is allowed to permit deleting input
                 if (text.isEmpty()) return true;
 
-                // Only digits allowed
                 if (!text.matches("\\d+")) return false;
 
-                // Disallow leading zero
                 if (text.startsWith("0")) return false;
 
                 return true;
