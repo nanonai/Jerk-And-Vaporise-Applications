@@ -5,7 +5,6 @@ import Admin.Main;
 import Admin.User;
 import InventoryMgr.Item;
 import PurchaseMgr.PurchaseOrder;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -17,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
-
 
 public class InventoryPage {
     private static JFrame parent;
@@ -227,9 +225,6 @@ public class InventoryPage {
             pages.setSelectedIndex(0);
             UpdateItemTable(list_length, page_counter);
             previousSelection.clear();
-            SwingUtilities.invokeLater(() -> {
-                RememberDeletion(deleting_id, table_item);
-            });
         });
         p_first.addMouseListener(new MouseAdapter() {
             @Override
@@ -273,9 +268,6 @@ public class InventoryPage {
                 pages.setSelectedIndex(page_counter);
                 UpdateItemTable(list_length, page_counter);
                 previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_item);
-                });
             }
         });
         page_panel.add(p_left, ii_gbc);
@@ -290,9 +282,6 @@ public class InventoryPage {
                 page_counter = pages.getSelectedIndex();
                 UpdateItemTable(list_length, page_counter);
                 previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_item);
-                });
             }
         });
         page_panel.add(pages, ii_gbc);
@@ -311,9 +300,6 @@ public class InventoryPage {
                 pages.setSelectedIndex(page_counter);
                 UpdateItemTable(list_length, page_counter);
                 previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_item);
-                });
             }
         });
         page_panel.add(p_right, ii_gbc);
@@ -328,9 +314,6 @@ public class InventoryPage {
             pages.setSelectedIndex(page_counter);
             UpdateItemTable(list_length, page_counter);
             previousSelection.clear();
-            SwingUtilities.invokeLater(() -> {
-                RememberDeletion(deleting_id, table_item);
-            });
         });
         p_last.addMouseListener(new MouseAdapter() {
             @Override
@@ -466,18 +449,5 @@ public class InventoryPage {
         }
         pages.repaint();
         pages.revalidate();
-    }
-    public static void RememberDeletion(Set<String> deleting_id, CustomComponents.CustomTable table) {
-        if (deleting) {
-            int rowCount = table.getRowCount();
-            for (int i = 0; i < rowCount; i++) {
-                Object value = table.getValueAt(i, table.getColumnModel().getColumnIndex("Id"));
-                if (value != null && deleting_id.contains(value.toString())) {
-                    table.addRowSelectionInterval(i, i);
-                }
-            }
-            table.revalidate();
-            table.repaint();
-        }
     }
 }

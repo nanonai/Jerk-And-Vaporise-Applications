@@ -59,7 +59,7 @@ PaymentDate:         2025-05-05
 FinanceMgrID:        FM0971204357
 ~~~~~
 PaymentID:           PY2369
-PurchaseOrderID:         PO0003
+PurchaseOrderID:     PO0003
 Amount:              45.0
 PaymentDate:         2025-05-27
 FinanceMgrID:        FM0971204357

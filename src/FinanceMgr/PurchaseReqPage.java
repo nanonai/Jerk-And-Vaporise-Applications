@@ -329,15 +329,18 @@ public class PurchaseReqPage {
 
         ii_gbc.gridx = 0;
         ii_gbc.insets = new Insets(0, 0, 0, 4);
-        viewPurchaseReq= new CustomComponents.CustomButton("View Details", merriweather, new Color(255, 255, 255),
-                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
+        viewPurchaseReq= new CustomComponents.CustomButton("View Details", merriweather,
+                new Color(255, 255, 255),
+                new Color(255, 255, 255),
+                new Color(225, 108, 150),
+                new Color(237, 136, 172),
                 Main.transparent, 0, 16, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         viewPurchaseReq.addActionListener(_ -> {
             if (table_purReq.getSelectedRowCount() == 0) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,
-                        "Please select an account to view!",
+                        "Please select a Purchase Requisition to view!",
                         "Error",
                         new Color(209, 88, 128),
                         new Color(255, 255, 255),

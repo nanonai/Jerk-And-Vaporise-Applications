@@ -2,7 +2,6 @@ package FinanceMgr;
 
 import Admin.*;
 import PurchaseMgr.PurchaseOrder;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -406,7 +405,7 @@ public class PaymentPage {
         ViewPayment.Loader(parent, merriweather, boldonse, content, null);
     }
     public static void UpdatePaymentTable(int length, int page) {
-        String[] titles = new String[]{"PaymentID", "Amount", "PaymentDate", "FinanceMrgID"};
+        String[] titles = new String[]{"PaymentID","PurchaserOrderID", "Amount", "PaymentDate", "FinanceMrgID"};
         Object[][] data;
         int counter = 0;
         int anti_counter = page * length;
@@ -420,7 +419,7 @@ public class PaymentPage {
                 anti_counter -= 1;
                 continue;
             } else {
-                data[counter] = new Object[]{payment.PaymentID,payment.Amount,payment.PaymentDate,payment.FinanceMgrID};
+                data[counter] = new Object[]{payment.PaymentID,payment.PurchaseOrderID,payment.Amount,payment.PaymentDate,payment.FinanceMgrID};
                 counter += 1;
                 if (counter == length || counter == payment_list.size()) { break; }
             }

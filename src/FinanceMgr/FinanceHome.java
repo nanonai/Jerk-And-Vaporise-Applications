@@ -13,13 +13,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import Admin.*;
-import InventoryMgr.InventoryHome;
 
 public class FinanceHome {
     public static int indicator = 2;
     private static JFrame parent;
     private static Font merriweather, boldonse;
-
     private static JPanel side_bar, top_bar, content;
     public static User current_user;
     private static BufferedImage logo, caret_up, caret_down;
