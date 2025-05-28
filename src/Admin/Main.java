@@ -7,7 +7,6 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 
-import InventoryMgr.misc.Human;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
 public class Main {
@@ -24,9 +23,6 @@ public class Main {
     public static final String item_sales_file = "datafile/item_Sales.txt";
 
     public static void main(String[] args) {
-        Human human = new Human();
-        System.out.println(human);
-
         SwingUtilities.invokeLater(() -> {
             BufferedImage icon;
             Font merriweather, boldonse;

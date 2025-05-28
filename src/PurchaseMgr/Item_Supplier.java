@@ -1,6 +1,7 @@
 package PurchaseMgr;
 
 import Admin.Main;
+import InventoryMgr.Item;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -210,4 +211,36 @@ public class Item_Supplier {
         }
         return false;  // ItemID not found
     }
+    public static List<Item> getItemsBySupplierID(String supplierID, String itemSupplierPath, String itemPath) {
+        List<Item> result = new ArrayList<>();
+        List<Item_Supplier> mappings = listAllItemSupplierFromSupplierID(supplierID, itemSupplierPath);
+
+        for (Item_Supplier mapping : mappings) {
+            Item item = Item.getItemByID(mapping.ItemID, itemPath);
+            if (item != null) {
+                result.add(item);
+            }
+        }
+
+        return result;
+    }
+    public static void replaceSupplierID(String itemID, String oldSupplierID, String newSupplierID, String filename) {
+        List<Item_Supplier> allLinks = listAllItemSupplier(filename);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Item_Supplier link : allLinks) {
+                String supplierID = link.SupplierID;
+                if (link.ItemID.equals(itemID) && link.SupplierID.equals(oldSupplierID)) {
+                    supplierID = newSupplierID;
+                }
+
+                writer.write("ItemID:         " + link.ItemID + "\n");
+                writer.write("SupplierID:     " + supplierID + "\n");
+                writer.write("~~~~~\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
