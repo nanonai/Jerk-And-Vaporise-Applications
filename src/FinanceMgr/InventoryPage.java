@@ -133,23 +133,6 @@ public class InventoryPage {
         ii_gbc.fill = GridBagConstraints.BOTH;
         ii_gbc.insets = new Insets(6, 6, 10, 5);
 
-//        search_icon1 = new CustomComponents.CustomSearchIcon(16, 3,
-//                new Color(122, 122, 122), Color.WHITE);
-//        search_icon2 = new CustomComponents.CustomSearchIcon(16, 3,
-//                new Color(81, 81, 81), Color.WHITE);
-//        s_btn = new JButton(search_icon1);
-//        s_btn.setRolloverIcon(search_icon2);
-//        s_btn.setBorderPainted(false);
-//        s_btn.setContentAreaFilled(false);
-//        s_btn.setFocusPainted(false);
-//        search_panel.add(s_btn, ii_gbc);
-//
-//        ii_gbc.gridx = 1;
-//        ii_gbc.insets = new Insets(6, 0, 10, 0);
-//        search = new CustomComponents.EmptyTextField(20, "Search...", new Color(122, 122, 122));
-//        search.setFont(merriweather.deriveFont(Font.BOLD, 14));
-//        search_panel.add(search, ii_gbc);
-
         igbc.gridwidth = 5;
         igbc.gridx = 0;
         igbc.gridy = 1;
@@ -191,7 +174,6 @@ public class InventoryPage {
                             deleting_id.remove(table_item.getValueAt(row,
                                     table_item.getColumnModel().getColumnIndex("Id")).toString());
                         }
-                        delete2.setText(String.format("Delete User (%s)", deleting_id.size()));
                         previousSelection.clear();
                         previousSelection.addAll(currentSelection);
                     });
@@ -419,7 +401,7 @@ public class InventoryPage {
             if (table_item.getSelectedRowCount() == 0) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,
-                        "Please select an account to view!",
+                        "Please select an item to view!",
                         "Error",
                         new Color(209, 88, 128),
                         new Color(255, 255, 255),

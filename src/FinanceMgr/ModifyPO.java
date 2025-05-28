@@ -11,8 +11,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import InventoryMgr.Item;
+import PurchaseMgr.Supplier;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -23,6 +27,7 @@ public class ModifyPO {
     private static PurchaseOrder current_PO;
     private static Item current_Item;
     private static CustomComponents.EmptyTextField quantityTxtField;
+    private static JComboBox<Object> itemComboBox, supplierComboBox;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content,PurchaseOrder current_PO) {
         ModifyPO.parent = parent;
@@ -222,6 +227,66 @@ public class ModifyPO {
         totalAmt.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(totalAmt, gbc);
 
+        quantityTxtField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                updateTotalAmount();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                updateTotalAmount();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                updateTotalAmount(); // Not used for plain text fields, but required
+            }
+
+            private void updateTotalAmount() {
+                String itemID = ItemID.getText().trim();
+                String quantityText = quantityTxtField.getText().trim();
+                int itemQuantity;
+
+                try {
+                    itemQuantity = Integer.parseInt(quantityText);
+                } catch (NumberFormatException e) {
+                    totalAmt.setText("Invalid quantity");
+                    return;
+                }
+
+                double unitPrice = 0.0;
+                boolean itemFound = false;
+
+                try (BufferedReader reader = new BufferedReader(new FileReader(Main.item_file))) {
+                    String line;
+                    boolean isMatchingBlock = false;
+
+                    while ((line = reader.readLine()) != null) {
+                        if (line.startsWith("ItemID:")) {
+                            if (line.contains(itemID)) {
+                                isMatchingBlock = true;
+                                itemFound = true;
+                            } else {
+                                isMatchingBlock = false;
+                            }
+                        } else if (isMatchingBlock && line.startsWith("UnitPrice:")) {
+                            String priceStr = line.split(":")[1].trim();
+                            unitPrice = Double.parseDouble(priceStr);
+                        } else if (isMatchingBlock && line.trim().equals("~~~~~")) {
+                            break;
+                        }
+                    }
+
+                    if (itemFound) {
+                        double total = unitPrice * itemQuantity;
+                        totalAmt.setText(String.format("%.2f", total));
+                    } else {
+                        totalAmt.setText("Item ID not found.");
+                    }
+                } catch (IOException ex) {
+                    totalAmt.setText("Error reading file.");
+                }
+            }
+        });
+
         gbc.gridy = 6;
         JLabel orderDate = new JLabel("    " + current_PO.OrderDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         orderDate.setOpaque(true);
@@ -270,9 +335,18 @@ public class ModifyPO {
 
             // Update the status in the file
             PurchaseOrder.ModifyPurchaseOrder(current_PO.PurchaseOrderID, po, Main.purchaseOrder_file);
-            JOptionPane.showMessageDialog(null, "Updated successfully!");
+            PurchaseOrder.updateTotalAmountInFile(current_PO.PurchaseOrderID,po,Double.parseDouble(totalAmt.getText()));
+            CustomComponents.CustomOptionPane.showErrorDialog(
+                    parent,
+                    "Updated successfully!",
+                    "Update",
+                    new Color(209, 88, 128),
+                    new Color(255, 255, 255),
+                    new Color(237, 136, 172),
+                    new Color(255, 255, 255)
+            );
             view_or_not.set(true); // Flag to indicate something was modified
-            dialog.dispose();      // Close the dialog
+            dialog.dispose();
         });
 
         close.addActionListener(_ -> {

@@ -13,9 +13,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import Admin.*;
+import InventoryMgr.InventoryHome;
 
 public class FinanceHome {
-    public static int indicator = 0;
+    public static int indicator = 2;
     private static JFrame parent;
     private static Font merriweather, boldonse;
 
@@ -66,8 +67,8 @@ public class FinanceHome {
                 0, 0);
         side_bar.add(purchaseOrder, gbc_side);
         purchaseOrder.addActionListener(_ -> {
-                    FinanceHome.indicator = 2;
-                    PageChanger();
+            FinanceHome.indicator = 2;
+            PageChanger();
                 });
 
         //purchaseRequisition
@@ -170,8 +171,8 @@ public class FinanceHome {
         });
         top_bar.add(profile_drop, gbc_top);
 
-        List<String> options = List.of("Check Profile", "Sign Out");
-        List<ActionListener> actions = List.of(
+        List<String> options = new java.util.ArrayList<>(List.of("Check Profile", "Sign Out"));
+        List<ActionListener> actions = new java.util.ArrayList<>(List.of(
                 e -> {
                     FinanceHome.indicator = 1;
                     PageChanger();
@@ -182,9 +183,23 @@ public class FinanceHome {
                     FinanceHome.indicator = 0;
                     Main.PageChanger(parent, merriweather, boldonse);
                 }
-        );
+        ));
 
-        SwingUtilities.invokeLater(() -> { //ensure things are not re-size before its loaded causing an error
+        if (current_user.UserID.substring(2).equals("0000000000")) {
+            options.add(1, "Log back to Admin Mode");
+            actions.add(1, e -> {
+                User admin = User.GetUserById("AD0000000000", Main.userdata_file);
+                admin.RememberMe = 1;
+                AdmHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content, admin);
+                Home.indicator = 1;
+                Home.PageChanger();
+                AdmHome.PageChanger();
+                User.UnrememberAllUser(Main.userdata_file);
+                User.modifyUser(admin.UserID, admin, Main.userdata_file);
+            });
+        }
+
+        SwingUtilities.invokeLater(() -> {
             profile_drop_menu = new CustomComponents.CustomPopupMenu(
                     profile_drop,
                     options,
@@ -243,9 +258,6 @@ public class FinanceHome {
 //    4 -> Inventory
 //    5 -> Process payment
 //    6 -> Generate financial report
-            case 0:
-                PurchaseOrderPage.ShowPage();
-                break;
             case 1:
                 Profile.ShowPage();
                 break;

@@ -1,5 +1,10 @@
 package Admin;
 
+import SalesMgr.*;
+import PurchaseMgr.*;
+import InventoryMgr.*;
+import FinanceMgr.*;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -23,7 +28,8 @@ public class AdmHome {
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
     private static CustomComponents.CustomProfileIcon profileIcon1, profileIcon2;
-    private static CustomComponents.CustomButton home_page, user_management, profile_drop;
+    private static CustomComponents.CustomButton home_page, user_management, sales_management,
+            purchase_management, inventory_management, finance_management, profile_drop;
     private static JLabel title;
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
@@ -84,7 +90,151 @@ public class AdmHome {
         side_bar.add(user_management, gbc_side);
 
         gbc_side.gridy = 3;
-        gbc_side.weighty = 7.4;
+        gbc_side.weighty = 0.8;
+        sales_management = new CustomComponents.CustomButton("Sales Mode", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 20,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        sales_management.addActionListener(_ -> {
+            boolean go = CustomComponents.CustomOptionPane.showConfirmDialog(
+                    parent,
+                    "Enter sales manager mode?",
+                    "Confirmation",
+                    new Color(209, 88, 128),
+                    new Color(255, 255, 255),
+                    new Color(237, 136, 172),
+                    new Color(255, 255, 255),
+                    new Color(56, 53, 70),
+                    new Color(255, 255, 255),
+                    new Color(73, 69, 87),
+                    new Color(255, 255, 255),
+                    false
+            );
+            if (go) {
+                AdmHome.indicator = 0;
+                User sales = User.GetUserById("SM0000000000", Main.userdata_file);
+                sales.RememberMe = 1;
+                SalesHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content, sales);
+                Home.indicator = 2;
+                Home.PageChanger();
+                SalesHome.indicator = 0;
+                SalesHome.PageChanger();
+                User.UnrememberAllUser(Main.userdata_file);
+                User.modifyUser(sales.UserID, sales, Main.userdata_file);
+            }
+        });
+        side_bar.add(sales_management, gbc_side);
+
+        gbc_side.gridy = 4;
+        gbc_side.weighty = 0.8;
+        purchase_management = new CustomComponents.CustomButton("Purchase Mode", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 20,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        purchase_management.addActionListener(_ -> {
+            boolean go = CustomComponents.CustomOptionPane.showConfirmDialog(
+                    parent,
+                    "Enter purchase manager mode?",
+                    "Confirmation",
+                    new Color(209, 88, 128),
+                    new Color(255, 255, 255),
+                    new Color(237, 136, 172),
+                    new Color(255, 255, 255),
+                    new Color(56, 53, 70),
+                    new Color(255, 255, 255),
+                    new Color(73, 69, 87),
+                    new Color(255, 255, 255),
+                    false
+            );
+            if (go) {
+                AdmHome.indicator = 0;
+                User purchase = User.GetUserById("PM0000000000", Main.userdata_file);
+                purchase.RememberMe = 1;
+                PurchaseHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content, purchase);
+                Home.indicator = 3;
+                Home.PageChanger();
+                PurchaseHome.indicator = 2;
+                PurchaseHome.PageChanger();
+                User.UnrememberAllUser(Main.userdata_file);
+                User.modifyUser(purchase.UserID, purchase, Main.userdata_file);
+            }
+        });
+        side_bar.add(purchase_management, gbc_side);
+
+        gbc_side.gridy = 5;
+        gbc_side.weighty = 0.8;
+        inventory_management = new CustomComponents.CustomButton("Inventory Mode", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 20,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        inventory_management.addActionListener(_ -> {
+            boolean go = CustomComponents.CustomOptionPane.showConfirmDialog(
+                    parent,
+                    "Enter inventory manager mode?",
+                    "Confirmation",
+                    new Color(209, 88, 128),
+                    new Color(255, 255, 255),
+                    new Color(237, 136, 172),
+                    new Color(255, 255, 255),
+                    new Color(56, 53, 70),
+                    new Color(255, 255, 255),
+                    new Color(73, 69, 87),
+                    new Color(255, 255, 255),
+                    false
+            );
+            if (go) {
+                AdmHome.indicator = 0;
+                User inventory = User.GetUserById("IM0000000000", Main.userdata_file);
+                inventory.RememberMe = 1;
+                InventoryHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content, inventory);
+                Home.indicator = 4;
+                Home.PageChanger();
+                InventoryHome.indicator = 0;
+                InventoryHome.PageChanger();
+                User.UnrememberAllUser(Main.userdata_file);
+                User.modifyUser(inventory.UserID, inventory, Main.userdata_file);
+            }
+        });
+        side_bar.add(inventory_management, gbc_side);
+
+        gbc_side.gridy = 6;
+        gbc_side.weighty = 0.8;
+        finance_management = new CustomComponents.CustomButton("Finance Mode", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 20,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        finance_management.addActionListener(_ -> {
+            boolean go = CustomComponents.CustomOptionPane.showConfirmDialog(
+                    parent,
+                    "Enter finance manager mode?",
+                    "Confirmation",
+                    new Color(209, 88, 128),
+                    new Color(255, 255, 255),
+                    new Color(237, 136, 172),
+                    new Color(255, 255, 255),
+                    new Color(56, 53, 70),
+                    new Color(255, 255, 255),
+                    new Color(73, 69, 87),
+                    new Color(255, 255, 255),
+                    false
+            );
+            if (go) {
+                AdmHome.indicator = 0;
+                User Finance = User.GetUserById("FM0000000000", Main.userdata_file);
+                Finance.RememberMe = 1;
+                FinanceHome.Loader(parent, merriweather, boldonse, side_bar, top_bar, content, Finance);
+                Home.indicator = 5;
+                FinanceHome.indicator = 1;
+                Home.PageChanger();
+                FinanceHome.PageChanger();
+                User.UnrememberAllUser(Main.userdata_file);
+                User.modifyUser(Finance.UserID, Finance, Main.userdata_file);
+            }
+        });
+        side_bar.add(finance_management, gbc_side);
+
+        gbc_side.gridy = 7;
+        gbc_side.weighty = 4.2;
         JLabel placeholder = new JLabel("");
         side_bar.add(placeholder, gbc_side);
 
@@ -198,6 +348,10 @@ public class AdmHome {
         content.repaint();
         home_page.UpdateText("Home Page");
         user_management.UpdateText("Manage User");
+        sales_management.UpdateText("Sales Mode");
+        purchase_management.UpdateText("Purchase Mode");
+        inventory_management.UpdateText("Inventory Mode");
+        finance_management.UpdateText("Finance Mode");
         switch (indicator) {
 //        Please indicate the relation of the indicator value and specific java class:
 //        0  -> Administrator Dashboard Page
@@ -205,20 +359,34 @@ public class AdmHome {
 //        2  -> User Management Page
             case 0:
                 Dashboard.ShowPage();
-                home_page.UpdateText("          Home Page          ");
-                user_management.UpdateText( "          Manage User          ");
+                home_page.UpdateText("             Home Page             ");
+                user_management.UpdateText( "             Manage User             ");
+                sales_management.UpdateText("             Sales Mode             ");
+                purchase_management.UpdateText("             Purchase Mode             ");
+                inventory_management.UpdateText("             Inventory Mode             ");
+                finance_management.UpdateText("             Finance Mode             ");
                 title.setText(String.format("<html>Welcome, Administrator <i>- %s</i></html>",
                         Home.current_user.FullName));
                 break;
             case 1:
                 Profile.ShowPage();
                 title.setText("Profile");
-                home_page.UpdateText("     Home Page     ");
-                user_management.UpdateText("     Manage User     ");
+                home_page.UpdateText("      Home Page      ");
+                user_management.UpdateText("      Manage User      ");
+                sales_management.UpdateText("      Sales Mode      ");
+                purchase_management.UpdateText("      Purchase Mode       ");
+                inventory_management.UpdateText("      Inventory Mode      ");
+                finance_management.UpdateText("      Finance Mode      ");
                 break;
             case 2:
                 UserMng.ShowPage();
                 title.setText("User Management Page");
+                home_page.UpdateText("   Home Page   ");
+                user_management.UpdateText("    Manage User   ");
+                sales_management.UpdateText("    Sales Mode    ");
+                purchase_management.UpdateText("    Purchase Mode     ");
+                inventory_management.UpdateText("    Inventory Mode    ");
+                finance_management.UpdateText("    Finance Mode    ");
                 break;
         }
     }
@@ -235,6 +403,10 @@ public class AdmHome {
             logo_cell.repaint();
             home_page.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
             user_management.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
+            sales_management.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
+            purchase_management.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
+            inventory_management.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
+            finance_management.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
             title.setFont(boldonse.deriveFont((float)finalBase_size));
             profileIcon1.UpdateSize((int) (finalBase_size * 2.5));
             profileIcon2.UpdateSize((int) (finalBase_size * 2.5));

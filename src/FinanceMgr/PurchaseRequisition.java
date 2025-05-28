@@ -1,5 +1,8 @@
 package FinanceMgr;
 
+import PurchaseMgr.PurchaseOrder;
+
+import javax.swing.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -133,5 +136,38 @@ public class PurchaseRequisition {
         } catch (IOException e) {
             e.getStackTrace();
         }
+    }
+
+    public static void savePurchaseRequisition(
+            PurchaseRequisition PR,
+            String filename,
+            JFrame parentFrame // for JOptionPane
+    ) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+            writer.write("PurchaseReqID :      " + PR.PurchaseReqID + "\n");
+            writer.write("ItemID:              " + PR.ItemID + "\n");
+            writer.write("SupplierID:          " + PR.SupplierID + "\n");
+            writer.write("Quantity:            " + PR.Quantity + "\n");
+            writer.write("ReqDate:             " + PR.ReqDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n");
+            writer.write("SalesMgrID:          " + PR.SalesMgrID + "\n");
+            writer.write("Status:              " + PR.Status + "\n");
+            writer.write("~~~~~\n");
+
+            JOptionPane.showMessageDialog(parentFrame, "Purchase requisition saved successfully.");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(parentFrame, "Error saving purchase requisition:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static PurchaseRequisition getPurchaseReqID(String purchaseReqID, String filename){
+        List<PurchaseRequisition> purchaseRequisitionList = listAllPurchaseRequisitions(filename);
+        PurchaseRequisition purchaseReq_temp = null;
+        for (PurchaseRequisition purchaseRequisition : purchaseRequisitionList) {
+            if (Objects.equals(purchaseRequisition.PurchaseReqID, purchaseReqID)) {
+                purchaseReq_temp = purchaseRequisition;
+                break;
+            }
+        }
+        return purchaseReq_temp;
     }
 }

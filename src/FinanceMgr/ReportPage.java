@@ -348,7 +348,6 @@ public class ReportPage {
                     }
                 }
                 //SALES DATA
-                //Step 1: Read Sales Summary and collect valid SalesIDs by date
                 File summaryFile = new File(Main.sales_file);
                 BufferedReader summaryReader = new BufferedReader(new FileReader(summaryFile));
                 StringBuilder summaryContent = new StringBuilder();
