@@ -70,7 +70,7 @@ public class StockReport {
             }
         }
 
-        List<Item_Sales> allSales = Item_Sales.listAllItemSales(Main.item_Sales_file);
+        List<Item_Sales> allSales = Item_Sales.listAllItemSales(Main.item_sales_file);
         for (Item_Sales is : allSales) {
             if (is.ItemID.equals(item.ItemID)) {
                 lifetime_sales += is.Quantity;

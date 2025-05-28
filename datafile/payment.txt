@@ -10,12 +10,6 @@ Amount:              98.8
 PaymentDate:         2023-06-18
 FinanceMgrID:        FM0971204357
 ~~~~~
-PaymentID:           PY8039
-PurchaseOrderID :    PO0003
-Amount:              145.6
-PaymentDate:         2023-11-09
-FinanceMgrID:        FM0971204357
-~~~~~
 PaymentID:           PY1284
 PurchaseOrderID :    PO0004
 Amount:              72.0
@@ -62,5 +56,11 @@ PaymentID:           PY1793
 PurchaseOrderID :    PO0011
 Amount:              98.75
 PaymentDate:         2025-05-05
+FinanceMgrID:        FM0971204357
+~~~~~
+PaymentID:           PY2369
+PurchaseOrderID:         PO0003
+Amount:              45.0
+PaymentDate:         2025-05-27
 FinanceMgrID:        FM0971204357
 ~~~~~

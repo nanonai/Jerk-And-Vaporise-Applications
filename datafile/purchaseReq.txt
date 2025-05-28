@@ -124,7 +124,7 @@ SupplierID:          S0004
 Quantity:            16
 ReqDate:             2024-03-19
 SalesMgrID:          SM5592118047
-Status:              0
+Status:              1
 ~~~~~
 PurchaseReqID :      PR0036
 ItemID:              I0017

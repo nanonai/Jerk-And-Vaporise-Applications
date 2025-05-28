@@ -1,5 +1,6 @@
 package PurchaseMgr;
 
+import Admin.Main;
 import Admin.User;
 
 import javax.swing.*;
@@ -211,6 +212,37 @@ public class PurchaseOrder {
             JOptionPane.showMessageDialog(parentFrame, "Purchase order " + purchaseOrderId + " deleted successfully.");
         } catch (IOException e) {
             JOptionPane.showMessageDialog(parentFrame, "Error deleting purchase order:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void updateTotalAmountInFile(String PurchaseOrderID, PurchaseOrder purchaseOrder, double newTotalAmt) {
+        List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(Main.purchaseOrder_file);
+        for (PurchaseOrder po : purchaseOrderList) {
+            if (Objects.equals(po.PurchaseOrderID, PurchaseOrderID)) {
+                po.PurchaseOrderID = purchaseOrder.PurchaseOrderID;
+                po.ItemID = purchaseOrder.ItemID;
+                po.SupplierID = purchaseOrder.SupplierID;
+                po.PurchaseQuantity = purchaseOrder.PurchaseQuantity;
+                po.TotalAmt = newTotalAmt;
+                po.OrderDate = purchaseOrder.OrderDate;
+                po.PurchaseMgrID = purchaseOrder.PurchaseMgrID;
+                po.Status = purchaseOrder.Status;
+            }
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Main.purchaseOrder_file))) {
+            for (PurchaseOrder po : purchaseOrderList) {
+                writer.write("PurchaseOrderID:     " + po.PurchaseOrderID + "\n");
+                writer.write("ItemID:              " + po.ItemID + "\n");
+                writer.write("SupplierID:          " + po.SupplierID + "\n");
+                writer.write("PurchaseQuantity:    " + po.PurchaseQuantity + "\n");
+                writer.write("TotalAmt:            " + po.TotalAmt + "\n");
+                writer.write("OrderDate:           " + po.OrderDate + "\n");
+                writer.write("PurchaseMgrID:       " + po.PurchaseMgrID + "\n");
+                writer.write("Status:              " + po.Status + "\n");
+                writer.write("~~~~~\n");
+            }
+        } catch (IOException e) {
+            e.getStackTrace();
         }
     }
 
