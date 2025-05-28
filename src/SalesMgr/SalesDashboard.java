@@ -263,7 +263,7 @@ public class SalesDashboard {
         igbc.insets = new Insets(0, 0, 20, 0);
         best_sold_quantity = new CustomComponents.CustomRoundChart(
                 chartData, colors, Color.WHITE, Color.BLACK, merriweather,
-                0, 0, 0.75, 1, chartLabels
+                0, 0, 0.82, 1, chartLabels
         );
         best_seller_summary.add(best_sold_quantity, igbc);
 

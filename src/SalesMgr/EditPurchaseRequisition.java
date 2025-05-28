@@ -49,7 +49,7 @@ public class EditPurchaseRequisition {
     public static boolean ShowPage(){
         JDialog dialog = new JDialog(parent, "Modify Purchase Requisition", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize(650, 400);
+        dialog.setSize(650, 350);
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(parent);
 
@@ -188,8 +188,8 @@ public class EditPurchaseRequisition {
                 dialog.dispose();
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,
+                        "Purchase requisition updated successfully",
                         "Successful!",
-                        "Yay",
                         new Color(209, 88, 128),
                         new Color(255, 255, 255),
                         new Color(237, 136, 172),

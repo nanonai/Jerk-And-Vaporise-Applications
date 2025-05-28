@@ -336,7 +336,12 @@ public class SalesHome {
                 case 4:
                     DailySalesMng.UpdateComponentSize(finalBase_size);
                     break;
-
+                case 5:
+                    PurchaseRequisitionMng.UpdateComponentSize(finalBase_size);
+                    break;
+                case 6:
+                    PurchaseOrderMng.UpdateComponentSize(finalBase_size);
+                    break;
             }
         });
     }

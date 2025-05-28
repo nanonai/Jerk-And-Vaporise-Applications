@@ -47,7 +47,7 @@ public class AddPurchaseRequisition {
     public static void ShowPage(){
         JDialog dialog = new JDialog(parent, "Add Purchase Requisition", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize(parent.getWidth() / 2, parent.getHeight() / 2);
+        dialog.setSize(650, 350);
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(parent);
 

@@ -509,35 +509,39 @@ public class PurchaseOrderMng {
         search_icon2.UpdateSize((int) (base_size * 0.8));
         s_btn.setSize(search_icon1.getIconWidth(), search_icon1.getIconHeight());
         s_btn.repaint();
+
         icon_clear1.UpdateSize(base_size);
         icon_clear2.UpdateSize(base_size);
         x_btn.setSize(icon_clear1.getIconWidth(), icon_clear1.getIconHeight());
         x_btn.repaint();
+
         left_icon1.UpdateSize(base_size);
         left_icon2.UpdateSize(base_size);
         p_left.setSize(left_icon1.getIconWidth(), left_icon1.getIconHeight());
         p_left.repaint();
+
         right_icon1.UpdateSize(base_size);
         right_icon2.UpdateSize(base_size);
         p_right.setSize(right_icon1.getIconWidth(), right_icon1.getIconHeight());
         p_right.repaint();
+
         p_first.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
         p_last.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
-        pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
+        pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
 
         lbl_show.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_indicate.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
+
         entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
-        pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         search.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
-        table_po
-                .SetChanges(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
-                        merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)), mode);
-        add2.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
-        add.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+
+        table_po.SetChanges(
+                merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
+                merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)),
+                mode
+        );
+
         add1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
-        data_transfer.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
-        delete1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
     }
 }

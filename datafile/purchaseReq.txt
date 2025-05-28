@@ -137,15 +137,15 @@ Status:              0
 PurchaseReqID :      PR2544
 ItemID:              I6215
 SupplierID:          S0002
-Quantity:            12
+Quantity:            20
 ReqDate:             2025-05-28
 SalesMgrID:          SM1253724128
 Status:              0
 ~~~~~
-PurchaseReqID :      PR4123
-ItemID:              I6215
-SupplierID:          S0002
-Quantity:            12
+PurchaseReqID :      PR7205
+ItemID:              I1007
+SupplierID:          S0001
+Quantity:            122
 ReqDate:             2025-05-28
 SalesMgrID:          SM1253724128
 Status:              0
