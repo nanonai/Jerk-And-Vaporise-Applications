@@ -26,7 +26,7 @@ public class ItemMng {
     private static int indicator, base_size;
     private static List<Item> AllItems;
     private static JButton s_btn,clearbtn,p_first,p_left,p_right,p_last;
-    private static CustomComponents.CustomButton btnRestock, btnAdd,btnEdit, btnView, cancel_delete, btnDelete1, btnDelete2;
+    private static CustomComponents.CustomButton btnAdd,btnEdit, btnView, cancel_delete, btnDelete1, btnDelete2;
     private static CustomComponents.CustomScrollPane scrollPane1;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
     private static CustomComponents.CustomXIcon icon_clear1, icon_clear2;
@@ -177,6 +177,9 @@ public class ItemMng {
         for (Item item : AllItems) {
             String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
             String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+            if ("DELETED_SUPPLIER".equals(supplierID)) {
+                supplierName = "<html><font color='red'>[Deleted Supplier]</font></html>";
+            }
 
             data[counter] = new Object[]{
                     item.ItemID,
@@ -572,7 +575,7 @@ public class ItemMng {
         });
         buttonPanel.add(btnDelete1, buttongbc);
 
-        btnDelete2 = new CustomComponents.CustomButton("Delete User (0)", merriweather, Color.WHITE, Color.WHITE,
+        btnDelete2 = new CustomComponents.CustomButton("Delete Item (0)", merriweather, Color.WHITE, Color.WHITE,
                 new Color(159, 4, 4), new Color(161, 40, 40), null, 0, 16,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
@@ -602,12 +605,6 @@ public class ItemMng {
 
                 List<Item_Supplier> d_itemSuppliers = Item_Supplier.GetItemSupplierByItemIds(ids, "datafile/item_supplier.txt");
                 DeleteItem.UpdateItemSupplier(d_itemSuppliers);
-
-                if (parent == null) {
-                    System.err.println("Parent JFrame is null. This shouldn't happen.");
-                    return;
-                }
-
                 DeleteItem.Loader(parent, merriweather, boldonse, content, itemsToDelete);
 
                 boolean delete = DeleteItem.ShowPage();
@@ -689,7 +686,9 @@ public class ItemMng {
             } else {
                 String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
                 String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
-
+                if ("DELETED_SUPPLIER".equals(supplierID)) {
+                    supplierName = "<html><font color='red'>[Deleted Supplier]</font></html>";
+                }
                 data[counter] = new Object[]{
                         item.ItemID,
                         item.ItemName,
