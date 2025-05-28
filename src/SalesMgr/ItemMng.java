@@ -26,7 +26,6 @@ public class ItemMng {
     private static int indicator, base_size;
     private static List<Item> AllItems;
     private static JButton s_btn,clearbtn,p_first,p_left,p_right,p_last;
-    private static JDialog dialogAdd, dialogDelete, dialogEdit;
     private static CustomComponents.CustomButton btnRestock, btnAdd,btnEdit, btnView, cancel_delete, btnDelete1, btnDelete2;
     private static CustomComponents.CustomScrollPane scrollPane1;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
@@ -44,11 +43,7 @@ public class ItemMng {
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse,
                               JPanel content, User current_user) {
-        if (parent == null) {
-            System.out.println("Parent JFrame is still null!");
-        } else {
-            System.out.println("Parent JFrame initialized successfully.");
-        }
+
         SalesMgr.ItemMng.parent = parent;
         SalesMgr.ItemMng.merriweather = merriweather;
         SalesMgr.ItemMng.boldonse = boldonse;
@@ -99,7 +94,7 @@ public class ItemMng {
         content.add(placeholder1, gbc);
 
         gbc.gridx = 4;
-        gbc.weightx = 3;
+        gbc.weightx = 1;
         CustomComponents.RoundedPanel search_panel = new CustomComponents.RoundedPanel(8, 0, 1, Color.WHITE,
                 new Color(209, 209, 209));
         search_panel.setLayout(new GridBagLayout());

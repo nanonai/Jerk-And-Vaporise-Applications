@@ -1,11 +1,11 @@
 ItemID:         I6215
 ItemName:       Morzani Bread
-UnitPrice:      31.0
-UnitCost:       13.0
-StockCount:     199
-Threshold:      22
-Category:       Fruits
-LastUpdate:     2025-05-26
+UnitPrice:      49.0
+UnitCost:       36.75
+StockCount:     106
+Threshold:      20
+Category:       Bakery
+LastUpdate:     2025-04-01
 ~~~~~
 ItemID:         I3580
 ItemName:       Harukei Frozen pizza
@@ -51,7 +51,7 @@ StockCount:     12
 Threshold:      1
 Category:       Fruits
 LastUpdate:     2025-05-21
-~~~~~
+=======
 ItemID:         I7962
 ItemName:       Nedzura Pretzels
 UnitPrice:      22.0
@@ -71,13 +71,13 @@ Category:       Fruits
 LastUpdate:     2025-05-20
 ~~~~~
 ItemID:         I2022
-ItemName:       Vergrun Juice
-UnitPrice:      32.0
-UnitCost:       32.0
+ItemName:       Vergrün Juice
+UnitPrice:      35.0
+UnitCost:       26.25
 StockCount:     95
 Threshold:      6
-Category:       Fruits
-LastUpdate:     2025-05-26
+Category:       Beverages
+LastUpdate:     2025-04-01
 ~~~~~
 ItemID:         I1000
 ItemName:       Eisvorn Ground beef
@@ -134,13 +134,13 @@ Category:       Bakery
 LastUpdate:     2025-04-01
 ~~~~~
 ItemID:         I3718
-ItemName:       Akeno carrot
-UnitPrice:      313.0
-UnitCost:       33.0
-StockCount:     133
-Threshold:      11
-Category:       Fruits
-LastUpdate:     2025-05-26
+ItemName:       Akeno Carrots
+UnitPrice:      49.0
+UnitCost:       36.75
+StockCount:     194
+Threshold:      16
+Category:       Vegetables
+LastUpdate:     2025-04-01
 ~~~~~
 ItemID:         I7467
 ItemName:       Tronquet Ham
@@ -179,56 +179,11 @@ Category:       Vegetables
 LastUpdate:     2025-04-01
 ~~~~~
 ItemID:         I1754
-ItemName:       Thanos hammer
-UnitPrice:      342.0
-UnitCost:       23.0
-StockCount:     333
-Threshold:      13
-Category:       Fruits
-LastUpdate:     2025-05-26
-~~~~~
-ItemID:         I5271
-ItemName:       Diddy Meat
-UnitPrice:      11.0
-UnitCost:       1.0
-StockCount:     111
-Threshold:      1
-Category:       Fruits
-LastUpdate:     2025-05-26
-~~~~~
-ItemID:         I7352
-ItemName:       DIDDY BANANA
-UnitPrice:      1.0
-UnitCost:       1.0
-StockCount:     123
-Threshold:      1
-Category:       Fruits
-LastUpdate:     2025-05-26
-~~~~~
-ItemID:         I2906
-ItemName:       adadsd milk
-UnitPrice:      12.0
-UnitCost:       12.0
-StockCount:     122
-Threshold:      11
-Category:       Dairy
-LastUpdate:     2025-05-27
-~~~~~
-ItemID:         I5159
-ItemName:       abuabuabuabu
-UnitPrice:      12.0
-UnitCost:       12.0
-StockCount:     122
-Threshold:      11
-Category:       Groceries
-LastUpdate:     2025-05-27
-~~~~~
-ItemID:         I1788
-ItemName:       lebronjames
-UnitPrice:      12.0
-UnitCost:       12.0
-StockCount:     1222
-Threshold:      12
-Category:       Groceries
-LastUpdate:     2025-05-27
+ItemName:       Tarnoux Chicken breast
+UnitPrice:      34.0
+UnitCost:       25.5
+StockCount:     45
+Threshold:      14
+Category:       Meat & Seafood
+LastUpdate:     2025-04-01
 ~~~~~

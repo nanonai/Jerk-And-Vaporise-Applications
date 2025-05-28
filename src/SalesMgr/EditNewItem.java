@@ -1,0 +1,905 @@
+package SalesMgr;
+
+import Admin.CustomComponents;
+import Admin.Main;
+import Admin.User;
+import InventoryMgr.Item;
+import PurchaseMgr.Item_Supplier;
+import PurchaseMgr.Supplier;
+
+import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+
+public class EditNewItem {
+    private static JFrame parent;
+    private static Font merriweather, boldonse;
+    private static JPanel content;
+    private static User current_user;
+    private static Item past, future;
+    private static JComboBox<String> types;
+    private static CustomComponents.EmptyTextField itemname, unitprice, unitcost, stockcount, threshold, suppliername;
+    private static CustomComponents.CustomButton btnConfirm, btnCancel;
+
+    private static Item selected_item;
+
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user, Item selected_item) {
+        EditNewItem.parent = parent;
+        EditNewItem.merriweather = merriweather;
+        EditNewItem.boldonse = boldonse;
+        EditNewItem.content = content;
+        EditNewItem.current_user = current_user;
+        EditNewItem.selected_item = selected_item;
+    }
+
+    public static void ShowPage() {
+        final int[][] result = {{0, 0}};
+        JDialog dialog = new JDialog(parent, "Edit Item", true);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setSize(780, 520);
+        dialog.setResizable(false);
+        dialog.setLocationRelativeTo(parent);
+
+        int size_factor = 0;
+        if (parent.getWidth() >= parent.getHeight()) {
+            size_factor = parent.getHeight() / 40;
+        } else {
+            size_factor = parent.getWidth() / 30;
+        }
+
+        int base_size = size_factor;
+
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 2;
+        gbc.weighty = 0;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(10, 10, 10, 0);
+        gbc.fill = GridBagConstraints.BOTH;
+        JLabel title = new JLabel("Edit Item Details");
+        title.setOpaque(false);
+        title.setFont(merriweather.deriveFont(Font.BOLD, (float) (base_size * 1.3)));
+        panel.add(title, gbc);
+
+        gbc.gridy = 1;
+        gbc.weightx = 2;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(5, 10, 5, 10);
+        JLabel type_label = new JLabel("Item Category:");
+        type_label.setOpaque(false);
+        type_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(type_label, gbc);
+
+        gbc.gridy = 2;
+        JLabel name_label = new JLabel("Item Name:");
+        name_label.setOpaque(false);
+        name_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(name_label, gbc);
+
+        gbc.gridy = 3;
+        JLabel price_label = new JLabel("Unit Price:");
+        price_label.setOpaque(false);
+        price_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(price_label, gbc);
+
+        gbc.gridy = 4;
+        JLabel unitcost_label = new JLabel("Unit Cost:");
+        unitcost_label.setOpaque(false);
+        unitcost_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(unitcost_label, gbc);
+
+        gbc.gridy = 5;
+        JLabel qty_label = new JLabel("Stock Count:");
+        qty_label.setOpaque(false);
+        qty_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(qty_label, gbc);
+
+        gbc.gridy = 6;
+        JLabel min_label = new JLabel("Minimum Threshold:");
+        min_label.setOpaque(false);
+        min_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(min_label, gbc);
+
+        gbc.gridy = 7;
+        JLabel supplier_label = new JLabel("Supplier Name:");
+        supplier_label.setOpaque(false);
+        supplier_label.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(supplier_label, gbc);
+
+        gbc.gridy = 8;
+        gbc.gridx = 0;
+        gbc.weightx = 1;          // allow horizontal expansion
+        gbc.weighty = 0.6;          // usually 0 for buttons (unless you want vertical growth)
+        gbc.insets = new Insets(15, 10, 15, 10);
+        gbc.fill = GridBagConstraints.BOTH;
+        btnConfirm = new CustomComponents.CustomButton("Confirm", merriweather, Color.WHITE, Color.WHITE,
+                new Color(225, 108, 150), new Color(237, 136, 172),
+                Main.transparent, 0, 20, Main.transparent, false,
+                5, false, null, 0, 0, 0);
+        btnConfirm.setPreferredSize(new Dimension(220, 50));  // Adjusted width and height
+        btnConfirm.addActionListener(_ -> {
+            // Check if any of the fields are empty or just contain spaces
+            if (itemname.getText().isEmpty() || unitprice.getText().isEmpty() || unitcost.getText().isEmpty() ||
+                    stockcount.getText().isEmpty() || threshold.getText().isEmpty() || suppliername.getText().isEmpty()) {
+
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Fields cannot be left empty or just contain spaces!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else {
+                // Perform item-specific validity check
+                String validity = Item.validitychecker(itemname.getText(), unitprice.getText().trim(),
+                        unitcost.getText().trim(), stockcount.getText(), threshold.getText(), suppliername.getText(),
+                        "datafile/item.txt");
+
+                // Check if the validity string length is exactly 6
+                if (validity.length() != 7) {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Invalid validity string length (Expected 6 characters).",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                    return;  // Exit if the length is not 6
+                }
+
+                // Handle Item Name Error
+                if (validity.charAt(0) == '0') {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Item name must be between 8 and 48 characters!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                    return;
+                }
+
+                // Handle Item Name Already Exists Error
+                if (validity.charAt(1) == 'X') {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Item name already exists!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                    return;
+                }
+
+                // Handle Unit Price Error
+                if (validity.charAt(2) == '0') {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Unit price must be a valid positive number!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                    return;
+                }
+
+                // Handle Unit Cost Error
+                if (validity.charAt(3) == '0') {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Unit cost must be a valid positive number!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                    return;
+                }
+                double unitPricegt = Double.parseDouble(unitprice.getText().trim());
+                double unitCostgt = Double.parseDouble(unitcost.getText().trim());
+                if (unitCostgt > unitPricegt) {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Unit cost cannot be greater than unit price!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                    return;
+                }
+
+                // Handle Stock Count Error
+                if (validity.charAt(4) == '0') {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Stock count must be a valid non-negative integer!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                    return;
+                }
+
+                // Handle Threshold Error
+                if (validity.charAt(5) == '0') {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Threshold must be a valid non-negative integer!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                    return;
+                }
+
+                // Handle Supplier Error
+                if (validity.charAt(6) == '0') {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Supplier not found! PLease add supplier!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                    return;
+                }
+
+                try {
+                    double unitPriceValue = Double.parseDouble(unitprice.getText().trim());
+                    double unitCostValue = Double.parseDouble(unitcost.getText().trim());
+                    int stockCountValue = Integer.parseInt(stockcount.getText().trim());
+                    int thresholdValue = Integer.parseInt(threshold.getText().trim());
+
+                    // Use existing item ID
+                    String item_id = selected_item.ItemID;
+                    String item_type = (String) Objects.requireNonNull(types.getSelectedItem());
+
+                    // Update the selected item fields
+                    selected_item.ItemName = itemname.getText();
+                    selected_item.UnitPrice = unitPriceValue;
+                    selected_item.UnitCost = unitCostValue;
+                    selected_item.StockCount = stockCountValue;
+                    selected_item.Threshold = thresholdValue;
+                    selected_item.Category = item_type;
+                    selected_item.LastUpdate = LocalDate.now();  // assuming you track update date
+
+                    // Save the updated item back to your datafile
+                    Item.modifyItem(selected_item, "datafile/item.txt");
+
+                    String supplierName = suppliername.getText().trim();
+                    String supplierID = Supplier.getSupplierID(supplierName);
+
+                    if ("Unknown".equals(supplierID)) {
+                        // Supplier doesn't exist, show error
+                        CustomComponents.CustomOptionPane.showErrorDialog(
+                                parent,
+                                "Supplier name does not exist in the system!",
+                                "Error",
+                                new Color(209, 88, 128),
+                                new Color(255, 255, 255),
+                                new Color(237, 136, 172),
+                                new Color(255, 255, 255)
+                        );
+                    } else {
+                        Item_Supplier.updateSupplierForItem(selected_item.ItemID, supplierID, "datafile/item_supplier.txt");
+
+                        boolean keep_editing = CustomComponents.CustomOptionPane.showConfirmDialog(
+                                parent,
+                                "Edit another item?",
+                                "Confirmation",
+                                new Color(209, 88, 128),
+                                new Color(255, 255, 255),
+                                new Color(237, 136, 172),
+                                new Color(255, 255, 255),
+                                new Color(56, 53, 70),
+                                new Color(255, 255, 255),
+                                new Color(73, 69, 87),
+                                new Color(255, 255, 255),
+                                true
+                        );
+                        if (!keep_editing) {
+                            dialog.dispose();
+                        } else {
+                            // Reset fields for next edit or close dialog
+                            itemname.Reset();
+                            unitprice.Reset();
+                            unitcost.Reset();
+                            stockcount.Reset();
+                            threshold.Reset();
+                            suppliername.Reset();
+                        }
+                    }
+
+                } catch (NumberFormatException ex) {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Please enter valid numeric values for price, cost, stock count, and threshold!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                }
+            }
+        });
+        panel.add(btnConfirm, gbc);
+
+        gbc.gridx = 2;
+        gbc.weightx = 1;
+        gbc.insets = new Insets(15, 10, 15, 10);
+        gbc.fill = GridBagConstraints.BOTH;
+        btnCancel = new CustomComponents.CustomButton("Cancel", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87),
+                Main.transparent, 0, 20, Main.transparent, false,
+                5, false, null, 0, 0, 0);
+        btnCancel.setPreferredSize(new Dimension(280, 50));  // Adjusted width and height
+        btnCancel.addActionListener(_ -> {
+            dialog.dispose();
+        });
+        panel.add(btnCancel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+        JLabel originalLabel = new JLabel("Original Item:");
+        originalLabel.setOpaque(false);
+        originalLabel.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(originalLabel, gbc);
+
+        gbc.gridy = 1;
+        JLabel oricategoryValue = new JLabel(selected_item.Category);
+        oricategoryValue.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        panel.add(oricategoryValue, gbc);
+
+        gbc.gridy = 2;
+        JLabel itemnameValue = new JLabel(selected_item.ItemName);
+        itemnameValue.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        panel.add(itemnameValue, gbc);
+
+        gbc.gridy = 3;
+        JLabel unitpriceValue = new JLabel(String.valueOf(selected_item.UnitPrice));
+        unitpriceValue.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        panel.add(unitpriceValue, gbc);
+
+        gbc.gridy = 4;
+        JLabel unitcostValue = new JLabel(String.valueOf(selected_item.UnitCost));
+        unitcostValue.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        panel.add(unitcostValue, gbc);
+
+        gbc.gridy = 5;
+        JLabel stockcountValue = new JLabel(String.valueOf(selected_item.StockCount));
+        stockcountValue.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        panel.add(stockcountValue, gbc);
+
+        gbc.gridy = 6;
+        JLabel thresholdValue = new JLabel(String.valueOf(selected_item.Threshold));
+        thresholdValue.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        panel.add(thresholdValue, gbc);
+
+        gbc.gridy = 7;
+        String suppliernameDetail = Item_Supplier.getSupplierNameByItemID(selected_item.ItemID, "datafile/item_supplier.txt", "datafile/supplier.txt");
+        JLabel suppliernameValue = new JLabel(suppliernameDetail);
+        suppliernameValue.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        panel.add(suppliernameValue, gbc);
+
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.weightx =2;
+        JLabel currentLabel = new JLabel("Current Item:");
+        currentLabel.setOpaque(false);
+        currentLabel.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
+        panel.add(currentLabel, gbc);
+
+        gbc.gridy = 1;
+        gbc.insets = new Insets(0, 0, 10, 10);
+        types = new JComboBox<>(new String[]{
+                "Fruits",
+                "Vegetables",
+                "Groceries",
+                "Drinks",
+                "Dairy",
+                "Meat & Seafood",
+                "Bakery",
+                "Others"
+        });
+        types.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                                                          boolean isSelected, boolean cellHasFocus) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                label.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+                return label;
+            }
+        });
+        types.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        types.setFocusable(false);
+        types.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        types.setPreferredSize(new Dimension(200, 30));
+        types.addActionListener(_ -> {SwingUtilities.invokeLater(itemname::requestFocusInWindow);});
+        panel.add(types, gbc);
+
+        gbc.gridy = 2;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        JPanel inner1 = new JPanel(new GridBagLayout());
+        inner1.setOpaque(true);
+        inner1.setBackground(Color.WHITE);
+        inner1.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        panel.add(inner1, gbc);
+
+        gbc.gridy = 3;
+        JPanel inner2 = new JPanel(new GridBagLayout());
+        inner2.setOpaque(true);
+        inner2.setBackground(Color.WHITE);
+        inner2.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        panel.add(inner2, gbc);
+
+        gbc.gridy = 4;
+        JPanel inner3 = new JPanel(new GridBagLayout());
+        inner3.setOpaque(true);
+        inner3.setBackground(Color.WHITE);
+        inner3.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        panel.add(inner3, gbc);
+
+        gbc.gridy = 5;
+        JPanel inner4 = new JPanel(new GridBagLayout());
+        inner4.setOpaque(true);
+        inner4.setBackground(Color.WHITE);
+        inner4.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        panel.add(inner4, gbc);
+
+        gbc.gridy = 6;
+        JPanel inner5 = new JPanel(new GridBagLayout());
+        inner5.setOpaque(true);
+        inner5.setBackground(Color.WHITE);
+        inner5.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        panel.add(inner5, gbc);
+
+        gbc.gridy = 7;
+        JPanel inner6 = new JPanel(new GridBagLayout());
+        inner6.setOpaque(true);
+        inner6.setBackground(Color.WHITE);
+        inner6.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        panel.add(inner6, gbc);
+
+        GridBagConstraints igbc = new GridBagConstraints();
+        igbc.fill = GridBagConstraints.BOTH;
+        igbc.gridx = 0;
+        igbc.gridy = 0;
+        igbc.weightx = 3;
+        igbc.weighty = 0.6;
+        itemname = new CustomComponents.EmptyTextField(20, "",
+                new Color(122, 122, 122));
+        itemname.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        itemname.setPreferredSize(new Dimension(200, 30));
+        itemname.addActionListener(_ -> {SwingUtilities.invokeLater(unitprice::requestFocusInWindow);});
+        itemname.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                itemname.setForeground(Color.BLACK);
+                itemname.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+                itemname.setToolTipText("Enter the item name (8 to 48 characters).");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                itemname.setToolTipText("");
+                String input = itemname.getText();
+                if ((input.length() < 8 || input.length() > 48) && !input.isEmpty()) {
+                    itemname.setForeground(new Color(159, 4, 4));
+                    Font font = itemname.getFont();
+                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    itemname.setFont(font.deriveFont(attributes));
+                    itemname.setToolTipText("Item name length must be between 8 and 48 characters.");
+                }
+            }
+        });
+        inner1.add(itemname, igbc);
+
+        unitprice = new CustomComponents.EmptyTextField(20, "",
+                new Color(122, 122, 122));
+        unitprice.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        unitprice.setPreferredSize(new Dimension(200, 30));
+        unitprice.addActionListener(_ -> {SwingUtilities.invokeLater(unitcost::requestFocusInWindow);});
+        unitprice.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                unitprice.setForeground(Color.BLACK);
+                unitprice.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+                unitprice.setToolTipText("Enter unit price (positive number).");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                unitprice.setToolTipText("");
+                String input = unitprice.getText().trim();
+                try {
+                    double value = Double.parseDouble(input);
+                    if (value <= 0) {
+                        unitprice.setForeground(new Color(159, 4, 4));
+                        Font font = unitprice.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        unitprice.setFont(font.deriveFont(attributes));
+                        unitprice.setToolTipText("Unit price must be a positive value.");
+                    }
+                } catch (NumberFormatException ex) {
+                    unitprice.setForeground(new Color(159, 4, 4));
+                    Font font = unitprice.getFont();
+                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    unitprice.setFont(font.deriveFont(attributes));
+                    unitprice.setToolTipText("Unit price must be a valid number.");
+                }
+            }
+        });
+        inner2.add(unitprice, igbc);
+
+        unitcost = new CustomComponents.EmptyTextField(20, "",
+                new Color(122, 122, 122));
+        unitcost.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        unitcost.setPreferredSize(new Dimension(200, 30));
+        unitcost.addActionListener(_ -> {SwingUtilities.invokeLater(stockcount::requestFocusInWindow);});
+        unitcost.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                unitcost.setForeground(Color.BLACK);
+                unitcost.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+                unitcost.setToolTipText("Enter unit cost (positive number).");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                unitcost.setToolTipText("");
+                String input = unitcost.getText();
+                try {
+                    double value = Double.parseDouble(input);
+                    if (value <= 0) {
+                        unitcost.setForeground(new Color(159, 4, 4));
+                        Font font = unitcost.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        unitcost.setFont(font.deriveFont(attributes));
+                        unitcost.setToolTipText("Unit cost must be a positive value.");
+                    }
+                } catch (NumberFormatException ex) {
+                    unitcost.setForeground(new Color(159, 4, 4));
+                    Font font = unitcost.getFont();
+                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    unitcost.setFont(font.deriveFont(attributes));
+                    unitcost.setToolTipText("Unit cost must be a valid number.");
+                }
+            }
+        });
+        ((AbstractDocument) unitcost.getDocument()).setDocumentFilter(new AddNewItem.NoSpaceFilter());
+        inner3.add(unitcost, igbc);
+
+        stockcount = new CustomComponents.EmptyTextField(20, "",
+                new Color(122, 122, 122));
+        stockcount.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        stockcount.setPreferredSize(new Dimension(200, 30));
+        stockcount.addActionListener(_ -> {SwingUtilities.invokeLater(threshold::requestFocusInWindow);});
+        stockcount.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                stockcount.setForeground(Color.BLACK);
+                stockcount.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+                stockcount.setToolTipText("Enter stock count (non-negative integer).");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                stockcount.setToolTipText("");
+                String input = stockcount.getText();
+                try {
+                    int value = Integer.parseInt(input);
+                    if (value < 0) {
+                        stockcount.setForeground(new Color(159, 4, 4));
+                        Font font = stockcount.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        stockcount.setFont(font.deriveFont(attributes));
+                        stockcount.setToolTipText("Stock count must be a non-negative integer.");
+                    }
+                } catch (NumberFormatException ex) {
+                    stockcount.setForeground(new Color(159, 4, 4));
+                    Font font = stockcount.getFont();
+                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    stockcount.setFont(font.deriveFont(attributes));
+                    stockcount.setToolTipText("Stock count must be an integer.");
+                }
+            }
+        });
+        ((AbstractDocument) stockcount.getDocument()).setDocumentFilter(new AddNewItem.NoSpaceFilter());
+        inner4.add(stockcount, igbc);
+
+        threshold = new CustomComponents.EmptyTextField(20, "", new Color(122, 122, 122));
+        threshold.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        threshold.setPreferredSize(new Dimension(200, 30));
+        threshold.addActionListener(_ -> {SwingUtilities.invokeLater(suppliername::requestFocusInWindow);});
+        threshold.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                threshold.setForeground(Color.BLACK);
+                threshold.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+                threshold.setToolTipText("Enter threshold (non-negative integer).");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                threshold.setToolTipText("");
+                String input = threshold.getText();
+                try {
+                    int value = Integer.parseInt(input);
+                    if (value < 0) {
+                        threshold.setForeground(new Color(159, 4, 4));
+                        Font font = threshold.getFont();
+                        Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        threshold.setFont(font.deriveFont(attributes));
+                        threshold.setToolTipText("Threshold must be a non-negative integer.");
+                    }
+                } catch (NumberFormatException ex) {
+                    threshold.setForeground(new Color(159, 4, 4));
+                    Font font = threshold.getFont();
+                    Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
+                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    threshold.setFont(font.deriveFont(attributes));
+                    threshold.setToolTipText("Threshold must be an integer.");
+                }
+            }
+        });
+        ((AbstractDocument) threshold.getDocument()).setDocumentFilter(new AddNewItem.NoSpaceFilter());
+        inner5.add(threshold, igbc);
+
+
+        suppliername = new CustomComponents.EmptyTextField(20, "",
+                new Color(122, 122, 122));
+        suppliername.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+        suppliername.setPreferredSize(new Dimension(200, 30));
+        suppliername.addActionListener(_ -> {SwingUtilities.invokeLater(() -> btnConfirm.doClick());});
+        suppliername.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                suppliername.setForeground(Color.BLACK);
+                suppliername.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+                suppliername.setToolTipText("Enter supplier name.");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                suppliername.setToolTipText("");
+                String input = suppliername.getText().trim();
+
+                // Check if supplier name is empty
+                if (input.isEmpty()) {
+                    suppliername.setForeground(new Color(159, 4, 4));
+                    Font font = suppliername.getFont();
+                    Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
+                    attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                    suppliername.setFont(font.deriveFont(attributes));
+                    suppliername.setToolTipText("Supplier name cannot be empty.");
+                } else {
+                    // Check if the supplier ID exists for the entered supplier name
+                    String supplierID = Supplier.getSupplierID(input);  // Call method to get SupplierID
+
+                    if ("Unknown".equals(supplierID)) {
+                        // Supplier not found, show error
+                        suppliername.setForeground(new Color(159, 4, 4));
+                        Font font = suppliername.getFont();
+                        Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
+                        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                        suppliername.setFont(font.deriveFont(attributes));
+                        suppliername.setToolTipText("Supplier ID not found or does not exist!");
+                    } else {
+                        // Supplier exists, reset text field style
+                        suppliername.setForeground(Color.BLACK);
+                        suppliername.setFont(suppliername.getFont().deriveFont(Font.PLAIN));
+                        suppliername.setToolTipText("");
+                    }
+                }
+            }
+        });
+        inner6.add(suppliername, igbc);
+
+        CustomComponents.CustomXIcon icon_clear1 = new CustomComponents.CustomXIcon((int) (base_size * 0.8), 3,
+                new Color(209, 209, 209), true);
+        CustomComponents.CustomXIcon icon_clear2 = new CustomComponents.CustomXIcon((int) (base_size * 0.8), 3,
+                Color.BLACK, true);
+
+        igbc.gridx = 3;
+        igbc.weightx = 1;
+        JButton clear1 = new JButton(icon_clear1);
+        clear1.setRolloverIcon(icon_clear2);
+        clear1.setOpaque(false);
+        clear1.setFocusable(false);
+        clear1.setBorder(BorderFactory.createEmptyBorder());
+        clear1.addActionListener(_ -> {itemname.Reset();});
+        inner1.add(clear1, igbc);
+
+        JButton clear2 = new JButton(icon_clear1);
+        clear2.setRolloverIcon(icon_clear2);
+        clear2.setOpaque(false);
+        clear2.setFocusable(false);
+        clear2.setBorder(BorderFactory.createEmptyBorder());
+        clear2.addActionListener(_ -> {unitprice.Reset();});
+        inner2.add(clear2, igbc);
+
+        JButton clear3 = new JButton(icon_clear1);
+        clear3.setRolloverIcon(icon_clear2);
+        clear3.setOpaque(false);
+        clear3.setFocusable(false);
+        clear3.setBorder(BorderFactory.createEmptyBorder());
+        clear3.addActionListener(_ -> {unitcost.Reset();});
+        inner3.add(clear3, igbc);
+
+        JButton clear4 = new JButton(icon_clear1);
+        clear4.setRolloverIcon(icon_clear2);
+        clear4.setOpaque(false);
+        clear4.setFocusable(false);
+        clear4.setBorder(BorderFactory.createEmptyBorder());
+        clear4.addActionListener(_ -> {stockcount.Reset();});
+        inner4.add(clear4, igbc);
+
+        JButton clear5 = new JButton(icon_clear1);
+        clear5.setRolloverIcon(icon_clear2);
+        clear5.setOpaque(false);
+        clear5.setFocusable(false);
+        clear5.setBorder(BorderFactory.createEmptyBorder());
+        clear5.addActionListener(_ -> {threshold.Reset();});
+        inner5.add(clear5, igbc);
+
+        JButton clear6 = new JButton(icon_clear1);
+        clear6.setRolloverIcon(icon_clear2);
+        clear6.setOpaque(false);
+        clear6.setFocusable(false);
+        clear6.setBorder(BorderFactory.createEmptyBorder());
+        clear6.addActionListener(_ -> {suppliername.Reset();});
+        inner6.add(clear6, igbc);
+
+        dialog.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Component clickedComponent = e.getComponent();
+                SwingUtilities.invokeLater(clickedComponent::requestFocusInWindow);
+            }
+        });
+        dialog.setContentPane(panel);
+        dialog.setVisible(true);
+        SwingUtilities.invokeLater(title::requestFocusInWindow);
+
+        return;
+    }
+
+
+    static class DigitFilter extends DocumentFilter {
+        @Override
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+                throws BadLocationException {
+            if (string != null && string.matches("\\d+")) {
+                super.insertString(fb, offset, string, attr);
+            }
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                throws BadLocationException {
+            if (text != null && text.matches("\\d+")) {
+                super.replace(fb, offset, length, text, attrs);
+            }
+        }
+
+        @Override
+        public void remove(FilterBypass fb, int offset, int length)
+                throws BadLocationException {
+            super.remove(fb, offset, length);
+        }
+    }
+
+    static class NoSpaceFilter extends DocumentFilter {
+        @Override
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+                throws BadLocationException {
+            if (string != null && !string.contains(" ")) {
+                super.insertString(fb, offset, string, attr);
+            }
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                throws BadLocationException {
+            if (text != null && !text.contains(" ")) {
+                super.replace(fb, offset, length, text, attrs);
+            }
+        }
+    }
+
+    static class DigitLimitFilter extends DocumentFilter {
+        private final int maxLength;
+
+        public DigitLimitFilter(int maxLength) {
+            this.maxLength = maxLength;
+        }
+
+        @Override
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+                throws BadLocationException {
+            if (string != null && string.matches("\\d+")) {
+                int newLength = fb.getDocument().getLength() + string.length();
+                if (newLength <= maxLength) {
+                    super.insertString(fb, offset, string, attr);
+                } else {
+                    int allowed = maxLength - fb.getDocument().getLength();
+                    if (allowed > 0) {
+                        super.insertString(fb, offset, string.substring(0, allowed), attr);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                throws BadLocationException {
+            if (text != null && text.matches("\\d+")) {
+                int currentLength = fb.getDocument().getLength();
+                int newLength = currentLength - length + text.length();
+                if (newLength <= maxLength) {
+                    super.replace(fb, offset, length, text, attrs);
+                } else {
+                    int allowed = maxLength - (currentLength - length);
+                    if (allowed > 0) {
+                        super.replace(fb, offset, length, text.substring(0, allowed), attrs);
+                    }
+                }
+            } else if (text.isEmpty()) {
+                super.replace(fb, offset, length, text, attrs);
+            }
+        }
+
+        @Override
+        public void remove(FilterBypass fb, int offset, int length)
+                throws BadLocationException {
+            super.remove(fb, offset, length);
+        }
+    }
+}
+
