@@ -128,17 +128,6 @@ public class PurchaseOrderPage {
         ii_gbc.fill = GridBagConstraints.BOTH;
         ii_gbc.insets = new Insets(6, 6, 10, 5);
 
-//        search_icon1 = new CustomComponents.CustomSearchIcon(16, 3,
-//                new Color(122, 122, 122), Color.WHITE);
-//        search_icon2 = new CustomComponents.CustomSearchIcon(16, 3,
-//                new Color(81, 81, 81), Color.WHITE);
-//        s_btn = new JButton(search_icon1);
-//        s_btn.setRolloverIcon(search_icon2);
-//        s_btn.setBorderPainted(false);
-//        s_btn.setContentAreaFilled(false);
-//        s_btn.setFocusPainted(false);
-//        search_panel.add(s_btn, ii_gbc);
-
         ii_gbc.gridx = 1;
         ii_gbc.insets = new Insets(6, 0, 8, 0);
         search = new CustomComponents.EmptyTextField(19, "", new Color(240, 240, 240));
@@ -167,13 +156,15 @@ public class PurchaseOrderPage {
         igbc.weightx = 1;
         igbc.weighty = 10;
         igbc.insets = new Insets(0, 0, 10, 0);
-        String[] titles = new String[]{"PurchaseOrderID", "ItemID","SupplierID","PurchaseQuantity", "TotalAmt","OrderDate","PurchaseMgrID","Status"};
+        String[] titles = new String[]{"PurchaseOrderID", "ItemID","SupplierID","PurchaseQuantity",
+                "TotalAmt","OrderDate","PurchaseMgrID","Status"};
         purchaseOrder_List = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
         Object[][] data = new Object[purchaseOrder_List.size()][titles.length];
         int counter = 0;
         for (PurchaseOrder purchaseOrder : purchaseOrder_List) {
             data[counter] = new Object[]{purchaseOrder.PurchaseOrderID, purchaseOrder.ItemID,purchaseOrder.SupplierID,
-                    purchaseOrder.PurchaseQuantity,purchaseOrder.TotalAmt, purchaseOrder.OrderDate,purchaseOrder.PurchaseMgrID,purchaseOrder.Status};
+                    purchaseOrder.PurchaseQuantity,purchaseOrder.TotalAmt, purchaseOrder.OrderDate,
+                    purchaseOrder.PurchaseMgrID,purchaseOrder.Status};
             counter += 1;
         }
 
@@ -202,7 +193,6 @@ public class PurchaseOrderPage {
                             deleting_id.remove(table_purOrder.getValueAt(row,
                                     table_purOrder.getColumnModel().getColumnIndex("Id")).toString());
                         }
-                        delete2.setText(String.format("Delete User (%s)", deleting_id.size()));
                         previousSelection.clear();
                         previousSelection.addAll(currentSelection);
                     });
@@ -406,8 +396,11 @@ public class PurchaseOrderPage {
         inner.add(button_panel2, igbc);
 
         ii_gbc.gridx = 1;
-        viewPO = new CustomComponents.CustomButton("View Purchase Order", merriweather, new Color(255, 255, 255),
-                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
+        viewPO = new CustomComponents.CustomButton("View Purchase Order", merriweather,
+                new Color(255, 255, 255),
+                new Color(255, 255, 255),
+                new Color(225, 108, 150),
+                new Color(237, 136, 172),
                 Main.transparent, 0, 16, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         viewPO.addActionListener(_ -> {
@@ -424,7 +417,8 @@ public class PurchaseOrderPage {
             } else {
                 String selected_id = table_purOrder.getValueAt(table_purOrder.getSelectedRow(),
                         table_purOrder.getColumnModel().getColumnIndex("PurchaseOrderID")).toString();
-                ViewPurchaseOrder.UpdatePurchaseOrder(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));
+                ViewPurchaseOrder.UpdatePurchaseOrder(PurchaseOrder.getPurchaseOrderID(selected_id,
+                        Main.purchaseOrder_file));
                 boolean see = ViewPurchaseOrder.ShowPage();
                 if (see) {
                     System.out.println(" ");
@@ -434,11 +428,16 @@ public class PurchaseOrderPage {
         button_panel1.add(viewPO, ii_gbc);
 
         ii_gbc.gridx = 2;
-        updateStatus = new CustomComponents.CustomButton("Update Status", merriweather, new Color(255, 255, 255),
+        updateStatus = new CustomComponents.CustomButton("Modify PO", merriweather, new Color(255, 255, 255),
                 new Color(236, 227, 227), new Color(158, 47, 84), new Color(237, 136, 172),
                 Main.transparent, 0, 16, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         updateStatus.addActionListener(_ -> {
+            int selectedRow = table_purOrder.getSelectedRow();
+            String status = table_purOrder.getValueAt(
+                    selectedRow,
+                    table_purOrder.getColumnModel().getColumnIndex("Status")
+            ).toString();
             if (table_purOrder.getSelectedRowCount() == 0) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,
@@ -449,7 +448,38 @@ public class PurchaseOrderPage {
                         new Color(237, 136, 172),
                         new Color(255, 255, 255)
                 );
-            } else {
+            }else if(status.equals("Paid")){
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "The PO has been Paid can not modify!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else if(status.equals("Arrived")){
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "The PO has Arrived can not modify!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            }else if(status.equals("Completed")){
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                    parent,
+                    "The PO has completed can not modify!",
+                    "Error",
+                    new Color(209, 88, 128),
+                    new Color(255, 255, 255),
+                    new Color(237, 136, 172),
+                    new Color(255, 255, 255)
+            );
+            }
+            else {
                 String selected_id = table_purOrder.getValueAt(table_purOrder.getSelectedRow(),
                         table_purOrder.getColumnModel().getColumnIndex("PurchaseOrderID")).toString();
                 ModifyPO.UpdatePO(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));

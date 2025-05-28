@@ -125,7 +125,7 @@ public class Payment {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (Payment py: allPY) {
                 writer.write("PaymentID:           " + py.PaymentID + "\n");
-                writer.write("PurchaseOrderID :    " + py.PurchaseOrderID + "\n");
+                writer.write("PurchaseOrderID:     " + py.PurchaseOrderID + "\n");
                 writer.write("Amount:              " + py.Amount + "\n");
                 writer.write("PaymentDate:         " + py.PaymentDate + "\n");
                 writer.write("FinanceMgrID:        " + py.FinanceMgrID + "\n");

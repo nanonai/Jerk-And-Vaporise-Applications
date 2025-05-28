@@ -129,23 +129,6 @@ public class PaymentPage {
         ii_gbc.fill = GridBagConstraints.BOTH;
         ii_gbc.insets = new Insets(6, 6, 10, 5);
 
-//        search_icon1 = new CustomComponents.CustomSearchIcon(16, 3,
-//                new Color(122, 122, 122), Color.WHITE);
-//        search_icon2 = new CustomComponents.CustomSearchIcon(16, 3,
-//                new Color(81, 81, 81), Color.WHITE);
-//        s_btn = new JButton(search_icon1);
-//        s_btn.setRolloverIcon(search_icon2);
-//        s_btn.setBorderPainted(false);
-//        s_btn.setContentAreaFilled(false);
-//        s_btn.setFocusPainted(false);
-//        search_panel.add(s_btn, ii_gbc);
-//
-//        ii_gbc.gridx = 1;
-//        ii_gbc.insets = new Insets(6, 0, 10, 0);
-//        search = new CustomComponents.EmptyTextField(20, "Search...", new Color(122, 122, 122));
-//        search.setFont(merriweather.deriveFont(Font.BOLD, 14));
-//        search_panel.add(search, ii_gbc);
-
         ii_gbc.gridx = 2;
         ii_gbc.insets = new Insets(0, 8, 0, 0);
         x_btn = new JButton(icon_clear1);
@@ -173,8 +156,11 @@ public class PaymentPage {
         Object[][] data = new Object[payment_list.size() ][titles.length];
         int counter = 0;
         for (Payment payment : payment_list) {
-            data[counter] = new Object[]{payment.PaymentID,payment.PurchaseOrderID, payment.Amount,
-                    payment.PaymentDate, payment.FinanceMgrID};
+            data[counter] = new Object[]{payment.PaymentID,
+                    payment.PurchaseOrderID,
+                    payment.Amount,
+                    payment.PaymentDate,
+                    payment.FinanceMgrID};
             counter += 1;
         }
 
@@ -203,7 +189,6 @@ public class PaymentPage {
                             deleting_id.remove(table_payment.getValueAt(row,
                                     table_payment.getColumnModel().getColumnIndex("Id")).toString());
                         }
-                        delete2.setText(String.format("Delete User (%s)", deleting_id.size()));
                         previousSelection.clear();
                         previousSelection.addAll(currentSelection);
                     });
@@ -257,9 +242,6 @@ public class PaymentPage {
             pages.setSelectedIndex(0);
             UpdatePaymentTable(list_length, page_counter);
             previousSelection.clear();
-            SwingUtilities.invokeLater(() -> {
-                RememberDeletion(deleting_id, table_payment);
-            });
         });
         p_first.addMouseListener(new MouseAdapter() {
             @Override
@@ -303,9 +285,6 @@ public class PaymentPage {
                 pages.setSelectedIndex(page_counter);
                 UpdatePaymentTable(list_length, page_counter);
                 previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_payment);
-                });
             }
         });
         page_panel.add(p_left, ii_gbc);
@@ -320,9 +299,6 @@ public class PaymentPage {
                 page_counter = pages.getSelectedIndex();
                 UpdatePaymentTable(list_length, page_counter);
                 previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_payment);
-                });
             }
         });
         page_panel.add(pages, ii_gbc);
@@ -341,9 +317,6 @@ public class PaymentPage {
                 pages.setSelectedIndex(page_counter);
                 UpdatePaymentTable(list_length, page_counter);
                 previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_payment);
-                });
             }
         });
         page_panel.add(p_right, ii_gbc);
@@ -358,9 +331,6 @@ public class PaymentPage {
             pages.setSelectedIndex(page_counter);
             UpdatePaymentTable(list_length, page_counter);
             previousSelection.clear();
-            SwingUtilities.invokeLater(() -> {
-                RememberDeletion(deleting_id, table_payment);
-            });
         });
         p_last.addMouseListener(new MouseAdapter() {
             @Override
@@ -466,7 +436,6 @@ public class PaymentPage {
                     payment_list.size()));
         }
     }
-
     public static void UpdatePaymentPages(int length) {
         int pageCount = (int) Math.ceil(payment_list.size() / (double) length);
         if (payment_list.size() <= length) {
@@ -502,17 +471,5 @@ public class PaymentPage {
             SwingUtilities.invokeLater(table_payment::requestFocusInWindow);
         }
     }
-    public static void RememberDeletion(Set<String> deleting_id, CustomComponents.CustomTable table) {
-        if (deleting) {
-            int rowCount = table.getRowCount();
-            for (int i = 0; i < rowCount; i++) {
-                Object value = table.getValueAt(i, table.getColumnModel().getColumnIndex("Id"));
-                if (value != null && deleting_id.contains(value.toString())) {
-                    table.addRowSelectionInterval(i, i);
-                }
-            }
-            table.revalidate();
-            table.repaint();
-        }
-    }
+
 }

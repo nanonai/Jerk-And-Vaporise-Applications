@@ -213,6 +213,12 @@ public class Supplier {
         }
         System.out.println("Email exist validity: " + indicator);
 
+        // 6. Name uniqueness (assuming no duplicate supplier name)
+//        if (nameChecker(supplierName, filename)) {
+//            indicator += "1";
+//        } else {
+//            indicator += "0";
+//        }
         if (address.length() >= 8 && address.length() <= 48) {
             indicator += "1";
         } else {

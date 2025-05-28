@@ -545,6 +545,7 @@ public class AddSupplier {
                 }
 
                 // All validations passed, proceed with item creation
+
                 try {
 //                    double unitPriceValue = Double.parseDouble(unitprice.getText().trim());
 //                    double unitCostValue = Double.parseDouble(unitcost.getText().trim());
@@ -606,6 +607,19 @@ public class AddSupplier {
 //                            suppliername.Reset();
 //                        }
 //                    }
+
+//
+//                } catch (NumberFormatException ex) {
+//                    CustomComponents.CustomOptionPane.showErrorDialog(
+//                            parent,
+//                            "Please enter valid numeric values for price, cost, stock count, and threshold!",
+//                            "Error",
+//                            new Color(209, 88, 128),
+//                            new Color(255, 255, 255),
+//                            new Color(237, 136, 172),
+//                            new Color(255, 255, 255)
+//                    );
+//                }
                     String new_ID = Supplier.idMaker(Main.supplier_file); // Generate unique Supplier ID
                     String supplierNameText = supplierName.getText().trim();
                     String contactPersonText = contactPerson.getText().trim();
