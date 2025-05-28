@@ -1,18 +1,10 @@
 PurchaseReqID :      PR0020
-ItemID:              I0009
-SupplierID:          S0001
-Quantity:            35
+ItemID:              I4493
+SupplierID:          S0009
+Quantity:            9099
 ReqDate:             2025-07-13
-SalesMgrID:          PM0971204372
-Status:              1
-~~~~~
-PurchaseReqID :      PR0021
-ItemID:              I0011
-SupplierID:          S0001
-Quantity:            15
-ReqDate:             2023-08-01
-SalesMgrID:          PM0971204373
-Status:              1
+SalesMgrID:          SM1253724128
+Status:              0
 ~~~~~
 PurchaseReqID :      PR0022
 ItemID:              I0009
@@ -30,7 +22,7 @@ ReqDate:             2023-09-03
 SalesMgrID:          PM0971204375
 Status:              1
 ~~~~~
-PurchaseReqID:       PR0024
+PurchaseReqID :      PR0024
 ItemID:              I0009
 SupplierID:          S0002
 Quantity:            18
@@ -66,7 +58,7 @@ PurchaseReqID :      PR0028
 ItemID:              I0042
 SupplierID:          S0010
 Quantity:            40
-ReqDate:             2023-11-16
+ReqDate:             2029-11-16
 SalesMgrID:          SM1253724128
 Status:              1
 ~~~~~
@@ -84,7 +76,7 @@ SupplierID:          S0004
 Quantity:            17
 ReqDate:             2023-12-20
 SalesMgrID:          SM6352871092
-Status:              0
+Status:              1
 ~~~~~
 PurchaseReqID :      PR0031
 ItemID:              I0008
@@ -92,7 +84,7 @@ SupplierID:          S0004
 Quantity:            23
 ReqDate:             2024-01-10
 SalesMgrID:          SM6352871092
-Status:              0
+Status:              1
 ~~~~~
 PurchaseReqID :      PR0032
 ItemID:              I0013
@@ -100,7 +92,7 @@ SupplierID:          S0004
 Quantity:            9
 ReqDate:             2024-01-25
 SalesMgrID:          SM6352871092
-Status:              0
+Status:              1
 ~~~~~
 PurchaseReqID :      PR0033
 ItemID:              I0010
@@ -130,15 +122,15 @@ PurchaseReqID :      PR0036
 ItemID:              I0017
 SupplierID:          S0004
 Quantity:            50
-ReqDate:             2024-04-07
+ReqDate:             2026-04-07
 SalesMgrID:          SM5592118047
-Status:              0
+Status:              1
 ~~~~~
 PurchaseReqID :      PR0037
 ItemID:              I0018
 SupplierID:          S0004
 Quantity:            21
-ReqDate:             2024-04-22
+ReqDate:             2026-04-22
 SalesMgrID:          SM5592118047
 Status:              0
 ~~~~~
@@ -146,7 +138,7 @@ PurchaseReqID :      PR0038
 ItemID:              I0019
 SupplierID:          S0004
 Quantity:            27
-ReqDate:             2024-05-05
+ReqDate:             2026-05-05
 SalesMgrID:          SM5592118047
 Status:              0
 ~~~~~
@@ -157,4 +149,12 @@ Quantity:            14
 ReqDate:             2025-05-22
 SalesMgrID:          SM5592118047
 Status:              1
+~~~~~
+PurchaseReqID :      PR6827
+ItemID:              I6215
+SupplierID:          S0010
+Quantity:            44444
+ReqDate:             2025-05-27
+SalesMgrID:          SM1253724128
+Status:              0
 ~~~~~

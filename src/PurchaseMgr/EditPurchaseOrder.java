@@ -1,47 +1,50 @@
 package PurchaseMgr;
 
-import Admin.User;
 import Admin.CustomComponents;
 import Admin.Main;
+import Admin.User;
 import InventoryMgr.Item;
 
 import javax.swing.*;
-        import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
-        import java.awt.*;
-        import java.awt.event.ActionEvent;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AddPurchaseOrder {
+public class EditPurchaseOrder {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static User current_user;
+    private static PurchaseOrder current_po;
     private static String itemNames;
     private static JComboBox<Object> itemComboBox, supplierComboBox;
     private static CustomComponents.EmptyTextField quantity;
     private static JLabel price, total;
     private static JDialog dialog;
+    private static User current_user;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
-        AddPurchaseOrder.parent = parent;
-        AddPurchaseOrder.merriweather = merriweather;
-        AddPurchaseOrder.boldonse = boldonse;
-        AddPurchaseOrder.content = content;
-        AddPurchaseOrder.current_user = current_user;
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user, PurchaseOrder current_po) {
+        EditPurchaseOrder.parent = parent;
+        EditPurchaseOrder.merriweather = merriweather;
+        EditPurchaseOrder.boldonse = boldonse;
+        EditPurchaseOrder.content = content;
+        EditPurchaseOrder.current_user = current_user;
+        EditPurchaseOrder.current_po = current_po;
     }
 
-    public static void ShowPage(){
-        JDialog dialog = new JDialog(parent, "Add Purchase Order", true);
+    public static void UpdatePurchaseOrder(PurchaseOrder purchaseOrder) {
+        EditPurchaseOrder.current_po = purchaseOrder;
+    }
+
+    public static boolean ShowPage(){
+        JDialog dialog = new JDialog(parent, "Modify Purchase Order", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setSize(parent.getWidth() / 2, parent.getHeight() / 2);
         dialog.setResizable(false);
@@ -65,7 +68,7 @@ public class AddPurchaseOrder {
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.insets = new Insets(10, 10, 10, 0);
-        JLabel title = new JLabel("Create Purchase Order");
+        JLabel title = new JLabel("Modify Purchase Order");
         title.setOpaque(false);
         title.setFont(merriweather.deriveFont(Font.BOLD, (float) (base_size * 1.3)));
         panel.add(title, gbc);
@@ -103,7 +106,6 @@ public class AddPurchaseOrder {
         panel.add(label5, gbc);
 
         gbc.gridy = 6;
-        //gbc.weighty = 1;
         JLabel type_label6 = new JLabel();
         panel.add(type_label6, gbc);
 
@@ -140,7 +142,6 @@ public class AddPurchaseOrder {
         panel.add(button_panel2, gbc);
 
         gbc.gridx = 0;
-        // gbc.weightx = 1;
         gbc.insets = new Insets(0, 0, 0, 0);
         JLabel blank2 = new JLabel();
         blank2.setOpaque(false);
@@ -169,23 +170,33 @@ public class AddPurchaseOrder {
             String qtyText = quantity.getText().trim();
 
             if (qtyText.isEmpty()) {
-                JOptionPane.showMessageDialog(dialog, "Please enter both quantity.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(dialog, "Cannot be empty.", "Input Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             try {
                 PurchaseOrder PO = new PurchaseOrder(
-                        PurchaseOrder.idMaker(Main.purchaseOrder_file),
+                        current_po.PurchaseOrderID,
                         itemID,
                         supplierID,
                         Integer.parseInt(qtyText),
                         calculateTotal(quantity , price),
-                        LocalDate.now(),
+                        current_po.OrderDate,
                         current_user.UserID,
                         "Pending"
                 );
-                PurchaseOrder.savePurchaseOrder(PO, Main.purchaseOrder_file, parent);
+
+                PurchaseOrder.ModifyPurchaseOrder(PO.PurchaseOrderID, PO, Main.purchaseOrder_file);
                 dialog.dispose();
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Successful!",
+                        "Yay",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(dialog, "Please enter valid numbers for quantity and price.",
                         "Format Error", JOptionPane.ERROR_MESSAGE);
@@ -237,17 +248,17 @@ public class AddPurchaseOrder {
                     } else {
                         price.setText("Price not found");
                     }
-                    quantity.setText("");
 
                     double totalAmt = calculateTotal(quantity, price);
                     total.setText(" RM " + String.format("%.2f", totalAmt));
                 });
             }
         });
-        itemComboBox.setSelectedIndex(0);
         itemComboBox.getActionListeners()[0].actionPerformed(new ActionEvent(itemComboBox, ActionEvent.ACTION_PERFORMED, ""));
 
         panel.add(itemComboBox, gbc);
+        String name = Item.getItemByID(current_po.ItemID, Main.item_file).ItemName;
+        itemComboBox.setSelectedItem(name);
 
         gbc.gridy = 2;
         List<Supplier> suppliersForPO = Item_Supplier.getSuppliersByItemID(
@@ -275,9 +286,10 @@ public class AddPurchaseOrder {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        quantity = new CustomComponents.EmptyTextField(20, "", new Color(122, 122, 122));
+        quantity = new CustomComponents.EmptyTextField(20, "", new Color(0, 0, 0));
         quantity.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         allowOnlyPositiveNonZeroIntegers(quantity);
+        quantity.setText(Integer.toString(current_po.PurchaseQuantity));
         inner1.add(quantity, gbc);
 
         // my price panel
@@ -335,6 +347,7 @@ public class AddPurchaseOrder {
         quantity.getDocument().addDocumentListener(listener);
         dialog.setContentPane(panel);
         dialog.setVisible(true);
+        return false;
     }
 
     public static void allowOnlyPositiveNonZeroIntegers(JTextField textField) {
@@ -431,5 +444,6 @@ public class AddPurchaseOrder {
         // If not found or error occurred
         return -1;
     }
+
 
 }

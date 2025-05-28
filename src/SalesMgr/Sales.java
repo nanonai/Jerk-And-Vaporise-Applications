@@ -1,6 +1,8 @@
 package SalesMgr;
 
+import Admin.Main;
 import FinanceMgr.PurchaseRequisition;
+import InventoryMgr.Item;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -10,7 +12,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class Sales {
-    public String SalesID, SalesMgrID;
+    public String SalesID, SalesMgrID, ItemName;
+    public int Quantity;
+    public double Amount;
     public LocalDate SalesDate;
     private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -107,4 +111,111 @@ public class Sales {
             e.getStackTrace();
         }
     }
+    public static String ValidityChecker(String itemName, String soldQuantity, String revenue) {
+        // Sample output: 0X0X
+        String indicator = "";
+
+        System.out.println("Checking Item: " + itemName);
+        boolean itemExists = false;
+        Item matchedItem = null;
+
+        if (itemName != null && !itemName.trim().isEmpty()) {
+            List<Item> itemList = Item.listAllItem(Main.item_file);
+
+            for (Item item : itemList) {
+                System.out.println("Comparing: [" + item.ItemName + "] with [" + itemName + "]");
+                if (item.ItemName.equalsIgnoreCase(itemName.trim())) {
+                    itemExists = true;
+                    matchedItem = item;
+                    break;
+                }
+            }
+
+            if (itemExists) {
+                indicator += "1";  // Item found
+            } else {
+                indicator += "0";  // Item not found
+            }
+        } else {
+            indicator += "0";  // Item name is empty or null
+        }
+
+        // Validate sold quantity (positive integer)
+        boolean quantityValid = false;
+        int quantityInt = 0;
+        if (soldQuantity.matches("\\d+")) {
+            quantityInt = Integer.parseInt(soldQuantity);
+            if (quantityInt > 0) {
+                quantityValid = true;
+            }
+        }
+
+        if (quantityValid) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        System.out.println("Sold Quantity validity: " + indicator);
+
+        // Validate revenue
+        if (revenue.matches("\\d+(\\.\\d{1,2})?") && Double.parseDouble(revenue) > 0) {
+            indicator += "1";
+        } else {
+            indicator += "0";
+        }
+        System.out.println("Revenue validity: " + indicator);
+
+        // Validate against total sold + current sale > stock count
+        if (itemExists && quantityValid && matchedItem != null) {
+            List<Item_Sales> itemSalesList = Item_Sales.listAllItemSales(Main.item_sales_file);
+            int totalSold = 0;
+
+            for (Item_Sales itemSales : itemSalesList) {
+                if (itemSales.ItemID.equals(matchedItem.ItemID)) {
+                    totalSold += itemSales.Quantity;
+                }
+            }
+
+            if ((totalSold + quantityInt) > matchedItem.StockCount) {
+                indicator += "0"; // Insufficient stock after accounting total sold
+            } else {
+                indicator += "1";
+            }
+        } else {
+            indicator += "1"; // Skip if not applicable
+        }
+
+        System.out.println("Stock count validity: " + indicator);
+
+        return indicator;
+    }
+
+    public static void removeSales(String SalesID, String filename) {
+        List<Sales> allSales = Sales.listAllSales(filename);
+        allSales.removeIf(sales -> Objects.equals(sales.SalesID, SalesID));
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Sales sales : allSales) {
+                writer.write("SalesID:        " + sales.SalesID + "\n");
+                writer.write("SalesDate:      " + sales.SalesDate + "\n");
+                writer.write("SalesMgrID:     " + sales.SalesMgrID + "\n");
+                writer.write("~~~~~\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Sales getSalesByID(String salesID, String filename) {
+        List<Sales> salesList = listAllSales(filename);
+        Sales tempSales = null;
+        for (Sales sales : salesList) {
+            if (Objects.equals(sales.SalesID, salesID)) {
+                tempSales = sales;
+                break;
+            }
+        }
+        return tempSales;
+    }
+
 }

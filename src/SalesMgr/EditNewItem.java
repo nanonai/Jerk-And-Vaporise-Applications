@@ -33,7 +33,6 @@ public class EditNewItem {
     private static JComboBox<String> types;
     private static CustomComponents.EmptyTextField itemname, unitprice, unitcost, stockcount, threshold, suppliername;
     private static CustomComponents.CustomButton btnConfirm, btnCancel;
-
     private static Item selected_item;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user, Item selected_item) {
@@ -126,7 +125,22 @@ public class EditNewItem {
         gbc.gridy = 8;
         gbc.gridx = 0;
         gbc.weightx = 1;          // allow horizontal expansion
-        gbc.weighty = 0.6;          // usually 0 for buttons (unless you want vertical growth)
+        gbc.weighty = 0.6;
+        gbc.insets = new Insets(15, 10, 15, 10);
+        gbc.fill = GridBagConstraints.BOTH;
+        btnCancel = new CustomComponents.CustomButton("Cancel", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87),
+                Main.transparent, 0, 20, Main.transparent, false,
+                5, false, null, 0, 0, 0);
+        btnCancel.setPreferredSize(new Dimension(280, 50));  // Adjusted width and height
+        btnCancel.addActionListener(_ -> {
+            dialog.dispose();
+        });
+        panel.add(btnCancel, gbc);
+
+
+        gbc.gridx = 2;
+        gbc.weightx = 1;
         gbc.insets = new Insets(15, 10, 15, 10);
         gbc.fill = GridBagConstraints.BOTH;
         btnConfirm = new CustomComponents.CustomButton("Confirm", merriweather, Color.WHITE, Color.WHITE,
@@ -360,20 +374,6 @@ public class EditNewItem {
             }
         });
         panel.add(btnConfirm, gbc);
-
-        gbc.gridx = 2;
-        gbc.weightx = 1;
-        gbc.insets = new Insets(15, 10, 15, 10);
-        gbc.fill = GridBagConstraints.BOTH;
-        btnCancel = new CustomComponents.CustomButton("Cancel", merriweather, Color.WHITE, Color.WHITE,
-                new Color(56, 53, 70), new Color(73, 69, 87),
-                Main.transparent, 0, 20, Main.transparent, false,
-                5, false, null, 0, 0, 0);
-        btnCancel.setPreferredSize(new Dimension(280, 50));  // Adjusted width and height
-        btnCancel.addActionListener(_ -> {
-            dialog.dispose();
-        });
-        panel.add(btnCancel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
