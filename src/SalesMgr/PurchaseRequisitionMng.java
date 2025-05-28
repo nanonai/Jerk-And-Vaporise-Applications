@@ -570,8 +570,9 @@ public class PurchaseRequisitionMng {
                 ? search.getText().trim().toLowerCase() : "";
 
         if (searcher.isEmpty()) {
+            pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
             page_counter = 0;
-            UpdatePages(pr_list.size());
+            UpdatePages(list_length);
             UpdateTable(list_length, page_counter);
             return;
         }
