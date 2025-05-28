@@ -411,12 +411,12 @@ public class ItemMng {
                 }
 
                 if (selected_item != null) {
-                    EditNewItem.Loader(parent, merriweather, boldonse, content, current_user, selected_item);
-                    EditNewItem.ShowPage();  // Pass the selected item to EditNewItem form for editing
-
-                    AllItems = Item.listAllItem("datafile/item.txt");
-                    UpdatePages(AllItems.size());
-                    UpdateTable(AllItems, list_length, page_counter);
+//                    EditNewItem.Loader(parent, merriweather, boldonse, content, current_user, selected_item);
+//                    EditNewItem.ShowPage();  // Pass the selected item to EditNewItem form for editing
+//
+//                    AllItems = Item.listAllItem("datafile/item.txt");
+//                    UpdatePages(AllItems.size());
+//                    UpdateTable(AllItems, list_length, page_counter);
 
                 } else {
                     CustomComponents.CustomOptionPane.showErrorDialog(
