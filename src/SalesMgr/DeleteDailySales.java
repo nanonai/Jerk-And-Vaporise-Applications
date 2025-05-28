@@ -27,8 +27,8 @@ public class DeleteDailySales {
         DeleteDailySales.merriweather = merriweather;
         DeleteDailySales.boldonse = boldonse;
         DeleteDailySales.content = content;
-        DeleteDailySales.salesList = salesList;           // Set the list of Sales records to delete
-        DeleteDailySales.itemSalesList = itemSalesList;   // Set the list of related Item_Sales records
+        DeleteDailySales.salesList = salesList;
+        DeleteDailySales.itemSalesList = itemSalesList;
     }
 
     public static boolean ShowPage() {
@@ -111,7 +111,7 @@ public class DeleteDailySales {
         panel.add(cancel, gbc);
 
         gbc.gridx = 1;
-        panel.add(new JLabel(""), gbc); // Placeholder
+        panel.add(new JLabel(""), gbc);
 
         gbc.gridx = 2;
         gbc.insets = new Insets(0, 0, 10, 10);

@@ -22,12 +22,11 @@ public class DeleteItem {
     private static List<Item> items;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, List<Item> items) {
-        // Ensure parent is properly passed to DeleteItem
         DeleteItem.parent = parent;
         DeleteItem.merriweather = merriweather;
         DeleteItem.boldonse = boldonse;
         DeleteItem.content = content;
-        DeleteItem.items = items; // Initialize items list here
+        DeleteItem.items = items;
     }
 
 
@@ -37,9 +36,8 @@ public class DeleteItem {
 
     public static boolean ShowPage() {
         if (parent == null) {
-            // Optionally show an error or log it
             System.out.println("Error: Parent JFrame is not initialized.");
-            return false; // Exit the method if parent is not set
+            return false;
         }
         AtomicBoolean delete_or_not = new AtomicBoolean(false);
         JDialog dialog = new JDialog(parent, "Delete Items", true);
@@ -48,7 +46,6 @@ public class DeleteItem {
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(parent);
 
-        // Define the base size of the dialog
         int size_factor = (parent.getWidth() >= parent.getHeight()) ? parent.getHeight() / 40 : parent.getWidth() / 30;
         int base_size = size_factor;
 
@@ -71,11 +68,10 @@ public class DeleteItem {
         List<String> data = new ArrayList<>();
         int counter = 1;
         for (Item item : items) {
-            // Displaying item details
             data.add(String.format("%s. ItemID: %s", counter, item.ItemID));
             data.add(String.format("    Item Name: %s", item.ItemName));
-            data.add(String.format("    Unit Price: %.2f", item.UnitPrice)); // Corrected here
-            data.add(String.format("    Unit Cost: %.2f", item.UnitCost));  // Corrected here
+            data.add(String.format("    Unit Price: %.2f", item.UnitPrice));
+            data.add(String.format("    Unit Cost: %.2f", item.UnitCost));
             data.add(String.format("    Stock Count: %d", item.StockCount));
             data.add(String.format("    Threshold: %d", item.Threshold));
             data.add(String.format("    Category: %s", item.Category));

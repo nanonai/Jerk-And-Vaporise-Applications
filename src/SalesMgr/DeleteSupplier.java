@@ -33,9 +33,8 @@ public class DeleteSupplier {
 
     public static boolean ShowPage() {
         if (parent == null) {
-            // Optionally show an error or log it
             System.out.println("Error: Parent JFrame is not initialized.");
-            return false; // Exit the method if parent is not set
+            return false;
         }
         AtomicBoolean delete_or_not = new AtomicBoolean(false);
         JDialog dialog = new JDialog(parent, "Delete Items", true);
@@ -125,7 +124,6 @@ public class DeleteSupplier {
             );
             if (proceed) {
                 for (Supplier supplier : suppliers) {
-                    // Remove related item_supplier links
                     List<Item_Supplier> related = Item_Supplier.listAllItemSupplierFromSupplierID(
                             supplier.SupplierID, "datafile/item_supplier.txt");
                     for (Item_Supplier rel : related) {
