@@ -61,10 +61,3 @@ Phone:          0182345678
 Email:          lisa.wong@fusionind.com
 Address:        909 Fusion Rd, Techport
 ~~~~~
-SupplierID:     S0010
-SupplierName:   Omega Resources
-ContactPerson:  Bryan Tan
-Phone:          0159988776
-Email:          bryan@omegaresources.com
-Address:        303 Omega Blvd, Resource City
-~~~~~

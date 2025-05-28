@@ -187,14 +187,26 @@ public class ViewItem {
         lastupdate.setFont(merriweather.deriveFont(Font.PLAIN, (float) base_size));
         panel.add(lastupdate, gbc);
 
+
         gbc.gridx = 0;
         gbc.gridy = 9;
         gbc.gridwidth = 2;
         gbc.insets = new Insets(10, 10, 10, 10);
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         GridBagConstraints bgbc = new GridBagConstraints();
-        bgbc.insets = new Insets(0, 10, 0, 10);
+
         bgbc.gridx = 0;
+        bgbc.insets = new Insets(0, 10, 0, 10);
+        CustomComponents.CustomButton close = new CustomComponents.CustomButton("Close",
+                merriweather.deriveFont(Font.PLAIN), Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87),
+                Main.transparent, 0, base_size, Main.transparent, false,
+                5, false, null, 0, 0, 0);
+        close.setPreferredSize(new Dimension(250, 38));
+        close.addActionListener(e -> dialog.dispose());
+        buttonPanel.add(close, bgbc);
+
+        bgbc.gridx = 1;
         CustomComponents.CustomButton btnSupplier = new CustomComponents.CustomButton(" Related Supplier",
                 merriweather.deriveFont(Font.PLAIN), Color.WHITE, Color.WHITE,
                 new Color(209, 88, 128), new Color(237, 136, 172),
@@ -202,14 +214,13 @@ public class ViewItem {
                 null, 0, 0, 0);
         btnSupplier.setPreferredSize(new Dimension(250, 38));
         btnSupplier.addActionListener(e -> {
-
             String supplierID = PurchaseMgr.Item_Supplier.getSupplierIDFromItemID(current_item.ItemID, "datafile/item_supplier.txt");
 
-            if (supplierID.equals("Unknown")) {
+            if (supplierID.equals("Unknown") || supplierID.equals("DELETED_SUPPLIER")) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,
-                        "Supplier not found for this item.",
-                        "Supplier Error",
+                        "Supplier has been deleted. Please add or assign a valid supplier.",
+                        "Supplier Missing",
                         new Color(209, 88, 128),
                         Color.WHITE,
                         new Color(237, 136, 172),
@@ -256,17 +267,6 @@ public class ViewItem {
             }
         });
         buttonPanel.add(btnSupplier, bgbc);
-
-
-        bgbc.gridx = 1;
-        CustomComponents.CustomButton close = new CustomComponents.CustomButton("Close",
-                merriweather.deriveFont(Font.PLAIN), Color.WHITE, Color.WHITE,
-                new Color(56, 53, 70), new Color(73, 69, 87),
-                Main.transparent, 0, base_size, Main.transparent, false,
-                5, false, null, 0, 0, 0);
-        close.setPreferredSize(new Dimension(250, 38));
-        close.addActionListener(e -> dialog.dispose());
-        buttonPanel.add(close, bgbc);
 
 // Add the button panel to the main panel
         panel.add(buttonPanel, gbc);

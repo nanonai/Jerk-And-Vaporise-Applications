@@ -67,8 +67,8 @@ public class FinanceHome {
                 0, 0);
         side_bar.add(purchaseOrder, gbc_side);
         purchaseOrder.addActionListener(_ -> {
-                    FinanceHome.indicator = 2;
-                    PageChanger();
+            FinanceHome.indicator = 2;
+            PageChanger();
                 });
 
         //purchaseRequisition

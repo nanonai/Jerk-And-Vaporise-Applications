@@ -508,4 +508,8 @@ public class User {
         }
         return userRelatedRecords;
     }
+
+    public String getUserID() {
+        return this.UserID;
+    }
 }

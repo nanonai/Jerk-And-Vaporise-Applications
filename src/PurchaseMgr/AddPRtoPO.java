@@ -1,47 +1,50 @@
 package PurchaseMgr;
 
-import Admin.User;
 import Admin.CustomComponents;
 import Admin.Main;
+import Admin.User;
+import FinanceMgr.PurchaseRequisition;
 import InventoryMgr.Item;
 
 import javax.swing.*;
-        import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
-        import java.awt.*;
-        import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.awt.*;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AddPurchaseOrder {
+public class AddPRtoPO {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
-    private static User current_user;
+    private static PurchaseRequisition current_pr;
     private static String itemNames;
-    private static JComboBox<Object> itemComboBox, supplierComboBox;
     private static CustomComponents.EmptyTextField quantity;
-    private static JLabel price, total;
+    private static JLabel price, total, item, supplier;
     private static JDialog dialog;
+    private static User current_user;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
-        AddPurchaseOrder.parent = parent;
-        AddPurchaseOrder.merriweather = merriweather;
-        AddPurchaseOrder.boldonse = boldonse;
-        AddPurchaseOrder.content = content;
-        AddPurchaseOrder.current_user = current_user;
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user, PurchaseRequisition current_pr) {
+        AddPRtoPO.parent = parent;
+        AddPRtoPO.merriweather = merriweather;
+        AddPRtoPO.boldonse = boldonse;
+        AddPRtoPO.content = content;
+        AddPRtoPO.current_user = current_user;
+        AddPRtoPO.current_pr = current_pr;
     }
 
-    public static void ShowPage(){
-        JDialog dialog = new JDialog(parent, "Add Purchase Order", true);
+    public static void UpdatePurchaseReq(PurchaseRequisition purchaseReq) {
+        AddPRtoPO.current_pr = purchaseReq;
+    }
+
+    public static boolean ShowPage(){
+        JDialog dialog = new JDialog(parent, "Add to Purchase Order", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setSize(parent.getWidth() / 2, parent.getHeight() / 2);
         dialog.setResizable(false);
@@ -65,7 +68,7 @@ public class AddPurchaseOrder {
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.insets = new Insets(10, 10, 10, 0);
-        JLabel title = new JLabel("Create Purchase Order");
+        JLabel title = new JLabel("Add to Purchase Order");
         title.setOpaque(false);
         title.setFont(merriweather.deriveFont(Font.BOLD, (float) (base_size * 1.3)));
         panel.add(title, gbc);
@@ -103,7 +106,6 @@ public class AddPurchaseOrder {
         panel.add(label5, gbc);
 
         gbc.gridy = 6;
-        //gbc.weighty = 1;
         JLabel type_label6 = new JLabel();
         panel.add(type_label6, gbc);
 
@@ -140,7 +142,6 @@ public class AddPurchaseOrder {
         panel.add(button_panel2, gbc);
 
         gbc.gridx = 0;
-        // gbc.weightx = 1;
         gbc.insets = new Insets(0, 0, 0, 0);
         JLabel blank2 = new JLabel();
         blank2.setOpaque(false);
@@ -156,12 +157,12 @@ public class AddPurchaseOrder {
         button_panel2.add(confirm, gbc);
 
         confirm.addActionListener(e -> {
-            String itemName = Objects.requireNonNull(itemComboBox.getSelectedItem()).toString();
+            String itemName = Objects.requireNonNull(item.getText().trim());
             Item item = Item.getItemByName(itemName, Main.item_file);
             assert item != null;
             String itemID = item.ItemID;
 
-            String supplierName = Objects.requireNonNull(supplierComboBox.getSelectedItem()).toString();
+            String supplierName = Objects.requireNonNull(supplier.getText().trim());
             Supplier supplier = Supplier.getSupplierByName(supplierName, Main.supplier_file);
             assert supplier != null;
             String supplierID = supplier.SupplierID;
@@ -169,7 +170,7 @@ public class AddPurchaseOrder {
             String qtyText = quantity.getText().trim();
 
             if (qtyText.isEmpty()) {
-                JOptionPane.showMessageDialog(dialog, "Please enter both quantity.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(dialog, "Cannot be empty.", "Input Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -184,8 +185,12 @@ public class AddPurchaseOrder {
                         current_user.UserID,
                         "Pending"
                 );
+
                 PurchaseOrder.savePurchaseOrder(PO, Main.purchaseOrder_file, parent);
+                updatePRStatus(ViewPurchaseRequisition.selectedPRID, "1", Main.purchaseReq_file);
+
                 dialog.dispose();
+
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(dialog, "Please enter valid numbers for quantity and price.",
                         "Format Error", JOptionPane.ERROR_MESSAGE);
@@ -194,75 +199,30 @@ public class AddPurchaseOrder {
 
         gbc.gridx = 1;
         gbc.gridy = 1;
-        // ArrayList
-        List<String> itemComboBoxData = new ArrayList<>();
-        // Save data to an Arraylist
-        List<Item> itemsForPO = Item.listAllItem(Main.item_file);
-        // loop item into array(itemComboBoxData) so we use itemsForPO other than itemComboBox.
-        for (Item item : itemsForPO){
-            itemComboBoxData.add(item.ItemName);
-        }
-        itemComboBox = new JComboBox<>(itemComboBoxData.toArray());
-        itemComboBox.setFocusable(false);
-        itemComboBox.setFont(merriweather.deriveFont(Font.PLAIN));
-        itemComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(() -> {
-                    String selectedItemName = Objects.requireNonNull(itemComboBox.getSelectedItem()).toString();
+        gbc.insets = new Insets(2, 2, 2, 2);
+        JPanel inner4 = new JPanel(new GridBagLayout());
+        inner4.setOpaque(true);
+        inner4.setBackground(Color.WHITE);
+        inner4.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        panel.add(inner4, gbc);
 
-                    // Get the item object
-                    Item selectedItem = Item.getItemByName(selectedItemName, Main.item_file);
-                    if (selectedItem == null) return;
-
-                    // Get item ID
-                    String selectedItemID = selectedItem.ItemID;
-
-                    // 1. Update Supplier ComboBox
-                    List<Supplier> suppliersForPO = Item_Supplier.getSuppliersByItemID(
-                            selectedItemID,
-                            Main.item_supplier_file
-                    );
-                    supplierComboBox.removeAllItems();
-                    for (Supplier supplier : suppliersForPO) {
-                        supplierComboBox.addItem(supplier.SupplierName);
-                    }
-                    supplierComboBox.repaint();
-                    supplierComboBox.revalidate();
-
-                    // 2. Update UnitCost Label (your 'price' label)
-                    double unitCost = getUnitCostByItemID(selectedItemID, new File(Main.item_file));
-                    if (unitCost >= 0) {
-                        price.setText(String.format(" RM %.2f", unitCost));
-                    } else {
-                        price.setText("Price not found");
-                    }
-                    quantity.setText("");
-
-                    double totalAmt = calculateTotal(quantity, price);
-                    total.setText(" RM " + String.format("%.2f", totalAmt));
-                });
-            }
-        });
-        itemComboBox.setSelectedIndex(0);
-        itemComboBox.getActionListeners()[0].actionPerformed(new ActionEvent(itemComboBox, ActionEvent.ACTION_PERFORMED, ""));
-
-        panel.add(itemComboBox, gbc);
+        gbc.insets = new Insets(0, 0, 0, 0);
+        item = new JLabel("  " + Item.getItemByID(current_pr.ItemID, Main.item_file).ItemName);
+        item.setFont(merriweather.deriveFont(Font.PLAIN));
+        inner4.add(item, gbc);
 
         gbc.gridy = 2;
-        List<Supplier> suppliersForPO = Item_Supplier.getSuppliersByItemID(
-                Objects.requireNonNull(Item.getItemByName(Objects.requireNonNull(
-                        itemComboBox.getSelectedItem()).toString(), Main.item_file)).ItemID,
-                Main.item_supplier_file
-        );
-        List<String> supplierComboBoxData = new ArrayList<>();
-        for (Supplier supplier : suppliersForPO){
-            supplierComboBoxData.add(supplier.SupplierName);
-        }
-        supplierComboBox = new JComboBox<>(supplierComboBoxData.toArray());
-        supplierComboBox.setFocusable(false);
-        supplierComboBox.setFont(merriweather.deriveFont(Font.PLAIN));
-        panel.add(supplierComboBox, gbc);
+        gbc.insets = new Insets(2, 2, 2, 2);
+        JPanel inner5 = new JPanel(new GridBagLayout());
+        inner5.setOpaque(true);
+        inner5.setBackground(Color.WHITE);
+        inner5.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+        panel.add(inner5, gbc);
+
+        gbc.insets = new Insets(0, 0, 0, 0);
+        supplier = new JLabel("  " + Objects.requireNonNull(Supplier.getSupplierByID(current_pr.SupplierID, Main.supplier_file)).SupplierName);
+        supplier.setFont(merriweather.deriveFont(Font.PLAIN));
+        inner5.add(supplier, gbc);
 
         // my quantity panel
         gbc.gridy = 3;
@@ -275,9 +235,10 @@ public class AddPurchaseOrder {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        quantity = new CustomComponents.EmptyTextField(20, "", new Color(122, 122, 122));
+        quantity = new CustomComponents.EmptyTextField(20, "", new Color(0, 0, 0));
         quantity.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         allowOnlyPositiveNonZeroIntegers(quantity);
+        quantity.setText(Integer.toString(current_pr.Quantity));
         inner1.add(quantity, gbc);
 
         // my price panel
@@ -293,7 +254,7 @@ public class AddPurchaseOrder {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        price = new JLabel(" RM 0.00");
+        price = new JLabel(" RM " + String.format("%.2f", Item.getItemByID(current_pr.ItemID, Main.item_file).UnitCost));
         price.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         inner2.add(price, gbc);
 
@@ -333,8 +294,10 @@ public class AddPurchaseOrder {
         };
 
         quantity.getDocument().addDocumentListener(listener);
+        SwingUtilities.invokeLater(updateTotal);
         dialog.setContentPane(panel);
         dialog.setVisible(true);
+        return false;
     }
 
     public static void allowOnlyPositiveNonZeroIntegers(JTextField textField) {
@@ -419,7 +382,7 @@ public class AddPurchaseOrder {
                 }
 
                 // Skip to next item if separator is found
-                if (line.equals("~~~~~")) {
+                if (line.equals("~")) {
                     found = false;
                 }
             }
@@ -432,4 +395,45 @@ public class AddPurchaseOrder {
         return -1;
     }
 
+    public static void updatePRStatus(String prId, String newStatus, String filename) {
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(filename));
+            List<String> updatedLines = new ArrayList<>();
+            boolean prFound = false;
+
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i);
+
+                // Normalize the line to remove extra spaces before and after colon
+                if (line.trim().startsWith("PurchaseReqID")) {
+                    String[] parts = line.split(":");
+                    if (parts.length > 1 && parts[1].trim().equals(prId)) {
+                        prFound = true;
+                        updatedLines.add(line); // keep the original line
+
+                        // Look for the "Status:" line in the following lines
+                        while (++i < lines.size()) {
+                            String nextLine = lines.get(i);
+                            if (nextLine.trim().startsWith("Status")) {
+                                updatedLines.add("Status:              " + newStatus);
+                                System.out.println("Status updated to: " + newStatus);
+                                break;
+                            } else {
+                                updatedLines.add(nextLine);
+                            }
+                        }
+                        continue; // skip the outer else block
+                    }
+                }
+                updatedLines.add(line); // default behavior
+            }
+            if (prFound) {
+                Files.write(Paths.get(filename), updatedLines);
+            } else {
+                System.out.println("PR ID not found in file: " + prId);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
