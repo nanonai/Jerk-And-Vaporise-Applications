@@ -253,7 +253,7 @@ public class Item {
             indicator += "0";
         }
         System.out.println("StockCount validity string: " + indicator);
-        // Validate threshold (non-negative integer)
+
         if (Threshold.matches("\\d+") && Integer.parseInt(Threshold) >= 0) {
             indicator += "1";
         } else {
@@ -261,18 +261,18 @@ public class Item {
         }
         System.out.println("Threshold validity string: " + indicator);
 
-        System.out.println("Checking Supplier: " + SupplierName);  // Debug log
+        System.out.println("Checking Supplier: " + SupplierName);
         if (!SupplierName.trim().isEmpty()) {
-            String supplierID = Supplier.getSupplierID(SupplierName);  // Validate supplier ID
-            System.out.println("Supplier ID: " + supplierID);  // Debug log
+            String supplierID = Supplier.getSupplierID(SupplierName);
+            System.out.println("Supplier ID: " + supplierID);
 
             if ("Unknown".equals(supplierID)) {
-                indicator += "0";  // Supplier not found
+                indicator += "0";
             } else {
-                indicator += "1";  // Supplier exists
+                indicator += "1";
             }
         } else {
-            indicator += "0";  // Supplier name is empty
+            indicator += "0";
         }
 
         return indicator;
@@ -290,11 +290,9 @@ public class Item {
         return item_temp;
     }
 
-    // getItem (general)
+
     public static Item getItemByName(String ItemName, String filename) {
-        // itemList is data inside txt file
         List<Item> itemList = listAllItem(filename);
-        // item (each item inside txt file)
         for (Item item : itemList) {  //    below store ItemName inside combobox
             if (Objects.equals(item.ItemName, ItemName)) {
                 return item;
@@ -303,9 +301,23 @@ public class Item {
         return null;
     }
 
+    public static String getItemIDByName(String ItemName, String filename) {
+        ItemName = ItemName.trim().toLowerCase();
+
+        List<Item> itemList = Item.listAllItem(filename);
+
+        for (Item item : itemList) {
+            if (item.ItemName.trim().toLowerCase().equals(ItemName)) {
+                return item.ItemID;
+            }
+        }
+        return "Unknown";
+    }
+
+
     public static void removeItem(String ItemID, String filename) {
-        List<Item> allItems = Item.listAllItem(filename);  // Assuming `listAllItem` fetches all items
-        allItems.removeIf(item -> Objects.equals(item.ItemID, ItemID));  // Remove item with matching ItemID
+        List<Item> allItems = Item.listAllItem(filename);
+        allItems.removeIf(item -> Objects.equals(item.ItemID, ItemID));
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (Item item : allItems) {
@@ -322,6 +334,15 @@ public class Item {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public static String getItemName(String itemID) {
+        List<Item> items = Item.listAllItem("datafile/item.txt");
+        for (Item item : items) {
+            if (item.ItemID.equals(itemID)) {
+                return item.ItemName;
+            }
+        }
+        return "";
     }
 
 }

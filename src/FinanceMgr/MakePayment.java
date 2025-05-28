@@ -239,7 +239,15 @@ public class MakePayment {
             );
             // Update the status in the file
             PurchaseOrder.ModifyPurchaseOrder(current_PO.PurchaseOrderID, po, Main.purchaseOrder_file);
-            JOptionPane.showMessageDialog(null, "Status updated successfully!");
+            CustomComponents.CustomOptionPane.showErrorDialog(
+                    parent,
+                    "Payment successfully!",
+                    "Payment",
+                    new Color(209, 88, 128),
+                    new Color(255, 255, 255),
+                    new Color(237, 136, 172),
+                    new Color(255, 255, 255)
+            );
 
             view_or_not.set(true); // Flag to indicate something was modified
             dialog.dispose();      // Close the dialog

@@ -26,7 +26,7 @@ public class ItemMng {
     private static int indicator, base_size;
     private static List<Item> AllItems;
     private static JButton s_btn,clearbtn,p_first,p_left,p_right,p_last;
-    private static CustomComponents.CustomButton btnRestock, btnAdd,btnEdit, btnView, cancel_delete, btnDelete1, btnDelete2;
+    private static CustomComponents.CustomButton btnAdd,btnEdit, btnView, cancel_delete, btnDelete1, btnDelete2;
     private static CustomComponents.CustomScrollPane scrollPane1;
     private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
     private static CustomComponents.CustomXIcon icon_clear1, icon_clear2;
@@ -148,7 +148,7 @@ public class ItemMng {
             public void focusGained(FocusEvent e) {
                 if (search.getText().equals("Search...")) {
                     search.setText("");
-                    search.setForeground(Color.BLACK); // Normal text color
+                    search.setForeground(Color.BLACK);
                 }
             }
 
@@ -156,7 +156,7 @@ public class ItemMng {
             public void focusLost(FocusEvent e) {
                 if (search.getText().isEmpty()) {
                     search.setText("Search...");
-                    search.setForeground(new Color(122, 122, 122)); // Placeholder color
+                    search.setForeground(new Color(122, 122, 122));
                 }
             }
         });
@@ -177,6 +177,9 @@ public class ItemMng {
         for (Item item : AllItems) {
             String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
             String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+            if ("DELETED_SUPPLIER".equals(supplierID)) {
+                supplierName = "<html><font color='red'>[Deleted Supplier]</font></html>";
+            }
 
             data[counter] = new Object[]{
                     item.ItemID,
@@ -361,7 +364,7 @@ public class ItemMng {
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnAdd.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
+        btnAdd.setPreferredSize(new Dimension(185, 40));
         btnAdd.addActionListener(_ -> {
             AddNewItem.Loader(parent, merriweather, boldonse, content, current_user);
             AddNewItem.ShowPage();
@@ -377,10 +380,9 @@ public class ItemMng {
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnEdit.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
+        btnEdit.setPreferredSize(new Dimension(185, 40));
 
         btnEdit.addActionListener(_ -> {
-            // Check if any row is selected
             if (table_item.getSelectedRowCount() == 0) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,
@@ -409,7 +411,7 @@ public class ItemMng {
 
                 if (selected_item != null) {
                     EditNewItem.Loader(parent, merriweather, boldonse, content, current_user, selected_item);
-                    EditNewItem.ShowPage();  // Pass the selected item to EditNewItem form for editing
+                    EditNewItem.ShowPage();
 
                     AllItems = Item.listAllItem("datafile/item.txt");
                     UpdatePages(AllItems.size());
@@ -436,7 +438,7 @@ public class ItemMng {
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnView.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
+        btnView.setPreferredSize(new Dimension(185, 40));
         btnView.addActionListener(_ -> {
             if (table_item.getSelectedRowCount() == 0) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
@@ -527,7 +529,7 @@ public class ItemMng {
                 new Color(50, 8, 32), new Color(174, 122, 140),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnDelete1.setPreferredSize(new Dimension(185, 40)); // Adjusted width and height
+        btnDelete1.setPreferredSize(new Dimension(185, 40));
         btnDelete1.addActionListener(_ -> {
             deleting = CustomComponents.CustomOptionPane.showConfirmDialog(
                     parent,
@@ -572,11 +574,11 @@ public class ItemMng {
         });
         buttonPanel.add(btnDelete1, buttongbc);
 
-        btnDelete2 = new CustomComponents.CustomButton("Delete User (0)", merriweather, Color.WHITE, Color.WHITE,
+        btnDelete2 = new CustomComponents.CustomButton("Delete Item (0)", merriweather, Color.WHITE, Color.WHITE,
                 new Color(159, 4, 4), new Color(161, 40, 40), null, 0, 16,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
-        btnDelete2.setPreferredSize(new Dimension(160, 40)); // Adjusted width and height
+        btnDelete2.setPreferredSize(new Dimension(160, 40));
         btnDelete2.addActionListener(_ -> {
             if (deleting_id.isEmpty()) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
@@ -602,12 +604,6 @@ public class ItemMng {
 
                 List<Item_Supplier> d_itemSuppliers = Item_Supplier.GetItemSupplierByItemIds(ids, "datafile/item_supplier.txt");
                 DeleteItem.UpdateItemSupplier(d_itemSuppliers);
-
-                if (parent == null) {
-                    System.err.println("Parent JFrame is null. This shouldn't happen.");
-                    return;
-                }
-
                 DeleteItem.Loader(parent, merriweather, boldonse, content, itemsToDelete);
 
                 boolean delete = DeleteItem.ShowPage();
@@ -623,7 +619,7 @@ public class ItemMng {
                     }
 
                     AllItems = Item.listAllItem("datafile/item.txt");
-                    deleting_id.clear(); // Clear the deleting ID set
+                    deleting_id.clear();
 
                     btnView.setEnabled(true);
                     btnAdd.setEnabled(true);
@@ -631,7 +627,6 @@ public class ItemMng {
                     btnView.setVisible(true);
                     cancel_delete.setVisible(false);
 
-                    // Update button colors to reflect the state change
                     btnView.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
                             new Color(225, 108, 150), new Color(237, 136, 172),
                             Main.transparent);
@@ -642,13 +637,11 @@ public class ItemMng {
                             new Color(225, 108, 150), new Color(237, 136, 172),
                             Main.transparent);
 
-                    // Reset table colors and mode
                     table_item.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(212, 212, 212));
                     mode = 1;
                     table_item.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
                             merriweather.deriveFont(Font.PLAIN, 16), mode);
 
-                    // Reset scroll pane borders and update pagination
                     scrollPane1.UpdateBorder(1, new Color(202, 202, 202), Main.transparent,
                             Main.transparent, Main.transparent, Main.transparent);
                     filter = 0;
@@ -658,7 +651,6 @@ public class ItemMng {
                     UpdatePages(AllItems.size());
                     UpdateTable(AllItems, list_length, page_counter);
 
-                    // Hide delete button and show delete confirmation button
                     btnDelete2.setVisible(false);
                     btnDelete1.setVisible(true);
                 }
@@ -689,7 +681,9 @@ public class ItemMng {
             } else {
                 String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
                 String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
-
+                if ("DELETED_SUPPLIER".equals(supplierID)) {
+                    supplierName = "<html><font color='red'>[Deleted Supplier]</font></html>";
+                }
                 data[counter] = new Object[]{
                         item.ItemID,
                         item.ItemName,
@@ -718,9 +712,9 @@ public class ItemMng {
     public static void UpdatePages(int totalItems) {
         int pageCount = (int) Math.ceil(totalItems / (double) list_length);
         if (totalItems <= list_length) {
-            pageCount = 1; // If the filtered results are less than the page length, show 1 page
+            pageCount = 1;
         }
-        pages.removeAllItems(); // Remove existing pages
+        pages.removeAllItems();
         for (int i = 1; i <= pageCount; i++) {
             pages.addItem(String.format("Page %s of %s", i, pageCount));
         }
@@ -735,7 +729,6 @@ public class ItemMng {
         List<Item> AllItems = Item.listAllItem("datafile/item.txt");
 
         if (searcher.isEmpty()) {
-            // Reset pagination when search is empty
             page_counter = 0;
             UpdatePages(AllItems.size());
             UpdateTable(AllItems, list_length, page_counter);
@@ -764,54 +757,35 @@ public class ItemMng {
     }
 
     public static void UpdateComponentSize(int base_size) {
-        // Update the size of search icons dynamically
         search_icon1.UpdateSize((int) (base_size * 0.8));
         search_icon2.UpdateSize((int) (base_size * 0.8));
         s_btn.setSize(search_icon1.getIconWidth(), search_icon1.getIconHeight());
         s_btn.repaint();
         icon_clear1.UpdateSize((int) (base_size * 0.8));
         icon_clear2.UpdateSize((int) (base_size * 0.8));
-
-        // Set button size to match the icon dimensions
         clearbtn.setSize(icon_clear1.getIconWidth(), icon_clear1.getIconHeight());
         clearbtn.setPreferredSize(new Dimension(icon_clear1.getIconWidth(), icon_clear1.getIconHeight()));
-
-        // Ensure button is repainted
         clearbtn.revalidate();
         clearbtn.repaint();
-
-        // Update left and right arrow icons dynamically
         left_icon1.UpdateSize(base_size);
         left_icon2.UpdateSize(base_size);
         p_left.setSize(left_icon1.getIconWidth(), left_icon1.getIconHeight());
         p_left.repaint();
-
         right_icon1.UpdateSize(base_size);
         right_icon2.UpdateSize(base_size);
         p_right.setSize(right_icon1.getIconWidth(), right_icon1.getIconHeight());
         p_right.repaint();
-
         p_first.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
         p_last.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
-
-        // Update pages and other relevant labels with new font size
         pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
-
-        // Update labels' font sizes based on base_size
         lbl_show.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_indicate.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
-
-        // Adjust the font size for combo boxes and text fields
         entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         search.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
-
-        // Update table font sizes based on base_size
         table_item.SetChanges(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
                 merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)), mode);
-
-        // Update other buttons with base_size
         btnAdd.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnEdit.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnDelete1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
@@ -819,8 +793,6 @@ public class ItemMng {
         btnView.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         cancel_delete.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
 
-
-        // Ensure components revalidate and repaint to reflect size changes
         s_btn.revalidate();
         p_left.revalidate();
         p_right.revalidate();

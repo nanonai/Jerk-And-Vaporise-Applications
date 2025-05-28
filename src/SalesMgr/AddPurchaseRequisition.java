@@ -1,16 +1,20 @@
-package PurchaseMgr;
+package SalesMgr;
 
 import Admin.User;
 import Admin.CustomComponents;
 import Admin.Main;
+import FinanceMgr.PurchaseRequisition;
 import InventoryMgr.Item;
+import PurchaseMgr.Item_Supplier;
+import PurchaseMgr.PurchaseOrder;
+import PurchaseMgr.Supplier;
 
 import javax.swing.*;
-        import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
-        import java.awt.*;
-        import java.awt.event.ActionEvent;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AddPurchaseOrder {
+public class AddPurchaseRequisition {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
@@ -33,17 +37,17 @@ public class AddPurchaseOrder {
     private static JDialog dialog;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
-        AddPurchaseOrder.parent = parent;
-        AddPurchaseOrder.merriweather = merriweather;
-        AddPurchaseOrder.boldonse = boldonse;
-        AddPurchaseOrder.content = content;
-        AddPurchaseOrder.current_user = current_user;
+        AddPurchaseRequisition.parent = parent;
+        AddPurchaseRequisition.merriweather = merriweather;
+        AddPurchaseRequisition.boldonse = boldonse;
+        AddPurchaseRequisition.content = content;
+        AddPurchaseRequisition.current_user = current_user;
     }
 
     public static void ShowPage(){
-        JDialog dialog = new JDialog(parent, "Add Purchase Order", true);
+        JDialog dialog = new JDialog(parent, "Add Purchase Requisition", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize(parent.getWidth() / 2, parent.getHeight() / 2);
+        dialog.setSize(650, 350);
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(parent);
 
@@ -65,7 +69,7 @@ public class AddPurchaseOrder {
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.insets = new Insets(10, 10, 10, 0);
-        JLabel title = new JLabel("Create Purchase Order");
+        JLabel title = new JLabel("Create Purchase Requisition");
         title.setOpaque(false);
         title.setFont(merriweather.deriveFont(Font.BOLD, (float) (base_size * 1.3)));
         panel.add(title, gbc);
@@ -91,19 +95,14 @@ public class AddPurchaseOrder {
         panel.add(label3, gbc);
 
         gbc.gridy = 4;
-        JLabel label4 = new JLabel("Price:");
-        label4.setOpaque(false);
-        label4.setFont(merriweather.deriveFont(Font.PLAIN, (float)(base_size)));
+        JLabel label4 = new JLabel();
         panel.add(label4, gbc);
 
         gbc.gridy = 5;
-        JLabel label5 = new JLabel("Total:");
-        label5.setOpaque(false);
-        label5.setFont(merriweather.deriveFont(Font.PLAIN, (float)(base_size)));
+        JLabel label5 = new JLabel();
         panel.add(label5, gbc);
 
         gbc.gridy = 6;
-        //gbc.weighty = 1;
         JLabel type_label6 = new JLabel();
         panel.add(type_label6, gbc);
 
@@ -150,7 +149,7 @@ public class AddPurchaseOrder {
         gbc.insets = new Insets(0, 0, 0, 0);
         CustomComponents.CustomButton confirm = new CustomComponents.CustomButton("Confirm",
                 merriweather.deriveFont(Font.PLAIN), Color.WHITE, Color.WHITE,
-                new Color(56, 53, 70), new Color(73, 69, 87),
+                new Color(209, 88, 128), new Color(237, 136, 172),
                 Main.transparent, 0, base_size, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         button_panel2.add(confirm, gbc);
@@ -174,17 +173,16 @@ public class AddPurchaseOrder {
             }
 
             try {
-                PurchaseOrder PO = new PurchaseOrder(
-                        PurchaseOrder.idMaker(Main.purchaseOrder_file),
+                PurchaseRequisition PR = new PurchaseRequisition(
+                        PurchaseRequisition.idMaker(Main.purchaseReq_file),
                         itemID,
                         supplierID,
                         Integer.parseInt(qtyText),
-                        calculateTotal(quantity , price),
                         LocalDate.now(),
                         current_user.UserID,
-                        "Pending"
+                        0
                 );
-                PurchaseOrder.savePurchaseOrder(PO, Main.purchaseOrder_file, parent);
+                PurchaseRequisition.savePurchaseRequisition(PR, Main.purchaseReq_file, parent);
                 dialog.dispose();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(dialog, "Please enter valid numbers for quantity and price.",
@@ -230,17 +228,17 @@ public class AddPurchaseOrder {
                     supplierComboBox.repaint();
                     supplierComboBox.revalidate();
 
-                    // 2. Update UnitCost Label (your 'price' label)
-                    double unitCost = getUnitCostByItemID(selectedItemID, new File(Main.item_file));
-                    if (unitCost >= 0) {
-                        price.setText(String.format(" RM %.2f", unitCost));
-                    } else {
-                        price.setText("Price not found");
-                    }
-                    quantity.setText("");
-
-                    double totalAmt = calculateTotal(quantity, price);
-                    total.setText(" RM " + String.format("%.2f", totalAmt));
+//                    // 2. Update UnitCost Label (your 'price' label)
+//                    double unitCost = getUnitCostByItemID(selectedItemID, new File(Main.item_file));
+//                    if (unitCost >= 0) {
+//                        price.setText(String.format(" RM %.2f", unitCost));
+//                    } else {
+//                        price.setText("Price not found");
+//                    }
+//                    quantity.setText("");
+//
+//                    double totalAmt = calculateTotal(quantity, price);
+//                    total.setText(" RM " + String.format("%.2f", totalAmt));
                 });
             }
         });
@@ -280,59 +278,59 @@ public class AddPurchaseOrder {
         allowOnlyPositiveNonZeroIntegers(quantity);
         inner1.add(quantity, gbc);
 
-        // my price panel
-        gbc.gridx = 1;
-        gbc.gridy = 4;
-        gbc.insets = new Insets(3, 2, 3, 2);
-
-        JPanel inner2 = new JPanel(new GridBagLayout());
-        inner2.setOpaque(true);
-        inner2.setBackground(Color.WHITE);
-        inner2.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
-        panel.add(inner2, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        price = new JLabel(" RM 0.00");
-        price.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-        inner2.add(price, gbc);
-
-        // my total panel
-        gbc.gridx = 1;
-        gbc.gridy = 5;
-        gbc.insets = new Insets(3, 2, 3, 2);
-        JPanel inner3 = new JPanel(new GridBagLayout());
-        inner3.setOpaque(true);
-        inner3.setBackground(Color.WHITE);
-        inner3.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
-        panel.add(inner3, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        total = new JLabel("");
-        total.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-        inner3.add(total, gbc);
-
-        Runnable updateTotal = () -> {
-            double totalAmt = calculateTotal(quantity, price);
-            total.setText(" RM " + String.format("%.2f", totalAmt));
-        };
-
-        DocumentListener listener = new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                updateTotal.run();
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                updateTotal.run();
-            }
-
-            public void changedUpdate(DocumentEvent e) {
-                updateTotal.run();
-            }
-        };
-
-        quantity.getDocument().addDocumentListener(listener);
+//        // my price panel
+//        gbc.gridx = 1;
+//        gbc.gridy = 4;
+//        gbc.insets = new Insets(3, 2, 3, 2);
+//
+//        JPanel inner2 = new JPanel(new GridBagLayout());
+//        inner2.setOpaque(true);
+//        inner2.setBackground(Color.WHITE);
+//        inner2.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+//        panel.add(inner2, gbc);
+//
+//        gbc.gridx = 0;
+//        gbc.gridy = 0;
+//        price = new JLabel(" RM 0.00");
+//        price.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+//        inner2.add(price, gbc);
+//
+//        // my total panel
+//        gbc.gridx = 1;
+//        gbc.gridy = 5;
+//        gbc.insets = new Insets(3, 2, 3, 2);
+//        JPanel inner3 = new JPanel(new GridBagLayout());
+//        inner3.setOpaque(true);
+//        inner3.setBackground(Color.WHITE);
+//        inner3.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
+//        panel.add(inner3, gbc);
+//
+//        gbc.gridx = 0;
+//        gbc.gridy = 0;
+//        total = new JLabel("");
+//        total.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
+//        inner3.add(total, gbc);
+//
+//        Runnable updateTotal = () -> {
+//            double totalAmt = calculateTotal(quantity, price);
+//            total.setText(" RM " + String.format("%.2f", totalAmt));
+//        };
+//
+//        DocumentListener listener = new DocumentListener() {
+//            public void insertUpdate(DocumentEvent e) {
+//                updateTotal.run();
+//            }
+//
+//            public void removeUpdate(DocumentEvent e) {
+//                updateTotal.run();
+//            }
+//
+//            public void changedUpdate(DocumentEvent e) {
+//                updateTotal.run();
+//            }
+//        };
+//
+//        quantity.getDocument().addDocumentListener(listener);
         dialog.setContentPane(panel);
         dialog.setVisible(true);
     }
@@ -379,57 +377,57 @@ public class AddPurchaseOrder {
         });
     }
 
-    public static double calculateTotal(JTextField quantityField, JLabel priceField) {
-        String quantityText = quantityField.getText().trim();
-        String priceText = priceField.getText().trim();
+//    public static double calculateTotal(JTextField quantityField, JLabel priceField) {
+//        String quantityText = quantityField.getText().trim();
+//        String priceText = priceField.getText().trim();
+//
+//        try {
+//            // Remove "RM " prefix
+//            if (priceText.startsWith("RM ")) {
+//                priceText = priceText.substring(3).trim();
+//            }
+//
+//            // Parse both values
+//            int quantity = Integer.parseInt(quantityText);
+//            double price = Double.parseDouble(priceText);
+//
+//            // Calculate total
+//            return quantity * price;
+//
+//        } catch (NumberFormatException e) {
+//            // Invalid input — return 0 or handle accordingly
+//            return 0.0;
+//        }
+//    }
 
-        try {
-            // Remove "RM " prefix
-            if (priceText.startsWith("RM ")) {
-                priceText = priceText.substring(3).trim();
-            }
-
-            // Parse both values
-            int quantity = Integer.parseInt(quantityText);
-            double price = Double.parseDouble(priceText);
-
-            // Calculate total
-            return quantity * price;
-
-        } catch (NumberFormatException e) {
-            // Invalid input — return 0 or handle accordingly
-            return 0.0;
-        }
-    }
-
-    public static double getUnitCostByItemID(String itemID, File itemFile) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(itemFile))) {
-            String line;
-            boolean found = false;
-
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-                if (line.startsWith("ItemID:") && line.contains(itemID)) {
-                    found = true;
-                }
-
-                if (found && line.startsWith("UnitCost:")) {
-                    String costStr = line.replace("UnitCost:", "").trim();
-                    return Double.parseDouble(costStr);
-                }
-
-                // Skip to next item if separator is found
-                if (line.equals("~~~~~")) {
-                    found = false;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NumberFormatException e) {
-            System.out.println("Failed to parse UnitCost for itemID: " + itemID);
-        }
-        // If not found or error occurred
-        return -1;
-    }
+//    public static double getUnitCostByItemID(String itemID, File itemFile) {
+//        try (BufferedReader reader = new BufferedReader(new FileReader(itemFile))) {
+//            String line;
+//            boolean found = false;
+//
+//            while ((line = reader.readLine()) != null) {
+//                line = line.trim();
+//                if (line.startsWith("ItemID:") && line.contains(itemID)) {
+//                    found = true;
+//                }
+//
+//                if (found && line.startsWith("UnitCost:")) {
+//                    String costStr = line.replace("UnitCost:", "").trim();
+//                    return Double.parseDouble(costStr);
+//                }
+//
+//                // Skip to next item if separator is found
+//                if (line.equals("~~~~~")) {
+//                    found = false;
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (NumberFormatException e) {
+//            System.out.println("Failed to parse UnitCost for itemID: " + itemID);
+//        }
+//        // If not found or error occurred
+//        return -1;
+//    }
 
 }

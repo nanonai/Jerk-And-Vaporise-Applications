@@ -95,7 +95,7 @@ public class SupplierMng {
         content.add(placeholder1, gbc);
 
         gbc.gridx = 4;
-        gbc.weightx = 10;
+        gbc.weightx = 2;
         CustomComponents.RoundedPanel search_panel = new CustomComponents.RoundedPanel(8, 0, 1, Color.WHITE,
                 new Color(209, 209, 209));
         search_panel.setLayout(new GridBagLayout());
@@ -149,7 +149,7 @@ public class SupplierMng {
             public void focusGained(FocusEvent e) {
                 if (search.getText().equals("Search...")) {
                     search.setText("");
-                    search.setForeground(Color.BLACK); // Normal text color
+                    search.setForeground(Color.BLACK);
                 }
             }
 
@@ -157,7 +157,7 @@ public class SupplierMng {
             public void focusLost(FocusEvent e) {
                 if (search.getText().isEmpty()) {
                     search.setText("Search...");
-                    search.setForeground(new Color(122, 122, 122)); // Placeholder color
+                    search.setForeground(new Color(122, 122, 122));
                 }
             }
         });
@@ -170,7 +170,7 @@ public class SupplierMng {
         gbc.gridwidth = 6;
         gbc.fill = GridBagConstraints.BOTH;
 
-        AllSupplier = Supplier.listAllSupplier("datafile/supplier.txt");
+        AllSupplier = Supplier.listAllSupplier(Main.supplier_file);
         String[] titles = new String[]{"SupplierID", "SupplierName", "ContactPerson", "Phone", "Email", "Address"};
         Object[][] data = new Object[AllSupplier.size()][titles.length];
         int counter = 0;
@@ -205,15 +205,13 @@ public class SupplierMng {
                         deselected.removeAll(currentSelection);
                         for (int row : newlySelected) {
                             deleting_id.add(table_item.getValueAt(row,
-                                    table_item.getColumnModel().getColumnIndex("ItemID")).toString());
-                            System.out.println("Selected ItemID: " + deleting_id);
+                                    table_item.getColumnModel().getColumnIndex("SupplierID")).toString());
                         }
                         for (int row : deselected) {
                             deleting_id.remove(table_item.getValueAt(row,
-                                    table_item.getColumnModel().getColumnIndex("ItemID")).toString());
-                            System.out.println("Deselected ItemID: " + deleting_id);
+                                    table_item.getColumnModel().getColumnIndex("SupplierID")).toString());
                         }
-                        btnDelete2.setText(String.format("Delete Item (%s)", deleting_id.size()));
+                        btnDelete2.setText(String.format("Delete Supplier (%s)", deleting_id.size()));
                         previousSelection.clear();
                         previousSelection.addAll(currentSelection);
                     });
@@ -250,7 +248,7 @@ public class SupplierMng {
         content.add(lbl_indicate, gbc);
 
         gbc.gridx = 4;
-        gbc.weightx = 1;
+        gbc.weightx = 3;
         gbc.gridwidth = 1;
         gbc.insets = new Insets(0,0,0,11);
         gbc.fill = GridBagConstraints.BOTH;
@@ -352,314 +350,306 @@ public class SupplierMng {
         buttongbc.weightx = 1;
         buttongbc.fill = GridBagConstraints.BOTH;
         buttongbc.insets = new Insets(3, 7, 5, 20);
-        btnAdd = new CustomComponents.CustomButton("Add Item", merriweather, Color.WHITE, Color.WHITE,
+        btnAdd = new CustomComponents.CustomButton("Add Supplier", merriweather, Color.WHITE, Color.WHITE,
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnAdd.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
+        btnAdd.setPreferredSize(new Dimension(185, 40));
         btnAdd.addActionListener(_ -> {
             AddSupplier.Loader(parent, merriweather, boldonse, content, current_user);
             AddSupplier.ShowPage();
 
-            AllSupplier = Supplier.listAllSupplier("datafile/supplier.txt");
+            AllSupplier = Supplier.listAllSupplier(Main.supplier_file);
             UpdatePages(AllSupplier.size());
             UpdateTable(AllSupplier, list_length, page_counter);
         });
         buttonPanel.add(btnAdd, buttongbc);
 
         buttongbc.gridx = 1;
-        btnEdit = new CustomComponents.CustomButton("Edit Item", merriweather, Color.WHITE, Color.WHITE,
+        btnEdit = new CustomComponents.CustomButton("Edit Supplier", merriweather, Color.WHITE, Color.WHITE,
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnEdit.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
+        btnEdit.setPreferredSize(new Dimension(185, 40));
 
-//        btnEdit.addActionListener(_ -> {
-//            // Check if any row is selected
-//            if (table_item.getSelectedRowCount() == 0) {
-//                CustomComponents.CustomOptionPane.showErrorDialog(
-//                        parent,
-//                        "Please select an item to edit!",
-//                        "Error",
-//                        new Color(209, 88, 128),
-//                        new Color(255, 255, 255),
-//                        new Color(237, 136, 172),
-//                        new Color(255, 255, 255)
-//                );
-//            } else {
-//                String selected_id = table_item.getValueAt(
-//                        table_item.getSelectedRow(),
-//                        table_item.getColumnModel().getColumnIndex("ItemID")
-//                ).toString();
-//
-//                System.out.println("Edit button clicked. Selected ItemID: " + selected_id);
-//
-//                Item selected_item = null;
-//                for (Item item : AllSupplier) {
-//                    if (item.ItemID.equals(selected_id)) {
-//                        selected_item = item;
-//                        break;
-//                    }
-//                }
-//
-//                if (selected_item != null) {
-//                    EditNewItem.Loader(parent, merriweather, boldonse, content, current_user, selected_item);
-//                    EditNewItem.ShowPage();  // Pass the selected item to EditNewItem form for editing
-//
-//                    AllSupplier = Item.listAllItem("datafile/item.txt");
-//                    UpdatePages(AllSupplier.size());
-//                    UpdateTable(AllSupplier, list_length, page_counter);
-//
-//                } else {
-//                    CustomComponents.CustomOptionPane.showErrorDialog(
-//                            parent,
-//                            "Selected item not found in the list!",
-//                            "Error",
-//                            new Color(209, 88, 128),
-//                            new Color(255, 255, 255),
-//                            new Color(237, 136, 172),
-//                            new Color(255, 255, 255)
-//                    );
-//                }
-//            }
-//        });
+        btnEdit.addActionListener(_ -> {
+            if (table_item.getSelectedRowCount() == 0) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select a supplier to edit!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        Color.WHITE,
+                        new Color(237, 136, 172),
+                        Color.WHITE
+                );
+            } else {
+                String selected_id = table_item.getValueAt(
+                        table_item.getSelectedRow(),
+                        table_item.getColumnModel().getColumnIndex("SupplierID")
+                ).toString();
+
+                Supplier selected_supplier = null;
+                for (Supplier supplier : AllSupplier) {
+                    if (supplier.SupplierID.equals(selected_id)) {
+                        selected_supplier = supplier;
+                        break;
+                    }
+                }
+
+                if (selected_supplier != null) {
+                    EditSupplier.Loader(parent, merriweather, boldonse, content, current_user, selected_supplier);
+                    EditSupplier.ShowPage();
+
+                    AllSupplier = Supplier.listAllSupplier(Main.supplier_file);
+                    UpdatePages(AllSupplier.size());
+                    UpdateTable(AllSupplier, list_length, page_counter);
+
+                } else {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Selected supplier not found in the list!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            Color.WHITE,
+                            new Color(237, 136, 172),
+                            Color.WHITE
+                    );
+                }
+            }
+        });
         buttonPanel.add(btnEdit, buttongbc);
 
 
         buttongbc.gridx = 2;
-        btnView = new CustomComponents.CustomButton("View Item", merriweather, Color.WHITE, Color.WHITE,
+        btnView = new CustomComponents.CustomButton("View Supplier", merriweather, Color.WHITE, Color.WHITE,
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnView.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
-//        btnView.addActionListener(_ -> {
-//            if (table_item.getSelectedRowCount() == 0) {
-//                CustomComponents.CustomOptionPane.showErrorDialog(
-//                        parent,
-//                        "Please select an item to view!",
-//                        "Error",
-//                        new Color(209, 88, 128),
-//                        new Color(255, 255, 255),
-//                        new Color(237, 136, 172),
-//                        new Color(255, 255, 255)
-//                );
-//            } else {
-//                String selected_id = table_item.getValueAt(
-//                        table_item.getSelectedRow(),
-//                        table_item.getColumnModel().getColumnIndex("ItemID")
-//                ).toString();
-//
-//                Item selected_item = null;
-//                for (Item item : AllSupplier) {
-//                    if (item.ItemID.equals(selected_id)) {
-//                        selected_item = item;
-//                        break;
-//                    }
-//                }
-//
-//                if (selected_item != null) {
-//                    ViewItem.Loader(parent, merriweather, boldonse, content, selected_item);
-//                    boolean see = ViewItem.ShowPage();
-//                    if (see) {
-//                        System.out.println("Item viewed.");
-//                    }
-//                } else {
-//                    CustomComponents.CustomOptionPane.showErrorDialog(
-//                            parent,
-//                            "Selected item not found in the list!",
-//                            "Error",
-//                            new Color(209, 88, 128),
-//                            new Color(255, 255, 255),
-//                            new Color(237, 136, 172),
-//                            new Color(255, 255, 255)
-//                    );
-//                }
-//            }
-//        });
+        btnView.setPreferredSize(new Dimension(185, 40));
+        btnView.addActionListener(_ -> {
+            if (table_item.getSelectedRowCount() == 0) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select a supplier to view!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        Color.WHITE,
+                        new Color(237, 136, 172),
+                        Color.WHITE
+                );
+            } else {
+                String selected_id = table_item.getValueAt(
+                        table_item.getSelectedRow(),
+                        table_item.getColumnModel().getColumnIndex("SupplierID")
+                ).toString();
+
+                Supplier selected_supplier = null;
+                for (Supplier supplier : AllSupplier) {
+                    if (supplier.SupplierID.equals(selected_id)) {
+                        selected_supplier = supplier;
+                        break;
+                    }
+                }
+
+                if (selected_supplier != null) {
+                    ViewSupplier.Loader(parent, merriweather, boldonse, content, selected_supplier);
+                    boolean see = ViewSupplier.ShowPage();
+                    if (see) {
+                        System.out.println("Supplier viewed.");
+                    }
+                } else {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "Selected supplier not found in the list!",
+                            "Error",
+                            new Color(209, 88, 128),
+                            Color.WHITE,
+                            new Color(237, 136, 172),
+                            Color.WHITE
+                    );
+                }
+            }
+        });
         buttonPanel.add(btnView, buttongbc);
-//
-//        cancel_delete = new CustomComponents.CustomButton("Cancel", merriweather, Color.WHITE, Color.WHITE,
-//                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 16,
-//                Main.transparent, false, 5, false, null, 0,
-//                0, 0);
-//        cancel_delete.setPreferredSize(new Dimension(185, 40));
-//        cancel_delete.setVisible(false);
-//        cancel_delete.addActionListener(_ -> {
-//            deleting = false;
-//            deleting_id.clear();
-//            btnView.setEnabled(true);
-//            btnAdd.setEnabled(true);
-//            btnEdit.setEnabled(true);
-//            btnView.setVisible(true);
-//            cancel_delete.setVisible(false);
-//
-//            btnView.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
-//                    new Color(225, 108, 150), new Color(237, 136, 172),
-//                    Main.transparent);
-//            btnAdd.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
-//                    new Color(209, 88, 128), new Color(237, 136, 172),
-//                    Main.transparent);
-//            btnEdit.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
-//                    new Color(225, 108, 150), new Color(237, 136, 172),
-//                    Main.transparent);
-//
-//            table_item.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(212, 212, 212));
-//            mode = 1;
-//            table_item.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
-//                    merriweather.deriveFont(Font.PLAIN, 16), mode);
-//            scrollPane1.UpdateBorder(1, new Color(202, 202, 202), Main.transparent,
-//                    Main.transparent, Main.transparent, Main.transparent);
-//
-//            btnDelete2.setVisible(false);
-//            btnDelete1.setVisible(true);
-//        });
-//        cancel_delete.setVisible(false);
-//        buttonPanel.add(cancel_delete, buttongbc);
+
+        cancel_delete = new CustomComponents.CustomButton("Cancel", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 16,
+                Main.transparent, false, 5, false, null, 0,
+                0, 0);
+        cancel_delete.setPreferredSize(new Dimension(185, 40));
+        cancel_delete.setVisible(false);
+        cancel_delete.addActionListener(_ -> {
+            deleting = false;
+            deleting_id.clear();
+            btnView.setEnabled(true);
+            btnAdd.setEnabled(true);
+            btnEdit.setEnabled(true);
+            btnView.setVisible(true);
+            cancel_delete.setVisible(false);
+
+            btnView.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                    new Color(225, 108, 150), new Color(237, 136, 172),
+                    Main.transparent);
+            btnAdd.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                    new Color(209, 88, 128), new Color(237, 136, 172),
+                    Main.transparent);
+            btnEdit.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                    new Color(225, 108, 150), new Color(237, 136, 172),
+                    Main.transparent);
+
+            table_item.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(212, 212, 212));
+            mode = 1;
+            table_item.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
+                    merriweather.deriveFont(Font.PLAIN, 16), mode);
+            scrollPane1.UpdateBorder(1, new Color(202, 202, 202), Main.transparent,
+                    Main.transparent, Main.transparent, Main.transparent);
+
+            btnDelete2.setVisible(false);
+            btnDelete1.setVisible(true);
+        });
+        cancel_delete.setVisible(false);
+        buttonPanel.add(cancel_delete, buttongbc);
 
 
         buttongbc.gridx = 3;
-        btnDelete1 = new CustomComponents.CustomButton("Delete Item", merriweather, Color.WHITE, Color.WHITE,
+        btnDelete1 = new CustomComponents.CustomButton("Delete Supplier", merriweather, Color.WHITE, Color.WHITE,
                 new Color(50, 8, 32), new Color(174, 122, 140),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnDelete1.setPreferredSize(new Dimension(185, 40)); // Adjusted width and height
-//        btnDelete1.addActionListener(_ -> {
-//            deleting = CustomComponents.CustomOptionPane.showConfirmDialog(
-//                    parent,
-//                    "Enter delete selection mode?",
-//                    "Confirmation",
-//                    new Color(159, 4, 4),
-//                    new Color(255, 255, 255),
-//                    new Color(161, 40, 40),
-//                    new Color(255, 255, 255),
-//                    new Color(56, 53, 70),
-//                    new Color(255, 255, 255),
-//                    new Color(73, 69, 87),
-//                    new Color(255, 255, 255),
-//                    false
-//            );
-//
-//            if (deleting) {
-//                btnView.setEnabled(false);
-//                btnAdd.setEnabled(false);
-//                btnEdit.setEnabled(false);
-//                btnView.setVisible(false);
-//                cancel_delete.setVisible(true);
-//                btnView.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
-//                        new Color(242, 242, 242), new Color(241, 241, 242),
-//                        new Color(241, 241, 242));
-//                btnAdd.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
-//                        new Color(241, 241, 242), new Color(241, 241, 242),
-//                        new Color(241, 241, 242));
-//                btnEdit.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
-//                        new Color(241, 241, 242), new Color(241, 241, 242),
-//                        new Color(241, 241, 242));
-//                table_item.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(255, 203, 205));
-//                mode = 0;
-//                table_item.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
-//                        merriweather.deriveFont(Font.PLAIN, 16), mode);
-//                scrollPane1.UpdateBorder(3, new Color(159, 4, 4), Main.transparent,
-//                        Main.transparent, Main.transparent, Main.transparent);
-//
-//                btnDelete1.setVisible(false);
-//                btnDelete2.setVisible(true);
-//            }
-//        });
+        btnDelete1.setPreferredSize(new Dimension(185, 40));
+        btnDelete1.addActionListener(_ -> {
+            deleting = CustomComponents.CustomOptionPane.showConfirmDialog(
+                    parent,
+                    "Enter delete selection mode?",
+                    "Confirmation",
+                    new Color(159, 4, 4),
+                    new Color(255, 255, 255),
+                    new Color(161, 40, 40),
+                    new Color(255, 255, 255),
+                    new Color(56, 53, 70),
+                    new Color(255, 255, 255),
+                    new Color(73, 69, 87),
+                    new Color(255, 255, 255),
+                    false
+            );
+
+            if (deleting) {
+                btnView.setEnabled(false);
+                btnAdd.setEnabled(false);
+                btnEdit.setEnabled(false);
+                btnView.setVisible(false);
+                cancel_delete.setVisible(true);
+                btnView.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
+                        new Color(242, 242, 242), new Color(241, 241, 242),
+                        new Color(241, 241, 242));
+                btnAdd.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
+                        new Color(241, 241, 242), new Color(241, 241, 242),
+                        new Color(241, 241, 242));
+                btnEdit.UpdateColor(new Color(199, 200, 202), new Color(199, 200, 202),
+                        new Color(241, 241, 242), new Color(241, 241, 242),
+                        new Color(241, 241, 242));
+                table_item.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(255, 203, 205));
+                mode = 0;
+                table_item.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
+                        merriweather.deriveFont(Font.PLAIN, 16), mode);
+                scrollPane1.UpdateBorder(3, new Color(159, 4, 4), Main.transparent,
+                        Main.transparent, Main.transparent, Main.transparent);
+
+                btnDelete1.setVisible(false);
+                btnDelete2.setVisible(true);
+            }
+        });
         buttonPanel.add(btnDelete1, buttongbc);
 
-        btnDelete2 = new CustomComponents.CustomButton("Delete User (0)", merriweather, Color.WHITE, Color.WHITE,
+        btnDelete2 = new CustomComponents.CustomButton("Delete Supplier (0)", merriweather, Color.WHITE, Color.WHITE,
                 new Color(159, 4, 4), new Color(161, 40, 40), null, 0, 16,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
-        btnDelete2.setPreferredSize(new Dimension(160, 40)); // Adjusted width and height
-//        btnDelete2.addActionListener(_ -> {
-//            if (deleting_id.isEmpty()) {
-//                CustomComponents.CustomOptionPane.showErrorDialog(
-//                        parent,
-//                        "Please select at least one item to delete!",
-//                        "Error",
-//                        new Color(209, 88, 128),
-//                        new Color(255, 255, 255),
-//                        new Color(237, 136, 172),
-//                        new Color(255, 255, 255)
-//                );
-//            } else {
-//
-//                List<String> ids = new ArrayList<>(deleting_id);
-//
-//                List<Item> itemsToDelete = new ArrayList<>();
-//                for (String itemId : ids) {
-//                    Item item = Item.getItemByID(itemId, "datafile/item.txt");
-//                    if (item != null) {
-//                        itemsToDelete.add(item);
-//                    }
-//                }
-//
-//                List<Item_Supplier> d_itemSuppliers = Item_Supplier.GetItemSupplierByItemIds(ids, "datafile/item_supplier.txt");
-//                DeleteItem.UpdateItemSupplier(d_itemSuppliers);
-//
-//                if (parent == null) {
-//                    System.err.println("Parent JFrame is null. This shouldn't happen.");
-//                    return;
-//                }
-//
-//                DeleteItem.Loader(parent, merriweather, boldonse, content, itemsToDelete);
-//
-//                boolean delete = DeleteItem.ShowPage();
-//                if (delete) {
-//                    deleting = false;
-//
-//                    for (String itemId : ids) {
-//                        Item.removeItem(itemId, "datafile/item.txt");
-//                    }
-//
-//                    for (Item_Supplier itemSupplier : d_itemSuppliers) {
-//                        Item_Supplier.removeItemSupplier(itemSupplier.ItemID, itemSupplier.SupplierID, "datafile/item_supplier.txt");
-//                    }
-//
-//                    AllSupplier = Item.listAllItem("datafile/item.txt");
-//                    deleting_id.clear(); // Clear the deleting ID set
-//
-//                    btnView.setEnabled(true);
-//                    btnAdd.setEnabled(true);
-//                    btnEdit.setEnabled(true);
-//                    btnView.setVisible(true);
-//                    cancel_delete.setVisible(false);
-//
-//                    // Update button colors to reflect the state change
-//                    btnView.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
-//                            new Color(225, 108, 150), new Color(237, 136, 172),
-//                            Main.transparent);
-//                    btnAdd.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
-//                            new Color(209, 88, 128), new Color(237, 136, 172),
-//                            Main.transparent);
-//                    btnEdit.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
-//                            new Color(225, 108, 150), new Color(237, 136, 172),
-//                            Main.transparent);
-//
-//                    // Reset table colors and mode
-//                    table_item.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(212, 212, 212));
-//                    mode = 1;
-//                    table_item.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
-//                            merriweather.deriveFont(Font.PLAIN, 16), mode);
-//
-//                    // Reset scroll pane borders and update pagination
-//                    scrollPane1.UpdateBorder(1, new Color(202, 202, 202), Main.transparent,
-//                            Main.transparent, Main.transparent, Main.transparent);
-//                    filter = 0;
-//                    page_counter = 0;
-//                    UpdatePages(list_length);
-//                    pages.setSelectedIndex(0);
-//                    UpdatePages(AllSupplier.size());
-//                    UpdateTable(AllSupplier, list_length, page_counter);
-//
-//                    // Hide delete button and show delete confirmation button
-//                    btnDelete2.setVisible(false);
-//                    btnDelete1.setVisible(true);
-//                }
-//            }
-//        });
-//        btnDelete2.setVisible(false);
+        btnDelete2.setPreferredSize(new Dimension(160, 40));
+        btnDelete2.addActionListener(_ -> {
+            if (deleting_id.isEmpty()) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select at least one supplier to delete!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else {
+
+                List<String> ids = new ArrayList<>(deleting_id);
+
+                List<Supplier> suppliersToDelete = new ArrayList<>();
+                for (String supplierId : ids) {
+                    Supplier supplier = Supplier.getSupplierByID(supplierId, Main.supplier_file);
+                    if (supplier != null) {
+                        suppliersToDelete.add(supplier);
+                    }
+                }
+
+                List<Item_Supplier> d_supplierItems = Item_Supplier.GetItemSupplierByItemIds(ids, Main.item_supplier_file);
+                DeleteSupplier.UpdateItemSupplier(d_supplierItems);
+
+                if (parent == null) {
+                    System.err.println("Parent JFrame is null. This shouldn't happen.");
+                    return;
+                }
+
+                DeleteSupplier.Loader(parent, merriweather, boldonse, content, suppliersToDelete);
+
+                boolean delete = DeleteSupplier.ShowPage();
+                if (delete) {
+                    deleting = false;
+                    for (String supplierId : ids) {
+                        Supplier.removeSupplier(supplierId, Main.supplier_file);
+                    }
+
+                    for (Item_Supplier itemSupplier : d_supplierItems) {
+                        Item_Supplier.replaceSupplierID(itemSupplier.ItemID, itemSupplier.SupplierID, "DELETED_SUPPLIER", Main.item_supplier_file);
+                    }
+
+                    AllSupplier = Supplier.listAllSupplier(Main.supplier_file);
+                    deleting_id.clear();
+
+                    btnView.setEnabled(true);
+                    btnAdd.setEnabled(true);
+                    btnEdit.setEnabled(true);
+                    btnView.setVisible(true);
+                    cancel_delete.setVisible(false);
+
+                    btnView.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                            new Color(225, 108, 150), new Color(237, 136, 172),
+                            Main.transparent);
+                    btnAdd.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                            new Color(209, 88, 128), new Color(237, 136, 172),
+                            Main.transparent);
+                    btnEdit.UpdateColor(new Color(255, 255, 255), new Color(255, 255, 255),
+                            new Color(225, 108, 150), new Color(237, 136, 172),
+                            Main.transparent);
+
+                    table_item.SetColors(Color.BLACK, Color.BLACK, Color.WHITE, new Color(212, 212, 212));
+                    mode = 1;
+                    table_item.SetChanges(merriweather.deriveFont(Font.BOLD, 18),
+                            merriweather.deriveFont(Font.PLAIN, 16), mode);
+
+                    scrollPane1.UpdateBorder(1, new Color(202, 202, 202), Main.transparent,
+                            Main.transparent, Main.transparent, Main.transparent);
+                    filter = 0;
+                    page_counter = 0;
+                    UpdatePages(list_length);
+                    pages.setSelectedIndex(0);
+                    UpdatePages(AllSupplier.size());
+                    UpdateTable(AllSupplier, list_length, page_counter);
+
+                    btnDelete2.setVisible(false);
+                    btnDelete1.setVisible(true);
+                }
+            }
+        });
+        btnDelete2.setVisible(false);
         buttonPanel.add(btnDelete2, ii_gbc);
     }
 
@@ -706,9 +696,9 @@ public class SupplierMng {
     public static void UpdatePages(int totalSuppliers) {
         int pageCount = (int) Math.ceil(totalSuppliers / (double) list_length);
         if (totalSuppliers <= list_length) {
-            pageCount = 1; // If the filtered results are less than the page length, show 1 page
+            pageCount = 1;
         }
-        pages.removeAllItems(); // Remove existing pages
+        pages.removeAllItems();
         for (int i = 1; i <= pageCount; i++) {
             pages.addItem(String.format("Page %s of %s", i, pageCount));
         }
@@ -720,10 +710,9 @@ public class SupplierMng {
         String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search..."))
                 ? search.getText().trim() : "";
 
-        List<Supplier> AllSupplier = Supplier.listAllSupplier("datafile/supplier.txt");
+        List<Supplier> AllSupplier = Supplier.listAllSupplier(Main.supplier_file);
 
         if (searcher.isEmpty()) {
-            // Reset pagination when search is empty
             page_counter = 0;
             UpdatePages(AllSupplier.size());
             UpdateTable(AllSupplier, list_length, page_counter);
@@ -751,54 +740,35 @@ public class SupplierMng {
     }
 
     public static void UpdateComponentSize(int base_size) {
-        // Update the size of search icons dynamically
         search_icon1.UpdateSize((int) (base_size * 0.8));
         search_icon2.UpdateSize((int) (base_size * 0.8));
         s_btn.setSize(search_icon1.getIconWidth(), search_icon1.getIconHeight());
         s_btn.repaint();
         icon_clear1.UpdateSize((int) (base_size * 0.8));
         icon_clear2.UpdateSize((int) (base_size * 0.8));
-
-        // Set button size to match the icon dimensions
         clearbtn.setSize(icon_clear1.getIconWidth(), icon_clear1.getIconHeight());
         clearbtn.setPreferredSize(new Dimension(icon_clear1.getIconWidth(), icon_clear1.getIconHeight()));
-
-        // Ensure button is repainted
         clearbtn.revalidate();
         clearbtn.repaint();
-
-        // Update left and right arrow icons dynamically
         left_icon1.UpdateSize(base_size);
         left_icon2.UpdateSize(base_size);
         p_left.setSize(left_icon1.getIconWidth(), left_icon1.getIconHeight());
         p_left.repaint();
-
         right_icon1.UpdateSize(base_size);
         right_icon2.UpdateSize(base_size);
         p_right.setSize(right_icon1.getIconWidth(), right_icon1.getIconHeight());
         p_right.repaint();
-
         p_first.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
         p_last.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
-
-        // Update pages and other relevant labels with new font size
         pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
-
-        // Update labels' font sizes based on base_size
         lbl_show.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_indicate.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
-
-        // Adjust the font size for combo boxes and text fields
         entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         search.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
-
-        // Update table font sizes based on base_size
         table_item.SetChanges(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
                 merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)), mode);
-
-        // Update other buttons with base_size
         btnAdd.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnEdit.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnDelete1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
@@ -806,8 +776,6 @@ public class SupplierMng {
         btnView.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         cancel_delete.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
 
-
-        // Ensure components revalidate and repaint to reflect size changes
         s_btn.revalidate();
         p_left.revalidate();
         p_right.revalidate();

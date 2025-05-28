@@ -33,7 +33,6 @@ public class EditNewItem {
     private static JComboBox<String> types;
     private static CustomComponents.EmptyTextField itemname, unitprice, unitcost, stockcount, threshold, suppliername;
     private static CustomComponents.CustomButton btnConfirm, btnCancel;
-
     private static Item selected_item;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user, Item selected_item) {
@@ -125,17 +124,31 @@ public class EditNewItem {
 
         gbc.gridy = 8;
         gbc.gridx = 0;
-        gbc.weightx = 1;          // allow horizontal expansion
-        gbc.weighty = 0.6;          // usually 0 for buttons (unless you want vertical growth)
+        gbc.weightx = 1;
+        gbc.weighty = 0.6;
+        gbc.insets = new Insets(15, 10, 15, 10);
+        gbc.fill = GridBagConstraints.BOTH;
+        btnCancel = new CustomComponents.CustomButton("Cancel", merriweather, Color.WHITE, Color.WHITE,
+                new Color(56, 53, 70), new Color(73, 69, 87),
+                Main.transparent, 0, 20, Main.transparent, false,
+                5, false, null, 0, 0, 0);
+        btnCancel.setPreferredSize(new Dimension(280, 50));
+        btnCancel.addActionListener(_ -> {
+            dialog.dispose();
+        });
+        panel.add(btnCancel, gbc);
+
+
+        gbc.gridx = 2;
+        gbc.weightx = 1;
         gbc.insets = new Insets(15, 10, 15, 10);
         gbc.fill = GridBagConstraints.BOTH;
         btnConfirm = new CustomComponents.CustomButton("Confirm", merriweather, Color.WHITE, Color.WHITE,
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnConfirm.setPreferredSize(new Dimension(220, 50));  // Adjusted width and height
+        btnConfirm.setPreferredSize(new Dimension(220, 50));
         btnConfirm.addActionListener(_ -> {
-            // Check if any of the fields are empty or just contain spaces
             if (itemname.getText().isEmpty() || unitprice.getText().isEmpty() || unitcost.getText().isEmpty() ||
                     stockcount.getText().isEmpty() || threshold.getText().isEmpty() || suppliername.getText().isEmpty()) {
 
@@ -149,12 +162,10 @@ public class EditNewItem {
                         new Color(255, 255, 255)
                 );
             } else {
-                // Perform item-specific validity check
                 String validity = Item.validitychecker(itemname.getText(), unitprice.getText().trim(),
                         unitcost.getText().trim(), stockcount.getText(), threshold.getText(), suppliername.getText(),
                         "datafile/item.txt");
 
-                // Check if the validity string length is exactly 6
                 if (validity.length() != 7) {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -165,10 +176,9 @@ public class EditNewItem {
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                    return;  // Exit if the length is not 6
+                    return;
                 }
 
-                // Handle Item Name Error
                 if (validity.charAt(0) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -182,7 +192,6 @@ public class EditNewItem {
                     return;
                 }
 
-                // Handle Item Name Already Exists Error
                 if (validity.charAt(1) == 'X') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -196,7 +205,6 @@ public class EditNewItem {
                     return;
                 }
 
-                // Handle Unit Price Error
                 if (validity.charAt(2) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -210,7 +218,6 @@ public class EditNewItem {
                     return;
                 }
 
-                // Handle Unit Cost Error
                 if (validity.charAt(3) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -238,7 +245,6 @@ public class EditNewItem {
                     return;
                 }
 
-                // Handle Stock Count Error
                 if (validity.charAt(4) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -252,7 +258,6 @@ public class EditNewItem {
                     return;
                 }
 
-                // Handle Threshold Error
                 if (validity.charAt(5) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -266,7 +271,6 @@ public class EditNewItem {
                     return;
                 }
 
-                // Handle Supplier Error
                 if (validity.charAt(6) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -286,27 +290,23 @@ public class EditNewItem {
                     int stockCountValue = Integer.parseInt(stockcount.getText().trim());
                     int thresholdValue = Integer.parseInt(threshold.getText().trim());
 
-                    // Use existing item ID
                     String item_id = selected_item.ItemID;
                     String item_type = (String) Objects.requireNonNull(types.getSelectedItem());
 
-                    // Update the selected item fields
                     selected_item.ItemName = itemname.getText();
                     selected_item.UnitPrice = unitPriceValue;
                     selected_item.UnitCost = unitCostValue;
                     selected_item.StockCount = stockCountValue;
                     selected_item.Threshold = thresholdValue;
                     selected_item.Category = item_type;
-                    selected_item.LastUpdate = LocalDate.now();  // assuming you track update date
+                    selected_item.LastUpdate = LocalDate.now();
 
-                    // Save the updated item back to your datafile
                     Item.modifyItem(selected_item, "datafile/item.txt");
 
                     String supplierName = suppliername.getText().trim();
                     String supplierID = Supplier.getSupplierID(supplierName);
 
                     if ("Unknown".equals(supplierID)) {
-                        // Supplier doesn't exist, show error
                         CustomComponents.CustomOptionPane.showErrorDialog(
                                 parent,
                                 "Supplier name does not exist in the system!",
@@ -336,7 +336,6 @@ public class EditNewItem {
                         if (!keep_editing) {
                             dialog.dispose();
                         } else {
-                            // Reset fields for next edit or close dialog
                             itemname.Reset();
                             unitprice.Reset();
                             unitcost.Reset();
@@ -360,20 +359,6 @@ public class EditNewItem {
             }
         });
         panel.add(btnConfirm, gbc);
-
-        gbc.gridx = 2;
-        gbc.weightx = 1;
-        gbc.insets = new Insets(15, 10, 15, 10);
-        gbc.fill = GridBagConstraints.BOTH;
-        btnCancel = new CustomComponents.CustomButton("Cancel", merriweather, Color.WHITE, Color.WHITE,
-                new Color(56, 53, 70), new Color(73, 69, 87),
-                Main.transparent, 0, 20, Main.transparent, false,
-                5, false, null, 0, 0, 0);
-        btnCancel.setPreferredSize(new Dimension(280, 50));  // Adjusted width and height
-        btnCancel.addActionListener(_ -> {
-            dialog.dispose();
-        });
-        panel.add(btnCancel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -710,7 +695,6 @@ public class EditNewItem {
                 suppliername.setToolTipText("");
                 String input = suppliername.getText().trim();
 
-                // Check if supplier name is empty
                 if (input.isEmpty()) {
                     suppliername.setForeground(new Color(159, 4, 4));
                     Font font = suppliername.getFont();
@@ -719,11 +703,9 @@ public class EditNewItem {
                     suppliername.setFont(font.deriveFont(attributes));
                     suppliername.setToolTipText("Supplier name cannot be empty.");
                 } else {
-                    // Check if the supplier ID exists for the entered supplier name
-                    String supplierID = Supplier.getSupplierID(input);  // Call method to get SupplierID
+                    String supplierID = Supplier.getSupplierID(input);
 
                     if ("Unknown".equals(supplierID)) {
-                        // Supplier not found, show error
                         suppliername.setForeground(new Color(159, 4, 4));
                         Font font = suppliername.getFont();
                         Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
@@ -731,7 +713,6 @@ public class EditNewItem {
                         suppliername.setFont(font.deriveFont(attributes));
                         suppliername.setToolTipText("Supplier ID not found or does not exist!");
                     } else {
-                        // Supplier exists, reset text field style
                         suppliername.setForeground(Color.BLACK);
                         suppliername.setFont(suppliername.getFont().deriveFont(Font.PLAIN));
                         suppliername.setToolTipText("");

@@ -48,7 +48,6 @@ public class PurchaseReqPage {
         gbc.weighty = 1;
         gbc.gridx = 0;
         gbc.gridy = 0;
-
         gbc.gridx = 6;
         gbc.weightx = 14;
         gbc.insets = new Insets(0, 0, 0, 20);
@@ -73,6 +72,7 @@ public class PurchaseReqPage {
         igbc.weighty = 1;
         igbc.fill = GridBagConstraints.BOTH;
         igbc.insets = new Insets(10, 10, 10, 10);
+
         lbl_show = new JLabel("Show");
         lbl_show.setFont(merriweather.deriveFont(Font.BOLD, 16));
         lbl_show.setOpaque(false);
@@ -122,23 +122,6 @@ public class PurchaseReqPage {
         ii_gbc.weighty = 1;
         ii_gbc.fill = GridBagConstraints.BOTH;
         ii_gbc.insets = new Insets(6, 6, 10, 5);
-
-//        search_icon1 = new CustomComponents.CustomSearchIcon(16, 3,
-//                new Color(122, 122, 122), Color.WHITE);
-//        search_icon2 = new CustomComponents.CustomSearchIcon(16, 3,
-//                new Color(81, 81, 81), Color.WHITE);
-//        s_btn = new JButton(search_icon1);
-//        s_btn.setRolloverIcon(search_icon2);
-//        s_btn.setBorderPainted(false);
-//        s_btn.setContentAreaFilled(false);
-//        s_btn.setFocusPainted(false);
-//        search_panel.add(s_btn, ii_gbc);
-//
-//        ii_gbc.gridx = 1;
-//        ii_gbc.insets = new Insets(6, 0, 10, 0);
-//        search = new CustomComponents.EmptyTextField(20, "Search...", new Color(122, 122, 122));
-//        search.setFont(merriweather.deriveFont(Font.BOLD, 14));
-//        search_panel.add(search, ii_gbc);
 
         igbc.gridwidth = 5;
         igbc.gridx = 0;

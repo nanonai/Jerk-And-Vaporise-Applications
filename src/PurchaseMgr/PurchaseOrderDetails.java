@@ -130,13 +130,6 @@ public class PurchaseOrderDetails {
         button_panel.add(placeholder, gbc);
 
         gbc.gridx = 1;
-        CustomComponents.CustomButton view = new CustomComponents.CustomButton("View Related Records",
-                merriweather.deriveFont(Font.PLAIN), new Color(255, 255, 255), new Color(255, 255, 255),
-                new Color(209, 88, 128), new Color(237, 136, 172),
-                Main.transparent, 0, base_size, Main.transparent, false, 5, false,
-                null, 0, 0, 0);
-        button_panel.add(view, gbc);
-
         gbc.gridy = 1;
         gbc.weightx = 2;
         gbc.insets = new Insets(0, 0, 10, 10);
@@ -203,37 +196,7 @@ public class PurchaseOrderDetails {
         date.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(date, gbc);
 
-        /*gbc.gridy = 9;
-        JPanel inner = new JPanel(new GridBagLayout());
-        inner.setOpaque(false);
-        panel.add(inner, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1;
-        gbc.insets = new Insets(0, 0, 0, 0);
-        JLabel code = new JLabel("    +60");
-        code.setOpaque(true);
-        code.setBackground(Color.WHITE);
-        code.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
-        code.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
-        inner.add(code, gbc);
-
-        gbc.gridx = 1;
-        gbc.weightx = 8;
-        JLabel phone = new JLabel("    " + current_user.Phone.substring(1));
-        phone.setOpaque(true);
-        phone.setBackground(Color.WHITE);
-        phone.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
-        phone.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
-        inner.add(phone, gbc);*/
-
         close.addActionListener(_ -> {
-            dialog.dispose();
-        });
-
-        view.addActionListener(_ -> {
-            view_or_not.set(true);
             dialog.dispose();
         });
 

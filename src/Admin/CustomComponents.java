@@ -1848,7 +1848,7 @@ public class CustomComponents {
             int i = 0;
             for (Double entry: data) {
                 int arcAngle = - (int) Math.round((entry / total) * 360);
-
+                if (i == data.size() - 1 && startAngle + arcAngle != -270) { arcAngle = -270 - startAngle; }
                 g2d.setColor(colors[colorIndex % colors.length]);
                 g2d.fillArc(x, y, diameter, diameter, startAngle, arcAngle);
 
@@ -1876,6 +1876,7 @@ public class CustomComponents {
             colorIndex = 0;
             for (Double entry : data) {
                 int arcAngle = - (int) Math.round((entry / total) * 360);
+                if (i == data.size() - 1 && startAngle + arcAngle != -270) { arcAngle = -270 - startAngle; }
                 double midAngle = - (arcAngle + 2 * startAngle) / 2.0;
 
                 int r = (int) (diameter / 2f * center_factor);

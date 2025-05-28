@@ -1,9 +1,6 @@
 package SalesMgr;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -105,4 +102,52 @@ public class Item_Sales {
             e.getStackTrace();
         }
     }
+
+    public static void modifyItemSales(Item_Sales updatedSales, String filename) {
+        List<Item_Sales> allItemSales = listAllItemSales(filename);
+        boolean found = false;
+
+        for (Item_Sales itemSales : allItemSales) {
+            if (Objects.equals(itemSales.SalesID, updatedSales.SalesID)) {
+                itemSales.ItemID = updatedSales.ItemID;
+                itemSales.Quantity = updatedSales.Quantity;
+                itemSales.Amount = updatedSales.Amount;
+                found = true;
+                break;
+            }
+        }
+
+        if (found) {
+            try (FileWriter writer = new FileWriter(filename)) {
+                for (Item_Sales itemSales : allItemSales) {
+                    writer.write("ItemID:         " + itemSales.ItemID + "\n");
+                    writer.write("SalesID:        " + itemSales.SalesID + "\n");
+                    writer.write("Quantity:       " + itemSales.Quantity + "\n");
+                    writer.write("Amount:         " + itemSales.Amount + "\n");
+                    writer.write("~~~~~\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void removeItemSalesBySalesID(String SalesID, String filename) {
+        List<Item_Sales> allItemSales = Item_Sales.listAllItemSales(filename);
+        allItemSales.removeIf(itemSales -> Objects.equals(itemSales.SalesID, SalesID));
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Item_Sales itemSales : allItemSales) {
+                writer.write("ItemID:         " + itemSales.ItemID + "\n");
+                writer.write("SalesID:        " + itemSales.SalesID + "\n");
+                writer.write("Quantity:       " + itemSales.Quantity + "\n");
+                writer.write("Amount:         " + itemSales.Amount + "\n");
+                writer.write("~~~~~\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

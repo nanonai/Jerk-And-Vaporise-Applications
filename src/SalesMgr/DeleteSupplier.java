@@ -1,37 +1,34 @@
 package SalesMgr;
 
 import Admin.Main;
-import InventoryMgr.Item;
 import Admin.CustomComponents;
 import PurchaseMgr.Item_Supplier;
+import PurchaseMgr.Supplier;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.awt.event.*;
 import java.util.List;
 import java.util.ArrayList;
-import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class DeleteItem {
+public class DeleteSupplier {
     private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
+    private static List<Supplier> suppliers;
     private static List<Item_Supplier> itemsupplier;
-    private static List<Item> items;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, List<Item> items) {
-        DeleteItem.parent = parent;
-        DeleteItem.merriweather = merriweather;
-        DeleteItem.boldonse = boldonse;
-        DeleteItem.content = content;
-        DeleteItem.items = items;
+    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, List<Supplier> suppliers) {
+        DeleteSupplier.parent = parent;
+        DeleteSupplier.merriweather = merriweather;
+        DeleteSupplier.boldonse = boldonse;
+        DeleteSupplier.content = content;
+        DeleteSupplier.suppliers = suppliers;
     }
 
-
     public static void UpdateItemSupplier(List<Item_Supplier> itemsupplier) {
-        DeleteItem.itemsupplier = itemsupplier;
+        DeleteSupplier.itemsupplier = itemsupplier;
     }
 
     public static boolean ShowPage() {
@@ -58,7 +55,7 @@ public class DeleteItem {
         gbc.gridy = 0;
         gbc.gridwidth = 3;
         gbc.insets = new Insets(10, 10, 0, 10);
-        JLabel title = new JLabel("Please confirm to delete all items listed below:");
+        JLabel title = new JLabel("Please confirm to delete all suppliers listed below:");
         title.setOpaque(false);
         title.setFont(merriweather.deriveFont(Font.BOLD, (float) (base_size * 1.3)));
         panel.add(title, gbc);
@@ -67,31 +64,26 @@ public class DeleteItem {
         gbc.insets = new Insets(0, 10, 10, 10);
         List<String> data = new ArrayList<>();
         int counter = 1;
-        for (Item item : items) {
-            data.add(String.format("%s. ItemID: %s", counter, item.ItemID));
-            data.add(String.format("    Item Name: %s", item.ItemName));
-            data.add(String.format("    Unit Price: %.2f", item.UnitPrice));
-            data.add(String.format("    Unit Cost: %.2f", item.UnitCost));
-            data.add(String.format("    Stock Count: %d", item.StockCount));
-            data.add(String.format("    Threshold: %d", item.Threshold));
-            data.add(String.format("    Category: %s", item.Category));
-            data.add(String.format("    Last Update: %s", item.LastUpdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+        for (Supplier supplier : suppliers) {
+            data.add(String.format("%d. SupplierID: %s", counter, supplier.SupplierID));
+            data.add(String.format("    Name: %s", supplier.SupplierName));
+            data.add(String.format("    Contact Person: %s", supplier.ContactPerson));
+            data.add(String.format("    Phone: %s", supplier.Phone));
+            data.add(String.format("    Email: %s", supplier.Email));
+            data.add(String.format("    Address: %s", supplier.Address));
             counter++;
         }
 
+        CustomComponents.CustomList<String> list = new CustomComponents.CustomList<>(
+                data, 1, base_size, merriweather.deriveFont(Font.PLAIN),
+                Color.BLACK, Color.BLACK, Color.WHITE, new Color(212, 212, 212));
 
-        CustomComponents.CustomList<String> list = new CustomComponents.CustomList<>(data, 1, base_size,
-                merriweather.deriveFont(Font.PLAIN),
-                Color.BLACK, Color.BLACK,
-                Color.WHITE, new Color(212, 212, 212));
-
-        CustomComponents.CustomScrollPane scrollPane = new CustomComponents.CustomScrollPane(false, 1, list,
-                6, new Color(202, 202, 202), Main.transparent,
+        CustomComponents.CustomScrollPane scrollPane = new CustomComponents.CustomScrollPane(
+                false, 1, list, 6, new Color(202, 202, 202), Main.transparent,
                 Main.transparent, Main.transparent, Main.transparent,
                 new Color(170, 170, 170), Color.WHITE,
                 new Color(140, 140, 140), new Color(110, 110, 110),
                 Color.WHITE, Color.WHITE, 6);
-
         panel.add(scrollPane, gbc);
 
         gbc.gridy = 2;
@@ -112,8 +104,9 @@ public class DeleteItem {
 
         gbc.gridx = 2;
         gbc.insets = new Insets(0, 0, 10, 10);
-        CustomComponents.CustomButton delete = new CustomComponents.CustomButton("Delete Items (" + items.size() + ")",
-                merriweather.deriveFont(Font.PLAIN), new Color(255, 255, 255), new Color(255, 255, 255),
+        CustomComponents.CustomButton delete = new CustomComponents.CustomButton(
+                "Delete Suppliers (" + suppliers.size() + ")",
+                merriweather.deriveFont(Font.PLAIN), Color.WHITE, Color.WHITE,
                 new Color(159, 4, 4), new Color(161, 40, 40),
                 Main.transparent, 0, base_size, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
@@ -125,22 +118,23 @@ public class DeleteItem {
             boolean proceed = CustomComponents.CustomOptionPane.showConfirmDialog(
                     parent, "Confirm to delete?", "Confirmation",
                     new Color(159, 4, 4),
-                    new Color(255, 255, 255),
-                    new Color(161, 40, 40),
-                    new Color(255, 255, 255),
-                    new Color(56, 53, 70),
-                    new Color(255, 255, 255),
-                    new Color(73, 69, 87),
-                    new Color(255, 255, 255),
-                    false
+                    Color.WHITE, new Color(161, 40, 40), Color.WHITE,
+                    new Color(56, 53, 70), Color.WHITE,
+                    new Color(73, 69, 87), Color.WHITE, false
             );
             if (proceed) {
-                for (Item item : items) {
-                    List<Item_Supplier> relatedSuppliers = Item_Supplier.listAllItemSupplierFromItemID(item.ItemID, "datafile/item_supplier.txt");
-                    for (Item_Supplier itemSupplier : relatedSuppliers) {
-                        Item_Supplier.removeItemSupplier(itemSupplier.ItemID, itemSupplier.SupplierID, "datafile/item_supplier.txt");
+                for (Supplier supplier : suppliers) {
+                    List<Item_Supplier> related = Item_Supplier.listAllItemSupplierFromSupplierID(
+                            supplier.SupplierID, "datafile/item_supplier.txt");
+                    for (Item_Supplier rel : related) {
+                        Item_Supplier.replaceSupplierID(
+                                rel.ItemID,
+                                rel.SupplierID,
+                                "DELETED_SUPPLIER",
+                                "datafile/item_supplier.txt"
+                        );
                     }
-                    Item.removeItem(item.ItemID, "datafile/item.txt");
+                    Supplier.removeSupplier(supplier.SupplierID, "datafile/supplier.txt");
                 }
                 delete_or_not.set(true);
             }
@@ -154,3 +148,4 @@ public class DeleteItem {
         return delete_or_not.get();
     }
 }
+
