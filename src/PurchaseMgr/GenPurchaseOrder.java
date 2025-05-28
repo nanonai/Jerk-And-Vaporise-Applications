@@ -9,14 +9,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.List;
-
-import static PurchaseMgr.PurchaseOrder.deletePurchaseOrder;
 
 public class GenPurchaseOrder {
     private static JFrame parent;
@@ -24,7 +19,7 @@ public class GenPurchaseOrder {
     private static JPanel content;
     private static User current_user;
     private static JButton s_btn, p_left, p_right, p_first, p_last, x_btn;
-    private static CustomComponents.CustomButton all, fin, pur, inv, sls, view, add, modify, delete1, data_transfer;
+    private static CustomComponents.CustomButton all, fin, pur, inv, sls, add2, add, add1, delete1, data_transfer;
     private static JLabel lbl_show, lbl_entries, lbl_indicate;
     private static JComboBox<String> entries, pages;
     private static CustomComponents.EmptyTextField search;
@@ -202,8 +197,7 @@ public class GenPurchaseOrder {
             counter += 1;
         }
 
-        table_po
- = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
+        table_po = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
                 merriweather.deriveFont(Font.PLAIN, 16), Color.BLACK, Color.BLACK,
                 Color.WHITE, new Color(212, 212, 212), 1, 30);
 
@@ -211,15 +205,12 @@ public class GenPurchaseOrder {
         pages = new JComboBox<>();
         UpdateTable(list_length, page_counter);
         UpdatePages(list_length);
-        table_po
-.setShowHorizontalLines(true);
-        table_po
-.setShowVerticalLines(true);
-        table_po
-.setGridColor(new Color(230, 230, 230));
+        table_po.setShowHorizontalLines(true);
+        table_po.setShowVerticalLines(true);
+        table_po.setGridColor(new Color(230, 230, 230));
 
-        CustomComponents.CustomScrollPane scrollPane1 = new CustomComponents.CustomScrollPane(false, 1, table_po
-,
+        CustomComponents.CustomScrollPane scrollPane1 = new CustomComponents.CustomScrollPane(false,
+                1, table_po,
                 6, new Color(202, 202, 202), Main.transparent,
                 Main.transparent, Main.transparent, Main.transparent,
                 new Color(170, 170, 170), Color.WHITE,
@@ -376,20 +367,13 @@ public class GenPurchaseOrder {
         });
         page_panel.add(p_last, ii_gbc);
 
-        igbc.gridwidth = 4;
+        igbc.gridwidth = 5;
         igbc.gridx = 0;
         igbc.gridy = 3;
         igbc.insets = new Insets(0, 5, 10, 0);
         JPanel button_panel1 = new JPanel(new GridBagLayout());
         button_panel1.setOpaque(false);
         inner.add(button_panel1, igbc);
-
-        igbc.gridwidth = 1;
-        igbc.gridx = 4;
-        igbc.insets = new Insets(0, 0, 10, 5);
-        JPanel button_panel2 = new JPanel(new GridBagLayout());
-        button_panel2.setOpaque(false);
-        inner.add(button_panel2, igbc);
 
         ii_gbc.gridx = 0;
         add = new CustomComponents.CustomButton("Add Purchase Order", merriweather, new Color(255, 255, 255),
@@ -403,44 +387,81 @@ public class GenPurchaseOrder {
         button_panel1.add(add, ii_gbc);
 
         ii_gbc.gridx = 1;
-        ii_gbc.insets = new Insets(0, 0, 0, 4);
-        JLabel emp1 = new JLabel();
-        /*view = new CustomComponents.CustomButton("View Details", merriweather, new Color(255, 255, 255),
-                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
-                Main.transparent, 0, 16, Main.transparent, false, 5, false,
-                null, 0, 0, 0);
-        view.addActionListener(_ -> {
-
-        });*/
-        button_panel1.add(emp1, ii_gbc);
-
-        ii_gbc.gridx = 2;
-        JLabel emp2 = new JLabel();
-        /*modify = new CustomComponents.CustomButton("Modify User", merriweather, new Color(255, 255, 255),
-                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
-                Main.transparent, 0, 16, Main.transparent, false, 5, false,
-                null, 0, 0, 0);
-        modify.addActionListener(_ -> {
-
-        });*/
-        button_panel1.add(emp2, ii_gbc);
-
-        ii_gbc.gridx = 3;
-        JLabel placeholder3 = new JLabel("");
-        button_panel1.add(placeholder3, ii_gbc);
-
-        /*ii_gbc.gridx = 4;
-        data_transfer = new CustomComponents.CustomButton("Transfer User Data", merriweather, new Color(255, 255, 255),
+        ii_gbc.insets = new Insets(0,20, 0, 0);
+        add1 = new CustomComponents.CustomButton("View Details", merriweather, new Color(255, 255, 255),
                 new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
                 Main.transparent, 0, 16, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
-        data_transfer.addActionListener(_ -> {
+        add1.addActionListener(_ -> {
+            if (table_po.getSelectedRowCount() == 0) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select a PO to View!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else {
+                String selected_id = table_po.getValueAt(table_po.getSelectedRow(),
+                        table_po.getColumnModel().getColumnIndex("Id")).toString();
+                PurchaseOrderDetails.UpdatePurchaseOrder(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));
+                boolean see = PurchaseOrderDetails.ShowPage();
+                if (see) {
+                    System.out.println(" ");
+                }
+            }
+        });
+        button_panel1.add(add1, ii_gbc);
+
+        ii_gbc.gridx = 3;
+        ii_gbc.insets = new Insets(0,20, 0, 0);
+        add2 = new CustomComponents.CustomButton("Edit Purchase Order", merriweather, new Color(255, 255, 255),
+                new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
+                Main.transparent, 0, 16, Main.transparent, false, 5, false,
+                null, 0, 0, 0);
+        add2.addActionListener(_ -> {
+            if (table_po.getSelectedRowCount() == 0) {
+                CustomComponents.CustomOptionPane.showErrorDialog(
+                        parent,
+                        "Please select a PO to Edit!",
+                        "Error",
+                        new Color(209, 88, 128),
+                        new Color(255, 255, 255),
+                        new Color(237, 136, 172),
+                        new Color(255, 255, 255)
+                );
+            } else {
+                int selectedRow = table_po.getSelectedRow();
+                String selected_id = table_po.getValueAt(selectedRow,
+                        table_po.getColumnModel().getColumnIndex("Id")).toString();
+                String selectedPOID = table_po.getValueAt(selectedRow, 0).toString(); // assume column 0 is PurchaseOrderID
+                String status = getStatusFromFile(selectedPOID); // Read from the text file
+
+                if ("Pending".equalsIgnoreCase(status)) {
+                    EditPurchaseOrder.UpdatePurchaseOrder(
+                            PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));
+                    EditPurchaseOrder.ShowPage();
+
+                } else {
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
+                            "This Purchase Order has been Approved / Paid / Denied. Cannot edit.",
+                            "Cannot Edit",
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
+                }
+            }
 
         });
-        button_panel2.add(data_transfer, ii_gbc);*/
+        button_panel1.add(add2, ii_gbc);
 
-        ii_gbc.gridx = 5;
-        ii_gbc.insets = new Insets(0, 0, 0, 0);
+        ii_gbc.gridx = 4;
+        ii_gbc.insets = new Insets(0, 20, 0, 4);
         delete1 = new CustomComponents.CustomButton("Delete Purchase Order", merriweather, Color.WHITE, Color.WHITE,
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 16,
                 Main.transparent, false, 5, false, null, 0,
@@ -452,10 +473,15 @@ public class GenPurchaseOrder {
                 String status = getStatusFromFile(selectedPOID); // Read from the text file
 
                 if ("Approved".equalsIgnoreCase(status)) {
-                    JOptionPane.showMessageDialog(parent,
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
                             "This Purchase Order has been approved and cannot be deleted.",
                             "Cannot Delete",
-                            JOptionPane.WARNING_MESSAGE);
+                            new Color(209, 88, 128),
+                            new Color(255, 255, 255),
+                            new Color(237, 136, 172),
+                            new Color(255, 255, 255)
+                    );
                     return;
                 }
 
@@ -463,10 +489,7 @@ public class GenPurchaseOrder {
                         "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    deletePurchaseOrder(selectedPOID, Main.purchaseOrder_file, parent);
-                    // Optionally: remove row from table model (if I turn it on, the resize will become terrible)
-                    // DefaultTableModel model = (DefaultTableModel) table_po.getModel();
-                    // model.removeRow(selectedRow);
+                    deletePurchaseOrder(selectedPOID, Main.purchaseOrder_file);
                 }
             }
             else {
@@ -477,14 +500,7 @@ public class GenPurchaseOrder {
                         new Color(255, 255, 255));
             }
         });
-        button_panel2.add(delete1, ii_gbc);
-
-//        AddUser.Loader(parent, merriweather, boldonse, content, current_user);
-//        ViewUser.Loader(parent, merriweather, boldonse, content, null);
-//        ModifyUser.Loader(parent, merriweather, boldonse, content, null);
-//        DeleteUser.Loader(parent, merriweather, boldonse, content, current_user);
-//        DeleteBridge.Loader(parent, merriweather, boldonse, content, current_user, null);
-//        TransferData.Loader(parent, merriweather, boldonse, content, null);
+        button_panel1.add(delete1, ii_gbc);
     }
 
     public static void UpdateTable(int length, int page) {
@@ -507,8 +523,7 @@ public class GenPurchaseOrder {
                 if (counter == length || counter == po_list.size()) { break; }
             }
         }
-        table_po
-.UpdateTableContent(titles, data);
+        table_po.UpdateTableContent(titles, data);
         String temp2 = "<html>Displaying <b>%s</b> to <b>%s</b> of <b>%s</b> records</html>";
         if (length >= po_list.size()) {
             lbl_indicate.setText(String.format(temp2, (!po_list.isEmpty()) ? 1 : 0, po_list.size(),
@@ -559,8 +574,7 @@ public class GenPurchaseOrder {
             page_counter = 0;
             UpdatePages(list_length);
             UpdateTable(list_length, page_counter);
-            SwingUtilities.invokeLater(table_po
-::requestFocusInWindow);
+            SwingUtilities.invokeLater(table_po::requestFocusInWindow);
         }
     }
 
@@ -598,9 +612,9 @@ public class GenPurchaseOrder {
         table_po
 .SetChanges(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
                 merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)), mode);
-        view.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        add2.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         add.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
-        modify.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+        add1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         data_transfer.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         delete1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
     }
@@ -625,4 +639,63 @@ public class GenPurchaseOrder {
         return null; // Not found
     }
 
+    public static void deletePurchaseOrder(
+            String purchaseOrderId,
+            String filename
+    ) {
+        try {
+            File inputFile = new File(filename);
+            List<String> lines = new ArrayList<>();
+            Scanner scanner = new Scanner(inputFile);
+
+            boolean skipBlock = false;
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+
+                if (line.startsWith("PurchaseOrderID:")) {
+                    if (line.contains(purchaseOrderId)) {
+                        skipBlock = true;
+                    } else {
+                        skipBlock = false;
+                    }
+                }
+
+                if (!skipBlock) {
+                    lines.add(line);
+                }
+
+                if (line.equals("~~~~~")) {
+                    skipBlock = false;
+                }
+            }
+            scanner.close();
+
+            // Write back to file
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+                for (String l : lines) {
+                    writer.write(l + "\n");
+                }
+            }
+            CustomComponents.CustomOptionPane.showErrorDialog(
+                    parent,
+                    "Purchase order " + purchaseOrderId + " deleted successfully.",
+                    "",
+                    new Color(209, 88, 128),
+                    new Color(255, 255, 255),
+                    new Color(237, 136, 172),
+                    new Color(255, 255, 255)
+            );
+        } catch (IOException e) {
+            CustomComponents.CustomOptionPane.showErrorDialog(
+                    parent,
+                    "Error deleting purchase order:\n" + e.getMessage(),
+                    "Error",
+                    new Color(209, 88, 128),
+                    new Color(255, 255, 255),
+                    new Color(237, 136, 172),
+                    new Color(255, 255, 255)
+            );
+        }
+    }
 }

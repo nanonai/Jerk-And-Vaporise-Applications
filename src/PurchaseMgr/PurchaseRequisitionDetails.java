@@ -116,93 +116,6 @@ public class PurchaseRequisitionDetails {
         panel.add(close, gbc);
 
         gbc.gridx = 1;
-        gbc.insets = new Insets(0, 0, 10, 10);
-        JPanel button_panel = new JPanel(new GridBagLayout());
-        button_panel.setOpaque(false);
-        panel.add(button_panel, gbc);
-
-        gbc.gridx = 0;
-        gbc.insets = new Insets(0, 0, 0, 0);
-        JLabel placeholder = new JLabel("");
-        placeholder.setOpaque(false);
-        button_panel.add(placeholder, gbc);
-
-        gbc.gridx = 1;
-        CustomComponents.CustomButton view = new CustomComponents.CustomButton("Add to Purchase Order",
-                merriweather.deriveFont(Font.PLAIN), new Color(255, 255, 255), new Color(255, 255, 255),
-                new Color(209, 88, 128), new Color(237, 136, 172),
-                Main.transparent, 0, base_size, Main.transparent, false, 5, false,
-                null, 0, 0, 0);
-        view.addActionListener(_ -> {
-            int selectedRow = table_pr.getSelectedRow();
-
-            if (selectedRow != -1) {
-                String selectedPRID = table_pr.getValueAt(selectedRow, 0).toString();
-                String status = getStatusFromFile(selectedPRID); // get PR status
-
-                if ("1".equalsIgnoreCase(status)) {
-                    JOptionPane.showMessageDialog(parent,
-                            "This PR has been generated.",
-                            "Cannot Add",
-                            JOptionPane.WARNING_MESSAGE);
-                } else {
-                    try {
-                        // Generate new Purchase Order ID
-                        String newPurchaseOrderID = PurchaseOrder.idMaker(Main.purchaseOrder_file);
-
-                        // Extract PR data from table row
-                        String itemID = table_pr.getValueAt(selectedRow, 1).toString();
-                        String supplierID = table_pr.getValueAt(selectedRow, 2).toString();
-                        int purchaseQuantity = Integer.parseInt(table_pr.getValueAt(selectedRow, 3).toString());
-                        double totalAmt = 0;
-                        LocalDate orderDate = LocalDate.parse(table_pr.getValueAt(selectedRow, 4).toString());
-                        String purchaseMgrID = table_pr.getValueAt(selectedRow, 5).toString();
-                        String poStatus = "Pending";
-
-                        // Create new PurchaseOrder object
-                        PurchaseOrder newPO = new PurchaseOrder(
-                                newPurchaseOrderID,
-                                itemID,
-                                supplierID,
-                                purchaseQuantity,
-                                totalAmt,
-                                orderDate,
-                                purchaseMgrID,
-                                poStatus
-                        );
-                        // Save PO to file
-                        PurchaseOrder.savePurchaseOrder(newPO, Main.purchaseOrder_file, parent);
-
-                        // Update PR status to "1"
-                        updatePRStatus(selectedPRID, "1", Main.purchaseReq_file);
-
-                    } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(parent,
-                                "Invalid number format in the selected row.",
-                                "Input Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(parent,
-                                "An error occurred:\n" + ex.getMessage(),
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            } else {
-                CustomComponents.CustomOptionPane.showErrorDialog(
-                        parent,
-                        "Please select a PR to generate a PO.",
-                        "Error!",
-                        new Color(209, 88, 128),
-                        new Color(255, 255, 255),
-                        new Color(237, 136, 172),
-                        new Color(255, 255, 255)
-                );
-            }
-        });
-
-        button_panel.add(view, gbc);
-
         gbc.gridy = 1;
         gbc.weightx = 2;
         gbc.insets = new Insets(0, 0, 10, 10);
@@ -254,7 +167,7 @@ public class PurchaseRequisitionDetails {
         panel.add(email1, gbc);
 
         String statusText;
-        if (current_pr.ReqDate.isBefore(LocalDate.now())) {
+        if (current_pr.ReqDate.isBefore(LocalDate.now()) && current_pr.Status == 0) {
             statusText = "Overdue";
         } else {
             if (current_pr.Status == 1){
@@ -272,38 +185,7 @@ public class PurchaseRequisitionDetails {
         date.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         panel.add(date, gbc);
 
-
-        /*gbc.gridy = 9;
-        JPanel inner = new JPanel(new GridBagLayout());
-        inner.setOpaque(false);
-        panel.add(inner, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1;
-        gbc.insets = new Insets(0, 0, 0, 0);
-        JLabel code = new JLabel("    +60");
-        code.setOpaque(true);
-        code.setBackground(Color.WHITE);
-        code.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
-        code.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
-        inner.add(code, gbc);
-
-        gbc.gridx = 1;
-        gbc.weightx = 8;
-        JLabel phone = new JLabel("    " + current_user.Phone.substring(1));
-        phone.setOpaque(true);
-        phone.setBackground(Color.WHITE);
-        phone.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
-        phone.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
-        inner.add(phone, gbc);*/
-
         close.addActionListener(_ -> {
-            dialog.dispose();
-        });
-
-        view.addActionListener(_ -> {
-            view_or_not.set(true);
             dialog.dispose();
         });
 

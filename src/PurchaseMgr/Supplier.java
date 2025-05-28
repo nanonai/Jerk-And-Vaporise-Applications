@@ -216,13 +216,12 @@ public class Supplier {
         }
 
         // 6. Name uniqueness (assuming no duplicate supplier name)
-        if (nameChecker(supplierName, filename)) {
-            indicator += "1";
-        } else {
-            indicator += "0";
-        }
-
+//        if (nameChecker(supplierName, filename)) {
+//            indicator += "1";
+//        } else {
+//            indicator += "0";
+//        }
+//
         return indicator;
     }
-
 }

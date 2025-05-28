@@ -58,6 +58,6 @@ public class Welcome {
     }
 
     public static void UpdateComponentSize(int base_size) {
-        greet.setFont(merriweather.deriveFont(Font.BOLD, base_size));
+//        greet.setFont(merriweather.deriveFont(Font.BOLD, base_size));
     }
 }

@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.util.List;
 
 import Admin.*;
+import PurchaseMgr.EditPurchaseOrder;
+import PurchaseMgr.PurchaseOrderDetails;
+import PurchaseMgr.PurchaseRequisitionDetails;
 
 public class SalesHome {
     public static int indicator = 0;
@@ -235,6 +238,9 @@ public class SalesHome {
         DailySalesMng.Loader(parent, merriweather, boldonse, content, current_user);
         PurchaseRequisitionMng.Loader(parent, merriweather, boldonse, content, current_user);
         PurchaseOrderMng.Loader(parent, merriweather, boldonse, content, current_user);
+        PurchaseOrderDetails.Loader(parent, merriweather, boldonse, content, null);
+        PurchaseRequisitionDetails.Loader(parent, merriweather, boldonse, content, null);
+        EditPurchaseRequisition.Loader(parent, merriweather, boldonse, content, current_user, null);
         PageChanger();
     }
 

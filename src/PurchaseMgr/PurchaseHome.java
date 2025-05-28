@@ -109,7 +109,7 @@ public class PurchaseHome {
 
         gbc_side.gridy = 5;
         gbc_side.weighty = 0.8;
-        generate_po = new CustomComponents.CustomButton("Generate \n Purchase Order", merriweather, Color.WHITE, Color.WHITE,
+        generate_po = new CustomComponents.CustomButton("Purchase Order", merriweather, Color.WHITE, Color.WHITE,
                 new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
                 Main.transparent, false, 5, false, null, 0,
                 0, 0);
@@ -119,20 +119,8 @@ public class PurchaseHome {
         });
         side_bar.add(generate_po, gbc_side);
 
-        gbc_side.gridy = 6;
-        gbc_side.weighty = 0.8;
-        view_po = new CustomComponents.CustomButton("View \n Purchase Order", merriweather, Color.WHITE, Color.WHITE,
-                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
-                Main.transparent, false, 5, false, null, 0,
-                0, 0);
-        view_po.addActionListener(_->{
-            PurchaseHome.indicator = 6;
-            PageChanger();
-        });
-        side_bar.add(view_po, gbc_side);
-
         gbc_side.gridy = 7;
-        gbc_side.weighty = 5;
+        gbc_side.weighty = 5.8;
         JLabel placeholder = new JLabel("");
         side_bar.add(placeholder, gbc_side);
 
@@ -191,7 +179,7 @@ public class PurchaseHome {
                 e -> {
                     User.UnrememberAllUser(Main.userdata_file);
                     Main.indicator = 0;
-                    PurchaseHome.indicator = 0;
+                    PurchaseHome.indicator = 2;
                     Main.PageChanger(parent, merriweather, boldonse);
                 }
         );
@@ -240,11 +228,12 @@ public class PurchaseHome {
         ViewSuppliers.Loader(parent, merriweather, boldonse, content, current_user);
         ViewPurchaseRequisition.Loader(parent, merriweather, boldonse, content, current_user);
         GenPurchaseOrder.Loader(parent, merriweather, boldonse, content, current_user);
-        ViewPurchaseOrder.Loader(parent, merriweather, boldonse, content, current_user);
         PurchaseOrderDetails.Loader(parent, merriweather, boldonse, content, null);
         PurchaseRequisitionDetails.Loader(parent, merriweather, boldonse, content, null);
         ItemDetails.Loader(parent, merriweather, boldonse, content, null);
         SupplierDetails.Loader(parent, merriweather, boldonse, content, null);
+        EditPurchaseOrder.Loader(parent, merriweather, boldonse, content, current_user, null);
+        AddPRtoPO.Loader(parent, merriweather, boldonse, content, current_user, null);
         PageChanger();
     }
 
@@ -275,9 +264,6 @@ public class PurchaseHome {
             case 5:
                 GenPurchaseOrder.ShowPage();
                 break;
-            case 6:
-                ViewPurchaseOrder.ShowPage();
-                break;
         }
         UpdateComponentSize(parent.getWidth(), parent.getHeight());
     }
@@ -292,12 +278,10 @@ public class PurchaseHome {
         int finalBase_size = base_size;
         SwingUtilities.invokeLater(() -> {
             logo_cell.repaint();
-//            home_page.UpdateCustomButton(0, finalBase_size, null, 0);
             view_item.UpdateCustomButton(0, finalBase_size, null, 0);
             view_supplier.UpdateCustomButton(0, finalBase_size, null, 0);
             view_requisition.UpdateCustomButton(0, finalBase_size, null, 0);
             generate_po.UpdateCustomButton(0, finalBase_size, null, 0);
-            view_po.UpdateCustomButton(0, finalBase_size, null, 0);
             title.setFont(boldonse.deriveFont((float)finalBase_size));
             profile.repaint();
             profileIcon1.UpdateSize((int) (finalBase_size * 2.5));
