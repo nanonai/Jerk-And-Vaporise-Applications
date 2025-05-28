@@ -490,6 +490,20 @@ public class AddSupplier {
                     );
                     return;
                 }
+//                double unitPricegt = Double.parseDouble(unitprice.getText().trim());
+//                double unitCostgt = Double.parseDouble(unitcost.getText().trim());
+//                if (unitCostgt > unitPricegt) {
+//                    CustomComponents.CustomOptionPane.showErrorDialog(
+//                            parent,
+//                            "Unit cost cannot be greater than unit price!",
+//                            "Error",
+//                            new Color(209, 88, 128),
+//                            new Color(255, 255, 255),
+//                            new Color(237, 136, 172),
+//                            new Color(255, 255, 255)
+//                    );
+//                    return;
+//                }
 
                 if (validity.charAt(4) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
@@ -532,6 +546,66 @@ public class AddSupplier {
 
                 // All validations passed, proceed with item creation
                 try {
+//                    double unitPriceValue = Double.parseDouble(unitprice.getText().trim());
+//                    double unitCostValue = Double.parseDouble(unitcost.getText().trim());
+//                    int stockCountValue = Integer.parseInt(stockcount.getText().trim());
+//                    int thresholdValue = Integer.parseInt(threshold.getText().trim());
+//
+//                    // If no exception was thrown, proceed with item creation
+//                    String item_type = (String) Objects.requireNonNull(types.getSelectedItem());
+//                    String new_id = Item.idMaker("datafile/item.txt");  // You can define your own ID maker logic
+//                    LocalDate currentDate = LocalDate.now();
+//                    future = new Item(new_id, itemname.getText(), unitPriceValue, unitCostValue,
+//                            stockCountValue, thresholdValue, item_type, currentDate);
+//                    Item.saveNewItem(future, "datafile/item.txt");
+//
+//                    String supplierName = suppliername.getText().trim();
+//                    String supplierID = Supplier.getSupplierID(supplierName);  // Use the method you already created to get SupplierID
+
+//                    if ("Unknown".equals(supplierID)) {
+//                        // If supplier doesn't exist, show error message
+//                        CustomComponents.CustomOptionPane.showErrorDialog(
+//                                parent,
+//                                "Supplier name does not exist in the system!",
+//                                "Error",
+//                                new Color(209, 88, 128),
+//                                new Color(255, 255, 255),
+//                                new Color(237, 136, 172),
+//                                new Color(255, 255, 255)
+//                        );
+//                    } else {
+//                        // If supplier exists, create an Item_Supplier instance
+//                        Item_Supplier itemSupplier = new Item_Supplier(new_id, supplierID);
+//                        Item_Supplier.saveNewItemSupplier(itemSupplier, "datafile/item_supplier.txt");
+//
+//                        // Ask user if they want to continue adding more items
+//                        boolean keep_adding = CustomComponents.CustomOptionPane.showConfirmDialog(
+//                                parent,
+//                                "Keep adding new items?",
+//                                "Confirmation",
+//                                new Color(209, 88, 128),
+//                                new Color(255, 255, 255),
+//                                new Color(237, 136, 172),
+//                                new Color(255, 255, 255),
+//                                new Color(56, 53, 70),
+//                                new Color(255, 255, 255),
+//                                new Color(73, 69, 87),
+//                                new Color(255, 255, 255),
+//                                true
+//                        );
+//
+//                        if (!keep_adding) {
+//                            dialog.dispose();
+//                        } else {
+//                            // Reset fields for the next item entry
+//                            itemname.Reset();
+//                            unitprice.Reset();
+//                            unitcost.Reset();
+//                            stockcount.Reset();
+//                            threshold.Reset();
+//                            suppliername.Reset();
+//                        }
+//                    }
                     String new_ID = Supplier.idMaker(Main.supplier_file); // Generate unique Supplier ID
                     String supplierNameText = supplierName.getText().trim();
                     String contactPersonText = contactPerson.getText().trim();
@@ -568,7 +642,6 @@ public class AddSupplier {
                             email.Reset();
                             address.Reset();
                         }
-
                 } catch (NumberFormatException ex) {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,

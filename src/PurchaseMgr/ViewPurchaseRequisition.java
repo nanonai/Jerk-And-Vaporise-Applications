@@ -38,6 +38,7 @@ public class ViewPurchaseRequisition {
     private static final Set<Integer> previousSelection = new HashSet<>();
     private static JLabel emp1, emp2, emp3;
     private static JDialog dialog;
+    public static String selectedPRID;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
         ViewPurchaseRequisition.parent = parent;
@@ -418,39 +419,15 @@ public class ViewPurchaseRequisition {
         ii_gbc.gridx = 1;
         ii_gbc.insets = new Insets(0, 0, 0, 4);
         JLabel emp1 = new JLabel();
-        /*view = new CustomComponents.CustomButton("View Details", merriweather, new Color(255, 255, 255),
-                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
-                Main.transparent, 0, 16, Main.transparent, false, 5, false,
-                null, 0, 0, 0);
-        view.addActionListener(_ -> {
-
-        });*/
         button_panel1.add(emp1, ii_gbc);
 
         ii_gbc.gridx = 2;
         JLabel emp2 = new JLabel();
-        /*modify = new CustomComponents.CustomButton("Modify User", merriweather, new Color(255, 255, 255),
-                new Color(255, 255, 255), new Color(225, 108, 150), new Color(237, 136, 172),
-                Main.transparent, 0, 16, Main.transparent, false, 5, false,
-                null, 0, 0, 0);
-        modify.addActionListener(_ -> {
-
-        });*/
         button_panel1.add(emp2, ii_gbc);
 
         ii_gbc.gridx = 3;
         JLabel placeholder3 = new JLabel("");
         button_panel1.add(placeholder3, ii_gbc);
-
-        /*ii_gbc.gridx = 4;
-        data_transfer = new CustomComponents.CustomButton("Transfer User Data", merriweather, new Color(255, 255, 255),
-                new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
-                Main.transparent, 0, 16, Main.transparent, false, 5, false,
-                null, 0, 0, 0);
-        data_transfer.addActionListener(_ -> {
-
-        });
-        button_panel2.add(data_transfer, ii_gbc);*/
 
         ii_gbc.gridx = 5;
         ii_gbc.insets = new Insets(0, 0, 0, 0);
@@ -460,58 +437,24 @@ public class ViewPurchaseRequisition {
                 0, 0);
         delete1.addActionListener(_ -> {
             int selectedRow = table_pr.getSelectedRow();
-
             if (selectedRow != -1) {
-                String selectedPRID = table_pr.getValueAt(selectedRow, 0).toString();
+                selectedPRID = table_pr.getValueAt(selectedRow, 0).toString();
                 String status = getStatusFromFile(selectedPRID); // get PR status
 
                 if ("1".equalsIgnoreCase(status)) {
-                    JOptionPane.showMessageDialog(parent,
+                    CustomComponents.CustomOptionPane.showErrorDialog(
+                            parent,
                             "This PR has been generated.",
                             "Cannot Add",
-                            JOptionPane.WARNING_MESSAGE);
+                            new Color(88, 149, 209),
+                            new Color(255, 255, 255),
+                            new Color(125, 178, 228),
+                            new Color(255, 255, 255)
+                    );
                 } else {
-                    try {
-                        // Generate new Purchase Order ID
-                        String newPurchaseOrderID = PurchaseOrder.idMaker(Main.purchaseOrder_file);
-
-                        // Extract PR data from table row
-                        String itemID = table_pr.getValueAt(selectedRow, 1).toString();
-                        String supplierID = table_pr.getValueAt(selectedRow, 2).toString();
-                        int purchaseQuantity = Integer.parseInt(table_pr.getValueAt(selectedRow, 3).toString());
-                        double totalAmt = 0;
-                        LocalDate orderDate = LocalDate.parse(table_pr.getValueAt(selectedRow, 4).toString());
-                        String purchaseMgrID = table_pr.getValueAt(selectedRow, 5).toString();
-                        String poStatus = "Pending";
-
-                        // Create new PurchaseOrder object
-                        PurchaseOrder newPO = new PurchaseOrder(
-                                newPurchaseOrderID,
-                                itemID,
-                                supplierID,
-                                purchaseQuantity,
-                                totalAmt,
-                                orderDate,
-                                purchaseMgrID,
-                                poStatus
-                        );
-                        // Save PO to file
-                        PurchaseOrder.savePurchaseOrder(newPO, Main.purchaseOrder_file, parent);
-
-                        // Update PR status to "1"
-                        updatePRStatus(selectedPRID, "1", Main.purchaseReq_file);
-
-                    } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(parent,
-                                "Invalid number format in the selected row.",
-                                "Input Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(parent,
-                                "An error occurred:\n" + ex.getMessage(),
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
+                    AddPRtoPO.UpdatePurchaseReq(
+                            PurchaseRequisition.getPurchaseReqByID(selectedPRID, Main.purchaseReq_file));
+                    AddPRtoPO.ShowPage();
                 }
             } else {
                 CustomComponents.CustomOptionPane.showErrorDialog(
@@ -526,15 +469,6 @@ public class ViewPurchaseRequisition {
             }
         });
         button_panel2.add(delete1, ii_gbc);
-
-
-
-//        PurchaseOrderDetails.Loader(parent, merriweather, boldonse, content, current_user);
-//        ViewUser.Loader(parent, merriweather, boldonse, content, null);
-//        ModifyUser.Loader(parent, merriweather, boldonse, content, null);
-//        DeleteUser.Loader(parent, merriweather, boldonse, content, current_user);
-//        DeleteBridge.Loader(parent, merriweather, boldonse, content, current_user, null);
-//        TransferData.Loader(parent, merriweather, boldonse, content, null);
     }
 
     public static void UpdateTable(int length, int page) {
@@ -551,8 +485,9 @@ public class ViewPurchaseRequisition {
             if (anti_counter != 0) {
                 anti_counter -= 1;
             } else {
+                String displayStatus = getDisplayStatus(purchaseRequisition.ReqDate, purchaseRequisition.Status);
                 data[counter] = new Object[]{purchaseRequisition.PurchaseReqID, purchaseRequisition.ItemID, purchaseRequisition.SupplierID,
-                        purchaseRequisition.Quantity, purchaseRequisition.ReqDate, purchaseRequisition.SalesMgrID, purchaseRequisition.Status};
+                        purchaseRequisition.Quantity, purchaseRequisition.ReqDate, purchaseRequisition.SalesMgrID, displayStatus};
                 counter += 1;
                 if (counter == length || counter == pr_list.size()) { break; }
             }
@@ -677,45 +612,14 @@ public class ViewPurchaseRequisition {
         return null; // Not found
     }
 
-    public static void updatePRStatus(String prId, String newStatus, String filename) {
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(filename));
-            List<String> updatedLines = new ArrayList<>();
-            boolean prFound = false;
-
-            for (int i = 0; i < lines.size(); i++) {
-                String line = lines.get(i);
-
-                // Normalize the line to remove extra spaces before and after colon
-                if (line.trim().startsWith("PurchaseReqID")) {
-                    String[] parts = line.split(":");
-                    if (parts.length > 1 && parts[1].trim().equals(prId)) {
-                        prFound = true;
-                        updatedLines.add(line); // keep the original line
-
-                        // Look for the "Status:" line in the following lines
-                        while (++i < lines.size()) {
-                            String nextLine = lines.get(i);
-                            if (nextLine.trim().startsWith("Status")) {
-                                updatedLines.add("Status:              " + newStatus);
-                                System.out.println("Status updated to: " + newStatus);
-                                break;
-                            } else {
-                                updatedLines.add(nextLine);
-                            }
-                        }
-                        continue; // skip the outer else block
-                    }
-                }
-                updatedLines.add(line); // default behavior
-            }
-            if (prFound) {
-                Files.write(Paths.get(filename), updatedLines);
-            } else {
-                System.out.println("PR ID not found in file: " + prId);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    private static String getDisplayStatus(LocalDate reqDate, int status) {
+        if (reqDate.isBefore(LocalDate.now()) && status == 0) {
+            return "Overdue";
         }
+        return switch (status) {
+            case 1 -> "Generated";
+            case 0 -> "Pending";
+            default -> "Unknown";
+        };
     }
 }

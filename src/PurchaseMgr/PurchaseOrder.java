@@ -1,13 +1,16 @@
 package PurchaseMgr;
 
+import Admin.CustomComponents;
 import Admin.User;
 
 import javax.swing.*;
 import javax.swing.text.*;
+import java.awt.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class PurchaseOrder {
@@ -167,51 +170,4 @@ public class PurchaseOrder {
             JOptionPane.showMessageDialog(parentFrame, "Error saving purchase order:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    public static void deletePurchaseOrder(
-            String purchaseOrderId,
-            String filename,
-            JFrame parentFrame // for JOptionPane
-    ) {
-        try {
-            File inputFile = new File(filename);
-            List<String> lines = new ArrayList<>();
-            Scanner scanner = new Scanner(inputFile);
-
-            boolean skipBlock = false;
-
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-
-                if (line.startsWith("PurchaseOrderID:")) {
-                    if (line.contains(purchaseOrderId)) {
-                        skipBlock = true;
-                    } else {
-                        skipBlock = false;
-                    }
-                }
-
-                if (!skipBlock) {
-                    lines.add(line);
-                }
-
-                if (line.equals("~~~~~")) {
-                    skipBlock = false;
-                }
-            }
-            scanner.close();
-
-            // Write back to file
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-                for (String l : lines) {
-                    writer.write(l + "\n");
-                }
-            }
-
-            JOptionPane.showMessageDialog(parentFrame, "Purchase order " + purchaseOrderId + " deleted successfully.");
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(parentFrame, "Error deleting purchase order:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
 }
