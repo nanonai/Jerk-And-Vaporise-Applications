@@ -25,10 +25,6 @@ import java.awt.font.TextAttribute;
 import java.util.HashMap;
 import java.util.Map;
 
-
-import static PurchaseMgr.Supplier.getSupplierID;
-
-
 public class AddNewItem {
     private static JFrame parent;
     private static Font merriweather, boldonse;

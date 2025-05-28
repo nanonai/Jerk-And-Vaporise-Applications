@@ -72,9 +72,9 @@ public class Dashboard {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1;
-        gbc.weighty = 1;
+        gbc.weighty = 2;
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(5, 5, 5, 5);
         user_summary = new CustomComponents.RoundedPanel(0, 5, 0, Color.WHITE, null);
         user_summary.setLayout(new GridBagLayout());
@@ -94,7 +94,7 @@ public class Dashboard {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.weighty = 40;
+        gbc.weighty = 30;
         gbc.gridwidth = 3;
         gbc.insets = new Insets(0, 0, 0, 0);
         JPanel bottom_panel = new JPanel(new GridBagLayout());
@@ -804,7 +804,7 @@ public class Dashboard {
             for (Item item: allItem) {
                 if (Objects.equals(item.Category, category)) {
                     List<Item_Sales> related_sales = Item_Sales.listAllItemSalesFromItemID(item.ItemID, Main.item_sales_file);
-                    for (Item_Sales item_sales: related_sales) {
+                    for (Item_Sales item_sales : related_sales) {
                         counter += item_sales.Quantity;
                     }
                 }

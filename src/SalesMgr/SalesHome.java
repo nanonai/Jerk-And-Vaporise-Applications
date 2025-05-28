@@ -230,7 +230,7 @@ public class SalesHome {
 
         Profile.Loader(parent, merriweather, boldonse, content, current_user);
         ItemMng.Loader(parent, merriweather, boldonse, content, current_user);
-        SalesHomePage.Loader(parent, merriweather, boldonse, content, current_user);
+        SalesDashboard.Loader(parent, merriweather, boldonse, content, current_user);
         SupplierMng.Loader(parent, merriweather, boldonse, content, current_user);
         DailySalesMng.Loader(parent, merriweather, boldonse, content, current_user);
         PurchaseRequisitionMng.Loader(parent, merriweather, boldonse, content, current_user);
@@ -252,7 +252,7 @@ public class SalesHome {
 //    5 -> Purchase requisitions page
 //    6 -> Purchase orders page
             case 0:
-                SalesHomePage.ShowPage();
+                SalesDashboard.ShowPage();
                 title.setText(String.format("<html>Welcome, Sales Manager <i>- %s</i></html>",
                         Home.current_user.FullName));
                 break;
@@ -308,6 +308,7 @@ public class SalesHome {
             profile.setSize(profileIcon1.getIconWidth(), profileIcon1.getIconHeight());
             switch (indicator) {
                 case 0:
+                    SalesDashboard.UpdateComponentSize(finalBase_size);
                     break;
                 case 1:
                     Profile.UpdateComponentSize(finalBase_size);
@@ -315,6 +316,13 @@ public class SalesHome {
                 case 2:
                     ItemMng.UpdateComponentSize(finalBase_size);
                     break;
+                case 3:
+                    SupplierMng.UpdateComponentSize(finalBase_size);
+                    break;
+                case 4:
+                    DailySalesMng.UpdateComponentSize(finalBase_size);
+                    break;
+
             }
         });
     }
