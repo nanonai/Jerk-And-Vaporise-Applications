@@ -382,7 +382,7 @@ public class ReportPage {
                     }
                 }
 
-                // Step 2: Match SalesID in item file and accumulate Amount
+                // Match SalesID in item file and accumulate Amount
                 File itemFile = new File(Main.item_sales_file);
                 BufferedReader itemReader = new BufferedReader(new FileReader(itemFile));
                 StringBuilder itemContent = new StringBuilder();
@@ -419,8 +419,7 @@ public class ReportPage {
                         }
                     }
                 }
-
-                // Part 3: GUI OUTPUTS
+                //GUI OUTPUTS
                 totalpoAmtTxtField.setText(String.format("%.2f", totalStatusPoAmt));
                 totalSalesAmtTxtField.setText(String.format("%.2f", totalSale));
                 poDetail.setText(poDetailsBuilder.toString());

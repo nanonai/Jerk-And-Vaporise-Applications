@@ -246,9 +246,6 @@ public class PurchaseOrderPage {
             pages.setSelectedIndex(0);
             UpdatePOTable(list_length, page_counter);
             previousSelection.clear();
-            SwingUtilities.invokeLater(() -> {
-                RememberDeletion(deleting_id, table_purOrder);
-            });
         });
         p_first.addMouseListener(new MouseAdapter() {
             @Override
@@ -292,9 +289,6 @@ public class PurchaseOrderPage {
                 pages.setSelectedIndex(page_counter);
                 UpdatePOTable(list_length, page_counter);
                 previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_purOrder);
-                });
             }
         });
         page_panel.add(p_left, ii_gbc);
@@ -309,9 +303,6 @@ public class PurchaseOrderPage {
                 page_counter = pages.getSelectedIndex();
                 UpdatePOTable(list_length, page_counter);
                 previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_purOrder);
-                });
             }
         });
         page_panel.add(pages, ii_gbc);
@@ -330,9 +321,6 @@ public class PurchaseOrderPage {
                 pages.setSelectedIndex(page_counter);
                 UpdatePOTable(list_length, page_counter);
                 previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_purOrder);
-                });
             }
         });
         page_panel.add(p_right, ii_gbc);
@@ -347,9 +335,6 @@ public class PurchaseOrderPage {
             pages.setSelectedIndex(page_counter);
             UpdatePOTable(list_length, page_counter);
             previousSelection.clear();
-            SwingUtilities.invokeLater(() -> {
-                RememberDeletion(deleting_id, table_purOrder);
-            });
         });
         p_last.addMouseListener(new MouseAdapter() {
             @Override
@@ -620,19 +605,6 @@ public class PurchaseOrderPage {
             UpdatePOPages(list_length);
             UpdatePOTable(list_length, page_counter);
             SwingUtilities.invokeLater(table_purOrder::requestFocusInWindow);
-        }
-    }
-    public static void RememberDeletion(Set<String> deleting_id, CustomComponents.CustomTable table) {
-        if (deleting) {
-            int rowCount = table.getRowCount();
-            for (int i = 0; i < rowCount; i++) {
-                Object value = table.getValueAt(i, table.getColumnModel().getColumnIndex("Id"));
-                if (value != null && deleting_id.contains(value.toString())) {
-                    table.addRowSelectionInterval(i, i);
-                }
-            }
-            table.revalidate();
-            table.repaint();
         }
     }
 }
