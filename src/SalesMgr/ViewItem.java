@@ -48,7 +48,6 @@ public class ViewItem {
         gbc.weightx = 1;
         gbc.weighty = 1;
 
-        // Title
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -268,7 +267,6 @@ public class ViewItem {
         });
         buttonPanel.add(btnSupplier, bgbc);
 
-// Add the button panel to the main panel
         panel.add(buttonPanel, gbc);
 
         dialog.setContentPane(panel);

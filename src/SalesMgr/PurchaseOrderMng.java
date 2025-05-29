@@ -380,7 +380,7 @@ public class PurchaseOrderMng {
         ii_gbc.insets = new Insets(0,20, 0, 0);
         add1 = new CustomComponents.CustomButton("View Details", merriweather, new Color(255, 255, 255),
                 new Color(255, 255, 255), new Color(209, 88, 128), new Color(237, 136, 172),
-                Main.transparent, 0, 16, Main.transparent, false, 5, false,
+                Main.transparent, 0, 20, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         add1.addActionListener(_ -> {
             if (table_po.getSelectedRowCount() == 0) {
@@ -468,152 +468,80 @@ public class PurchaseOrderMng {
 
     public static void SearchStuff() {
         String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search...\r\r")) ?
-                search.getText() : "";
-        String temp = switch (filter) {
-            case 1 -> "Finance Manager";
-            case 2 -> "Purchase Manager";
-            case 3 -> "Inventory Manager";
-            case 4 -> "Sales Manager";
-            default -> "";
-        };
-        List<PurchaseOrder> temp_user_list = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
-        if (temp_user_list.isEmpty()) {
+                search.getText().toLowerCase() : "";
+
+        List<PurchaseOrder> allOrders = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
+        List<PurchaseOrder> filteredList = new ArrayList<>();
+
+        for (PurchaseOrder po : allOrders) {
+            if (po.PurchaseOrderID.toLowerCase().contains(searcher) ||
+                    po.ItemID.toLowerCase().contains(searcher) ||
+                    po.SupplierID.toLowerCase().contains(searcher) ||
+                    po.PurchaseMgrID.toLowerCase().contains(searcher) ||
+                    String.valueOf(po.PurchaseQuantity).contains(searcher) ||
+                    po.Status.toLowerCase().contains(searcher)) {
+                filteredList.add(po);
+            }
+        }
+
+        if (filteredList.isEmpty()) {
             CustomComponents.CustomOptionPane.showInfoDialog(
                     parent,
                     "No results found.",
                     "Notification",
                     new Color(88, 149, 209),
-                    new Color(255, 255, 255),
+                    Color.WHITE,
                     new Color(125, 178, 228),
-                    new Color(255, 255, 255)
+                    Color.WHITE
             );
-        } else {
-            po_list = temp_user_list;
-            page_counter = 0;
-            UpdatePages(list_length);
-            UpdateTable(list_length, page_counter);
-            SwingUtilities.invokeLater(table_po::requestFocusInWindow);
         }
+
+        po_list = filteredList;
+        page_counter = 0;
+        UpdatePages(list_length);
+        UpdateTable(list_length, page_counter);
+        SwingUtilities.invokeLater(table_po::requestFocusInWindow);
     }
+
 
     public static void UpdateComponentSize(int base_size) {
         search_icon1.UpdateSize((int) (base_size * 0.8));
         search_icon2.UpdateSize((int) (base_size * 0.8));
         s_btn.setSize(search_icon1.getIconWidth(), search_icon1.getIconHeight());
         s_btn.repaint();
+
         icon_clear1.UpdateSize(base_size);
         icon_clear2.UpdateSize(base_size);
         x_btn.setSize(icon_clear1.getIconWidth(), icon_clear1.getIconHeight());
         x_btn.repaint();
+
         left_icon1.UpdateSize(base_size);
         left_icon2.UpdateSize(base_size);
         p_left.setSize(left_icon1.getIconWidth(), left_icon1.getIconHeight());
         p_left.repaint();
+
         right_icon1.UpdateSize(base_size);
         right_icon2.UpdateSize(base_size);
         p_right.setSize(right_icon1.getIconWidth(), right_icon1.getIconHeight());
         p_right.repaint();
+
         p_first.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
         p_last.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
-        pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
-        all.UpdateCustomButton(0, (int) (base_size), null, 0);
-        fin.UpdateCustomButton(0, (int) (base_size), null, 0);
-        pur.UpdateCustomButton(0, (int) (base_size), null, 0);
-        inv.UpdateCustomButton(0, (int) (base_size), null, 0);
-        sls.UpdateCustomButton(0, (int) (base_size), null, 0);
+        pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
+
         lbl_show.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_indicate.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
+
         entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
-        pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         search.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
-        table_po
-                .SetChanges(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
-                        merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)), mode);
-        add2.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
-        add.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
+
+        table_po.SetChanges(
+                merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
+                merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)),
+                mode
+        );
+
         add1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
-        data_transfer.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
-        delete1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
-    }
-
-    private static String getStatusFromFile(String poID) {
-        File file = new File(Main.purchaseOrder_file);
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            boolean poFound = false;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("PurchaseOrderID:")) {
-                    String currentPOID = line.split(":")[1].trim();
-                    poFound = currentPOID.equals(poID);
-                }
-                if (poFound && line.startsWith("Status:")) {
-                    return line.split(":")[1].trim();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null; // Not found
-    }
-
-    public static void deletePurchaseOrder(
-            String purchaseOrderId,
-            String filename
-    ) {
-        try {
-            File inputFile = new File(filename);
-            List<String> lines = new ArrayList<>();
-            Scanner scanner = new Scanner(inputFile);
-
-            boolean skipBlock = false;
-
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-
-                if (line.startsWith("PurchaseOrderID:")) {
-                    if (line.contains(purchaseOrderId)) {
-                        skipBlock = true;
-                    } else {
-                        skipBlock = false;
-                    }
-                }
-
-                if (!skipBlock) {
-                    lines.add(line);
-                }
-
-                if (line.equals("~~~~~")) {
-                    skipBlock = false;
-                }
-            }
-            scanner.close();
-
-            // Write back to file
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-                for (String l : lines) {
-                    writer.write(l + "\n");
-                }
-            }
-            CustomComponents.CustomOptionPane.showErrorDialog(
-                    parent,
-                    "Purchase order " + purchaseOrderId + " deleted successfully.",
-                    "",
-                    new Color(209, 88, 128),
-                    new Color(255, 255, 255),
-                    new Color(237, 136, 172),
-                    new Color(255, 255, 255)
-            );
-        } catch (IOException e) {
-            CustomComponents.CustomOptionPane.showErrorDialog(
-                    parent,
-                    "Error deleting purchase order:\n" + e.getMessage(),
-                    "Error",
-                    new Color(209, 88, 128),
-                    new Color(255, 255, 255),
-                    new Color(237, 136, 172),
-                    new Color(255, 255, 255)
-            );
-        }
     }
 }

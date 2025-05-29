@@ -197,13 +197,13 @@ Category:       Fruits
 LastUpdate:     2025-05-26
 ~~~~~
 ItemID:         I7352
-ItemName:       DIDDY BANANA
+ItemName:       APU banana
 UnitPrice:      1.0
 UnitCost:       1.0
 StockCount:     123
 Threshold:      1
 Category:       Fruits
-LastUpdate:     2025-05-26
+LastUpdate:     2025-05-28
 ~~~~~
 ItemID:         I2906
 ItemName:       adadsd milk
