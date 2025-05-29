@@ -83,6 +83,27 @@ public class PurchaseOrder {
         return allPurchaseOrders;
     }
 
+    public static List<PurchaseOrder> listAllPOFromFilter(String filename, String filter) {
+        List<PurchaseOrder> po_list = listAllPurchaseOrders(filename);
+        List<PurchaseOrder> filtered_po_list = new ArrayList<>();
+        if (filter.isEmpty()) {
+            return po_list;
+        }
+        for (PurchaseOrder po: po_list) {
+            if (po.PurchaseOrderID.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
+                    po.ItemID.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
+                    po.SupplierID.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
+                    Integer.toString(po.PurchaseQuantity).contains(filter.toLowerCase().replace(" ", "")) ||
+                    Double.toString(po.TotalAmt).contains(filter.toLowerCase().replace(" ", "")) ||
+                    po.OrderDate.toString().contains(filter.toLowerCase().replace(" ", "")) ||
+                    po.PurchaseMgrID.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
+                    po.Status.toLowerCase().contains(filter.toLowerCase().replace(" ", ""))) {
+                filtered_po_list.add(po);
+            }
+        }
+        return filtered_po_list;
+    }
+
     public static void ModifyPurchaseOrder(String PurchaseOrderID, PurchaseOrder purchaseOrder, String filename) {
         List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(filename);
         for (PurchaseOrder po : purchaseOrderList) {

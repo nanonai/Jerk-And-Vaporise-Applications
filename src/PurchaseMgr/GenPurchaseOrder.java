@@ -27,12 +27,9 @@ public class GenPurchaseOrder {
     private static CustomComponents.CustomArrowIcon left_icon1, left_icon2, right_icon1, right_icon2;
     private static CustomComponents.CustomXIcon icon_clear1, icon_clear2;
     private static CustomComponents.CustomTable table_po;
-    private static int list_length = 10, page_counter = 0, filter = 0, mode = 1;
-    private static boolean deleting = false;
+    public static int list_length = 10, page_counter = 0, mode = 1;
     private static List<PurchaseOrder> po_list;
-    private static Set<String> deleting_id = new LinkedHashSet<>();
     private static final Set<Integer> previousSelection = new HashSet<>();
-    private static JLabel emp1, emp2, emp3;
 
     public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
         GenPurchaseOrder.parent = parent;
@@ -43,7 +40,6 @@ public class GenPurchaseOrder {
     }
 
     public static void ShowPage() {
-        deleting_id = new LinkedHashSet<>();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
@@ -551,14 +547,7 @@ public class GenPurchaseOrder {
     public static void SearchStuff() {
         String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search...\r\r")) ?
                 search.getText() : "";
-        String temp = switch (filter) {
-            case 1 -> "Finance Manager";
-            case 2 -> "Purchase Manager";
-            case 3 -> "Inventory Manager";
-            case 4 -> "Sales Manager";
-            default -> "";
-        };
-        List<PurchaseOrder> temp_user_list = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
+        List<PurchaseOrder> temp_user_list = PurchaseOrder.listAllPOFromFilter(Main.purchaseOrder_file, searcher);
         if (temp_user_list.isEmpty()) {
             CustomComponents.CustomOptionPane.showInfoDialog(
                     parent,
