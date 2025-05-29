@@ -76,7 +76,7 @@ Email:          im123@gmail.com
 Phone:          0123574252
 AccType:        Inventory Manager
 DateOfRegis:    2025-03-31
-RememberMe:     0
+RememberMe:     1
 ~~~~~
 UserID:         FM0971204357
 Username:       fm123

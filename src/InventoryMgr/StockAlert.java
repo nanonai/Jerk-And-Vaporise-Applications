@@ -17,7 +17,7 @@ public class StockAlert {
             sb.append("<html><b>Items low on stock:</b><br>");
             for (Item item : lowStock) {
                 sb.append("ID: ").append(item.ItemID)
-                        .append(" - Name: ").append(item.ItemName);
+                        .append(" - Name: ").append(item.ItemName).append("<br>");
             }
             sb.append("</html>");
             CustomComponents.CustomOptionPane.showErrorDialog(parent, sb.toString(), "Low stock alert",
