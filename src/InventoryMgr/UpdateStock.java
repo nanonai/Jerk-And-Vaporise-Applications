@@ -186,7 +186,7 @@ public class UpdateStock {
 
         // ReadPO File, find itemID and check if the itemId is approved or whatsoever
 
-        List<PurchaseOrder> AllPO = PurchaseOrder.listAllPurchaseOrders("datafile/purchaseOrder.txt");
+        List<PurchaseOrder> AllPO = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
         List<PurchaseOrder> Filtered = new ArrayList<PurchaseOrder>();
 
         for (PurchaseOrder po : AllPO) {

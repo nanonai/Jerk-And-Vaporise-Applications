@@ -187,7 +187,7 @@ public class ViewDailySales {
                 null, 0, 0, 0);
         btnSM.setPreferredSize(new Dimension(250, 38));
         btnSM.addActionListener(e -> {
-            User matchedUser = User.GetUserById(selected_sales.SalesMgrID, "datafile/user.txt");
+            User matchedUser = User.GetUserById(selected_sales.SalesMgrID, Main.userdata_file);
 
             if (matchedUser == null) {
                 CustomComponents.CustomOptionPane.showErrorDialog(

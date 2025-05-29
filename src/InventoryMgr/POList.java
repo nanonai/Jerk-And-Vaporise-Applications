@@ -158,7 +158,7 @@ public class POList {
         gbc.gridwidth = 6;
         gbc.fill = GridBagConstraints.BOTH;
 
-        AllPO = PurchaseOrder.listAllPurchaseOrders("datafile/purchaseOrder.txt");
+        AllPO = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
         String[] titles = new String[]{"PurchaseOrderID", "ItemID", "PurchaseQuantity", "SupplierID", "OrderDate", "PurchaseMgrID", "Status"};
         Object[][] data = new Object[AllPO.size()][titles.length];
         int counter = 0;
