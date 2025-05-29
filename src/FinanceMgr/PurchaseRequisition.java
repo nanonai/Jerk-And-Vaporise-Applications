@@ -1,5 +1,6 @@
 package FinanceMgr;
 
+import InventoryMgr.Item;
 import PurchaseMgr.PurchaseOrder;
 
 import javax.swing.*;
@@ -73,6 +74,27 @@ public class PurchaseRequisition {
         return allPurchaseRequisitions;
     }
 
+    public static List<PurchaseRequisition> listAllPRFromFilter(String filename, String filter) {
+        List<PurchaseRequisition> pr_list = listAllPurchaseRequisitions(filename);
+        List<PurchaseRequisition> filtered_pr_list = new ArrayList<>();
+        if (filter.isEmpty()) {
+            return pr_list;
+        }
+        for (PurchaseRequisition pr: pr_list) {
+            String temp = (pr.Status == 0) ? (pr.ReqDate.isBefore(LocalDate.now())) ? "Overdue" : "Pending" : "Processed";
+            if ((pr.PurchaseReqID.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
+                    pr.ItemID.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
+                    pr.SupplierID.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
+                    Integer.toString(pr.Quantity).contains(filter.toLowerCase().replace(" ", "")) ||
+                    pr.ReqDate.toString().contains(filter.toLowerCase().replace(" ", "")) ||
+                    pr.SalesMgrID.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
+                    temp.toLowerCase().contains(filter.toLowerCase().replace(" ", "")))) {
+                filtered_pr_list.add(pr);
+            }
+        }
+        return filtered_pr_list;
+    }
+    
     public static String idMaker(String filename) {
         List<PurchaseRequisition> allPurchaseRequisition = listAllPurchaseRequisitions(filename);
         boolean repeated = false;

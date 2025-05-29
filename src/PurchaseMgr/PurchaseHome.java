@@ -257,8 +257,13 @@ public class PurchaseHome {
         content.repaint();
         ViewPurchaseRequisition.list_length = 10;
         ViewPurchaseRequisition.page_counter = 0;
-        ViewPurchaseRequisition.filter = 0;
         ViewPurchaseRequisition.mode = 1;
+        GenPurchaseOrder.list_length = 10;
+        GenPurchaseOrder.page_counter = 0;
+        GenPurchaseOrder.mode = 1;
+        ViewItems.list_length = 10;
+        ViewItems.page_counter = 0;
+        ViewItems.mode = 1;
         switch (indicator) {
 //    Please indicate the relation of the indicator value and specific java class:
 //    0 -> Purchase Manager Welcome Page
