@@ -1,5 +1,6 @@
 package InventoryMgr;
 
+import Admin.User;
 import PurchaseMgr.Supplier;
 
 import java.io.*;
@@ -74,6 +75,27 @@ public class Item {
             e.getStackTrace();
         }
         return allItem;
+    }
+
+    public static List<Item> listAllItemFromFilter(String filename, String filter) {
+        List<Item> item_list = listAllItem(filename);
+        List<Item> filtered_item_list = new ArrayList<>();
+        if (filter.isEmpty()) {
+            return item_list;
+        }
+        for (Item item: item_list) {
+            if ((item.ItemID.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
+                    item.ItemName.toLowerCase().replace(" ", "").contains(filter.toLowerCase().replace(" ", "")) ||
+                    Double.toString(item.UnitPrice).contains(filter.toLowerCase().replace(" ", "")) ||
+                    Double.toString(item.UnitCost).contains(filter.toLowerCase().replace(" ", "")) ||
+                    Integer.toString(item.StockCount).contains(filter.toLowerCase().replace(" ", "")) ||
+                    Integer.toString(item.Threshold).contains(filter.toLowerCase().replace(" ", "")) ||
+                    item.Category.toLowerCase().replace(" ", "").contains(filter.toLowerCase().replace(" ", "")) ||
+                    item.LastUpdate.toString().contains(filter.toLowerCase().replace(" ", "")))) {
+                filtered_item_list.add(item);
+            }
+        }
+        return filtered_item_list;
     }
 
     public static String idMaker(String filename) {

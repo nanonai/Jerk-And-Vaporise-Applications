@@ -133,7 +133,7 @@ public class User {
         for (User user: type_user_list) {
             if ((user.UserID.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
                     user.Email.toLowerCase().replace(" ", "").contains(filter.toLowerCase().replace(" ", "")) ||
-                    user.Phone.contains(filter) ||
+                    user.Phone.contains(filter.toLowerCase().replace(" ", "")) ||
                     user.DateOfRegis.toString().contains(filter.toLowerCase().replace(" ", "")) ||
                     user.Username.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
                     user.FullName.toLowerCase().replace(" ", "").contains(filter.toLowerCase().replace(" ", "")) ||
