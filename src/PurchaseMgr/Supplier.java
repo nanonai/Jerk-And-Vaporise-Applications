@@ -81,6 +81,25 @@ public class Supplier {
         return null;
     }
 
+    public static List<Supplier> listAllSupplierFromFilter(String filename, String filter) {
+        List<Supplier> spl_list = listAllSupplier(filename);
+        List<Supplier> filtered_spl_list = new ArrayList<>();
+        if (filter.isEmpty()) {
+            return spl_list;
+        }
+        for (Supplier spl: spl_list) {
+            if ((spl.SupplierID.toLowerCase().contains(filter.toLowerCase().replace(" ", "")) ||
+                    spl.SupplierName.toLowerCase().replace(" ", "").contains(filter.toLowerCase().replace(" ", "")) ||
+                    spl.ContactPerson.toLowerCase().replace(" ", "").contains(filter.toLowerCase().replace(" ", "")) ||
+                    spl.Phone.contains(filter.toLowerCase().replace(" ", "")) ||
+                    spl.Email.toLowerCase().replace(" ", "").contains(filter.toLowerCase().replace(" ", "")) ||
+                    spl.Address.toLowerCase().replace(" ", "").contains(filter.toLowerCase().replace(" ", "")))) {
+                filtered_spl_list.add(spl);
+            }
+        }
+        return filtered_spl_list;
+    }
+
     public static Supplier getSupplierByName(String SupplierName, String filename) {
         // itemList is data inside txt file
         List<Supplier> supplierList = listAllSupplier(filename);
