@@ -28,7 +28,7 @@ public class InventoryHome {
     private static CustomComponents.ImageCell logo_cell;
     private static JButton profile;
     private static CustomComponents.CustomProfileIcon profileIcon1, profileIcon2;
-    private static CustomComponents.CustomButton dashboard, mng_inv, mng_po, profile_drop, test;
+    private static CustomComponents.CustomButton dashboard, mng_inv, mng_po, profile_drop;
     private static JLabel title;
     private static CustomComponents.CustomPopupMenu profile_drop_menu;
 
@@ -98,18 +98,6 @@ public class InventoryHome {
         side_bar.add(mng_po, gbc_side);
 
         gbc_side.gridy = 4;
-        gbc_side.weighty = 0.8;
-        test = new CustomComponents.CustomButton("Test", merriweather, Color.WHITE, Color.WHITE,
-                new Color(56, 53, 70), new Color(73, 69, 87), null, 0, 14,
-                Main.transparent, false, 5, false, null, 0,
-                0, 0);
-        test.addActionListener(_ -> {
-            InventoryHome.indicator = 69;
-            PageChanger();
-        });
-        side_bar.add(test, gbc_side);
-
-        gbc_side.gridy = 5;
         gbc_side.weighty = 8.2;
         JLabel placeholder = new JLabel("");
         side_bar.add(placeholder, gbc_side);
@@ -275,11 +263,11 @@ public class InventoryHome {
             mng_inv.UpdateCustomButton(0, finalBase_size, null, 0);
             mng_po.UpdateCustomButton(0, finalBase_size, null, 0);
             dashboard.UpdateCustomButton(0, finalBase_size, null, 0);
-            test.UpdateCustomButton(0, finalBase_size, null, 0);
             title.setFont(boldonse.deriveFont((float)finalBase_size));
             profile.repaint();
             profileIcon1.UpdateSize((int) (finalBase_size * 2.5));
             profileIcon2.UpdateSize((int) (finalBase_size * 2.5));
+            profile_drop.UpdateSize(top_bar.getHeight() / 2, top_bar.getHeight());
             profile.setSize(profileIcon1.getIconWidth(), profileIcon1.getIconHeight());
             switch (indicator) {
                 case 0:

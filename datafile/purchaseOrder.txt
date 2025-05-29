@@ -14,7 +14,7 @@ PurchaseQuantity:    10
 TotalAmt:            100.0
 OrderDate:           2025-05-03
 PurchaseMgrID:       PM0971204357
-Status:              Approved
+Status:              Received
 ~~~~~
 PurchaseOrderID:     PO0003
 ItemID:              I0003

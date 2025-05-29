@@ -11,7 +11,7 @@ ItemID:         I3580
 ItemName:       Harukei Frozen pizza
 UnitPrice:      16.0
 UnitCost:       12.0
-StockCount:     231
+StockCount:     241
 Threshold:      23
 Category:       Frozen Foods
 LastUpdate:     2025-04-01
@@ -231,4 +231,22 @@ StockCount:     1222
 Threshold:      12
 Category:       Groceries
 LastUpdate:     2025-05-27
+~~~~~
+ItemID:         I7968
+ItemName:       Diddy Party
+UnitPrice:      20.0
+UnitCost:       15.0
+StockCount:     15
+Threshold:      15
+Category:       Vegetables
+LastUpdate:     2025-05-29
+~~~~~
+ItemID:         I1672
+ItemName:       Testing Item
+UnitPrice:      12.0
+UnitCost:       5.0
+StockCount:     14
+Threshold:      144
+Category:       Fruits
+LastUpdate:     2025-05-29
 ~~~~~

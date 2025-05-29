@@ -25,7 +25,7 @@ public class ListGenerator {
         g2d = image.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        g2d.setColor(new Color(239, 239, 239));
+        g2d.setColor(new Color(255, 255, 255));
         g2d.fillRect(0, 0, width, height);
 
         g2d.setFont(merriweather);
