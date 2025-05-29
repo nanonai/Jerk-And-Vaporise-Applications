@@ -84,72 +84,8 @@ public class POList {
 
         gbc.gridx = 4;
         gbc.weightx = 1;
-        CustomComponents.RoundedPanel search_panel = new CustomComponents.RoundedPanel(8, 0, 1, Color.WHITE,
-                new Color(209, 209, 209));
-        search_panel.setLayout(new GridBagLayout());
-        content.add(search_panel, gbc);
-
-        GridBagConstraints igbc = new GridBagConstraints();
-        igbc.gridx = 0;
-        igbc.gridy = 0;
-        igbc.weightx = 1;
-        igbc.weighty = 1;
-        igbc.fill = GridBagConstraints.BOTH;
-        igbc.insets = new Insets(6, 6, 10, 5);
-        search_icon1 = new CustomComponents.CustomSearchIcon(16, 3, new Color(122, 122, 122), Color.WHITE);
-        search_icon2 = new CustomComponents.CustomSearchIcon(16, 3, Color.BLACK, Color.WHITE);
-        s_btn = new JButton(search_icon1);
-        s_btn.setRolloverIcon(search_icon2);
-        s_btn.setBorderPainted(false);
-        s_btn.setContentAreaFilled(false);
-        s_btn.setFocusPainted(false);
-        s_btn.addActionListener(_ -> SearchStuff());
-        search_panel.add(s_btn, igbc);
-
-        igbc.gridx = 1;
-        igbc.insets = new Insets(6, 0, 6, 0);
-        search = new CustomComponents.EmptyTextField(20, "Search...\r\r", new Color(122, 122, 122));
-        search.setFont(merriweather.deriveFont(Font.BOLD, 14));
-        search.addActionListener(_ -> SearchStuff());
-        search_panel.add(search, igbc);
-
-        igbc.gridx = 2;
-        igbc.weightx = 0.9;
-        igbc.weighty = 0.9;
-        igbc.fill = GridBagConstraints.BOTH;
-        icon_clear1 = new CustomComponents.CustomXIcon(23, 3,
-                new Color(209, 209, 209), true);
-        icon_clear2 = new CustomComponents.CustomXIcon(23, 3,
-                Color.BLACK, true);
-        clearbtn = new JButton(icon_clear1);
-        clearbtn.setRolloverIcon(icon_clear2);
-        clearbtn.setOpaque(false);
-        clearbtn.setFocusable(false);
-        clearbtn.setBorder(BorderFactory.createEmptyBorder());
-        clearbtn.addActionListener(e -> {
-            search.setText("");
-            search.requestFocus();
-            UpdatePages(AllPO.size());
-            UpdateTable(AllPO, list_length, page_counter);
-        });
-        search.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (search.getText().equals("Search...")) {
-                    search.setText("");
-                    search.setForeground(Color.BLACK); // Normal text color
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (search.getText().isEmpty()) {
-                    search.setText("Search...");
-                    search.setForeground(new Color(122, 122, 122)); // Placeholder color
-                }
-            }
-        });
-        search_panel.add(clearbtn, igbc);
+        JLabel placeholder2 = new JLabel("");
+        content.add(placeholder2, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -298,22 +234,22 @@ public class POList {
         buttonPanel.setOpaque(false); // Set the panel background to transparent
         content.add(buttonPanel, gbc);
 
-        GridBagConstraints buttonGbc = new GridBagConstraints();
-        buttonGbc.gridx = 0;
-        buttonGbc.gridy = 0;
-        buttonGbc.insets = new Insets(0, 7, 5, 7);  // Reduced horizontal space (left and right padding)
-
-        // Add "Check Records" button
-        btnRec = new CustomComponents.CustomButton("Check Records", merriweather, Color.WHITE, Color.WHITE,
-                new Color(225, 108, 150), new Color(237, 136, 172),
-                Main.transparent, 0, 20, Main.transparent, false,
-                5, false, null, 0, 0, 0);
-        btnRec.setPreferredSize(new Dimension(165, 45));  // Increase width and height of the "Check Records" button
-        btnRec.addActionListener(_ -> {
-            InventoryMgr.POList.indicator = 0;
-            PageChanger();
-        });
-        buttonPanel.add(btnRec, buttonGbc);
+//        GridBagConstraints buttonGbc = new GridBagConstraints();
+//        buttonGbc.gridx = 0;
+//        buttonGbc.gridy = 0;
+//        buttonGbc.insets = new Insets(0, 7, 5, 7);  // Reduced horizontal space (left and right padding)
+//
+//        // Add "Check Records" button
+//        btnRec = new CustomComponents.CustomButton("Check Records", merriweather, Color.WHITE, Color.WHITE,
+//                new Color(225, 108, 150), new Color(237, 136, 172),
+//                Main.transparent, 0, 20, Main.transparent, false,
+//                5, false, null, 0, 0, 0);
+//        btnRec.setPreferredSize(new Dimension(165, 45));  // Increase width and height of the "Check Records" button
+//        btnRec.addActionListener(_ -> {
+//            InventoryMgr.POList.indicator = 0;
+//            PageChanger();
+//        });
+//        buttonPanel.add(btnRec, buttonGbc);
     }
 
     public static void PageChanger() {
