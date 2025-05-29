@@ -13,7 +13,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -186,7 +185,7 @@ public class EditPurchaseOrder {
                         "Pending"
                 );
 
-                PurchaseOrder.ModifyPurchaseOrder(PO.PurchaseOrderID, PO, Main.purchaseOrder_file);
+                PurchaseOrder.ModifyPurchaseOrder(PO.PurchaseOrderID, PO, Main.purchase_order_file);
                 dialog.dispose();
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,

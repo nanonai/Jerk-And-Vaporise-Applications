@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.List;
 
 import Admin.*;
-import FinanceMgr.FinanceHome;
 import InventoryMgr.misc.InvStatic;
 import SalesMgr.AddNewItem;
 
@@ -158,7 +157,7 @@ public class InventoryHome {
                     User.UnrememberAllUser(Main.userdata_file);
                     Main.indicator = 0;
                     InventoryHome.indicator = 0;
-                    Main.PageChanger(parent, merriweather, boldonse);
+                    Main.PageChanger(parent);
                 }
         ));
 
@@ -172,7 +171,7 @@ public class InventoryHome {
                 Home.PageChanger();
                 AdmHome.PageChanger();
                 User.UnrememberAllUser(Main.userdata_file);
-                User.modifyUser(admin.UserID, admin, Main.userdata_file);
+                User.ModifyUser(admin.UserID, admin, Main.userdata_file);
             });
         }
 
@@ -215,7 +214,7 @@ public class InventoryHome {
         });
 
         Dashboard.Loader(parent, merriweather, boldonse, content, current_user);
-        Profile.Loader(parent, merriweather, boldonse, content, current_user);
+        Profile.Loader(merriweather, boldonse, content, current_user);
         AddNewItem.Loader(parent, merriweather, boldonse, content, current_user);
         PageChanger();
 

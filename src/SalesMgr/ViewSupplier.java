@@ -180,8 +180,8 @@ public class ViewSupplier {
         btnItems.addActionListener(e -> {
             List<Item> items = PurchaseMgr.Item_Supplier.getItemsBySupplierID(
                     current_supplier.SupplierID,
-                    "datafile/item_supplier.txt",
-                    "datafile/item.txt"
+                    Main.item_supplier_file,
+                    Main.item_file
             );
 
             if (items.isEmpty()) {

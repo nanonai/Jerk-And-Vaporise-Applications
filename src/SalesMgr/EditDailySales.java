@@ -174,7 +174,7 @@ public class EditDailySales {
         itemname = new CustomComponents.EmptyTextField(20, "",
                 new Color(0, 0, 0));
         itemname.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
-        itemname.setText(getItemName(selected_itemSales.ItemID));
+        itemname.setText(getItemName(Main.item_file, selected_itemSales.ItemID));
         itemname.addActionListener(_ -> {SwingUtilities.invokeLater(quantity::requestFocusInWindow);});
         itemname.addFocusListener(new FocusListener() {
             @Override
@@ -197,7 +197,7 @@ public class EditDailySales {
                     itemname.setFont(baseFont.deriveFont(attributes));
                     itemname.setToolTipText("Item name length must be between 8 and 48 characters.");
                 } else {
-                    String itemID = Item.getItemIDByName(input, "datafile/item.txt");
+                    String itemID = Item.getItemIDByName(input, Main.item_file);
                     System.out.println("ItemID: " + itemID);
 
                     if (itemID == "Unknown" || itemID.isEmpty()) {
@@ -488,7 +488,7 @@ public class EditDailySales {
 
                     Sales.ModifySales(selected_sales.SalesID, selected_sales, "datafile/sales.txt");
 
-                    String itemID = Item.getItemIDByName(itemNameValue, "datafile/item.txt");
+                    String itemID = Item.getItemIDByName(itemNameValue, Main.item_file);
 
                     if (itemID == null || itemID.isEmpty()) {
                         CustomComponents.CustomOptionPane.showErrorDialog(

@@ -11,17 +11,12 @@ import java.util.List;
 
 public class DeleteUser {
     private static JFrame parent;
-    private static Font merriweather, boldonse;
-    private static JPanel content;
-    private static User current_user;
+    private static Font merriweather;
     private static List<User> users;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
+    public static void Loader(JFrame parent, Font merriweather) {
         DeleteUser.parent = parent;
         DeleteUser.merriweather = merriweather;
-        DeleteUser.boldonse = boldonse;
-        DeleteUser.content = content;
-        DeleteUser.current_user = current_user;
     }
 
     public static void UpdateUsers(List<User> users) {
@@ -36,7 +31,7 @@ public class DeleteUser {
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(parent);
 
-        int size_factor = 0;
+        int size_factor;
         if (parent.getWidth() >= parent.getHeight()) {
             size_factor = parent.getHeight() / 40;
         } else {
@@ -115,9 +110,7 @@ public class DeleteUser {
                 null, 0, 0, 0);
         panel.add(delete, gbc);
 
-        cancel.addActionListener(_ -> {
-            dialog.dispose();
-        });
+        cancel.addActionListener(_ -> dialog.dispose());
 
         delete.addActionListener(_ -> {
             boolean proceed = CustomComponents.CustomOptionPane.showConfirmDialog(

@@ -136,11 +136,11 @@ public class DeleteItem {
             );
             if (proceed) {
                 for (Item item : items) {
-                    List<Item_Supplier> relatedSuppliers = Item_Supplier.listAllItemSupplierFromItemID(item.ItemID, "datafile/item_supplier.txt");
+                    List<Item_Supplier> relatedSuppliers = Item_Supplier.listAllItemSupplierFromItemID(item.ItemID, Main.item_supplier_file);
                     for (Item_Supplier itemSupplier : relatedSuppliers) {
-                        Item_Supplier.removeItemSupplier(itemSupplier.ItemID, itemSupplier.SupplierID, "datafile/item_supplier.txt");
+                        Item_Supplier.removeItemSupplier(itemSupplier.ItemID, itemSupplier.SupplierID, Main.item_supplier_file);
                     }
-                    Item.removeItem(item.ItemID, "datafile/item.txt");
+                    Item.removeItem(item.ItemID, Main.item_file);
                 }
                 delete_or_not.set(true);
             }

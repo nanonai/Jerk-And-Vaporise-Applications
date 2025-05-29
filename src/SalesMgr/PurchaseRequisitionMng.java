@@ -192,7 +192,7 @@ public class PurchaseRequisitionMng {
         igbc.weighty = 4;
         igbc.insets = new Insets(0, 3, 0, 3);
         String[] titles = new String[]{"Id", "ItemID", "SupplierID", "Quantity", "Req Date", "Manager", "Status"};
-        pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
+        pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchase_req_file);
         Object[][] data = new Object[pr_list.size()][titles.length];
         int counter = 0;
         for (PurchaseRequisition purchaseRequisition : pr_list) {
@@ -387,7 +387,7 @@ public class PurchaseRequisitionMng {
         add.addActionListener(_ -> {
             AddPurchaseRequisition.Loader(parent, merriweather, boldonse, content, current_user);
             AddPurchaseRequisition.ShowPage();
-            pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
+            pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchase_req_file);
             UpdatePages(list_length);
             UpdateTable(list_length, page_counter);
         });
@@ -413,7 +413,7 @@ public class PurchaseRequisitionMng {
             } else {
                 String selected_id = table_pr.getValueAt(table_pr.getSelectedRow(),
                         table_pr.getColumnModel().getColumnIndex("Id")).toString();
-                PurchaseRequisitionDetails.UpdatePurchaseRequisition(PurchaseRequisition.getPurchaseReqByID(selected_id, Main.purchaseReq_file));
+                PurchaseRequisitionDetails.UpdatePurchaseRequisition(PurchaseRequisition.getPurchaseReqByID(selected_id, Main.purchase_req_file));
                 boolean see = PurchaseRequisitionDetails.ShowPage();
                 if (see) {
                     System.out.println(" ");
@@ -448,7 +448,7 @@ public class PurchaseRequisitionMng {
 
                 if ("0".equalsIgnoreCase(status)) {
                     EditPurchaseRequisition.UpdatePurchaseRequisition(
-                            PurchaseRequisition.getPurchaseReqID(selected_id, Main.purchaseReq_file));
+                            PurchaseRequisition.getPurchaseReqID(selected_id, Main.purchase_req_file));
                     EditPurchaseRequisition.ShowPage();
 
                 } else {
@@ -463,7 +463,7 @@ public class PurchaseRequisitionMng {
                     );
                 }
             }
-            pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
+            pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchase_req_file);
             UpdatePages(list_length);
             UpdateTable(list_length, page_counter);
         });
@@ -499,7 +499,7 @@ public class PurchaseRequisitionMng {
                         "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    deletePurchaseRequisition(selectedPRID, Main.purchaseReq_file);
+                    deletePurchaseRequisition(selectedPRID, Main.purchase_req_file);
                 }
             }
             else {
@@ -509,7 +509,7 @@ public class PurchaseRequisitionMng {
                         new Color(237, 136, 172),
                         new Color(255, 255, 255));
             }
-            pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
+            pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchase_req_file);
             UpdatePages(list_length);
             page_counter = 0;
             UpdateTable(list_length, page_counter);
@@ -570,7 +570,7 @@ public class PurchaseRequisitionMng {
                 ? search.getText().trim().toLowerCase() : "";
 
         if (searcher.isEmpty()) {
-            pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
+            pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchase_req_file);
             page_counter = 0;
             UpdatePages(list_length);
             UpdateTable(list_length, page_counter);
@@ -578,7 +578,7 @@ public class PurchaseRequisitionMng {
         }
 
         List<PurchaseRequisition> filtered = new ArrayList<>();
-        for (PurchaseRequisition pr : PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file)) {
+        for (PurchaseRequisition pr : PurchaseRequisition.listAllPurchaseRequisitions(Main.purchase_req_file)) {
             String id = pr.PurchaseReqID.toLowerCase();
             String item = pr.ItemID.toLowerCase();
             String supp = pr.SupplierID.toLowerCase();
@@ -644,7 +644,7 @@ public class PurchaseRequisitionMng {
     }
 
     private static String getStatusFromFile(String prID) {
-        File file = new File(Main.purchaseReq_file);
+        File file = new File(Main.purchase_req_file);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             boolean poFound = false;

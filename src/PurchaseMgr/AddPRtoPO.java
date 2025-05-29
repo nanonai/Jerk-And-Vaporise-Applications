@@ -176,7 +176,7 @@ public class AddPRtoPO {
 
             try {
                 PurchaseOrder PO = new PurchaseOrder(
-                        PurchaseOrder.idMaker(Main.purchaseOrder_file),
+                        PurchaseOrder.idMaker(Main.purchase_order_file),
                         itemID,
                         supplierID,
                         Integer.parseInt(qtyText),
@@ -186,8 +186,8 @@ public class AddPRtoPO {
                         "Pending"
                 );
 
-                PurchaseOrder.savePurchaseOrder(PO, Main.purchaseOrder_file, parent);
-                updatePRStatus(ViewPurchaseRequisition.selectedPRID, "1", Main.purchaseReq_file);
+                PurchaseOrder.savePurchaseOrder(PO, Main.purchase_order_file, parent);
+                updatePRStatus(ViewPurchaseRequisition.selectedPRID, "1", Main.purchase_req_file);
 
                 dialog.dispose();
 

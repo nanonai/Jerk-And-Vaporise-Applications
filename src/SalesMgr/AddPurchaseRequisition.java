@@ -6,20 +6,13 @@ import Admin.Main;
 import FinanceMgr.PurchaseRequisition;
 import InventoryMgr.Item;
 import PurchaseMgr.Item_Supplier;
-import PurchaseMgr.PurchaseOrder;
 import PurchaseMgr.Supplier;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -174,7 +167,7 @@ public class AddPurchaseRequisition {
 
             try {
                 PurchaseRequisition PR = new PurchaseRequisition(
-                        PurchaseRequisition.idMaker(Main.purchaseReq_file),
+                        PurchaseRequisition.idMaker(Main.purchase_req_file),
                         itemID,
                         supplierID,
                         Integer.parseInt(qtyText),
@@ -182,7 +175,7 @@ public class AddPurchaseRequisition {
                         current_user.UserID,
                         0
                 );
-                PurchaseRequisition.savePurchaseRequisition(PR, Main.purchaseReq_file, parent);
+                PurchaseRequisition.savePurchaseRequisition(PR, Main.purchase_req_file, parent);
                 dialog.dispose();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(dialog, "Please enter valid numbers for quantity and price.",

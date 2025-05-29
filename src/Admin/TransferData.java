@@ -4,8 +4,6 @@ import FinanceMgr.Payment;
 import FinanceMgr.PurchaseRequisition;
 import PurchaseMgr.PurchaseOrder;
 import SalesMgr.Sales;
-import SalesMgr.SalesHome;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -16,11 +14,9 @@ import java.util.List;
 
 public class TransferData {
     private static JFrame parent;
-    private static Font merriweather, boldonse;
-    private static JPanel content;
+    private static Font merriweather;
     private static User current_user;
     private static JComboBox<Object> user_combo, type_combo;
-    private static JLabel username;
     private static CustomComponents.CustomList<String> record_list1, record_list2;
     private static List<User> filter;
     private static List<Sales> left_list1;
@@ -30,20 +26,17 @@ public class TransferData {
     private static List<Object> right_list = new ArrayList<>();
     private static int partition = 0;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
+    public static void Loader(JFrame parent, Font merriweather) {
         TransferData.parent = parent;
         TransferData.merriweather = merriweather;
-        TransferData.boldonse = boldonse;
-        TransferData.content = content;
-        TransferData.current_user = current_user;
     }
 
     public static void UpdateUser(User current_user) {
         TransferData.current_user = current_user;
-        filter = User.listAllUserFromFilter(Main.userdata_file, current_user.AccType, "", current_user);
+        filter = User.ListAllUserFromFilter(Main.userdata_file, current_user.AccType, "", current_user);
         left_list1 = User.checkSalesRecordByID(current_user.UserID, Main.sales_file);
-        left_list2 = User.checkPRRecordByID(current_user.UserID, Main.purchaseReq_file);
-        left_list3 = User.checkPORecordByID(current_user.UserID, Main.purchaseOrder_file);
+        left_list2 = User.checkPRRecordByID(current_user.UserID, Main.purchase_req_file);
+        left_list3 = User.checkPORecordByID(current_user.UserID, Main.purchase_order_file);
         left_list4 = User.checkPYRecordByID(current_user.UserID, Main.payment_file);
         right_list = new ArrayList<>();
     }
@@ -55,7 +48,7 @@ public class TransferData {
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(parent);
 
-        int size_factor = 0;
+        int size_factor;
         if (parent.getWidth() >= parent.getHeight()) {
             size_factor = parent.getHeight() / 40;
         } else {
@@ -152,7 +145,7 @@ public class TransferData {
             if (!User.checkSalesRecordByID(current_user.UserID, Main.sales_file).isEmpty()) {
                 combo_data1.add("Sales Records");
             }
-            if (!User.checkPRRecordByID(current_user.UserID, Main.purchaseReq_file).isEmpty()) {
+            if (!User.checkPRRecordByID(current_user.UserID, Main.purchase_req_file).isEmpty()) {
                 combo_data1.add("Purchase Requisition Records");
             }
         } else if (current_user.UserID.startsWith("PM")) {
@@ -163,9 +156,7 @@ public class TransferData {
         type_combo = new JComboBox<>(combo_data1.toArray());
         type_combo.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.9)));
         type_combo.setFocusable(false);
-        type_combo.addActionListener(_ -> {
-            record_list1.UpdateListContent(UpdateLeftJList());
-        });
+        type_combo.addActionListener(_ -> record_list1.UpdateListContent(UpdateLeftJList()));
         panel.add(type_combo, gbc);
 
         gbc.gridy = 4;
@@ -355,9 +346,7 @@ public class TransferData {
                 null, 0, 0, 0);
         button_panel.add(confirm, gbc);
 
-        cancel.addActionListener(_ -> {
-            dialog.dispose();
-        });
+        cancel.addActionListener(_ -> dialog.dispose());
 
         confirm.addActionListener(_ -> {
             if (right_list.isEmpty()) {
@@ -598,10 +587,10 @@ public class TransferData {
                     Sales.ModifySales(sales.SalesID, sales, Main.sales_file);
                 } else if (item instanceof PurchaseRequisition pr) {
                     pr.SalesMgrID = selected.UserID;
-                    PurchaseRequisition.ModifyPurchaseRequisition(pr.PurchaseReqID, pr, Main.purchaseReq_file);
+                    PurchaseRequisition.ModifyPurchaseRequisition(pr.PurchaseReqID, pr, Main.purchase_req_file);
                 } else if (item instanceof PurchaseOrder po) {
                     po.PurchaseMgrID = selected.UserID;
-                    PurchaseOrder.ModifyPurchaseOrder(po.PurchaseOrderID, po, Main.purchaseOrder_file);
+                    PurchaseOrder.ModifyPurchaseOrder(po.PurchaseOrderID, po, Main.purchase_order_file);
                 } else if (item instanceof Payment py) {
                     py.FinanceMgrID = selected.UserID;
                     Payment.ModifyPayment(py.PaymentID, py, Main.payment_file);

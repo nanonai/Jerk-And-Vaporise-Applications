@@ -301,7 +301,7 @@ public class ReportPage {
                 Date end = inputFormat.parse(endDate);
 
                 // PURCHASE ORDERS
-                File file = new File(Main.purchaseOrder_file);
+                File file = new File(Main.purchase_order_file);
                 BufferedReader reader = new BufferedReader(new FileReader(file));
                 StringBuilder content = new StringBuilder();
                 String line;

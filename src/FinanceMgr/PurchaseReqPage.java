@@ -5,8 +5,6 @@ import Admin.Main;
 import Admin.User;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -130,7 +128,7 @@ public class PurchaseReqPage {
         igbc.weighty = 10;
         igbc.insets = new Insets(0, 0, 10, 0);
         String[] titles = new String[]{"PurchaseReqID", "ItemID", "SupplierID", "Quantity", "ReqDate", "SalesMgrID", "Status"};
-        purchaseReq_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
+        purchaseReq_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchase_req_file);
         Object[][] data = new Object[purchaseReq_list.size()][titles.length];
         int counter = 0;
         for (PurchaseRequisition purchaseRequisition : purchaseReq_list) {
@@ -350,7 +348,7 @@ public class PurchaseReqPage {
             } else {
                 String selected_id = table_purReq.getValueAt(table_purReq.getSelectedRow(),
                         table_purReq.getColumnModel().getColumnIndex("PurchaseReqID")).toString();
-                ViewPurchaseReq.UpdatePurchaseReq(PurchaseRequisition.getPurchaseReqByID(selected_id, Main.purchaseReq_file));
+                ViewPurchaseReq.UpdatePurchaseReq(PurchaseRequisition.getPurchaseReqByID(selected_id, Main.purchase_req_file));
                 boolean see = ViewPurchaseReq.ShowPage();
                 if (see) {
                     System.out.println(" ");

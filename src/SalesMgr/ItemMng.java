@@ -169,14 +169,14 @@ public class ItemMng {
         gbc.gridwidth = 6;
         gbc.fill = GridBagConstraints.BOTH;
 
-        AllItems = Item.listAllItem("datafile/item.txt");
+        AllItems = Item.listAllItem(Main.item_file);
         String[] titles = new String[]{"ItemID", "ItemName", "Unit Price", "Unit Cost", "StockCount", "Threshold",
                                        "Category", "Last Update","Supplier Name"};
         Object[][] data = new Object[AllItems.size()][titles.length];
         int counter = 0;
         for (Item item : AllItems) {
-            String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
-            String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+            String supplierID = getSupplierIDFromItemID(item.ItemID, Main.item_supplier_file);
+            String supplierName = getSupplierName(supplierID, Main.supplier_file);
             if ("DELETED_SUPPLIER".equals(supplierID)) {
                 supplierName = "<html><font color='red'>[Deleted Supplier]</font></html>";
             }
@@ -369,7 +369,7 @@ public class ItemMng {
             AddNewItem.Loader(parent, merriweather, boldonse, content, current_user);
             AddNewItem.ShowPage();
 
-            AllItems = Item.listAllItem("datafile/item.txt");
+            AllItems = Item.listAllItem(Main.item_file);
             UpdatePages(AllItems.size());
             UpdateTable(AllItems, list_length, page_counter);
         });
@@ -413,7 +413,7 @@ public class ItemMng {
                     EditNewItem.Loader(parent, merriweather, boldonse, content, current_user, selected_item);
                     EditNewItem.ShowPage();
 
-                    AllItems = Item.listAllItem("datafile/item.txt");
+                    AllItems = Item.listAllItem(Main.item_file);
                     UpdatePages(AllItems.size());
                     UpdateTable(AllItems, list_length, page_counter);
 
@@ -596,13 +596,13 @@ public class ItemMng {
 
                 List<Item> itemsToDelete = new ArrayList<>();
                 for (String itemId : ids) {
-                    Item item = Item.getItemByID(itemId, "datafile/item.txt");
+                    Item item = Item.getItemByID(itemId, Main.item_file);
                     if (item != null) {
                         itemsToDelete.add(item);
                     }
                 }
 
-                List<Item_Supplier> d_itemSuppliers = Item_Supplier.GetItemSupplierByItemIds(ids, "datafile/item_supplier.txt");
+                List<Item_Supplier> d_itemSuppliers = Item_Supplier.GetItemSupplierByItemIds(ids, Main.item_supplier_file);
                 DeleteItem.UpdateItemSupplier(d_itemSuppliers);
                 DeleteItem.Loader(parent, merriweather, boldonse, content, itemsToDelete);
 
@@ -611,14 +611,14 @@ public class ItemMng {
                     deleting = false;
 
                     for (String itemId : ids) {
-                        Item.removeItem(itemId, "datafile/item.txt");
+                        Item.removeItem(itemId, Main.item_file);
                     }
 
                     for (Item_Supplier itemSupplier : d_itemSuppliers) {
-                        Item_Supplier.removeItemSupplier(itemSupplier.ItemID, itemSupplier.SupplierID, "datafile/item_supplier.txt");
+                        Item_Supplier.removeItemSupplier(itemSupplier.ItemID, itemSupplier.SupplierID, Main.item_supplier_file);
                     }
 
-                    AllItems = Item.listAllItem("datafile/item.txt");
+                    AllItems = Item.listAllItem(Main.item_file);
                     deleting_id.clear();
 
                     btnView.setEnabled(true);
@@ -679,8 +679,8 @@ public class ItemMng {
                 anti_counter -= 1;
                 continue;
             } else {
-                String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
-                String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+                String supplierID = getSupplierIDFromItemID(item.ItemID, Main.item_supplier_file);
+                String supplierName = getSupplierName(supplierID, Main.supplier_file);
                 if ("DELETED_SUPPLIER".equals(supplierID)) {
                     supplierName = "<html><font color='red'>[Deleted Supplier]</font></html>";
                 }
@@ -726,7 +726,7 @@ public class ItemMng {
         String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search..."))
                 ? search.getText().trim() : "";
 
-        List<Item> AllItems = Item.listAllItem("datafile/item.txt");
+        List<Item> AllItems = Item.listAllItem(Main.item_file);
 
         if (searcher.isEmpty()) {
             page_counter = 0;
@@ -734,8 +734,8 @@ public class ItemMng {
             UpdateTable(AllItems, list_length, page_counter);
         } else {
             AllItems.removeIf(item -> {
-                String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
-                String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+                String supplierID = getSupplierIDFromItemID(item.ItemID, Main.item_supplier_file);
+                String supplierName = getSupplierName(supplierID, Main.supplier_file);
 
                 return !(item.ItemName.toLowerCase().contains(searcher.toLowerCase()) ||
                         item.ItemID.toLowerCase().contains(searcher.toLowerCase()) ||

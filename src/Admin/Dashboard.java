@@ -16,17 +16,14 @@ import java.util.*;
 import java.util.List;
 
 public class Dashboard {
-    private static JFrame parent;
-    private static Font merriweather, boldonse;
+    private static Font merriweather;
     private static JPanel content, series_panel, button_panel;
     private static User current_user;
     private static CustomComponents.RoundedPanel user_summary, item_spl_stock_summary, pr_po_py_summary,
             financial_summary, best_seller_summary;
     private static List<User> allUser;
-    private static List<Sales> allSales;
     private static List<PurchaseRequisition> allPR;
     private static List<PurchaseOrder> allPO;
-    private static List<Payment> allPY;
     private static List<Item> allItem;
     private static List<Supplier> allSpl;
     private static JLabel user1, item1, spl1, stock1, pr1, po1, py1, finTitle, sales_label, payment_label, bsTitle,
@@ -41,11 +38,11 @@ public class Dashboard {
     private static double maxValue;
     private static List<List<Double>> dataSeries;
     private static int mode = 1;
-    private static Color[] colors1 = {
+    private static final Color[] colors1 = {
             new Color(216, 66, 120),
             new Color(234, 121, 160)
     };
-    private static Color[] colors2 = {
+    private static final Color[] colors2 = {
             new Color(168, 0, 56),
             new Color(191, 30, 84),
             new Color(207, 63, 112),
@@ -58,11 +55,8 @@ public class Dashboard {
     private static List<Double> sold_quantities;
     private static CustomComponents.CustomRoundChart best_sold_quantity;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse,
-                              JPanel content, User current_user) {
-        Dashboard.parent = parent;
+    public static void Loader(Font merriweather, JPanel content, User current_user) {
         Dashboard.merriweather = merriweather;
-        Dashboard.boldonse = boldonse;
         Dashboard.content = content;
         Dashboard.current_user = current_user;
     }
@@ -511,7 +505,7 @@ public class Dashboard {
                 this.value = value;
                 this.label = label;
             }
-        };
+        }
         List<Pair> pairs = new ArrayList<>();
         for (int i = 0; i < sold_quantities.size(); i++) {
             pairs.add(new Pair(sold_quantities.get(i), categories.get(i)));
@@ -685,14 +679,15 @@ public class Dashboard {
         b_week.UpdateCustomButton(0, (int) (base_size * 0.8), null, 0);
         b_month.UpdateCustomButton(0, (int) (base_size * 0.8), null, 0);
         b_year.UpdateCustomButton(0, (int) (base_size * 0.8), null, 0);
+        best_sold_quantity.repaint();
     }
 
     public static void UpdateAllData() {
-        allUser = User.listAllUserFromFilter(Main.userdata_file, "", "", current_user);
-        allSales = Sales.listAllSales(Main.sales_file);
-        allPR = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
-        allPO = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
-        allPY = Payment.listAllPayment(Main.payment_file);
+        allUser = User.ListAllUserFromFilter(Main.userdata_file, "", "", current_user);
+        List<Sales> allSales = Sales.listAllSales(Main.sales_file);
+        allPR = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchase_req_file);
+        allPO = PurchaseOrder.listAllPurchaseOrders(Main.purchase_order_file);
+        List<Payment> allPY = Payment.listAllPayment(Main.payment_file);
         allItem = Item.listAllItem(Main.item_file);
         allSpl = Supplier.listAllSupplier(Main.supplier_file);
         LocalDate today = LocalDate.now();

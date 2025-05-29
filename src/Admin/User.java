@@ -7,7 +7,6 @@ import SalesMgr.Sales;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -18,15 +17,6 @@ public class User {
     public String UserID, Username, Password, FullName, Email, AccType, Phone;
     public int RememberMe;
     public LocalDate DateOfRegis;
-    private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final String EMAIL_REGEX =
-            "^(?!\\.)(?!.*\\.\\.)([a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*)"
-                    + "@([a-zA-Z0-9.-]+)\\.([a-zA-Z]{2,})$";
-    private static final String PHONE_REGEX = "^01[0-9]{8}$";
-    private static final String upperCasePattern = ".*[A-Z].*";
-    private static final String lowerCasePattern = ".*[a-z].*";
-    private static final String digitPattern = ".*\\d.*";
-    private static final String specialCharPattern = ".*[!@#$%^&*()\\-+].*";
 
     public User(String UserID, String Username, String Password, String FullName,
                 String Email, String Phone, String AccType, LocalDate DateOfRegis,
@@ -42,7 +32,7 @@ public class User {
         this.RememberMe = RememberMe;
     }
 
-    public static List<User> listAllUser(String filename) {
+    public static List<User> ListAllUser(String filename) {
         List<User> allUser = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String UserID = "", Username = "", Password = "", FullName = "", Email = "", AccType = "", Phone = "";
@@ -51,18 +41,6 @@ public class User {
 
             String line;
             int counter = 1;
-//          User account format:
-//          ----------------------------------------------
-//          UserID:         XX0000000000
-//          Username:       XX000
-//          Password:       XX000
-//          FullName:       XXXX
-//          Email:          XXXXXXXX@XXXXXX.XXXX
-//          Phone:          000000000
-//          AccType:        XXXXXXX
-//          DateOfRegis:    0000-00-00
-//          RememberMe:     0/1
-//          ~~~~~
             while ((line = reader.readLine()) != null) {
                 switch (counter) {
                     case 1:
@@ -87,7 +65,7 @@ public class User {
                         AccType = line.substring(16);
                         break;
                     case 8:
-                        DateOfRegis = LocalDate.parse(line.substring(16), df);
+                        DateOfRegis = LocalDate.parse(line.substring(16), Main.df);
                         break;
                     case 9:
                         RememberMe = Integer.parseInt(line.substring(16));
@@ -106,8 +84,8 @@ public class User {
         return allUser;
     }
 
-    public static List<User> listAllUserFromFilter(String filename, String type, String filter, User current_user) {
-        List<User> user_list = listAllUser(filename);
+    public static List<User> ListAllUserFromFilter(String filename, String type, String filter, User current_user) {
+        List<User> user_list = ListAllUser(filename);
         List<User> type_user_list = new ArrayList<>();
         List<User> filtered_user_list = new ArrayList<>();
         if (type.isEmpty() && filter.isEmpty()) {
@@ -145,7 +123,7 @@ public class User {
     }
 
     public static User GetUserById(String id, String filename) {
-        List<User> user_list = listAllUser(filename);
+        List<User> user_list = ListAllUser(filename);
         User user_temp = null;
         for (User user: user_list) {
             if (Objects.equals(user.UserID, id)) {
@@ -164,8 +142,8 @@ public class User {
         return user_list;
     }
 
-    public static User RememberedUser(String filename) {
-        List<User> allUser = listAllUser(filename);
+    public static User GetRememberedUser(String filename) {
+        List<User> allUser = ListAllUser(filename);
         User r_user = null;
         for (User user : allUser) {
             if (Objects.equals(user.RememberMe, 1)) {
@@ -177,7 +155,7 @@ public class User {
     }
 
     public static void UnrememberAllUser(String filename) {
-        List<User> allUser = listAllUser(filename);
+        List<User> allUser = ListAllUser(filename);
         for (User user : allUser) {
             if (Objects.equals(user.RememberMe, 1)) {
                 user.RememberMe = 0;
@@ -193,7 +171,7 @@ public class User {
                 writer.write("Email:          " + user.Email + "\n");
                 writer.write("Phone:          " + user.Phone + "\n");
                 writer.write("AccType:        " + user.AccType + "\n");
-                writer.write("DateOfRegis:    " + user.DateOfRegis.format(df) + "\n");
+                writer.write("DateOfRegis:    " + user.DateOfRegis.format(Main.df) + "\n");
                 writer.write("RememberMe:     " + user.RememberMe + "\n");
                 writer.write("~~~~~\n");
             }
@@ -203,7 +181,7 @@ public class User {
     }
 
     public static String idMaker(String AccType, String filename) {
-        List<User> allUser = listAllUser(filename);
+        List<User> allUser = ListAllUser(filename);
         boolean repeated = false;
         boolean success = false;
         String role = switch (AccType) {
@@ -237,8 +215,8 @@ public class User {
         return newId;
     }
 
-    public static boolean usernameChecker(String Username, String filename) {
-        List<User> allUser = listAllUser(filename);
+    public static boolean UsernameChecker(String Username, String filename) {
+        List<User> allUser = ListAllUser(filename);
         boolean repeated = false;
         for (User user : allUser) {
             if (Objects.equals(user.Username.toLowerCase(), Username.toLowerCase())) {
@@ -249,8 +227,8 @@ public class User {
         return !repeated;
     }
 
-    public static boolean emailChecker(String Email, String filename) {
-        List<User> allUser = listAllUser(filename);
+    public static boolean EmailChecker(String Email, String filename) {
+        List<User> allUser = ListAllUser(filename);
         boolean repeated = false;
         for (User user : allUser) {
             if (Objects.equals(user.Email, Email)) {
@@ -261,8 +239,8 @@ public class User {
         return !repeated;
     }
 
-    public static boolean phoneChecker(String Phone, String filename) {
-        List<User> allUser = listAllUser(filename);
+    public static boolean PhoneChecker(String Phone, String filename) {
+        List<User> allUser = ListAllUser(filename);
         boolean repeated = false;
         for (User user : allUser) {
             if (Objects.equals(user.Phone, Phone)) {
@@ -273,12 +251,12 @@ public class User {
         return !repeated;
     }
 
-    public static boolean passwordChecker(String password) {
-        return password.matches(upperCasePattern) && password.matches(lowerCasePattern) &&
-                password.matches(digitPattern) && password.matches(specialCharPattern);
+    public static boolean PasswordChecker(String password) {
+        return password.matches(Main.upper_regex) && password.matches(Main.lower_regex) &&
+                password.matches(Main.digit_regex) && password.matches(Main.special_regex);
     }
 
-    public static String validityChecker(String Username, String Password, String FullName,
+    public static String ValidityChecker(String Username, String Password, String FullName,
                                          String Email, String Phone, String filename) {
 //      Sample output: 0X0X00X0X
         String indicator = "";
@@ -287,7 +265,7 @@ public class User {
         } else {
             indicator += "0";
         }
-        if (usernameChecker(Username, filename)) {
+        if (UsernameChecker(Username, filename)) {
             indicator += "O";
         } else {
             indicator += "X";
@@ -297,7 +275,7 @@ public class User {
         } else {
             indicator += "0";
         }
-        if (passwordChecker(Password)) {
+        if (PasswordChecker(Password)) {
             indicator += "O";
         } else {
             indicator += "X";
@@ -307,22 +285,22 @@ public class User {
         } else {
             indicator += "0";
         }
-        if (Pattern.compile(EMAIL_REGEX).matcher(Email).matches()) {
+        if (Pattern.compile(Main.email_regex).matcher(Email).matches()) {
             indicator += "1";
         } else {
             indicator += "0";
         }
-        if (emailChecker(Email, filename)) {
+        if (EmailChecker(Email, filename)) {
             indicator += "O";
         } else {
             indicator += "X";
         }
-        if (Pattern.compile(PHONE_REGEX).matcher(Phone).matches()) {
+        if (Pattern.compile(Main.phone_regex).matcher(Phone).matches()) {
             indicator += "1";
         } else {
             indicator += "0";
         }
-        if (phoneChecker(Phone, filename)) {
+        if (PhoneChecker(Phone, filename)) {
             indicator += "O";
         } else {
             indicator += "X";
@@ -330,8 +308,8 @@ public class User {
         return indicator;
     }
 
-    public static String validityCheckerWithHistory(String Username, String Password, String FullName,
-                                         String Email, String Phone, String filename, User old) {
+    public static String ValidityCheckerWithHistory(String Username, String Password, String FullName,
+                                                    String Email, String Phone, String filename, User old) {
 //      Sample output: 0X0X00X0X
         String indicator = "";
         if (Username.length() >= 8 && Username.length() <= 36) {
@@ -339,7 +317,7 @@ public class User {
         } else {
             indicator += "0";
         }
-        if (usernameChecker(Username, filename)) {
+        if (UsernameChecker(Username, filename)) {
             indicator += "O";
         } else {
             if (Username.equals(old.Username)) {
@@ -353,7 +331,7 @@ public class User {
         } else {
             indicator += "0";
         }
-        if (passwordChecker(Password)) {
+        if (PasswordChecker(Password)) {
             indicator += "O";
         } else {
             indicator += "X";
@@ -363,12 +341,12 @@ public class User {
         } else {
             indicator += "0";
         }
-        if (Pattern.compile(EMAIL_REGEX).matcher(Email).matches()) {
+        if (Pattern.compile(Main.email_regex).matcher(Email).matches()) {
             indicator += "1";
         } else {
             indicator += "0";
         }
-        if (emailChecker(Email, filename)) {
+        if (EmailChecker(Email, filename)) {
             indicator += "O";
         } else {
             if (Email.equals(old.Email)) {
@@ -377,12 +355,12 @@ public class User {
                 indicator += "X";
             }
         }
-        if (Pattern.compile(PHONE_REGEX).matcher(Phone).matches()) {
+        if (Pattern.compile(Main.phone_regex).matcher(Phone).matches()) {
             indicator += "1";
         } else {
             indicator += "0";
         }
-        if (phoneChecker(Phone, filename)) {
+        if (PhoneChecker(Phone, filename)) {
             indicator += "O";
         } else {
             if (Phone.equals(old.Phone)) {
@@ -394,7 +372,7 @@ public class User {
         return indicator;
     }
 
-    public static void saveNewUser(User user, String filename) {
+    public static void SaveNewUser(User user, String filename) {
         try (FileWriter writer = new FileWriter(filename, true)) {
             writer.write("UserID:         " + user.UserID + "\n");
             writer.write("Username:       " + user.Username + "\n");
@@ -403,7 +381,7 @@ public class User {
             writer.write("Email:          " + user.Email + "\n");
             writer.write("Phone:          " + user.Phone + "\n");
             writer.write("AccType:        " + user.AccType + "\n");
-            writer.write("DateOfRegis:    " + user.DateOfRegis.format(df) + "\n");
+            writer.write("DateOfRegis:    " + user.DateOfRegis.format(Main.df) + "\n");
             writer.write("RememberMe:     0\n");
             writer.write("~~~~~\n");
         } catch (IOException e) {
@@ -411,8 +389,8 @@ public class User {
         }
     }
 
-    public static void removeUser(String UserID, String filename) {
-        List<User> allUser = listAllUser(filename);
+    public static void RemoveUser(String UserID, String filename) {
+        List<User> allUser = ListAllUser(filename);
         allUser.removeIf(user -> Objects.equals(user.UserID, UserID));
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (User user : allUser) {
@@ -423,7 +401,7 @@ public class User {
                 writer.write("Email:          " + user.Email + "\n");
                 writer.write("Phone:          " + user.Phone + "\n");
                 writer.write("AccType:        " + user.AccType + "\n");
-                writer.write("DateOfRegis:    " + user.DateOfRegis.format(df) + "\n");
+                writer.write("DateOfRegis:    " + user.DateOfRegis.format(Main.df) + "\n");
                 writer.write("RememberMe:     " + user.RememberMe + "\n");
                 writer.write("~~~~~\n");
             }
@@ -432,8 +410,8 @@ public class User {
         }
     }
 
-    public static void modifyUser(String UserID, User Incoming, String filename) {
-        List<User> allUser = listAllUser(filename);
+    public static void ModifyUser(String UserID, User Incoming, String filename) {
+        List<User> allUser = ListAllUser(filename);
         for (User user : allUser) {
             if (Objects.equals(user.UserID, UserID)) {
                 user.UserID = Incoming.UserID;
@@ -456,7 +434,7 @@ public class User {
                 writer.write("Email:          " + user.Email + "\n");
                 writer.write("Phone:          " + user.Phone + "\n");
                 writer.write("AccType:        " + user.AccType + "\n");
-                writer.write("DateOfRegis:    " + user.DateOfRegis.format(df) + "\n");
+                writer.write("DateOfRegis:    " + user.DateOfRegis.format(Main.df) + "\n");
                 writer.write("RememberMe:     " + user.RememberMe + "\n");
                 writer.write("~~~~~\n");
             }
@@ -507,9 +485,5 @@ public class User {
             }
         }
         return userRelatedRecords;
-    }
-
-    public String getUserID() {
-        return this.UserID;
     }
 }

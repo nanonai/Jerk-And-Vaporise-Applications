@@ -7,14 +7,12 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import InventoryMgr.Item;
-import PurchaseMgr.Supplier;
+
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import java.util.List;
@@ -334,7 +332,7 @@ public class ModifyPO {
             );
 
             // Update the status in the file
-            PurchaseOrder.ModifyPurchaseOrder(current_PO.PurchaseOrderID, po, Main.purchaseOrder_file);
+            PurchaseOrder.ModifyPurchaseOrder(current_PO.PurchaseOrderID, po, Main.purchase_order_file);
             PurchaseOrder.updateTotalAmountInFile(current_PO.PurchaseOrderID,po,Double.parseDouble(totalAmt.getText()));
             CustomComponents.CustomOptionPane.showErrorDialog(
                     parent,

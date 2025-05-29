@@ -11,8 +11,6 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
@@ -189,7 +187,7 @@ public class ViewPurchaseRequisition {
         igbc.weighty = 4;
         igbc.insets = new Insets(0, 3, 0, 3);
         String[] titles = new String[]{"Id", "ItemID", "SupplierID", "Quantity", "Req Date", "Manager", "Status"};
-        pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchaseReq_file);
+        pr_list = PurchaseRequisition.listAllPurchaseRequisitions(Main.purchase_req_file);
         Object[][] data = new Object[pr_list.size()][titles.length];
         int counter = 0;
         for (PurchaseRequisition purchaseRequisition : pr_list) {
@@ -402,7 +400,7 @@ public class ViewPurchaseRequisition {
             } else {
                 String selected_id = table_pr.getValueAt(table_pr.getSelectedRow(),
                         table_pr.getColumnModel().getColumnIndex("Id")).toString();
-                PurchaseRequisitionDetails.UpdatePurchaseRequisition(PurchaseRequisition.getPurchaseReqByID(selected_id, Main.purchaseReq_file));
+                PurchaseRequisitionDetails.UpdatePurchaseRequisition(PurchaseRequisition.getPurchaseReqByID(selected_id, Main.purchase_req_file));
                 boolean see = PurchaseRequisitionDetails.ShowPage();
                 if (see) {
                     System.out.println(" ");
@@ -448,7 +446,7 @@ public class ViewPurchaseRequisition {
                     );
                 } else {
                     AddPRtoPO.UpdatePurchaseReq(
-                            PurchaseRequisition.getPurchaseReqByID(selectedPRID, Main.purchaseReq_file));
+                            PurchaseRequisition.getPurchaseReqByID(selectedPRID, Main.purchase_req_file));
                     AddPRtoPO.ShowPage();
                 }
             } else {
@@ -515,7 +513,7 @@ public class ViewPurchaseRequisition {
     public static void SearchStuff() {
         String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search...\r\r")) ?
                 search.getText() : "";
-        List<PurchaseRequisition> temp_user_list = PurchaseRequisition.listAllPRFromFilter(Main.purchaseReq_file, searcher);
+        List<PurchaseRequisition> temp_user_list = PurchaseRequisition.listAllPRFromFilter(Main.purchase_req_file, searcher);
         if (temp_user_list.isEmpty()) {
             CustomComponents.CustomOptionPane.showInfoDialog(
                     parent,
@@ -576,7 +574,7 @@ public class ViewPurchaseRequisition {
     }
 
     static String getStatusFromFile(String poID) {
-        File file = new File(Main.purchaseReq_file);
+        File file = new File(Main.purchase_req_file);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             boolean isTargetBlock = false;

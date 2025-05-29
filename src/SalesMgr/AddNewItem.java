@@ -431,7 +431,7 @@ public class AddNewItem {
                     suppliername.setFont(font.deriveFont(attributes));
                     suppliername.setToolTipText("Supplier name cannot be empty.");
                 } else {
-                    String supplierID = Supplier.getSupplierID(input);
+                    String supplierID = Supplier.getSupplierID(Main.supplier_file, input);
 
                     if ("Unknown".equals(supplierID)) {
                         suppliername.setForeground(new Color(159, 4, 4));
@@ -525,7 +525,7 @@ public class AddNewItem {
             } else {
                 String validity = Item.validitychecker(itemname.getText(), unitprice.getText().trim(),
                         unitcost.getText().trim(), stockcount.getText(), threshold.getText(), suppliername.getText(),
-                        "datafile/item.txt");
+                        Main.item_file);
 
                 if (validity.length() != 7) {
                     CustomComponents.CustomOptionPane.showErrorDialog(
@@ -652,14 +652,14 @@ public class AddNewItem {
                     int thresholdValue = Integer.parseInt(threshold.getText().trim());
 
                     String item_type = (String) Objects.requireNonNull(types.getSelectedItem());
-                    String new_id = Item.idMaker("datafile/item.txt");
+                    String new_id = Item.idMaker(Main.item_file);
                     LocalDate currentDate = LocalDate.now();
                     future = new Item(new_id, itemname.getText(), unitPriceValue, unitCostValue,
                             stockCountValue, thresholdValue, item_type, currentDate);
-                    Item.saveNewItem(future, "datafile/item.txt");
+                    Item.saveNewItem(future, Main.item_file);
 
                     String supplierName = suppliername.getText().trim();
-                    String supplierID = Supplier.getSupplierID(supplierName);
+                    String supplierID = Supplier.getSupplierID(Main.supplier_file, supplierName);
 
                     if ("Unknown".equals(supplierID)) {
                         CustomComponents.CustomOptionPane.showErrorDialog(
@@ -673,7 +673,7 @@ public class AddNewItem {
                         );
                     } else {
                         Item_Supplier itemSupplier = new Item_Supplier(new_id, supplierID);
-                        Item_Supplier.saveNewItemSupplier(itemSupplier, "datafile/item_supplier.txt");
+                        Item_Supplier.saveNewItemSupplier(itemSupplier, Main.item_supplier_file);
 
                         boolean keep_adding = CustomComponents.CustomOptionPane.showConfirmDialog(
                                 parent,

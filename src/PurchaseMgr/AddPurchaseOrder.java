@@ -175,7 +175,7 @@ public class AddPurchaseOrder {
 
             try {
                 PurchaseOrder PO = new PurchaseOrder(
-                        PurchaseOrder.idMaker(Main.purchaseOrder_file),
+                        PurchaseOrder.idMaker(Main.purchase_order_file),
                         itemID,
                         supplierID,
                         Integer.parseInt(qtyText),
@@ -184,7 +184,7 @@ public class AddPurchaseOrder {
                         current_user.UserID,
                         "Pending"
                 );
-                PurchaseOrder.savePurchaseOrder(PO, Main.purchaseOrder_file, parent);
+                PurchaseOrder.savePurchaseOrder(PO, Main.purchase_order_file, parent);
                 dialog.dispose();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(dialog, "Please enter valid numbers for quantity and price.",

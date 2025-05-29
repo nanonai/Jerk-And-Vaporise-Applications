@@ -13,7 +13,6 @@ import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 
-import static PurchaseMgr.Item_Supplier.getSupplierIDFromItemID;
 import static PurchaseMgr.Item_Supplier.getSupplierName;
 
 public class StockReport {
@@ -58,7 +57,7 @@ public class StockReport {
 
         int base_size = size_factor;
 
-        AllPo = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
+        AllPo = PurchaseOrder.listAllPurchaseOrders(Main.purchase_order_file);
         String[] titles = new String[]{"PurchaseOrderID", "ItemID", "PurchaseQuantity", "SupplierID", "OrderDate", "PurchaseMgrID", "Status"};
         Object[][] data = new Object[AllPo.size()][titles.length];
         int counter = 0;

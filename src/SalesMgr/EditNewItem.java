@@ -164,7 +164,7 @@ public class EditNewItem {
             } else {
                 String validity = Item.validitychecker(itemname.getText(), unitprice.getText().trim(),
                         unitcost.getText().trim(), stockcount.getText(), threshold.getText(), suppliername.getText(),
-                        "datafile/item.txt");
+                        Main.item_file);
 
                 if (validity.length() != 7) {
                     CustomComponents.CustomOptionPane.showErrorDialog(
@@ -301,10 +301,10 @@ public class EditNewItem {
                     selected_item.Category = item_type;
                     selected_item.LastUpdate = LocalDate.now();
 
-                    Item.modifyItem(selected_item, "datafile/item.txt");
+                    Item.modifyItem(selected_item, Main.item_file);
 
                     String supplierName = suppliername.getText().trim();
-                    String supplierID = Supplier.getSupplierID(supplierName);
+                    String supplierID = Supplier.getSupplierID(Main.supplier_file, supplierName);
 
                     if ("Unknown".equals(supplierID)) {
                         CustomComponents.CustomOptionPane.showErrorDialog(
@@ -317,7 +317,7 @@ public class EditNewItem {
                                 new Color(255, 255, 255)
                         );
                     } else {
-                        Item_Supplier.updateSupplierForItem(selected_item.ItemID, supplierID, "datafile/item_supplier.txt");
+                        Item_Supplier.updateSupplierForItem(selected_item.ItemID, supplierID, Main.item_supplier_file);
 
                         boolean keep_editing = CustomComponents.CustomOptionPane.showConfirmDialog(
                                 parent,
@@ -399,7 +399,8 @@ public class EditNewItem {
         panel.add(thresholdValue, gbc);
 
         gbc.gridy = 7;
-        String suppliernameDetail = Item_Supplier.getSupplierNameByItemID(selected_item.ItemID, "datafile/item_supplier.txt", "datafile/supplier.txt");
+        String suppliernameDetail = Item_Supplier.getSupplierNameByItemID(
+                selected_item.ItemID, Main.item_supplier_file, Main.supplier_file);
         JLabel suppliernameValue = new JLabel(suppliernameDetail);
         suppliernameValue.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         panel.add(suppliernameValue, gbc);
@@ -703,7 +704,7 @@ public class EditNewItem {
                     suppliername.setFont(font.deriveFont(attributes));
                     suppliername.setToolTipText("Supplier name cannot be empty.");
                 } else {
-                    String supplierID = Supplier.getSupplierID(input);
+                    String supplierID = Supplier.getSupplierID(Main.supplier_file, input);
 
                     if ("Unknown".equals(supplierID)) {
                         suppliername.setForeground(new Color(159, 4, 4));

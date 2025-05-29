@@ -122,7 +122,7 @@ public class ViewDailySales {
 
         gbc.gridx = 1;
         gbc.insets = new Insets(0, 0, 10, 20);
-        JLabel item_value = new JLabel("    " + getItemName(selected_itemSales.ItemID));
+        JLabel item_value = new JLabel("    " + getItemName(Main.item_file, selected_itemSales.ItemID));
         item_value.setOpaque(true);
         item_value.setBackground(Color.WHITE);
         item_value.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209)));
@@ -210,7 +210,7 @@ public class ViewDailySales {
                                 "<b>Account Type:</b> %s<br>" +
                                 "<b>Registration Date:</b> %s" +
                                 "</html>",
-                        matchedUser.getUserID(),
+                        matchedUser.UserID,
                         matchedUser.Username,
                         matchedUser.FullName,
                         matchedUser.Email,

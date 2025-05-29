@@ -14,10 +14,8 @@ import java.io.IOException;
 import java.util.List;
 
 import Admin.*;
-import PurchaseMgr.EditPurchaseOrder;
 import PurchaseMgr.PurchaseOrderDetails;
 import PurchaseMgr.PurchaseRequisitionDetails;
-import FinanceMgr.FinanceHome;
 
 public class SalesHome {
     public static int indicator = 0;
@@ -190,7 +188,7 @@ public class SalesHome {
                     User.UnrememberAllUser(Main.userdata_file);
                     Main.indicator = 0;
                     SalesHome.indicator = 0;
-                    Main.PageChanger(parent, merriweather, boldonse);
+                    Main.PageChanger(parent);
                 }
         ));
 
@@ -204,7 +202,7 @@ public class SalesHome {
                 Home.PageChanger();
                 AdmHome.PageChanger();
                 User.UnrememberAllUser(Main.userdata_file);
-                User.modifyUser(admin.UserID, admin, Main.userdata_file);
+                User.ModifyUser(admin.UserID, admin, Main.userdata_file);
             });
         }
 
@@ -246,7 +244,7 @@ public class SalesHome {
             }
         });
 
-        Profile.Loader(parent, merriweather, boldonse, content, current_user);
+        Profile.Loader(merriweather, boldonse, content, current_user);
         ItemMng.Loader(parent, merriweather, boldonse, content, current_user);
         SalesDashboard.Loader(parent, merriweather, boldonse, content, current_user);
         SupplierMng.Loader(parent, merriweather, boldonse, content, current_user);

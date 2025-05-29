@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class Profile {
-    private static JFrame parent;
     private static Font merriweather, boldonse;
     private static JPanel content;
     public static User current_user;
@@ -26,7 +25,7 @@ public class Profile {
     private static CustomComponents.CustomButton exit, hidden;
     private static CustomComponents.CustomProfileIcon profileIcon;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse,
+    public static void Loader(Font merriweather, Font boldonse,
                               JPanel content, User current_user) {
         try {
             icon_username = ImageIO.read(new File("images/user_dark.png"));
@@ -41,7 +40,6 @@ public class Profile {
         } catch (IOException e) {
             e.getStackTrace();
         }
-        Profile.parent = parent;
         Profile.merriweather = merriweather;
         Profile.boldonse = boldonse;
         Profile.content = content;
@@ -196,8 +194,8 @@ public class Profile {
     }
 
     public static void UpdateComponentSize(int base_size) {
-        exit.UpdateSize((int) (base_size * 2), (int) (base_size * 2));
-        profileIcon.UpdateSize((int) (base_size * 20));
+        exit.UpdateSize(base_size * 2, base_size * 2);
+        profileIcon.UpdateSize(base_size * 20);
         profile_pic.repaint();
         id_label.setFont(merriweather.deriveFont((float) (base_size * 1.1)));
         job_label.setFont(merriweather.deriveFont((float) (base_size * 1.1)));

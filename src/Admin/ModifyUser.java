@@ -4,7 +4,6 @@ import FinanceMgr.Payment;
 import FinanceMgr.PurchaseRequisition;
 import PurchaseMgr.PurchaseOrder;
 import SalesMgr.Sales;
-
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
@@ -16,32 +15,22 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 
 public class ModifyUser {
     private static JFrame parent;
-    private static Font merriweather, boldonse;
-    private static JPanel content;
+    private static Font merriweather;
     private static User current_user;
     private static JComboBox<String> types;
     private static CustomComponents.EmptyTextField username, fullname, password, email, phone;
-    private static final String EMAIL_REGEX =
-            "^(?!\\.)(?!.*\\.\\.)([a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*)"
-                    + "@([a-zA-Z0-9.-]+)\\.([a-zA-Z]{2,})$";
-    private static final String PHONE_REGEX = "^01[0-9]{8}$";
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
+    public static void Loader(JFrame parent, Font merriweather) {
         ModifyUser.parent = parent;
         ModifyUser.merriweather = merriweather;
-        ModifyUser.boldonse = boldonse;
-        ModifyUser.content = content;
-        ModifyUser.current_user = current_user;
     }
 
     public static void UpdateUser(User user) {
@@ -56,7 +45,7 @@ public class ModifyUser {
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(parent);
 
-        int size_factor = 0;
+        int size_factor;
         if (parent.getWidth() >= parent.getHeight()) {
             size_factor = parent.getHeight() / 40;
         } else {
@@ -166,7 +155,7 @@ public class ModifyUser {
         switch (current_user.AccType) {
             case "Finance Manager":
                 types.setSelectedItem("Finance Manager");
-                List<PurchaseOrder> po_record = User.checkPORecordByID(current_user.UserID, Main.purchaseOrder_file);
+                List<PurchaseOrder> po_record = User.checkPORecordByID(current_user.UserID, Main.purchase_order_file);
                 if (!po_record.isEmpty()) {
                     types.setEnabled(false);
                     types.setToolTipText("<html>This account has related activities/history.<br>" +
@@ -188,15 +177,15 @@ public class ModifyUser {
             case "Sales Manager":
                 types.setSelectedItem("Sales Manager");
                 List<Sales> sales_record = User.checkSalesRecordByID(current_user.UserID, Main.sales_file);
-                List<PurchaseRequisition> pr_record = User.checkPRRecordByID(current_user.UserID, Main.purchaseReq_file);
+                List<PurchaseRequisition> pr_record = User.checkPRRecordByID(current_user.UserID, Main.purchase_req_file);
                 if (!sales_record.isEmpty() || !pr_record.isEmpty()) {
                     types.setEnabled(false);
                     types.setToolTipText("<html>This account has related activities/history.<br>" +
                             "You are not allowed to change its role!</html>");
                 }
                 break;
-        };
-        types.addActionListener(_ -> {SwingUtilities.invokeLater(username::requestFocusInWindow);});
+        }
+        types.addActionListener(_ -> SwingUtilities.invokeLater(username::requestFocusInWindow));
         panel.add(types, gbc);
 
         gbc.gridy = 2;
@@ -244,7 +233,7 @@ public class ModifyUser {
                 new Color(0, 0, 0));
         username.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         username.setText(current_user.Username);
-        username.addActionListener(_ -> {SwingUtilities.invokeLater(fullname::requestFocusInWindow);});
+        username.addActionListener(_ -> SwingUtilities.invokeLater(fullname::requestFocusInWindow));
         username.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -258,7 +247,7 @@ public class ModifyUser {
                 username.setToolTipText("");
                 String input = username.getText();
                 if (!Objects.equals(input, current_user.Username)) {
-                    if (!User.usernameChecker(input, Main.userdata_file) && !input.isEmpty()) {
+                    if (!User.UsernameChecker(input, Main.userdata_file) && !input.isEmpty()) {
                         username.setForeground(new Color(159, 4, 4));
                         Font font = username.getFont();
                         Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
@@ -283,7 +272,7 @@ public class ModifyUser {
                 new Color(0, 0, 0));
         fullname.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         fullname.setText(current_user.FullName);
-        fullname.addActionListener(_ -> {SwingUtilities.invokeLater(password::requestFocusInWindow);});
+        fullname.addActionListener(_ -> SwingUtilities.invokeLater(password::requestFocusInWindow));
         fullname.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -314,7 +303,7 @@ public class ModifyUser {
                 new Color(0, 0, 0));
         password.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         password.setText(current_user.Password);
-        password.addActionListener(_ -> {SwingUtilities.invokeLater(email::requestFocusInWindow);});
+        password.addActionListener(_ -> SwingUtilities.invokeLater(email::requestFocusInWindow));
         password.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -328,7 +317,7 @@ public class ModifyUser {
                 password.setToolTipText("");
                 String input = password.getText();
                 if (!input.equals(current_user.Password)) {
-                    if (!User.passwordChecker(input) && !input.isEmpty()) {
+                    if (!User.PasswordChecker(input) && !input.isEmpty()) {
                         password.setForeground(new Color(159, 4, 4));
                         Font font = password.getFont();
                         Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
@@ -354,7 +343,7 @@ public class ModifyUser {
                 new Color(0, 0, 0));
         email.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         email.setText(current_user.Email);
-        email.addActionListener(_ -> {SwingUtilities.invokeLater(phone::requestFocusInWindow);});
+        email.addActionListener(_ -> SwingUtilities.invokeLater(phone::requestFocusInWindow));
         email.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -368,14 +357,14 @@ public class ModifyUser {
                 email.setToolTipText("");
                 String input = email.getText();
                 if (!input.equals(current_user.Email)) {
-                    if (!User.emailChecker(input, Main.userdata_file) && !input.isEmpty()) {
+                    if (!User.EmailChecker(input, Main.userdata_file) && !input.isEmpty()) {
                         email.setForeground(new Color(159, 4, 4));
                         Font font = email.getFont();
                         Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
                         attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
                         email.setFont(font.deriveFont(attributes));
                         email.setToolTipText("This email address is already\nregistered under another account.");
-                    } else if (!Pattern.compile(EMAIL_REGEX).matcher(input).matches() && !input.isEmpty()) {
+                    } else if (!Pattern.compile(Main.email_regex).matcher(input).matches() && !input.isEmpty()) {
                         email.setForeground(new Color(159, 4, 4));
                         Font font = email.getFont();
                         Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
@@ -407,7 +396,7 @@ public class ModifyUser {
                 new Color(0, 0, 0));
         phone.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.8)));
         phone.setText(current_user.Phone.substring(1));
-        phone.addActionListener(_ -> {confirm.doClick();});
+        phone.addActionListener(_ -> confirm.doClick());
         phone.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -421,14 +410,14 @@ public class ModifyUser {
                 phone.setToolTipText("");
                 String input = phone.getText();
                 if (!input.equals(current_user.Phone.substring(1))) {
-                    if (!User.phoneChecker("0" + input, Main.userdata_file) && !input.isEmpty()) {
+                    if (!User.PhoneChecker("0" + input, Main.userdata_file) && !input.isEmpty()) {
                         phone.setForeground(new Color(159, 4, 4));
                         Font font = phone.getFont();
                         Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
                         attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
                         phone.setFont(font.deriveFont(attributes));
                         phone.setToolTipText("This phone number is already\nregistered under another account.");
-                    } else if (!Pattern.compile(PHONE_REGEX).matcher("0" + input).matches() && !input.isEmpty()) {
+                    } else if (!Pattern.compile(Main.phone_regex).matcher("0" + input).matches() && !input.isEmpty()) {
                         phone.setForeground(new Color(159, 4, 4));
                         Font font = phone.getFont();
                         Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
@@ -455,7 +444,7 @@ public class ModifyUser {
         clear1.setOpaque(false);
         clear1.setFocusable(false);
         clear1.setBorder(BorderFactory.createEmptyBorder());
-        clear1.addActionListener(_ -> {username.Reset();});
+        clear1.addActionListener(_ -> username.Reset());
         inner1.add(clear1, igbc);
 
         JButton clear2 = new JButton(icon_clear1);
@@ -463,7 +452,7 @@ public class ModifyUser {
         clear2.setOpaque(false);
         clear2.setFocusable(false);
         clear2.setBorder(BorderFactory.createEmptyBorder());
-        clear2.addActionListener(_ -> {fullname.Reset();});
+        clear2.addActionListener(_ -> fullname.Reset());
         inner2.add(clear2, igbc);
 
         JButton clear3 = new JButton(icon_clear1);
@@ -471,7 +460,7 @@ public class ModifyUser {
         clear3.setOpaque(false);
         clear3.setFocusable(false);
         clear3.setBorder(BorderFactory.createEmptyBorder());
-        clear3.addActionListener(_ -> {password.Reset();});
+        clear3.addActionListener(_ -> password.Reset());
         inner3.add(clear3, igbc);
 
         JButton clear4 = new JButton(icon_clear1);
@@ -479,7 +468,7 @@ public class ModifyUser {
         clear4.setOpaque(false);
         clear4.setFocusable(false);
         clear4.setBorder(BorderFactory.createEmptyBorder());
-        clear4.addActionListener(_ -> {email.Reset();});
+        clear4.addActionListener(_ -> email.Reset());
         inner4.add(clear4, igbc);
 
         JButton clear5 = new JButton(icon_clear1);
@@ -487,12 +476,10 @@ public class ModifyUser {
         clear5.setOpaque(false);
         clear5.setFocusable(false);
         clear5.setBorder(BorderFactory.createEmptyBorder());
-        clear5.addActionListener(_ -> {phone.Reset();});
+        clear5.addActionListener(_ ->phone.Reset());
         inner5.add(clear5, igbc);
 
-        cancel.addActionListener(_ -> {
-            dialog.dispose();
-        });
+        cancel.addActionListener(_ -> dialog.dispose());
 
         confirm.addActionListener(_ -> {
             if (username.getText().isEmpty() || fullname.getText().isEmpty() || password.getText().isEmpty() ||
@@ -507,7 +494,7 @@ public class ModifyUser {
                         new Color(255, 255, 255)
                 );
             } else {
-                String validity = User.validityCheckerWithHistory(username.getText(), password.getText(), fullname.getText().trim(),
+                String validity = User.ValidityCheckerWithHistory(username.getText(), password.getText(), fullname.getText().trim(),
                         email.getText(), "0" + phone.getText(), Main.userdata_file, current_user);
                 if (validity.charAt(0) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
@@ -629,7 +616,7 @@ public class ModifyUser {
                                 false
                         );
                         if (sure) {
-                            User.modifyUser(current_user.UserID, modified, Main.userdata_file);
+                            User.ModifyUser(current_user.UserID, modified, Main.userdata_file);
                             result[0] = true;
                             dialog.dispose();
                         }

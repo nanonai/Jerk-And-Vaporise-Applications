@@ -213,7 +213,7 @@ public class ViewItem {
                 null, 0, 0, 0);
         btnSupplier.setPreferredSize(new Dimension(250, 38));
         btnSupplier.addActionListener(e -> {
-            String supplierID = PurchaseMgr.Item_Supplier.getSupplierIDFromItemID(current_item.ItemID, "datafile/item_supplier.txt");
+            String supplierID = PurchaseMgr.Item_Supplier.getSupplierIDFromItemID(current_item.ItemID, Main.item_supplier_file);
 
             if (supplierID.equals("Unknown") || supplierID.equals("DELETED_SUPPLIER")) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
@@ -228,7 +228,7 @@ public class ViewItem {
                 return;
             }
 
-            Supplier supplier = Supplier.getSupplierByID(supplierID, "datafile/supplier.txt");
+            Supplier supplier = Supplier.getSupplierByID(supplierID, Main.supplier_file);
 
             if (supplier == null) {
                 CustomComponents.CustomOptionPane.showErrorDialog(

@@ -8,8 +8,6 @@ import PurchaseMgr.PurchaseOrder;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.util.List;
 import java.util.Objects;
 
@@ -94,7 +92,7 @@ public class POList {
         gbc.gridwidth = 6;
         gbc.fill = GridBagConstraints.BOTH;
 
-        AllPO = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
+        AllPO = PurchaseOrder.listAllPurchaseOrders(Main.purchase_order_file);
         String[] titles = new String[]{"PurchaseOrderID", "ItemID", "PurchaseQuantity", "SupplierID", "OrderDate", "PurchaseMgrID", "Status"};
         Object[][] data = new Object[AllPO.size()][titles.length];
         int counter = 0;
@@ -277,7 +275,7 @@ public class POList {
                 anti_counter -= 1;
                 continue;
             } else {
-                String supplierName = getSupplierName(po.SupplierID, "datafile/supplier.txt");
+                String supplierName = getSupplierName(po.SupplierID, Main.supplier_file);
 
                 data[counter] = new Object[]{
                         po.PurchaseOrderID,
@@ -328,8 +326,8 @@ public class POList {
         } else {
             // Apply search filtering
             AllPO.removeIf(item -> {
-                String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
-                String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+                String supplierID = getSupplierIDFromItemID(item.ItemID, Main.item_supplier_file);
+                String supplierName = getSupplierName(supplierID, Main.supplier_file);
 
                 return !(item.PurchaseOrderID.toLowerCase().contains(searcher.toLowerCase()) ||
                         item.ItemID.toLowerCase().contains(searcher.toLowerCase()) ||

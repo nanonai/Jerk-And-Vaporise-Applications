@@ -3,7 +3,6 @@ package PurchaseMgr;
 import Admin.CustomComponents;
 import Admin.Main;
 import Admin.User;
-import FinanceMgr.PurchaseRequisition;
 import InventoryMgr.Item;
 
 import javax.swing.*;
@@ -14,7 +13,6 @@ import java.awt.event.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
 
@@ -564,7 +562,7 @@ public class ViewItems {
     }
 
     static String getStatusFromFile(String poID) {
-        File file = new File(Main.purchaseReq_file);
+        File file = new File(Main.purchase_req_file);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             boolean isTargetBlock = false;

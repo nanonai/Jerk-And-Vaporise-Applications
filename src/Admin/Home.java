@@ -1,12 +1,11 @@
 package Admin;
+
 import javax.swing.*;
 import java.awt.*;
-
 import SalesMgr.*;
 import PurchaseMgr.*;
 import InventoryMgr.*;
 import FinanceMgr.*;
-
 
 public class Home {
     public static int indicator = -1;
@@ -75,12 +74,6 @@ public class Home {
         content.revalidate();
         content.repaint();
         switch (indicator) {
-//    Please indicate the relation of the indicator value and specific java class:
-//    1 -> Administrator Home Page
-//    2 -> Sales Manager Home Page
-//    3 -> Purchase Manager Home Page
-//    4 -> Inventory Manager Home Page
-//    5 -> Finance Manager Home Page
             case 1:
                 AdmHome.ShowPage();
                 break;

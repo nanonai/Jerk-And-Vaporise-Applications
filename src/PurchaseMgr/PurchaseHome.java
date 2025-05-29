@@ -4,7 +4,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerAdapter;
@@ -15,8 +14,6 @@ import java.io.IOException;
 import java.util.List;
 
 import Admin.*;
-import FinanceMgr.FinanceHome;
-import InventoryMgr.Item;
 
 public class PurchaseHome {
     public static int indicator = 2;
@@ -181,7 +178,7 @@ public class PurchaseHome {
                     User.UnrememberAllUser(Main.userdata_file);
                     Main.indicator = 0;
                     PurchaseHome.indicator = 2;
-                    Main.PageChanger(parent, merriweather, boldonse);
+                    Main.PageChanger(parent);
                 }
         ));
 
@@ -195,7 +192,7 @@ public class PurchaseHome {
                 Home.PageChanger();
                 AdmHome.PageChanger();
                 User.UnrememberAllUser(Main.userdata_file);
-                User.modifyUser(admin.UserID, admin, Main.userdata_file);
+                User.ModifyUser(admin.UserID, admin, Main.userdata_file);
             });
         }
         SwingUtilities.invokeLater(() -> {
@@ -236,7 +233,7 @@ public class PurchaseHome {
             }
         });
 
-        Profile.Loader(parent, merriweather, boldonse, content, current_user);
+        Profile.Loader(merriweather, boldonse, content, current_user);
         Welcome.Loader(parent, merriweather, boldonse, content, current_user);
         ViewItems.Loader(parent, merriweather, boldonse, content, current_user);
         ViewSuppliers.Loader(parent, merriweather, boldonse, content, current_user);

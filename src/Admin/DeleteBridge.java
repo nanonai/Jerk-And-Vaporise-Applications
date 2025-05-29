@@ -12,26 +12,18 @@ import java.awt.event.MouseEvent;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class DeleteBridge {
     private static JFrame parent;
-    private static Font merriweather, boldonse;
-    private static JPanel content;
-    private static User current_user;
+    private static Font merriweather;
     private static JComboBox<Object> user_combo, type_combo;
     private static JLabel username;
-    private static CustomComponents.CustomList record_list;
+    private static CustomComponents.CustomList<String> record_list;
     private static List<User> deleting;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content,
-                              User current_user, List<User> deleting) {
+    public static void Loader(JFrame parent, Font merriweather) {
         DeleteBridge.parent = parent;
         DeleteBridge.merriweather = merriweather;
-        DeleteBridge.boldonse = boldonse;
-        DeleteBridge.content = content;
-        DeleteBridge.current_user = current_user;
-        DeleteBridge.deleting = deleting;
     }
 
     public static void UpdateList(List<User> deleting) {
@@ -42,11 +34,11 @@ public class DeleteBridge {
         int[] result = new int[]{0, 0};
         JDialog dialog = new JDialog(parent, "User Correlation", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize((int) (parent.getWidth() / 2), (int) (parent.getHeight() / 1.3));
+        dialog.setSize((parent.getWidth() / 2), (int) (parent.getHeight() / 1.3));
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(parent);
 
-        int size_factor = 0;
+        int size_factor;
         if (parent.getWidth() >= parent.getHeight()) {
             size_factor = parent.getHeight() / 40;
         } else {
@@ -148,7 +140,7 @@ public class DeleteBridge {
                 if (!User.checkSalesRecordByID(deleting.get(user_combo.getSelectedIndex()).UserID, Main.sales_file).isEmpty()) {
                     type_combo.addItem("Sales Records");
                 }
-                if (!User.checkPRRecordByID(deleting.get(user_combo.getSelectedIndex()).UserID, Main.purchaseReq_file).isEmpty()) {
+                if (!User.checkPRRecordByID(deleting.get(user_combo.getSelectedIndex()).UserID, Main.purchase_req_file).isEmpty()) {
                     type_combo.addItem("Purchase Requisition Records");
                 }
             } else if (deleting.get(user_combo.getSelectedIndex()).UserID.startsWith("PM")) {
@@ -173,7 +165,7 @@ public class DeleteBridge {
             if (!User.checkSalesRecordByID(deleting.get(user_combo.getSelectedIndex()).UserID, Main.sales_file).isEmpty()) {
                 combo_data2.add("Sales Records");
             }
-            if (!User.checkPRRecordByID(deleting.get(user_combo.getSelectedIndex()).UserID, Main.purchaseReq_file).isEmpty()) {
+            if (!User.checkPRRecordByID(deleting.get(user_combo.getSelectedIndex()).UserID, Main.purchase_req_file).isEmpty()) {
                 combo_data2.add("Purchase Requisition Records");
             }
         } else if (deleting.get(user_combo.getSelectedIndex()).UserID.startsWith("PM")) {
@@ -198,7 +190,7 @@ public class DeleteBridge {
                     counter += 1;
                 }
             } else if (type_combo.getSelectedItem() == "Purchase Requisition Records") {
-                List<PurchaseRequisition> allPR = User.checkPRRecordByID(current.UserID, Main.purchaseReq_file);
+                List<PurchaseRequisition> allPR = User.checkPRRecordByID(current.UserID, Main.purchase_req_file);
                 for (PurchaseRequisition pr: allPR) {
                     temp.add(counter + ".)");
                     temp.add(String.format("Purchase Requisition ID:       %s", pr.PurchaseReqID));
@@ -207,7 +199,7 @@ public class DeleteBridge {
                     counter += 1;
                 }
             } else if (type_combo.getSelectedItem() == "Purchase Order Records") {
-                List<PurchaseOrder> allPO = User.checkPORecordByID(current.UserID, Main.purchaseOrder_file);
+                List<PurchaseOrder> allPO = User.checkPORecordByID(current.UserID, Main.purchase_order_file);
                 for (PurchaseOrder po: allPO) {
                     temp.add(counter + ".)");
                     temp.add(String.format("Purchase Order ID:           %s", po.PurchaseOrderID));
@@ -246,7 +238,7 @@ public class DeleteBridge {
                 counter += 1;
             }
         } else if (type_combo.getSelectedItem() == "Purchase Requisition Records") {
-            List<PurchaseRequisition> allPR = User.checkPRRecordByID(current.UserID, Main.purchaseReq_file);
+            List<PurchaseRequisition> allPR = User.checkPRRecordByID(current.UserID, Main.purchase_req_file);
             for (PurchaseRequisition pr: allPR) {
                 temp.add(counter + ".)");
                 temp.add(String.format("Purchase Requisition ID:       %s", pr.PurchaseReqID));
@@ -255,7 +247,7 @@ public class DeleteBridge {
                 counter += 1;
             }
         } else if (type_combo.getSelectedItem() == "Purchase Order Records") {
-            List<PurchaseOrder> allPO = User.checkPORecordByID(current.UserID, Main.purchaseOrder_file);
+            List<PurchaseOrder> allPO = User.checkPORecordByID(current.UserID, Main.purchase_order_file);
             for (PurchaseOrder po: allPO) {
                 temp.add(counter + ".)");
                 temp.add(String.format("Purchase Order ID:           %s", po.PurchaseOrderID));
@@ -293,9 +285,7 @@ public class DeleteBridge {
         );
         panel.add(scrollPane, gbc);
 
-        cancel.addActionListener(_ -> {
-            dialog.dispose();
-        });
+        cancel.addActionListener(_ -> dialog.dispose());
 
         trans.addActionListener(_ -> {
             result[0] = 1;

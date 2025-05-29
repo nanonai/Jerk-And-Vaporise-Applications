@@ -3,8 +3,6 @@ package Admin;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -12,7 +10,7 @@ import java.util.List;
 
 public class UserMng {
     private static JFrame parent;
-    private static Font merriweather, boldonse;
+    private static Font merriweather;
     private static JPanel content;
     private static User current_user;
     private static JButton s_btn, p_left, p_right, p_first, p_last, x_btn;
@@ -31,10 +29,9 @@ public class UserMng {
     private static Set<String> deleting_id = new LinkedHashSet<>();
     private static final Set<Integer> previousSelection = new HashSet<>();
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
+    public static void Loader(JFrame parent, Font merriweather, JPanel content, User current_user) {
         UserMng.parent = parent;
         UserMng.merriweather = merriweather;
-        UserMng.boldonse = boldonse;
         UserMng.content = content;
         UserMng.current_user = current_user;
     }
@@ -211,7 +208,7 @@ public class UserMng {
         entries.setForeground(new Color(122, 122, 122));
         entries.setFocusable(false);
         entries.setSelectedItem("10");
-        entries.addActionListener(e -> {
+        entries.addActionListener(_ -> {
             list_length = Integer.parseInt((String) Objects.requireNonNull(entries.getSelectedItem()));
             UpdatePages(list_length);
             page_counter = 0;
@@ -321,7 +318,7 @@ public class UserMng {
         igbc.weighty = 4;
         igbc.insets = new Insets(0, 3, 0, 3);
         String[] titles = new String[]{"Id", "Role", "Username", "Full Name", "Phone", "Email", "Date Joined"};
-        user_list = User.listAllUserFromFilter(Main.userdata_file, "", "", current_user);
+        user_list = User.ListAllUserFromFilter(Main.userdata_file, "", "", current_user);
         Object[][] data = new Object[user_list.size()][titles.length];
         int counter = 0;
         for (User user : user_list) {
@@ -333,33 +330,30 @@ public class UserMng {
         table_user = new CustomComponents.CustomTable(titles, data, merriweather.deriveFont(Font.BOLD, 18),
                 merriweather.deriveFont(Font.PLAIN, 16), Color.BLACK, Color.BLACK,
                 Color.WHITE, new Color(212, 212, 212), 1, 30);
-        table_user.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting() && deleting) {
-                    SwingUtilities.invokeLater(() -> {
-                        int[] selectedRows = table_user.getSelectedRows();
-                        Set<Integer> currentSelection = new HashSet<>();
-                        for (int row : selectedRows) {
-                            currentSelection.add(row);
-                        }
-                        Set<Integer> newlySelected = new HashSet<>(currentSelection);
-                        newlySelected.removeAll(previousSelection);
-                        Set<Integer> deselected = new HashSet<>(previousSelection);
-                        deselected.removeAll(currentSelection);
-                        for (int row : newlySelected) {
-                            deleting_id.add(table_user.getValueAt(row,
-                                    table_user.getColumnModel().getColumnIndex("Id")).toString());
-                        }
-                        for (int row : deselected) {
-                            deleting_id.remove(table_user.getValueAt(row,
-                                    table_user.getColumnModel().getColumnIndex("Id")).toString());
-                        }
-                        delete2.setText(String.format("Delete User (%s)", deleting_id.size()));
-                        previousSelection.clear();
-                        previousSelection.addAll(currentSelection);
-                    });
-                }
+        table_user.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && deleting) {
+                SwingUtilities.invokeLater(() -> {
+                    int[] selectedRows = table_user.getSelectedRows();
+                    Set<Integer> currentSelection = new HashSet<>();
+                    for (int row : selectedRows) {
+                        currentSelection.add(row);
+                    }
+                    Set<Integer> newlySelected = new HashSet<>(currentSelection);
+                    newlySelected.removeAll(previousSelection);
+                    Set<Integer> deselected = new HashSet<>(previousSelection);
+                    deselected.removeAll(currentSelection);
+                    for (int row : newlySelected) {
+                        deleting_id.add(table_user.getValueAt(row,
+                                table_user.getColumnModel().getColumnIndex("Id")).toString());
+                    }
+                    for (int row : deselected) {
+                        deleting_id.remove(table_user.getValueAt(row,
+                                table_user.getColumnModel().getColumnIndex("Id")).toString());
+                    }
+                    delete2.setText(String.format("Delete User (%s)", deleting_id.size()));
+                    previousSelection.clear();
+                    previousSelection.addAll(currentSelection);
+                });
             }
         });
         lbl_indicate = new JLabel("");
@@ -409,9 +403,7 @@ public class UserMng {
             pages.setSelectedIndex(0);
             UpdateTable(list_length, page_counter);
             previousSelection.clear();
-            SwingUtilities.invokeLater(() -> {
-                RememberDeletion(deleting_id, table_user);
-            });
+            SwingUtilities.invokeLater(() -> RememberDeletion(deleting_id, table_user));
         });
         p_first.addMouseListener(new MouseAdapter() {
             @Override
@@ -455,9 +447,7 @@ public class UserMng {
                 pages.setSelectedIndex(page_counter);
                 UpdateTable(list_length, page_counter);
                 previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_user);
-                });
+                SwingUtilities.invokeLater(() -> RememberDeletion(deleting_id, table_user));
             }
         });
         page_panel.add(p_left, ii_gbc);
@@ -467,14 +457,12 @@ public class UserMng {
         pages.setForeground(new Color(122, 122, 122));
         pages.setFocusable(false);
         pages.setBorder(BorderFactory.createLineBorder(new Color(209, 209, 209), 1));
-        pages.addActionListener(e -> {
+        pages.addActionListener(_ -> {
             if (pages.getItemCount() > 0) {
                 page_counter = pages.getSelectedIndex();
                 UpdateTable(list_length, page_counter);
                 previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_user);
-                });
+                SwingUtilities.invokeLater(() -> RememberDeletion(deleting_id, table_user));
             }
         });
         page_panel.add(pages, ii_gbc);
@@ -493,9 +481,7 @@ public class UserMng {
                 pages.setSelectedIndex(page_counter);
                 UpdateTable(list_length, page_counter);
                 previousSelection.clear();
-                SwingUtilities.invokeLater(() -> {
-                    RememberDeletion(deleting_id, table_user);
-                });
+                SwingUtilities.invokeLater(() -> RememberDeletion(deleting_id, table_user));
             }
         });
         page_panel.add(p_right, ii_gbc);
@@ -510,9 +496,7 @@ public class UserMng {
             pages.setSelectedIndex(page_counter);
             UpdateTable(list_length, page_counter);
             previousSelection.clear();
-            SwingUtilities.invokeLater(() -> {
-                RememberDeletion(deleting_id, table_user);
-            });
+            SwingUtilities.invokeLater(() -> RememberDeletion(deleting_id, table_user));
         });
         p_last.addMouseListener(new MouseAdapter() {
             @Override
@@ -581,8 +565,8 @@ public class UserMng {
                 boolean see = ViewUser.ShowPage();
                 if (see) {
                     if (User.checkSalesRecordByID(selected_id, Main.sales_file).isEmpty() &&
-                            User.checkPRRecordByID(selected_id, Main.purchaseReq_file).isEmpty() &&
-                            User.checkPORecordByID(selected_id, Main.purchaseOrder_file).isEmpty() &&
+                            User.checkPRRecordByID(selected_id, Main.purchase_req_file).isEmpty() &&
+                            User.checkPORecordByID(selected_id, Main.purchase_order_file).isEmpty() &&
                             User.checkPYRecordByID(selected_id, Main.payment_file).isEmpty()) {
                         CustomComponents.CustomOptionPane.showErrorDialog(
                                 parent,
@@ -661,7 +645,7 @@ public class UserMng {
                 String selected_id = table_user.getValueAt(table_user.getSelectedRow(),
                         table_user.getColumnModel().getColumnIndex("Id")).toString();
                 int position = 0;
-                List<User> allUser = User.listAllUser(Main.userdata_file);
+                List<User> allUser = User.ListAllUser(Main.userdata_file);
                 for (User item: allUser) {
                     if (!Objects.equals(item.UserID, selected_id)) {
                         position += 1;
@@ -678,7 +662,7 @@ public class UserMng {
                     table_user.clearSelection();
                     table_user.addRowSelectionInterval(interval, interval);
                 } else if (modified[0]) {
-                    allUser = User.listAllUser(Main.userdata_file);
+                    allUser = User.ListAllUser(Main.userdata_file);
                     String id = allUser.get(position).UserID;
                     search.Reset();
                     switch (allUser.get(position).AccType) {
@@ -743,8 +727,8 @@ public class UserMng {
                         table_user.getColumnModel().getColumnIndex("Id")).toString();
                 User selected = User.GetUserById(selected_id, Main.userdata_file);
                 if (User.checkSalesRecordByID(selected_id, Main.sales_file).isEmpty() &&
-                        User.checkPRRecordByID(selected_id, Main.purchaseReq_file).isEmpty() &&
-                        User.checkPORecordByID(selected_id, Main.purchaseOrder_file).isEmpty() &&
+                        User.checkPRRecordByID(selected_id, Main.purchase_req_file).isEmpty() &&
+                        User.checkPORecordByID(selected_id, Main.purchase_order_file).isEmpty() &&
                         User.checkPYRecordByID(selected_id, Main.payment_file).isEmpty()) {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -755,7 +739,7 @@ public class UserMng {
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                } else if (User.listAllUserFromFilter(
+                } else if (User.ListAllUserFromFilter(
                         Main.userdata_file,
                         selected.AccType,
                         "",
@@ -785,7 +769,7 @@ public class UserMng {
                 0, 0);
         cancel_delete.addActionListener(_ -> {
             deleting = false;
-            user_list = User.listAllUser(Main.userdata_file);
+            user_list = User.ListAllUser(Main.userdata_file);
             deleting_id.clear();
             view.setEnabled(true);
             add.setEnabled(true);
@@ -887,9 +871,9 @@ public class UserMng {
                 List<User> related_user = new ArrayList<>();
                 for (String id: ids) {
                     if (id.startsWith("SM") && (!User.checkSalesRecordByID(id, Main.sales_file).isEmpty() ||
-                            !User.checkPRRecordByID(id, Main.purchaseReq_file).isEmpty())) {
+                            !User.checkPRRecordByID(id, Main.purchase_req_file).isEmpty())) {
                         related_user.add(User.GetUserById(id, Main.userdata_file));
-                    } else if (id.startsWith("PM") && !User.checkPORecordByID(id, Main.purchaseOrder_file).isEmpty()) {
+                    } else if (id.startsWith("PM") && !User.checkPORecordByID(id, Main.purchase_order_file).isEmpty()) {
                         related_user.add(User.GetUserById(id, Main.userdata_file));
                     } else if (id.startsWith("FM") && !User.checkPYRecordByID(id, Main.payment_file).isEmpty()) {
                         related_user.add(User.GetUserById(id, Main.userdata_file));
@@ -903,8 +887,8 @@ public class UserMng {
                         String selected_id = related_user.get(resolve[1]).UserID;
                         User selected = User.GetUserById(selected_id, Main.userdata_file);
                         if (User.checkSalesRecordByID(selected_id, Main.sales_file).isEmpty() &&
-                                User.checkPRRecordByID(selected_id, Main.purchaseReq_file).isEmpty() &&
-                                User.checkPORecordByID(selected_id, Main.purchaseOrder_file).isEmpty() &&
+                                User.checkPRRecordByID(selected_id, Main.purchase_req_file).isEmpty() &&
+                                User.checkPORecordByID(selected_id, Main.purchase_order_file).isEmpty() &&
                                 User.checkPYRecordByID(selected_id, Main.payment_file).isEmpty()) {
                             CustomComponents.CustomOptionPane.showErrorDialog(
                                     parent,
@@ -915,7 +899,7 @@ public class UserMng {
                                     new Color(237, 136, 172),
                                     new Color(255, 255, 255)
                             );
-                        } else if (User.listAllUserFromFilter(
+                        } else if (User.ListAllUserFromFilter(
                                 Main.userdata_file,
                                 selected.AccType,
                                 "",
@@ -944,7 +928,7 @@ public class UserMng {
                         search.Reset();
                         deleting = false;
                         for (User user: d_users) {
-                            User.removeUser(user.UserID, Main.userdata_file);
+                            User.RemoveUser(user.UserID, Main.userdata_file);
                         }
                         SearchStuff();
                         deleting_id.clear();
@@ -984,13 +968,13 @@ public class UserMng {
         delete2.setVisible(false);
         button_panel2.add(delete2, ii_gbc);
 
-        AddUser.Loader(parent, merriweather, boldonse, content, current_user);
-        ViewUser.Loader(parent, merriweather, boldonse, content, null);
-        ModifyUser.Loader(parent, merriweather, boldonse, content, null);
-        DeleteUser.Loader(parent, merriweather, boldonse, content, current_user);
-        DeleteBridge.Loader(parent, merriweather, boldonse, content, current_user, null);
-        TransferData.Loader(parent, merriweather, boldonse, content, null);
-        ViewData.Loader(parent, merriweather, boldonse, content, null);
+        AddUser.Loader(parent, merriweather);
+        ViewUser.Loader(parent, merriweather);
+        ModifyUser.Loader(parent, merriweather);
+        DeleteUser.Loader(parent, merriweather);
+        DeleteBridge.Loader(parent, merriweather);
+        TransferData.Loader(parent, merriweather);
+        ViewData.Loader(parent, merriweather);
 
         if (filter != 0) {
             switch (filter) {
@@ -1083,7 +1067,7 @@ public class UserMng {
             case 4 -> "Sales Manager";
             default -> "";
         };
-        List<User> temp_user_list = User.listAllUserFromFilter(Main.userdata_file, temp, searcher, current_user);
+        List<User> temp_user_list = User.ListAllUserFromFilter(Main.userdata_file, temp, searcher, current_user);
         if (temp_user_list.isEmpty()) {
             CustomComponents.CustomOptionPane.showInfoDialog(
                     parent,
@@ -1123,11 +1107,11 @@ public class UserMng {
         p_first.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
         p_last.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
         pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
-        all.UpdateCustomButton(0, (int) (base_size), null, 0);
-        fin.UpdateCustomButton(0, (int) (base_size), null, 0);
-        pur.UpdateCustomButton(0, (int) (base_size), null, 0);
-        inv.UpdateCustomButton(0, (int) (base_size), null, 0);
-        sls.UpdateCustomButton(0, (int) (base_size), null, 0);
+        all.UpdateCustomButton(0, base_size, null, 0);
+        fin.UpdateCustomButton(0, base_size, null, 0);
+        pur.UpdateCustomButton(0, base_size, null, 0);
+        inv.UpdateCustomButton(0, base_size, null, 0);
+        sls.UpdateCustomButton(0, base_size, null, 0);
         lbl_show.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_indicate.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));

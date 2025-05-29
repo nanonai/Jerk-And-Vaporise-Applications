@@ -1,5 +1,6 @@
 package InventoryMgr;
 
+import Admin.Main;
 import Admin.User;
 import PurchaseMgr.Supplier;
 
@@ -183,7 +184,7 @@ public class Item {
 
     public static boolean addStock(Item item, int amount) {
         try {
-            String filePath = "datafile/item.txt";
+            String filePath = Main.item_file;
             String targetId = item.ItemID;
 
             List<String> updatedLines = new ArrayList<>();
@@ -285,7 +286,7 @@ public class Item {
 
         System.out.println("Checking Supplier: " + SupplierName);
         if (!SupplierName.trim().isEmpty()) {
-            String supplierID = Supplier.getSupplierID(SupplierName);
+            String supplierID = Supplier.getSupplierID(Main.supplier_file, SupplierName);
             System.out.println("Supplier ID: " + supplierID);
 
             if ("Unknown".equals(supplierID)) {
@@ -357,8 +358,8 @@ public class Item {
             e.printStackTrace();
         }
     }
-    public static String getItemName(String itemID) {
-        List<Item> items = Item.listAllItem("datafile/item.txt");
+    public static String getItemName(String filename, String itemID) {
+        List<Item> items = Item.listAllItem(filename);
         for (Item item : items) {
             if (item.ItemID.equals(itemID)) {
                 return item.ItemName;

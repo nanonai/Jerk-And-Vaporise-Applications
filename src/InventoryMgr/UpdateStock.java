@@ -1,6 +1,5 @@
 package InventoryMgr;
 
-import Admin.AddUser;
 import Admin.CustomComponents;
 import Admin.Main;
 import Admin.User;
@@ -8,22 +7,10 @@ import InventoryMgr.misc.InvStatic;
 import PurchaseMgr.PurchaseOrder;
 
 import javax.swing.*;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.font.TextAttribute;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 public class UpdateStock {
 
@@ -186,7 +173,7 @@ public class UpdateStock {
 
         // ReadPO File, find itemID and check if the itemId is approved or whatsoever
 
-        List<PurchaseOrder> AllPO = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
+        List<PurchaseOrder> AllPO = PurchaseOrder.listAllPurchaseOrders(Main.purchase_order_file);
         List<PurchaseOrder> Filtered = new ArrayList<PurchaseOrder>();
 
         for (PurchaseOrder po : AllPO) {
@@ -201,7 +188,7 @@ public class UpdateStock {
     }
 
     static boolean MarkPOReceived(PurchaseOrder po) {
-        Item item = Item.getItemByID(po.ItemID, "datafile/item.txt");
+        Item item = Item.getItemByID(po.ItemID, Main.item_file);
         Item.addStock(item, po.PurchaseQuantity);
         po.Status = "Received";
         PurchaseOrder.ModifyPurchaseOrder(po.PurchaseOrderID, po, "datafile/purchaseOrder.txt");

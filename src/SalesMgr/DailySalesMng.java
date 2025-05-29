@@ -168,7 +168,7 @@ public class DailySalesMng {
         gbc.fill = GridBagConstraints.BOTH;
         allSales = Sales.listAllSales("datafile/sales.txt");
         allItemSales = Item_Sales.listAllItemSales("datafile/item_sales.txt");
-        allItems = Item.listAllItem("datafile/item.txt");
+        allItems = Item.listAllItem(Main.item_file);
 
         String[] titles = new String[]{"SalesID", "SalesDate", "SalesMgrID", "ItemName", "SoldQuantity", "Revenue"};
         Object[][] data = new Object[allSales.size()][titles.length];

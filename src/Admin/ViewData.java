@@ -4,7 +4,6 @@ import FinanceMgr.Payment;
 import FinanceMgr.PurchaseRequisition;
 import PurchaseMgr.PurchaseOrder;
 import SalesMgr.Sales;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -15,8 +14,7 @@ import java.util.List;
 
 public class ViewData {
     private static JFrame parent;
-    private static Font merriweather, boldonse;
-    private static JPanel content;
+    private static Font merriweather;
     private static User current_user;
     private static JComboBox<Object> type_combo;
     private static CustomComponents.CustomList<String> record_list1;
@@ -25,19 +23,16 @@ public class ViewData {
     private static List<PurchaseOrder> list3;
     private static List<Payment> list4;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
+    public static void Loader(JFrame parent, Font merriweather) {
         ViewData.parent = parent;
         ViewData.merriweather = merriweather;
-        ViewData.boldonse = boldonse;
-        ViewData.content = content;
-        ViewData.current_user = current_user;
     }
 
     public static void UpdateUser(User current_user) {
         ViewData.current_user = current_user;
         list1 = User.checkSalesRecordByID(current_user.UserID, Main.sales_file);
-        list2 = User.checkPRRecordByID(current_user.UserID, Main.purchaseReq_file);
-        list3 = User.checkPORecordByID(current_user.UserID, Main.purchaseOrder_file);
+        list2 = User.checkPRRecordByID(current_user.UserID, Main.purchase_req_file);
+        list3 = User.checkPORecordByID(current_user.UserID, Main.purchase_order_file);
         list4 = User.checkPYRecordByID(current_user.UserID, Main.payment_file);
     }
 
@@ -48,7 +43,7 @@ public class ViewData {
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(parent);
 
-        int size_factor = 0;
+        int size_factor;
         if (parent.getWidth() >= parent.getHeight()) {
             size_factor = parent.getHeight() / 40;
         } else {
@@ -137,7 +132,7 @@ public class ViewData {
             if (!User.checkSalesRecordByID(current_user.UserID, Main.sales_file).isEmpty()) {
                 combo_data1.add("Sales Records");
             }
-            if (!User.checkPRRecordByID(current_user.UserID, Main.purchaseReq_file).isEmpty()) {
+            if (!User.checkPRRecordByID(current_user.UserID, Main.purchase_req_file).isEmpty()) {
                 combo_data1.add("Purchase Requisition Records");
             }
         } else if (current_user.UserID.startsWith("PM")) {
@@ -148,9 +143,7 @@ public class ViewData {
         type_combo = new JComboBox<>(combo_data1.toArray());
         type_combo.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size * 0.9)));
         type_combo.setFocusable(false);
-        type_combo.addActionListener(_ -> {
-            record_list1.UpdateListContent(UpdateJList());
-        });
+        type_combo.addActionListener(_ -> record_list1.UpdateListContent(UpdateJList()));
         panel.add(type_combo, gbc);
 
         gbc.gridy = 4;
@@ -200,9 +193,7 @@ public class ViewData {
                 null, 0, 0, 0);
         button_panel.add(cancel, gbc);
 
-        cancel.addActionListener(_ -> {
-            dialog.dispose();
-        });
+        cancel.addActionListener(_ -> dialog.dispose());
 
         dialog.addMouseListener(new MouseAdapter() {
             @Override

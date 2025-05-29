@@ -14,7 +14,6 @@ import java.awt.image.BufferedImage;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class CustomComponents {
     public static class ImagePanel extends JPanel {
@@ -270,7 +269,7 @@ public class CustomComponents {
     }
 
     public static class RoundedPanel extends JPanel {
-        private int shadow_factor;
+        private final int shadow_factor;
         private final int border_factor;
         private int corner_radius;
         private final Color fill_color, border_color;
@@ -291,11 +290,6 @@ public class CustomComponents {
 
         public int GetShadowSize() {
             return shadow_factor;
-        }
-
-        public void UpdateShadowSize(int shadow_factor) {
-            this.shadow_factor = shadow_factor;
-            repaint();
         }
 
         @Override
@@ -1052,7 +1046,7 @@ public class CustomComponents {
         private int mode;
         private int[] previousSelection = new int[0];
         private boolean suppressListener = false;
-        private Object data;
+        private final Object data;
 
         @SuppressWarnings("unchecked")
         public CustomList(Object data, int mode, int text_size, Font text_font,
@@ -1429,7 +1423,8 @@ public class CustomComponents {
     }
 
     public static class CustomSearchIcon implements Icon {
-        private int size, border_width;
+        private int size;
+        private final int border_width;
         private final Color stroke, fill;
 
         public CustomSearchIcon(int size, int border_width, Color stroke, Color fill) {
@@ -1442,9 +1437,7 @@ public class CustomComponents {
         public void UpdateSize(int size) {
             this.size = size;
         }
-        
-        public void UpdateBorder(int border_width) { this.border_width = border_width; }
-        
+
         @Override
         public int getIconWidth() {
             return size;
@@ -1512,7 +1505,7 @@ public class CustomComponents {
         private int[] previousSelection = new int[0];
         private boolean suppressListener = false;
         private int mode;
-        private Font content;
+        private final Font content;
         private Color cfg, cfg_press, cbg, cbg_press;
 
         public CustomTable(String[] columns, Object[][] data, Font title, Font content,
@@ -1651,7 +1644,8 @@ public class CustomComponents {
     }
 
     public static class CustomArrowIcon implements Icon {
-        private int size, borderWidth;
+        private int size;
+        private final int borderWidth;
         private final Color stroke;
         private final boolean direction;
 
@@ -1664,10 +1658,6 @@ public class CustomComponents {
 
         public void UpdateSize(int size) {
             this.size = size;
-        }
-
-        public void UpdateBorder(int borderWidth) {
-            this.borderWidth = borderWidth;
         }
 
         @Override
@@ -1714,7 +1704,8 @@ public class CustomComponents {
     }
 
     public static class CustomXIcon implements Icon {
-        private int size, borderWidth;
+        private int size;
+        private final int borderWidth;
         private final Color stroke;
         private final boolean roundedEnds;
 
@@ -1727,10 +1718,6 @@ public class CustomComponents {
 
         public void UpdateSize(int size) {
             this.size = size;
-        }
-
-        public void UpdateBorder(int borderWidth) {
-            this.borderWidth = borderWidth;
         }
 
         @Override
@@ -1803,9 +1790,9 @@ public class CustomComponents {
                     for (int i = 0; i < arcShapes.length; i++) {
                         if (arcShapes[i] != null && arcShapes[i].contains(e.getPoint())) {
                             if (data.get(i) % 1 == 0) {
-                                setToolTipText(tool_tip.get(i) + String.valueOf(data.get(i).intValue()));
+                                setToolTipText(tool_tip.get(i) + data.get(i).intValue());
                             } else {
-                                setToolTipText(tool_tip.get(i) + String.valueOf(data.get(i)));
+                                setToolTipText(tool_tip.get(i) + data.get(i));
                             }
                             return;
                         }
@@ -1909,7 +1896,7 @@ public class CustomComponents {
         private final List<List<Point>> nodePositions = new ArrayList<>();
         private final List<List<Double>> nodeValues = new ArrayList<>();
         private final Color[] seriesColors;
-        private Color bg;
+        private final Color bg;
         private final Color text;
         private final Font font;
         private double maxY;
@@ -2127,7 +2114,7 @@ public class CustomComponents {
 
     public static class CustomVaryingTextIcon implements Icon {
         private float[] sizeList;
-        private String[] texts;
+        private final String[] texts;
         private final Color color;
         private final Font font;
         private int width, height;
@@ -2142,11 +2129,6 @@ public class CustomComponents {
 
         public void UpdateSize(float[] sizeList) {
             this.sizeList = sizeList;
-            recalculateSize();
-        }
-
-        public void UpdateText(String[] texts) {
-            this.texts = texts;
             recalculateSize();
         }
 
@@ -2167,7 +2149,7 @@ public class CustomComponents {
             }
             g2d.dispose();
             width = maxWidth;
-            height = (int) totalHeight;
+            height = totalHeight;
         }
 
         @Override

@@ -6,14 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.io.*;
 import java.time.LocalDate;
-import Admin.Profile;
 
 public class MakePayment {
     private static JFrame parent;
@@ -238,7 +233,7 @@ public class MakePayment {
                     updatedStatus // <-- new status passed here
             );
             // Update the status in the file
-            PurchaseOrder.ModifyPurchaseOrder(current_PO.PurchaseOrderID, po, Main.purchaseOrder_file);
+            PurchaseOrder.ModifyPurchaseOrder(current_PO.PurchaseOrderID, po, Main.purchase_order_file);
             CustomComponents.CustomOptionPane.showErrorDialog(
                     parent,
                     "Payment successfully!",

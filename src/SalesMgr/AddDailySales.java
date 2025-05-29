@@ -404,7 +404,7 @@ public class AddDailySales {
                     LocalDate currentDate = LocalDate.now();
                     String new_id = Sales.idMaker(Main.sales_file);
 
-                    Sales newSales = new Sales(new_id, currentDate, current_user.getUserID());
+                    Sales newSales = new Sales(new_id, currentDate, current_user.UserID);
                     Sales.saveNewSales(newSales, Main.sales_file);
 
                     String itemID = Item.getItemIDByName(itemName, Main.item_file);

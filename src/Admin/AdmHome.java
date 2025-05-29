@@ -4,7 +4,6 @@ import SalesMgr.*;
 import PurchaseMgr.*;
 import InventoryMgr.*;
 import FinanceMgr.*;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -120,7 +119,7 @@ public class AdmHome {
                 SalesHome.indicator = 0;
                 SalesHome.PageChanger();
                 User.UnrememberAllUser(Main.userdata_file);
-                User.modifyUser(sales.UserID, sales, Main.userdata_file);
+                User.ModifyUser(sales.UserID, sales, Main.userdata_file);
             }
         });
         side_bar.add(sales_management, gbc_side);
@@ -156,7 +155,7 @@ public class AdmHome {
                 PurchaseHome.indicator = 2;
                 PurchaseHome.PageChanger();
                 User.UnrememberAllUser(Main.userdata_file);
-                User.modifyUser(purchase.UserID, purchase, Main.userdata_file);
+                User.ModifyUser(purchase.UserID, purchase, Main.userdata_file);
             }
         });
         side_bar.add(purchase_management, gbc_side);
@@ -192,7 +191,7 @@ public class AdmHome {
                 InventoryHome.indicator = 0;
                 InventoryHome.PageChanger();
                 User.UnrememberAllUser(Main.userdata_file);
-                User.modifyUser(inventory.UserID, inventory, Main.userdata_file);
+                User.ModifyUser(inventory.UserID, inventory, Main.userdata_file);
             }
         });
         side_bar.add(inventory_management, gbc_side);
@@ -228,7 +227,7 @@ public class AdmHome {
                 Home.PageChanger();
                 FinanceHome.PageChanger();
                 User.UnrememberAllUser(Main.userdata_file);
-                User.modifyUser(Finance.UserID, Finance, Main.userdata_file);
+                User.ModifyUser(Finance.UserID, Finance, Main.userdata_file);
             }
         });
         side_bar.add(finance_management, gbc_side);
@@ -286,15 +285,15 @@ public class AdmHome {
 
         List<String> options = List.of("Check Profile", "Sign Out");
         List<ActionListener> actions = List.of(
-                e -> {
+                _ -> {
                     AdmHome.indicator = 1;
                     PageChanger();
                 },
-                e -> {
+                _ -> {
                     User.UnrememberAllUser(Main.userdata_file);
                     Main.indicator = 0;
                     AdmHome.indicator = 0;
-                    Main.PageChanger(parent, merriweather, boldonse);
+                    Main.PageChanger(parent);
                 }
         );
 
@@ -336,9 +335,9 @@ public class AdmHome {
             }
         });
 
-        Dashboard.Loader(parent, merriweather, boldonse, content, current_user);
-        Profile.Loader(parent, merriweather, boldonse, content, current_user);
-        UserMng.Loader(parent, merriweather, boldonse, content, current_user);
+        Dashboard.Loader(merriweather, content, current_user);
+        Profile.Loader(merriweather, boldonse, content, current_user);
+        UserMng.Loader(parent, merriweather, content, current_user);
         PageChanger();
     }
 
@@ -353,10 +352,6 @@ public class AdmHome {
         inventory_management.UpdateText("Inventory Mode");
         finance_management.UpdateText("Finance Mode");
         switch (indicator) {
-//        Please indicate the relation of the indicator value and specific java class:
-//        0  -> Administrator Dashboard Page
-//        1  -> Profile Page
-//        2  -> User Management Page
             case 0:
                 Dashboard.ShowPage();
                 home_page.UpdateText("             Home Page             ");
@@ -392,7 +387,7 @@ public class AdmHome {
     }
 
     public static void UpdateComponentSize(int parent_width, int parent_height) {
-        int base_size = 0;
+        int base_size;
         if (parent_width >= parent_height) {
             base_size = parent_height / 40;
         } else {
@@ -401,13 +396,13 @@ public class AdmHome {
         int finalBase_size = base_size;
         SwingUtilities.invokeLater(() -> {
             logo_cell.repaint();
-            home_page.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
-            user_management.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
-            sales_management.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
-            purchase_management.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
-            inventory_management.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
-            finance_management.UpdateCustomButton(0, (int) (finalBase_size), null, 0);
-            title.setFont(boldonse.deriveFont((float)finalBase_size));
+            home_page.UpdateCustomButton(0, finalBase_size, null, 0);
+            user_management.UpdateCustomButton(0, finalBase_size, null, 0);
+            sales_management.UpdateCustomButton(0, finalBase_size, null, 0);
+            purchase_management.UpdateCustomButton(0, finalBase_size, null, 0);
+            inventory_management.UpdateCustomButton(0, finalBase_size, null, 0);
+            finance_management.UpdateCustomButton(0, finalBase_size, null, 0);
+            title.setFont(boldonse.deriveFont((float) finalBase_size));
             profileIcon1.UpdateSize((int) (finalBase_size * 2.5));
             profileIcon2.UpdateSize((int) (finalBase_size * 2.5));
             profile_drop.UpdateSize(top_bar.getHeight() / 2, top_bar.getHeight());

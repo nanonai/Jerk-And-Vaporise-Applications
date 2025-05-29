@@ -1,5 +1,6 @@
 package PurchaseMgr;
 
+import Admin.Main;
 import Admin.User;
 import InventoryMgr.Item;
 
@@ -112,9 +113,8 @@ public class Supplier {
         return null;
     }
 
-    public static String getSupplierID(String supplierName) {
-        String filePath = "datafile/supplier.txt";
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+    public static String getSupplierID(String filename, String supplierName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             String foundSupplierID = "", foundSupplierName = "";
 
@@ -132,7 +132,7 @@ public class Supplier {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            e.getStackTrace();
         }
         return "Unknown";  // Return a default value if no matching SupplierID was found
     }

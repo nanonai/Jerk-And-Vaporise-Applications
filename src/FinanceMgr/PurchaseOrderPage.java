@@ -158,7 +158,7 @@ public class PurchaseOrderPage {
         igbc.insets = new Insets(0, 0, 10, 0);
         String[] titles = new String[]{"PurchaseOrderID", "ItemID","SupplierID","PurchaseQuantity",
                 "TotalAmt","OrderDate","PurchaseMgrID","Status"};
-        purchaseOrder_List = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
+        purchaseOrder_List = PurchaseOrder.listAllPurchaseOrders(Main.purchase_order_file);
         Object[][] data = new Object[purchaseOrder_List.size()][titles.length];
         int counter = 0;
         for (PurchaseOrder purchaseOrder : purchaseOrder_List) {
@@ -403,7 +403,7 @@ public class PurchaseOrderPage {
                 String selected_id = table_purOrder.getValueAt(table_purOrder.getSelectedRow(),
                         table_purOrder.getColumnModel().getColumnIndex("PurchaseOrderID")).toString();
                 ViewPurchaseOrder.UpdatePurchaseOrder(PurchaseOrder.getPurchaseOrderID(selected_id,
-                        Main.purchaseOrder_file));
+                        Main.purchase_order_file));
                 boolean see = ViewPurchaseOrder.ShowPage();
                 if (see) {
                     System.out.println(" ");
@@ -467,7 +467,7 @@ public class PurchaseOrderPage {
             else {
                 String selected_id = table_purOrder.getValueAt(table_purOrder.getSelectedRow(),
                         table_purOrder.getColumnModel().getColumnIndex("PurchaseOrderID")).toString();
-                ModifyPO.UpdatePO(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));
+                ModifyPO.UpdatePO(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchase_order_file));
                 boolean see = ModifyPO.ShowPage();
                 if (see) {
                     System.out.println(" ");
@@ -506,7 +506,7 @@ public class PurchaseOrderPage {
                         table_purOrder.getColumnModel().getColumnIndex("PurchaseOrderID")
                 ).toString();
 
-                MakePayment.UpdatePO(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));
+                MakePayment.UpdatePO(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchase_order_file));
                 boolean see = MakePayment.ShowPage();
                 if (see) {
                     System.out.println("Payment interface displayed.");
@@ -588,7 +588,7 @@ public class PurchaseOrderPage {
     public static void SearchStuff() {
         String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search...\r\r")) ?
                 search.getText() : "";
-        List<PurchaseOrder> temp_po_list = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
+        List<PurchaseOrder> temp_po_list = PurchaseOrder.listAllPurchaseOrders(Main.purchase_order_file);
         if (temp_po_list.isEmpty()) {
             CustomComponents.CustomOptionPane.showInfoDialog(
                     parent,

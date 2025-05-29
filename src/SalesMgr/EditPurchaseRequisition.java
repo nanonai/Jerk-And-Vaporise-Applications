@@ -9,14 +9,10 @@ import PurchaseMgr.Item_Supplier;
 import PurchaseMgr.Supplier;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -184,7 +180,7 @@ public class EditPurchaseRequisition {
                         0
                 );
 
-                PurchaseRequisition.ModifyPurchaseRequisition(PR.PurchaseReqID, PR, Main.purchaseReq_file);
+                PurchaseRequisition.ModifyPurchaseRequisition(PR.PurchaseReqID, PR, Main.purchase_req_file);
                 dialog.dispose();
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,

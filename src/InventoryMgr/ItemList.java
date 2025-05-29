@@ -87,14 +87,14 @@ public class ItemList {
         gbc.gridwidth = 6;
         gbc.fill = GridBagConstraints.BOTH;
 
-        AllItems = Item.listAllItem("datafile/item.txt");
+        AllItems = Item.listAllItem(Main.item_file);
         String[] titles = new String[]{"ItemID", "ItemName", "Unit Price", "Unit Cost", "StockCount", "Threshold",
                 "Category", "Last Update","Supplier Name"};
         Object[][] data = new Object[AllItems.size()][titles.length];
         int counter = 0;
         for (Item item : AllItems) {
-            String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
-            String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+            String supplierID = getSupplierIDFromItemID(item.ItemID, Main.item_supplier_file);
+            String supplierName = getSupplierName(supplierID, Main.supplier_file);
 
             data[counter] = new Object[]{
                     item.ItemID,
@@ -263,7 +263,7 @@ public class ItemList {
         btnEdit.addActionListener(_ -> {
             int selectedRowIndex = table_item.getSelectedRow();
             Object value = table_item.getValueAt(selectedRowIndex, 0);
-            Item itm = Item.getItemByID(value.toString(), "datafile/item.txt");
+            Item itm = Item.getItemByID(value.toString(), Main.item_file);
             EditItem.ShowPage(itm);
         });
         buttonPanel.add(btnEdit, buttonGbc);
@@ -292,7 +292,7 @@ public class ItemList {
             try {
                 int selectedRowIndex = table_item.getSelectedRow();
                 Object value = table_item.getValueAt(selectedRowIndex, 0);
-                Item itm = Item.getItemByID(value.toString(), "datafile/item.txt");
+                Item itm = Item.getItemByID(value.toString(), Main.item_file);
                 UpdateStock.ShowPage(itm);
             } catch (Exception e){
                 CustomComponents.CustomOptionPane.showErrorDialog(parent, "You might want to select something before doing this", "Invalid selection",
@@ -315,7 +315,7 @@ public class ItemList {
             int selectedRowIndex = table_item.getSelectedRow();
             int columnIndex = table_item.getColumnModel().getColumnIndex("ItemID");
             Object value = table_item.getValueAt(selectedRowIndex, columnIndex);
-            Item itm = Item.getItemByID(value.toString(), "datafile/item.txt");
+            Item itm = Item.getItemByID(value.toString(), Main.item_file);
             StockReport.ShowPage(itm);
         });
         buttonPanel.add(btnStockReport, buttonGbc);
@@ -355,8 +355,8 @@ public class ItemList {
                 anti_counter -= 1;
                 continue;
             } else {
-                String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
-                String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
+                String supplierID = getSupplierIDFromItemID(item.ItemID, Main.item_supplier_file);
+                String supplierName = getSupplierName(supplierID, Main.supplier_file);
 
                 data[counter] = new Object[]{
                         item.ItemID,

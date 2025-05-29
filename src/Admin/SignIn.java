@@ -242,9 +242,9 @@ public class SignIn {
                     new Color(237, 136, 172),
                     new Color(255, 255, 255)
             );
-        } else if (!User.usernameChecker(txt1.getText().toLowerCase(), Main.userdata_file) ||
-                !User.emailChecker(txt1.getText(), Main.userdata_file)) {
-            List<User> allUser = User.listAllUser(Main.userdata_file);
+        } else if (!User.UsernameChecker(txt1.getText().toLowerCase(), Main.userdata_file) ||
+                !User.EmailChecker(txt1.getText(), Main.userdata_file)) {
+            List<User> allUser = User.ListAllUser(Main.userdata_file);
             boolean correct = false;
             String AccType = "";
             for (User user : allUser) {
@@ -275,10 +275,10 @@ public class SignIn {
                     }
                 }
                 if (check.isSelected() && logged_in != null) {
-                        User.modifyUser(logged_in.UserID, logged_in, Main.userdata_file);
+                    User.ModifyUser(logged_in.UserID, logged_in, Main.userdata_file);
                 }
                 Home.current_user = logged_in;
-                Main.PageChanger(parent, merriweather, boldonse);
+                Main.PageChanger(parent);
             } else {
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,
@@ -304,7 +304,7 @@ public class SignIn {
     }
 
     public static void LoginRemembered() {
-        User user = User.RememberedUser(Main.userdata_file);
+        User user = User.GetRememberedUser(Main.userdata_file);
         User logged_in = new User(user.UserID, user.Username, user.Password, user.FullName,
                 user.Email, user.Phone, user.AccType, user.DateOfRegis, 1);
         String AccType = logged_in.AccType;
@@ -317,7 +317,7 @@ public class SignIn {
             case "Finance Manager" -> Home.indicator = 5;
         }
         Home.current_user = logged_in;
-        Main.PageChanger(parent, merriweather, boldonse);
+        Main.PageChanger(parent);
     }
 
     public static void UpdateComponentSize(int parent_width, int parent_height) {
@@ -336,7 +336,7 @@ public class SignIn {
         check.setIcon(new CustomComponents.CustomCheckBoxIcon(parent_height / 22, parent_height / 70,parent_height / 350,false,
                 new Color(145, 145, 145), Color.WHITE, new Color(97, 97, 97)));
         check.setSelectedIcon(new CustomComponents.CustomCheckBoxIcon(parent_height / 22, parent_height / 70,parent_height / 350,true,
-               new Color(145, 145, 145), Color.WHITE, new Color(97, 97, 97)));
+                new Color(145, 145, 145), Color.WHITE, new Color(97, 97, 97)));
         button.UpdateCustomButton(parent_height / 10, parent_height / 30, null, 0);
         txt_icon1.repaint();
         txt_icon2.repaint();

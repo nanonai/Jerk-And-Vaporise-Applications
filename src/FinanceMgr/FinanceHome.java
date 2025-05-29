@@ -179,7 +179,7 @@ public class FinanceHome {
                     User.UnrememberAllUser(Main.userdata_file);
                     Main.indicator = 0;
                     FinanceHome.indicator = 0;
-                    Main.PageChanger(parent, merriweather, boldonse);
+                    Main.PageChanger(parent);
                 }
         ));
 
@@ -193,7 +193,7 @@ public class FinanceHome {
                 Home.PageChanger();
                 AdmHome.PageChanger();
                 User.UnrememberAllUser(Main.userdata_file);
-                User.modifyUser(admin.UserID, admin, Main.userdata_file);
+                User.ModifyUser(admin.UserID, admin, Main.userdata_file);
             });
         }
 
@@ -239,7 +239,7 @@ public class FinanceHome {
         InventoryPage.Loader(parent, merriweather, boldonse, content, current_user);
         PurchaseReqPage.Loader(parent, merriweather, boldonse, content, current_user);
         PurchaseOrderPage.Loader(parent, merriweather, boldonse, content, current_user);
-        Profile.Loader(parent, merriweather, boldonse, content, current_user);
+        Profile.Loader(merriweather, boldonse, content, current_user);
         PageChanger();
     }
 

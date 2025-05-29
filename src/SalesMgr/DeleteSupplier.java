@@ -125,16 +125,16 @@ public class DeleteSupplier {
             if (proceed) {
                 for (Supplier supplier : suppliers) {
                     List<Item_Supplier> related = Item_Supplier.listAllItemSupplierFromSupplierID(
-                            supplier.SupplierID, "datafile/item_supplier.txt");
+                            supplier.SupplierID, Main.item_supplier_file);
                     for (Item_Supplier rel : related) {
                         Item_Supplier.replaceSupplierID(
                                 rel.ItemID,
                                 rel.SupplierID,
                                 "DELETED_SUPPLIER",
-                                "datafile/item_supplier.txt"
+                                Main.item_supplier_file
                         );
                     }
-                    Supplier.removeSupplier(supplier.SupplierID, "datafile/supplier.txt");
+                    Supplier.removeSupplier(supplier.SupplierID, Main.supplier_file);
                 }
                 delete_or_not.set(true);
             }

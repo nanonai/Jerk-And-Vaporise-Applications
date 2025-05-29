@@ -184,7 +184,7 @@ public class GenPurchaseOrder {
         igbc.weighty = 4;
         igbc.insets = new Insets(0, 3, 0, 3);
         String[] titles = new String[]{"Id", "ItemID", "Quantity", "SupplierID", "Order Date", "Manager", "Status"};
-        po_list = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
+        po_list = PurchaseOrder.listAllPurchaseOrders(Main.purchase_order_file);
         Object[][] data = new Object[po_list.size()][titles.length];
         int counter = 0;
         for (PurchaseOrder purchaseOrder : po_list) {
@@ -402,7 +402,7 @@ public class GenPurchaseOrder {
             } else {
                 String selected_id = table_po.getValueAt(table_po.getSelectedRow(),
                         table_po.getColumnModel().getColumnIndex("Id")).toString();
-                PurchaseOrderDetails.UpdatePurchaseOrder(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));
+                PurchaseOrderDetails.UpdatePurchaseOrder(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchase_order_file));
                 boolean see = PurchaseOrderDetails.ShowPage();
                 if (see) {
                     System.out.println(" ");
@@ -437,7 +437,7 @@ public class GenPurchaseOrder {
 
                 if ("Pending".equalsIgnoreCase(status)) {
                     EditPurchaseOrder.UpdatePurchaseOrder(
-                            PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));
+                            PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchase_order_file));
                     EditPurchaseOrder.ShowPage();
 
                 } else {
@@ -485,7 +485,7 @@ public class GenPurchaseOrder {
                         "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    deletePurchaseOrder(selectedPOID, Main.purchaseOrder_file);
+                    deletePurchaseOrder(selectedPOID, Main.purchase_order_file);
                 }
             }
             else {
@@ -547,7 +547,7 @@ public class GenPurchaseOrder {
     public static void SearchStuff() {
         String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search...\r\r")) ?
                 search.getText() : "";
-        List<PurchaseOrder> temp_user_list = PurchaseOrder.listAllPOFromFilter(Main.purchaseOrder_file, searcher);
+        List<PurchaseOrder> temp_user_list = PurchaseOrder.listAllPOFromFilter(Main.purchase_order_file, searcher);
         if (temp_user_list.isEmpty()) {
             CustomComponents.CustomOptionPane.showInfoDialog(
                     parent,
@@ -609,7 +609,7 @@ public class GenPurchaseOrder {
     }
 
     private static String getStatusFromFile(String poID) {
-        File file = new File(Main.purchaseOrder_file);
+        File file = new File(Main.purchase_order_file);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             boolean poFound = false;

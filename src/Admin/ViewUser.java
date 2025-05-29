@@ -9,16 +9,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ViewUser {
     private static JFrame parent;
-    private static Font merriweather, boldonse;
-    private static JPanel content;
+    private static Font merriweather;
     private static User current_user;
 
-    public static void Loader(JFrame parent, Font merriweather, Font boldonse, JPanel content, User current_user) {
+    public static void Loader(JFrame parent, Font merriweather) {
         ViewUser.parent = parent;
         ViewUser.merriweather = merriweather;
-        ViewUser.boldonse = boldonse;
-        ViewUser.content = content;
-        ViewUser.current_user = current_user;
     }
 
     public static void UpdateUser(User user) {
@@ -33,7 +29,7 @@ public class ViewUser {
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(parent);
 
-        int size_factor = 0;
+        int size_factor;
         if (parent.getWidth() >= parent.getHeight()) {
             size_factor = parent.getHeight() / 40;
         } else {
@@ -218,9 +214,7 @@ public class ViewUser {
         phone.setFont(merriweather.deriveFont(Font.PLAIN, (float) (base_size)));
         inner.add(phone, gbc);
 
-        close.addActionListener(_ -> {
-            dialog.dispose();
-        });
+        close.addActionListener(_ -> dialog.dispose());
 
         view.addActionListener(_ -> {
             view_or_not.set(true);

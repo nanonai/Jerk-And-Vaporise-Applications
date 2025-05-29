@@ -10,7 +10,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -189,7 +188,7 @@ public class PurchaseOrderMng {
         igbc.weighty = 4;
         igbc.insets = new Insets(0, 3, 0, 3);
         String[] titles = new String[]{"Id", "ItemID", "Quantity", "SupplierID", "Order Date", "Manager", "Status"};
-        po_list = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
+        po_list = PurchaseOrder.listAllPurchaseOrders(Main.purchase_order_file);
         Object[][] data = new Object[po_list.size()][titles.length];
         int counter = 0;
         for (PurchaseOrder purchaseOrder : po_list) {
@@ -396,7 +395,7 @@ public class PurchaseOrderMng {
             } else {
                 String selected_id = table_po.getValueAt(table_po.getSelectedRow(),
                         table_po.getColumnModel().getColumnIndex("Id")).toString();
-                PurchaseOrderDetails.UpdatePurchaseOrder(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchaseOrder_file));
+                PurchaseOrderDetails.UpdatePurchaseOrder(PurchaseOrder.getPurchaseOrderID(selected_id, Main.purchase_order_file));
                 boolean see = PurchaseOrderDetails.ShowPage();
                 if (see) {
                     System.out.println(" ");
@@ -470,7 +469,7 @@ public class PurchaseOrderMng {
         String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search...\r\r")) ?
                 search.getText().toLowerCase() : "";
 
-        List<PurchaseOrder> allOrders = PurchaseOrder.listAllPurchaseOrders(Main.purchaseOrder_file);
+        List<PurchaseOrder> allOrders = PurchaseOrder.listAllPurchaseOrders(Main.purchase_order_file);
         List<PurchaseOrder> filteredList = new ArrayList<>();
 
         for (PurchaseOrder po : allOrders) {

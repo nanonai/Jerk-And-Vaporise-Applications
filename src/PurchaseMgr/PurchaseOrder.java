@@ -1,18 +1,13 @@
 package PurchaseMgr;
 
 import Admin.Main;
-import Admin.CustomComponents;
-import Admin.User;
 
 import javax.swing.*;
-import javax.swing.text.*;
-import java.awt.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class PurchaseOrder {
     public static PurchaseOrder getPurchaseOrderID;
@@ -240,7 +235,7 @@ public class PurchaseOrder {
     }
 
     public static void updateTotalAmountInFile(String PurchaseOrderID, PurchaseOrder purchaseOrder, double newTotalAmt) {
-        List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(Main.purchaseOrder_file);
+        List<PurchaseOrder> purchaseOrderList = listAllPurchaseOrders(Main.purchase_order_file);
         for (PurchaseOrder po : purchaseOrderList) {
             if (Objects.equals(po.PurchaseOrderID, PurchaseOrderID)) {
                 po.PurchaseOrderID = purchaseOrder.PurchaseOrderID;
@@ -253,7 +248,7 @@ public class PurchaseOrder {
                 po.Status = purchaseOrder.Status;
             }
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Main.purchaseOrder_file))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Main.purchase_order_file))) {
             for (PurchaseOrder po : purchaseOrderList) {
                 writer.write("PurchaseOrderID:     " + po.PurchaseOrderID + "\n");
                 writer.write("ItemID:              " + po.ItemID + "\n");
