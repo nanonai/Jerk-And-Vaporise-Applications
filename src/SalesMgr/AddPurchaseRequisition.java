@@ -47,7 +47,7 @@ public class AddPurchaseRequisition {
     public static void ShowPage(){
         JDialog dialog = new JDialog(parent, "Add Purchase Requisition", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize(parent.getWidth() / 2, parent.getHeight() / 2);
+        dialog.setSize(650, 350);
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(parent);
 
@@ -149,7 +149,7 @@ public class AddPurchaseRequisition {
         gbc.insets = new Insets(0, 0, 0, 0);
         CustomComponents.CustomButton confirm = new CustomComponents.CustomButton("Confirm",
                 merriweather.deriveFont(Font.PLAIN), Color.WHITE, Color.WHITE,
-                new Color(56, 53, 70), new Color(73, 69, 87),
+                new Color(209, 88, 128), new Color(237, 136, 172),
                 Main.transparent, 0, base_size, Main.transparent, false, 5, false,
                 null, 0, 0, 0);
         button_panel2.add(confirm, gbc);

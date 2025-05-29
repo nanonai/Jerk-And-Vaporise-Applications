@@ -16,7 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.List;  // Import from java.util package
+import java.util.List;
 import java.util.Objects;
 
 
@@ -166,7 +166,6 @@ public class AddDailySales {
                 itemname.setToolTipText("");
                 String input = itemname.getText().trim();
                 if (!input.isEmpty()) {
-                    // Check if the item exists
                     List<Item> itemList = Item.listAllItem(Main.item_file);
                     boolean itemExists = false;
 
@@ -178,7 +177,7 @@ public class AddDailySales {
                     }
 
                     if (!itemExists) {
-                        itemname.setForeground(new Color(159, 4, 4));  // Red text color for invalid input
+                        itemname.setForeground(new Color(159, 4, 4));
                         Font font = itemname.getFont();
                         Map<TextAttribute, Object> attributes = new java.util.HashMap<>(font.getAttributes());
                         attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
@@ -319,7 +318,6 @@ public class AddDailySales {
         });
 
         confirm.addActionListener(_ -> {
-            // Check if any of the fields are empty or just contain spaces
             if (itemname.getText().isEmpty() || quantity.getText().isEmpty() || amount.getText().isEmpty()) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,
@@ -344,10 +342,9 @@ public class AddDailySales {
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                    return;  // Exit if the length is not 3
+                    return;
                 }
 
-                // Handle Item Name Error
                 if (validity.charAt(0) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -361,7 +358,6 @@ public class AddDailySales {
                     return;
                 }
 
-                // Handle Sold Quantity Error
                 if (validity.charAt(1) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -375,7 +371,6 @@ public class AddDailySales {
                     return;
                 }
 
-                // Handle Revenue Error
                 if (validity.charAt(2) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -401,9 +396,8 @@ public class AddDailySales {
                     );
                     return;
                 }
-                // All validations passed, proceed with sales entry creation
+
                 try {
-                    // Parse and process valid input
                     String itemName = itemname.getText().trim();
                     int quantitySold = Integer.parseInt(quantity.getText().trim());
                     double revenue = Double.parseDouble(amount.getText().trim());
@@ -413,7 +407,7 @@ public class AddDailySales {
                     Sales newSales = new Sales(new_id, currentDate, current_user.getUserID());
                     Sales.saveNewSales(newSales, Main.sales_file);
 
-                    String itemID = Item.getItemIDByName(itemName, Main.item_file);  // Assuming Item.getItemID() returns the item ID based on item name
+                    String itemID = Item.getItemIDByName(itemName, Main.item_file);
                     String salesID = newSales.SalesID;
 
                     Item_Sales newItemSales = new Item_Sales(itemID, salesID, quantitySold, revenue);
@@ -429,7 +423,6 @@ public class AddDailySales {
                             new Color(255, 255, 255)
                     );
 
-                    // Close the dialog
                     dialog.dispose();
                 } catch (NumberFormatException ex) {
                     CustomComponents.CustomOptionPane.showErrorDialog(

@@ -146,7 +146,7 @@ public class DailySalesMng {
             public void focusGained(FocusEvent e) {
                 if (search.getText().equals("Search...")) {
                     search.setText("");
-                    search.setForeground(Color.BLACK); // Normal text color
+                    search.setForeground(Color.BLACK);
                 }
             }
 
@@ -154,7 +154,7 @@ public class DailySalesMng {
             public void focusLost(FocusEvent e) {
                 if (search.getText().isEmpty()) {
                     search.setText("Search...");
-                    search.setForeground(new Color(122, 122, 122)); // Placeholder color
+                    search.setForeground(new Color(122, 122, 122));
                 }
             }
         });
@@ -371,7 +371,7 @@ public class DailySalesMng {
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnAdd.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
+        btnAdd.setPreferredSize(new Dimension(185, 40));
         btnAdd.addActionListener(_ -> {
             AddDailySales.Loader(parent, merriweather, boldonse, content, current_user);
             AddDailySales.ShowPage();
@@ -391,10 +391,9 @@ public class DailySalesMng {
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnEdit.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
+        btnEdit.setPreferredSize(new Dimension(185, 40));
 
         btnEdit.addActionListener(_ -> {
-            // Check if any row is selected
             if (table_sales.getSelectedRowCount() == 0) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,
@@ -461,7 +460,7 @@ public class DailySalesMng {
                 new Color(225, 108, 150), new Color(237, 136, 172),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnView.setPreferredSize(new Dimension(185, 40));  // Adjusted width and height
+        btnView.setPreferredSize(new Dimension(185, 40));
         btnView.addActionListener(_ -> {
             if (table_sales.getSelectedRowCount() == 0) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
@@ -562,7 +561,7 @@ public class DailySalesMng {
                 new Color(50, 8, 32), new Color(174, 122, 140),
                 Main.transparent, 0, 20, Main.transparent, false,
                 5, false, null, 0, 0, 0);
-        btnDelete1.setPreferredSize(new Dimension(185, 40)); // Adjusted width and height
+        btnDelete1.setPreferredSize(new Dimension(185, 40));
         btnDelete1.addActionListener(_ -> {
             deleting = CustomComponents.CustomOptionPane.showConfirmDialog(
                     parent,
@@ -782,19 +781,16 @@ public class DailySalesMng {
 
         List<Sales> filteredSales = new ArrayList<>();
         for (Sales sales : allSales) {
-            // Create a string to search in
             String salesID = sales.SalesID.toLowerCase();
             String salesDate = sales.SalesDate.toString().toLowerCase();
             String salesMgrID = sales.SalesMgrID.toLowerCase();
 
-            // Loop through Item_Sales to match with the search term
             List<Item_Sales> itemSalesList = Item_Sales.listAllItemSalesFromSalesID(
                     sales.SalesID, "datafile/item_sales.txt");
 
             boolean matches = false;
             for (Item_Sales itemSale : itemSalesList) {
                 String itemName = "";
-                // Find the matching Item name for the ItemID
                 for (Item item : allItems) {
                     if (item.ItemID.equals(itemSale.ItemID)) {
                         itemName = item.ItemName.toLowerCase();
@@ -802,13 +798,12 @@ public class DailySalesMng {
                     }
                 }
 
-                // Check if any field matches the search term
                 if (salesID.contains(searcher) ||
                         salesDate.contains(searcher) ||
                         salesMgrID.contains(searcher) ||
                         itemName.contains(searcher)) {
                     matches = true;
-                    break; // If we find a match, no need to check further for this sale
+                    break;
                 }
             }
 
@@ -830,54 +825,35 @@ public class DailySalesMng {
     }
 
     public static void UpdateComponentSize(int base_size) {
-        // Update the size of search icons dynamically
         search_icon1.UpdateSize((int) (base_size * 0.8));
         search_icon2.UpdateSize((int) (base_size * 0.8));
         s_btn.setSize(search_icon1.getIconWidth(), search_icon1.getIconHeight());
         s_btn.repaint();
         icon_clear1.UpdateSize((int) (base_size * 0.8));
         icon_clear2.UpdateSize((int) (base_size * 0.8));
-
-        // Set button size to match the icon dimensions
         clearbtn.setSize(icon_clear1.getIconWidth(), icon_clear1.getIconHeight());
         clearbtn.setPreferredSize(new Dimension(icon_clear1.getIconWidth(), icon_clear1.getIconHeight()));
-
-        // Ensure button is repainted
         clearbtn.revalidate();
         clearbtn.repaint();
-
-        // Update left and right arrow icons dynamically
         left_icon1.UpdateSize(base_size);
         left_icon2.UpdateSize(base_size);
         p_left.setSize(left_icon1.getIconWidth(), left_icon1.getIconHeight());
         p_left.repaint();
-
         right_icon1.UpdateSize(base_size);
         right_icon2.UpdateSize(base_size);
         p_right.setSize(right_icon1.getIconWidth(), right_icon1.getIconHeight());
         p_right.repaint();
-
         p_first.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
         p_last.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
-
-        // Update pages and other relevant labels with new font size
         pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.8)));
-
-        // Update labels' font sizes based on base_size
         lbl_show.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
         lbl_indicate.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.9)));
-
-        // Adjust the font size for combo boxes and text fields
         entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         search.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
-
-        // Update table font sizes based on base_size
         table_sales.SetChanges(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
                 merriweather.deriveFont(Font.PLAIN, (int) (base_size * 0.9)), mode);
-
-        // Update other buttons with base_size
         btnAdd.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnEdit.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         btnDelete1.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
@@ -885,8 +861,6 @@ public class DailySalesMng {
         btnView.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
         cancel_delete.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
 
-
-        // Ensure components revalidate and repaint to reflect size changes
         s_btn.revalidate();
         p_left.revalidate();
         p_right.revalidate();

@@ -395,7 +395,6 @@ public class EditDailySales {
         });
 
         confirm.addActionListener(_ -> {
-            // Check if any of the fields are empty or just contain spaces
             if (itemname.getText().isEmpty() || quantity.getText().isEmpty() || amount.getText().isEmpty()) {
                 CustomComponents.CustomOptionPane.showErrorDialog(
                         parent,
@@ -420,10 +419,9 @@ public class EditDailySales {
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                    return;  // Exit if the length is not 3
+                    return;
                 }
 
-                // Handle Item Name Error
                 if (validity.charAt(0) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -437,7 +435,6 @@ public class EditDailySales {
                     return;
                 }
 
-                // Handle Sold Quantity Error
                 if (validity.charAt(1) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -451,7 +448,6 @@ public class EditDailySales {
                     return;
                 }
 
-                // Handle Revenue Error
                 if (validity.charAt(2) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -479,7 +475,7 @@ public class EditDailySales {
                 }
 
                 try {
-                    String itemNameValue = itemname.getText().trim(); // Assuming ItemID is entered in the itemname field
+                    String itemNameValue = itemname.getText().trim();
                     int soldQuantityValue = Integer.parseInt(quantity.getText().trim());
                     double revenueValue = Double.parseDouble(amount.getText().trim());
                     String salesDateValue = date.getText().trim();
@@ -488,11 +484,11 @@ public class EditDailySales {
                     selected_sales.ItemName = itemNameValue;
                     selected_sales.Quantity = soldQuantityValue;
                     selected_sales.Amount = revenueValue;
-                    selected_sales.SalesDate = LocalDate.parse(salesDateValue);  // Parse the date
+                    selected_sales.SalesDate = LocalDate.parse(salesDateValue);
 
                     Sales.ModifySales(selected_sales.SalesID, selected_sales, "datafile/sales.txt");
 
-                    String itemID = Item.getItemIDByName(itemNameValue, "datafile/item.txt"); // Use your actual item file
+                    String itemID = Item.getItemIDByName(itemNameValue, "datafile/item.txt");
 
                     if (itemID == null || itemID.isEmpty()) {
                         CustomComponents.CustomOptionPane.showErrorDialog(
@@ -509,7 +505,6 @@ public class EditDailySales {
                     Item_Sales updatedItemSales = new Item_Sales(itemID, salesID, soldQuantityValue, revenueValue);
                     Item_Sales.modifyItemSales(updatedItemSales, "datafile/item_sales.txt");
 
-                    // Confirmation Dialog
                 boolean keepEditing = CustomComponents.CustomOptionPane.showConfirmDialog(
                         parent,
                         "Edit another sale?",
@@ -528,7 +523,6 @@ public class EditDailySales {
                 if (!keepEditing) {
                     dialog.dispose();
                 } else {
-                    // Reset fields for next entry or close dialog
                     itemname.Reset();
                     quantity.Reset();
                     amount.Reset();

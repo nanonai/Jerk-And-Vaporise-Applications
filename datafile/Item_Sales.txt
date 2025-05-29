@@ -1,16 +1,6 @@
 ItemID:         I5271
-SalesID:        SL4870
-Quantity:       12
-Amount:         122.0
-~~~~~
-ItemID:         I5271
 SalesID:        SL1303
 Quantity:       10
-Amount:         122.0
-~~~~~
-ItemID:         I5271
-SalesID:        SL1471
-Quantity:       89
 Amount:         122.0
 ~~~~~
 ItemID:         I7467
@@ -37,4 +27,24 @@ ItemID:         I5159
 SalesID:        SL5177
 Quantity:       70
 Amount:         12.0
+~~~~~
+ItemID:         I7352
+SalesID:        SL9642
+Quantity:       12
+Amount:         122.0
+~~~~~
+ItemID:         I7352
+SalesID:        SL8868
+Quantity:       1
+Amount:         12.0
+~~~~~
+ItemID:         I7352
+SalesID:        SL9551
+Quantity:       12
+Amount:         12.0
+~~~~~
+ItemID:         I7352
+SalesID:        SL6456
+Quantity:       40
+Amount:         122.0
 ~~~~~

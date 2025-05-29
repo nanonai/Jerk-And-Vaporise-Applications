@@ -109,7 +109,6 @@ public class Item_Sales {
 
         for (Item_Sales itemSales : allItemSales) {
             if (Objects.equals(itemSales.SalesID, updatedSales.SalesID)) {
-                // Update the matching record
                 itemSales.ItemID = updatedSales.ItemID;
                 itemSales.Quantity = updatedSales.Quantity;
                 itemSales.Amount = updatedSales.Amount;
@@ -118,7 +117,6 @@ public class Item_Sales {
             }
         }
 
-        // If a matching sales record was found, save the changes
         if (found) {
             try (FileWriter writer = new FileWriter(filename)) {
                 for (Item_Sales itemSales : allItemSales) {
@@ -129,7 +127,7 @@ public class Item_Sales {
                     writer.write("~~~~~\n");
                 }
             } catch (IOException e) {
-                e.printStackTrace(); // Log the error
+                e.printStackTrace();
             }
         }
     }

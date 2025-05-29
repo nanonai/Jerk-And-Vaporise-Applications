@@ -423,7 +423,6 @@ public class AddNewItem {
                 suppliername.setToolTipText("");
                 String input = suppliername.getText().trim();
 
-                // Check if supplier name is empty
                 if (input.isEmpty()) {
                     suppliername.setForeground(new Color(159, 4, 4));
                     Font font = suppliername.getFont();
@@ -432,11 +431,9 @@ public class AddNewItem {
                     suppliername.setFont(font.deriveFont(attributes));
                     suppliername.setToolTipText("Supplier name cannot be empty.");
                 } else {
-                    // Check if the supplier ID exists for the entered supplier name
-                    String supplierID = Supplier.getSupplierID(input);  // Call method to get SupplierID
+                    String supplierID = Supplier.getSupplierID(input);
 
                     if ("Unknown".equals(supplierID)) {
-                        // Supplier not found, show error
                         suppliername.setForeground(new Color(159, 4, 4));
                         Font font = suppliername.getFont();
                         Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
@@ -444,7 +441,6 @@ public class AddNewItem {
                         suppliername.setFont(font.deriveFont(attributes));
                         suppliername.setToolTipText("Supplier ID not found or does not exist!");
                     } else {
-                        // Supplier exists, reset text field style
                         suppliername.setForeground(Color.BLACK);
                         suppliername.setFont(suppliername.getFont().deriveFont(Font.PLAIN));
                         suppliername.setToolTipText("");
@@ -514,7 +510,6 @@ public class AddNewItem {
         });
 
         confirm.addActionListener(_ -> {
-            // Check if any of the fields are empty or just contain spaces
             if (itemname.getText().isEmpty() || unitprice.getText().isEmpty() || unitcost.getText().isEmpty() ||
                     stockcount.getText().isEmpty() || threshold.getText().isEmpty() || suppliername.getText().isEmpty()) {
 
@@ -528,12 +523,10 @@ public class AddNewItem {
                         new Color(255, 255, 255)
                 );
             } else {
-                // Perform item-specific validity check
                 String validity = Item.validitychecker(itemname.getText(), unitprice.getText().trim(),
                         unitcost.getText().trim(), stockcount.getText(), threshold.getText(), suppliername.getText(),
                         "datafile/item.txt");
 
-                // Check if the validity string length is exactly 6
                 if (validity.length() != 7) {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -544,10 +537,9 @@ public class AddNewItem {
                             new Color(237, 136, 172),
                             new Color(255, 255, 255)
                     );
-                    return;  // Exit if the length is not 6
+                    return;
                 }
 
-                // Handle Item Name Error
                 if (validity.charAt(0) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -561,7 +553,6 @@ public class AddNewItem {
                     return;
                 }
 
-                // Handle Item Name Already Exists Error
                 if (validity.charAt(1) == 'X') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -575,7 +566,6 @@ public class AddNewItem {
                     return;
                 }
 
-                // Handle Unit Price Error
                 if (validity.charAt(2) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -589,7 +579,6 @@ public class AddNewItem {
                     return;
                 }
 
-                // Handle Unit Cost Error
                 if (validity.charAt(3) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -617,7 +606,6 @@ public class AddNewItem {
                     return;
                 }
 
-                // Handle Stock Count Error
                 if (validity.charAt(4) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -631,7 +619,6 @@ public class AddNewItem {
                     return;
                 }
 
-                // Handle Threshold Error
                 if (validity.charAt(5) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -645,7 +632,6 @@ public class AddNewItem {
                     return;
                 }
 
-                // Handle Supplier Error
                 if (validity.charAt(6) == '0') {
                     CustomComponents.CustomOptionPane.showErrorDialog(
                             parent,
@@ -659,26 +645,23 @@ public class AddNewItem {
                     return;
                 }
 
-                // All validations passed, proceed with item creation
                 try {
                     double unitPriceValue = Double.parseDouble(unitprice.getText().trim());
                     double unitCostValue = Double.parseDouble(unitcost.getText().trim());
                     int stockCountValue = Integer.parseInt(stockcount.getText().trim());
                     int thresholdValue = Integer.parseInt(threshold.getText().trim());
 
-                    // If no exception was thrown, proceed with item creation
                     String item_type = (String) Objects.requireNonNull(types.getSelectedItem());
-                    String new_id = Item.idMaker("datafile/item.txt");  // You can define your own ID maker logic
+                    String new_id = Item.idMaker("datafile/item.txt");
                     LocalDate currentDate = LocalDate.now();
                     future = new Item(new_id, itemname.getText(), unitPriceValue, unitCostValue,
                             stockCountValue, thresholdValue, item_type, currentDate);
                     Item.saveNewItem(future, "datafile/item.txt");
 
                     String supplierName = suppliername.getText().trim();
-                    String supplierID = Supplier.getSupplierID(supplierName);  // Use the method you already created to get SupplierID
+                    String supplierID = Supplier.getSupplierID(supplierName);
 
                     if ("Unknown".equals(supplierID)) {
-                        // If supplier doesn't exist, show error message
                         CustomComponents.CustomOptionPane.showErrorDialog(
                                 parent,
                                 "Supplier name does not exist in the system!",
@@ -689,11 +672,9 @@ public class AddNewItem {
                                 new Color(255, 255, 255)
                         );
                     } else {
-                        // If supplier exists, create an Item_Supplier instance
                         Item_Supplier itemSupplier = new Item_Supplier(new_id, supplierID);
                         Item_Supplier.saveNewItemSupplier(itemSupplier, "datafile/item_supplier.txt");
 
-                        // Ask user if they want to continue adding more items
                         boolean keep_adding = CustomComponents.CustomOptionPane.showConfirmDialog(
                                 parent,
                                 "Keep adding new items?",
@@ -712,7 +693,6 @@ public class AddNewItem {
                         if (!keep_adding) {
                             dialog.dispose();
                         } else {
-                            // Reset fields for the next item entry
                             itemname.Reset();
                             unitprice.Reset();
                             unitcost.Reset();
