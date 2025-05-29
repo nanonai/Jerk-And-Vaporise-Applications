@@ -9,9 +9,6 @@ import SalesMgr.AddNewItem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.util.List;
 import java.util.Objects;
 
 import static PurchaseMgr.Item_Supplier.getSupplierIDFromItemID;
@@ -25,14 +22,9 @@ public class ItemList {
     private static User current_user = InvStatic.current_user;
     private static int indicator, base_size;
     private static java.util.List<Item> AllItems;
-    private static JList ItemList;
-    private static JButton s_btn,clearbtn,p_first,p_left,p_right,p_last;
-    private static JDialog dialogAdd, dialogDelete, dialogEdit;
+    private static JButton p_first,p_left,p_right,p_last;
     private static CustomComponents.CustomButton btnAdd,btnDelete,btnEdit,btnModify,btnStockReport;
     private static CustomComponents.CustomScrollPane scrollPane1;
-    private static CustomComponents.CustomSearchIcon search_icon1, search_icon2;
-    private static CustomComponents.CustomXIcon icon_clear1, icon_clear2;
-    private static CustomComponents.EmptyTextField search;
     private static CustomComponents.CustomTable table_item;
     private static CustomComponents.CustomArrowIcon right_icon1,right_icon2, left_icon1, left_icon2;
     private static JLabel lbl_show, lbl_entries,lbl_indicate;
@@ -85,72 +77,8 @@ public class ItemList {
 
         gbc.gridx = 4;
         gbc.weightx = 1;
-        CustomComponents.RoundedPanel search_panel = new CustomComponents.RoundedPanel(8, 0, 1, Color.WHITE,
-                new Color(209, 209, 209));
-        search_panel.setLayout(new GridBagLayout());
+        JLabel search_panel = new JLabel("");
         content.add(search_panel, gbc);
-
-        GridBagConstraints igbc = new GridBagConstraints();
-        igbc.gridx = 0;
-        igbc.gridy = 0;
-        igbc.weightx = 1;
-        igbc.weighty = 1;
-        igbc.fill = GridBagConstraints.BOTH;
-        igbc.insets = new Insets(6, 6, 10, 5);
-        search_icon1 = new CustomComponents.CustomSearchIcon(16, 3, new Color(122, 122, 122), Color.WHITE);
-        search_icon2 = new CustomComponents.CustomSearchIcon(16, 3, Color.BLACK, Color.WHITE);
-        s_btn = new JButton(search_icon1);
-        s_btn.setRolloverIcon(search_icon2);
-        s_btn.setBorderPainted(false);
-        s_btn.setContentAreaFilled(false);
-        s_btn.setFocusPainted(false);
-        s_btn.addActionListener(_ -> SearchStuff());
-        search_panel.add(s_btn, igbc);
-
-        igbc.gridx = 1;
-        igbc.insets = new Insets(6, 0, 6, 0);
-        search = new CustomComponents.EmptyTextField(20, "Search...\r\r", new Color(122, 122, 122));
-        search.setFont(merriweather.deriveFont(Font.BOLD, 14));
-        search.addActionListener(_ -> SearchStuff());
-        search_panel.add(search, igbc);
-
-        igbc.gridx = 2;
-        igbc.weightx = 0.9;
-        igbc.weighty = 0.9;
-        igbc.fill = GridBagConstraints.BOTH;
-        icon_clear1 = new CustomComponents.CustomXIcon(23, 3,
-                new Color(209, 209, 209), true);
-        icon_clear2 = new CustomComponents.CustomXIcon( 23, 3,
-                Color.BLACK, true);
-        clearbtn = new JButton(icon_clear1);
-        clearbtn.setRolloverIcon(icon_clear2);
-        clearbtn.setOpaque(false);
-        clearbtn.setFocusable(false);
-        clearbtn.setBorder(BorderFactory.createEmptyBorder());
-        clearbtn.addActionListener(e -> {
-            search.setText("");
-            search.requestFocus();
-            UpdatePages(AllItems.size());
-            UpdateTable(AllItems, list_length, page_counter);
-        });
-        search.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (search.getText().equals("Search...")) {
-                    search.setText("");
-                    search.setForeground(Color.BLACK); // Normal text color
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (search.getText().isEmpty()) {
-                    search.setText("Search...");
-                    search.setForeground(new Color(122, 122, 122)); // Placeholder color
-                }
-            }
-        });
-        search_panel.add(clearbtn, igbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -468,60 +396,8 @@ public class ItemList {
         pages.revalidate();
     }
 
-    public static void SearchStuff() {
-        String searcher = (!search.getText().isEmpty() && !Objects.equals(search.getText(), "Search..."))
-                ? search.getText().trim() : "";
-
-        List<Item> AllItems = Item.listAllItem("datafile/item.txt");
-
-        if (searcher.isEmpty()) {
-            // Reset pagination when search is empty
-            page_counter = 0;
-            UpdatePages(AllItems.size());
-            UpdateTable(AllItems, list_length, page_counter);
-        } else {
-            // Apply search filtering
-            AllItems.removeIf(item -> {
-                String supplierID = getSupplierIDFromItemID(item.ItemID, "datafile/item_supplier.txt");
-                String supplierName = getSupplierName(supplierID, "datafile/supplier.txt");
-
-                return !(item.ItemName.toLowerCase().contains(searcher.toLowerCase()) ||
-                        item.ItemID.toLowerCase().contains(searcher.toLowerCase()) ||
-                        item.Category.toLowerCase().contains(searcher.toLowerCase()) ||
-                        supplierName.toLowerCase().contains(searcher.toLowerCase()));
-            });
-        }
-
-        if (AllItems.isEmpty()) {
-            CustomComponents.CustomOptionPane.showInfoDialog(
-                    parent, "No results found.", "Notification",
-                    Color.GRAY, Color.WHITE, Color.GRAY, Color.WHITE
-            );
-        } else {
-            // Update pagination and table with full item details
-            page_counter = 0;
-            UpdatePages(AllItems.size());
-            UpdateTable(AllItems, list_length, page_counter);
-        }
-    }
 
     public static void UpdateComponentSize(int base_size) {
-        // Update the size of search icons dynamically
-        search_icon1.UpdateSize((int) (base_size * 0.8));
-        search_icon2.UpdateSize((int) (base_size * 0.8));
-        s_btn.setSize(search_icon1.getIconWidth(), search_icon1.getIconHeight());
-        s_btn.repaint();
-        icon_clear1.UpdateSize((int) (base_size * 0.8));
-        icon_clear2.UpdateSize((int) (base_size * 0.8));
-
-        // Set button size to match the icon dimensions
-        clearbtn.setSize(icon_clear1.getIconWidth(), icon_clear1.getIconHeight());
-        clearbtn.setPreferredSize(new Dimension(icon_clear1.getIconWidth(), icon_clear1.getIconHeight()));
-
-        // Ensure button is repainted
-        clearbtn.revalidate();
-        clearbtn.repaint();
-
         // Update left and right arrow icons dynamically
         left_icon1.UpdateSize(base_size);
         left_icon2.UpdateSize(base_size);
@@ -547,7 +423,6 @@ public class ItemList {
         // Adjust the font size for combo boxes and text fields
         entries.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
         pages.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
-        search.setFont(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.85)));
 
         // Update table font sizes based on base_size
         table_item.SetChanges(merriweather.deriveFont(Font.BOLD, (int) (base_size * 0.95)),
@@ -561,7 +436,6 @@ public class ItemList {
         btnStockReport.UpdateCustomButton(0, (int) (base_size * 0.9), null, 0);
 
         // Ensure components revalidate and repaint to reflect size changes
-        s_btn.revalidate();
         p_left.revalidate();
         p_right.revalidate();
         p_first.revalidate();
@@ -571,7 +445,6 @@ public class ItemList {
         lbl_entries.revalidate();
         lbl_indicate.revalidate();
         entries.revalidate();
-        search.revalidate();
         table_item.revalidate();
         btnAdd.revalidate();
         btnEdit.revalidate();
@@ -579,7 +452,6 @@ public class ItemList {
         btnModify.revalidate();
         btnStockReport.revalidate();
 
-        s_btn.repaint();
         p_left.repaint();
         p_right.repaint();
         p_first.repaint();
@@ -589,7 +461,6 @@ public class ItemList {
         lbl_entries.repaint();
         lbl_indicate.repaint();
         entries.repaint();
-        search.repaint();
         table_item.repaint();
         btnAdd.repaint();
         btnEdit.repaint();
