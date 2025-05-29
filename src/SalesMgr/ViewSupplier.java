@@ -47,7 +47,6 @@ public class ViewSupplier {
         gbc.weightx = 1;
         gbc.weighty = 1;
 
-        // Title
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -153,7 +152,6 @@ public class ViewSupplier {
         address.setFont(merriweather.deriveFont(Font.PLAIN, (float) base_size));
         panel.add(address, gbc);
 
-// Bottom panel with "View Supplied Items" and "Close"
         gbc.gridx = 0;
         gbc.gridy = 7;
         gbc.gridwidth = 2;
@@ -172,7 +170,6 @@ public class ViewSupplier {
         close.addActionListener(e -> dialog.dispose());
         buttonPanel.add(close, bgbc);
 
-// View Supplied Items button
         bgbc.gridx = 1;
         CustomComponents.CustomButton btnItems = new CustomComponents.CustomButton("View Supplied Items",
                 merriweather.deriveFont(Font.PLAIN), Color.WHITE, Color.WHITE,
@@ -208,7 +205,6 @@ public class ViewSupplier {
         });
         buttonPanel.add(btnItems, bgbc);
 
-// Add the button panel to the dialog
         panel.add(buttonPanel, gbc);
 
         dialog.setContentPane(panel);

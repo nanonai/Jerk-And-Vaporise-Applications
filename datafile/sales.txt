@@ -1,12 +1,4 @@
-SalesID:        SL4870
-SalesDate:      2025-05-26
-SalesMgrID:     SM1253724128
-~~~~~
 SalesID:        SL1303
-SalesDate:      2025-05-26
-SalesMgrID:     SM1253724128
-~~~~~
-SalesID:        SL1471
 SalesDate:      2025-05-26
 SalesMgrID:     SM1253724128
 ~~~~~
@@ -28,5 +20,21 @@ SalesMgrID:     SM1253724128
 ~~~~~
 SalesID:        SL5177
 SalesDate:      2025-05-27
+SalesMgrID:     SM1253724128
+~~~~~
+SalesID:        SL9642
+SalesDate:      2025-05-28
+SalesMgrID:     SM1253724128
+~~~~~
+SalesID:        SL8868
+SalesDate:      2024-12-22
+SalesMgrID:     SM1253724128
+~~~~~
+SalesID:        SL9551
+SalesDate:      2025-05-28
+SalesMgrID:     SM1253724128
+~~~~~
+SalesID:        SL6456
+SalesDate:      2025-05-28
 SalesMgrID:     SM1253724128
 ~~~~~
